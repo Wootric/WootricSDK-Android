@@ -2,6 +2,7 @@
     <string name="app_name">AndroidSdk</string>
     <string name="title_activity_survey">SurveyActivity</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="default_survey_question">How likely are you to recommend us to a friend or coworker?</string>
+    <string name="submit">Submit</string>
+
 </resources>

@@ -9,6 +9,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import static com.wootric.androidsdk.TestUtils.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -20,13 +22,11 @@ import static org.assertj.core.api.Assertions.fail;
 @Config(manifest = Config.NONE, emulateSdk = 21)
 public class UserManagerTest {
 
-    private Context context;
     private UserManager userManager;
 
     @Before
     public void setup() {
-        context = RuntimeEnvironment.application;
-        userManager = new UserManager(context, TestUtils.CLIENT_ID, TestUtils.CLIENT_SECRET,
+        userManager = new UserManager(testActivity(), TestUtils.CLIENT_ID, TestUtils.CLIENT_SECRET,
                 TestUtils.ACCOUNT_TOKEN);
     }
 
@@ -39,7 +39,7 @@ public class UserManagerTest {
         }
 
         try {
-            new UserManager(context, null, TestUtils.CLIENT_SECRET, TestUtils.ACCOUNT_TOKEN);
+            new UserManager(testActivity(), null, TestUtils.CLIENT_SECRET, TestUtils.ACCOUNT_TOKEN);
             fail("Null client id should throw exception");
         } catch (IllegalArgumentException expected) {
         }
@@ -58,7 +58,7 @@ public class UserManagerTest {
     }
 
     @Test public void returnsInitializedObject() throws Exception {
-        assertThat(userManager.getContext()).isEqualTo(context);
+        assertThat(userManager.getContext()).isEqualTo(testActivity());
         assertThat(userManager.getClientId()).isEqualTo(TestUtils.CLIENT_ID);
         assertThat(userManager.getClientSecret()).isEqualTo(TestUtils.CLIENT_SECRET);
         assertThat(userManager.getAccountToken()).isEqualTo(TestUtils.ACCOUNT_TOKEN);

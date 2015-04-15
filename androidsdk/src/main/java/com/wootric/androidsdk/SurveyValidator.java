@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.Date;
 
-import static com.wootric.androidsdk.Constants.DEFAULT;
+import static com.wootric.androidsdk.Constants.NOT_SET;
 
 /**
  * Validates if a survey should be shown to end user
@@ -12,18 +12,18 @@ import static com.wootric.androidsdk.Constants.DEFAULT;
  */
 public class SurveyValidator {
 
-    private OnSurveyValidatedListener onSurveyValidatedListener;
+    OnSurveyValidatedListener onSurveyValidatedListener;
     private final String accountToken;
     private final String endUserEmail;
     private final Context context;
 
     // Optional
     private boolean surveyImmediately   = false;
-    private long createdAt              = DEFAULT;
-    private int dailyResponseCap        = DEFAULT;
-    private int registeredPercent       = DEFAULT;
-    private int visitorPercent          = DEFAULT;
-    private int resurveyThrottle        = DEFAULT;
+    private long createdAt              = NOT_SET;
+    private int dailyResponseCap        = NOT_SET;
+    private int registeredPercent       = NOT_SET;
+    private int visitorPercent          = NOT_SET;
+    private int resurveyThrottle        = NOT_SET;
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 
@@ -64,19 +64,19 @@ public class SurveyValidator {
     void validate() {
         if(needsSurvey()) {
             if(surveyImmediately) {
-                notifySurveyValidated(true);
+                notifyShouldShowSurvey();
             } else {
                 checkEligibility();
             }
         }
     }
 
-    private boolean needsSurvey() {
-        PreferencesUtils prefs = PreferencesUtils.getInstance(context);
+    boolean needsSurvey() {
+        boolean wasRecentlySurveyed = PreferencesUtils.getInstance(context).wasRecentlySurveyed();
 
-        return !prefs.wasRecentlySurveyed() ||
+        return !wasRecentlySurveyed ||
                 surveyImmediately ||
-                createdAt == DEFAULT ||
+                createdAt == NOT_SET ||
                 firstSurveyDelayPassed() ||
                 dayDelayPassed();
     }
@@ -89,30 +89,37 @@ public class SurveyValidator {
     private boolean dayDelayPassed(){
         PreferencesUtils prefs = PreferencesUtils.getInstance(context);
 
+        if(!prefs.isLastSeenSet()) {
+            return false;
+        }
+
         long timeSinceLastSeen = new Date().getTime() - prefs.getLastSeen();
+
         return timeSinceLastSeen >= FIRST_SURVEY;
     }
 
-    private void checkEligibility() {
+    void checkEligibility() {
         CheckEligibilityTask checkEligibilityTask = new CheckEligibilityTask(
                 accountToken, endUserEmail, dailyResponseCap,
                 registeredPercent, visitorPercent, resurveyThrottle) {
             @Override
             protected void onPostExecute(Boolean eligible) {
-                notifySurveyValidated(eligible);
+                if(eligible) {
+                    notifyShouldShowSurvey();
+                }
             }
         };
 
         checkEligibilityTask.execute();
     }
 
-    private void notifySurveyValidated(boolean shouldShowSurvey) {
+    void notifyShouldShowSurvey() {
         if(onSurveyValidatedListener != null) {
-            onSurveyValidatedListener.onSurveyValidated(shouldShowSurvey);
+            onSurveyValidatedListener.onSurveyValidated();
         }
     }
 
     interface OnSurveyValidatedListener {
-        void onSurveyValidated(boolean shouldShowSurvey);
+        void onSurveyValidated();
     }
 }

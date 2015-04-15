@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle" >
+            <size android:height="48dp"/>
+            <corners android:radius="24dp" />
+
+            <solid android:color="@color/white"/>
+            <stroke android:color="@color/survey_seek_bar_checked" android:width="4dp"/>
+        </shape>
+    </item>
+</selector>

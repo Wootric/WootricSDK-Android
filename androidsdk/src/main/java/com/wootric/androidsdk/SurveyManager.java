@@ -3,6 +3,15 @@ package com.wootric.androidsdk;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.Handler;
+import android.view.View;
+import android.view.ViewTreeObserver;
+
+import java.io.File;
+import java.util.Date;
 
 /**
  * Created by maciejwitowski on 4/10/15.
@@ -62,25 +71,84 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener 
 
     public void survey() {
         updateLastSeen();
+        setupSurveyValidator();
+    }
 
+    void setupSurveyValidator() {
         surveyValidator.setOnSurveyValidatedListener(this);
         surveyValidator.validate();
     }
 
-    private void updateLastSeen() {
+    void updateLastSeen() {
         PreferencesUtils prefs = PreferencesUtils.getInstance(context);
 
         if(!prefs.wasRecentlyLastSeen()) {
-            prefs.setLastSeenNow();
+            prefs.setLastSeen(new Date().getTime());
         }
     }
 
     @Override
-    public void onSurveyValidated(boolean shouldShowSurvey) {
-        if(shouldShowSurvey) {
+    public void onSurveyValidated() {
+        final View view = context.findViewById(android.R.id.content);
+        view.getViewTreeObserver().addOnPreDrawListener(startSurveyBeforeDrawListener(view));
+    }
+
+    private ViewTreeObserver.OnPreDrawListener startSurveyBeforeDrawListener(final View view) {
+        return new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                ViewTreeObserver observer = view.getViewTreeObserver();
+                if(observer != null) {
+                    observer.removeOnPreDrawListener(this);
+                }
+                startSurveyWithDelay();
+
+                return true;
+            }
+        };
+    }
+
+    private void startSurveyWithDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final Bitmap screenshot = ImageUtils.takeActivityScreenshot(context, 4);
+                new ScreenshotProcessor(context).execute(screenshot);
+            }
+        }, 0); // TODO think what delay to add on prod
+    }
+
+
+    private static class ScreenshotProcessor extends AsyncTask<Bitmap, Void, String> {
+
+        private Context context;
+
+        public ScreenshotProcessor(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(Bitmap... params) {
+            Bitmap blurredImage = Blur.blur(context, params[0], 8);
+            File file = new File(Environment.getExternalStorageDirectory(), "survey_background.png");
+            ImageUtils.imageToFile(blurredImage, file);
+
+            return file.getAbsolutePath();
+        }
+
+        @Override
+        protected void onPostExecute(String filePath) {
+            startSurveyActivity(filePath);
+        }
+
+        private void startSurveyActivity(String filePath) {
             Intent surveyActivity = new Intent(context, SurveyActivity.class);
+            surveyActivity.putExtra(SurveyActivity.EXTRA_FILE_PATH, filePath);
             context.startActivity(surveyActivity);
-            context.overridePendingTransition(0,0);
+
+            if(context instanceof Activity) {
+                ((Activity)context).overridePendingTransition(0,0);
+            }
         }
     }
 }

@@ -5,15 +5,17 @@ import android.content.SharedPreferences;
 
 import java.util.Date;
 
+import static com.wootric.androidsdk.Constants.NOT_SET;
+
 /**
  * Created by maciejwitowski on 4/10/15.
  */
 public class PreferencesUtils {
 
-    private static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
+    static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
 
-    private static final String KEY_LAST_SEEN = "last_seen";
-    private static final String KEY_LAST_SURVEYED = "surveyed";
+    static final String KEY_LAST_SEEN = "last_seen";
+    static final String KEY_LAST_SURVEYED = "surveyed";
 
     private static PreferencesUtils singleton = null;
 
@@ -48,9 +50,9 @@ public class PreferencesUtils {
     }
 
     private boolean isRecentTime(String key) {
-        long eventTime = prefs().getLong(key, -1);
+        long eventTime = prefs().getLong(key, NOT_SET);
 
-        if(eventTime == -1) {
+        if(eventTime == NOT_SET) {
             return false;
         }
 
@@ -59,10 +61,18 @@ public class PreferencesUtils {
     }
 
     long getLastSeen() {
-        return prefs().getLong(KEY_LAST_SEEN, 0);
+        return prefs().getLong(KEY_LAST_SEEN, NOT_SET);
     }
 
-    void setLastSeenNow() {
-        prefs().edit().putLong(KEY_LAST_SEEN, new Date().getTime()).apply();
+    boolean isLastSeenSet() {
+        return prefs().getLong(KEY_LAST_SEEN, NOT_SET) != NOT_SET;
+    }
+
+    void setLastSeen(long lastSeen) {
+        prefs().edit().putLong(KEY_LAST_SEEN, lastSeen).apply();
+    }
+
+    void setLastSurveyed(long lastSurveyed) {
+        prefs().edit().putLong(KEY_LAST_SURVEYED, lastSurveyed).apply();
     }
 }

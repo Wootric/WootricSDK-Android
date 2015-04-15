@@ -1,12 +1,68 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/survey_layout"
+    android:weightSum="2"
+    android:gravity="bottom"
     tools:context="com.wootric.androidsdk.SurveyActivity">
 
-    <TextView android:text="Survey!!!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/survey_modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="24dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_survey_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/survey_question_text"
+            android:text="@string/default_survey_question"
+            android:gravity="center"
+            android:layout_margin="16dp"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/seek_bar_container"
+            android:layout_below="@+id/tv_survey_question">
+
+            <com.wootric.androidsdk.SurveySeekBar
+                android:layout_centerHorizontal="true"
+                android:id="@+id/seek_bar_survey"
+                android:layout_centerInParent="true"
+                android:progressDrawable="@drawable/survey_seek_bar"
+                android:thumb="@drawable/survey_seek_bar_thumb"
+                android:splitTrack="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="0dp"
+                android:thumbOffset="-4dp"/>
+
+            <LinearLayout
+                android:id="@+id/grades_layout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"/>
+
+        </RelativeLayout>
+
+
+        <Button
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/seek_bar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColor="@color/submit"
+            android:text="@string/submit"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

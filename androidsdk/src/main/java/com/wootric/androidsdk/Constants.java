@@ -8,7 +8,7 @@ public class Constants {
     static final String ELIGIBILITY_URL =
             "http://wootric-eligibility.herokuapp.com/eligible.json";
 
-    static final int DEFAULT = -1;
+    static final int NOT_SET = -1;
 
     // Request params
     static final String PARAM_ACCOUNT_TOKEN         = "account_token";
