@@ -28,42 +28,5 @@ public class ImageUtils {
         view.setDrawingCacheEnabled(false);
         return screenshot;
     }
-
-    public static void imageToFile(Bitmap image, File file) {
-        if(image == null || file == null) {
-            return;
-        }
-
-        FileOutputStream outputStream = null;
-
-        try {
-            outputStream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static Bitmap fileToImage(File file) {
-        if(file.exists()) {
-            try {
-                return BitmapFactory.decodeStream(new FileInputStream(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
 }
 

@@ -1,16 +1,14 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import java.io.File;
 import java.util.Date;
 
 /**
@@ -20,6 +18,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener 
 
     private final Activity context;
     private final SurveyValidator surveyValidator;
+    private WootricCustomMessage customMessage;
 
     // Mandatory
     private final String endUserEmail;
@@ -69,6 +68,11 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener 
         return this;
     }
 
+    public SurveyManager customMessage(WootricCustomMessage customMessage) {
+        this.customMessage = customMessage;
+        return this;
+    }
+
     public void survey() {
         updateLastSeen();
         setupSurveyValidator();
@@ -112,43 +116,14 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                final Bitmap screenshot = ImageUtils.takeActivityScreenshot(context, 4);
-                new ScreenshotProcessor(context).execute(screenshot);
+                Bitmap screenshot = ImageUtils.takeActivityScreenshot(context, 4);
+                Bitmap blurredScreenshot = Blur.blur(context, screenshot, 8);
+                Intent surveyActivity = new Intent(context, SurveyActivity.class);
+                surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, blurredScreenshot);
+                surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, customMessage);
+                context.startActivity(surveyActivity);
+                context.overridePendingTransition(0,0);
             }
-        }, 0); // TODO think what delay to add on prod
-    }
-
-
-    private static class ScreenshotProcessor extends AsyncTask<Bitmap, Void, String> {
-
-        private Context context;
-
-        public ScreenshotProcessor(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected String doInBackground(Bitmap... params) {
-            Bitmap blurredImage = Blur.blur(context, params[0], 8);
-            File file = new File(Environment.getExternalStorageDirectory(), "survey_background.png");
-            ImageUtils.imageToFile(blurredImage, file);
-
-            return file.getAbsolutePath();
-        }
-
-        @Override
-        protected void onPostExecute(String filePath) {
-            startSurveyActivity(filePath);
-        }
-
-        private void startSurveyActivity(String filePath) {
-            Intent surveyActivity = new Intent(context, SurveyActivity.class);
-            surveyActivity.putExtra(SurveyActivity.EXTRA_FILE_PATH, filePath);
-            context.startActivity(surveyActivity);
-
-            if(context instanceof Activity) {
-                ((Activity)context).overridePendingTransition(0,0);
-            }
-        }
+        }, 0);
     }
 }

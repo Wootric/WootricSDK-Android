@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="white">#ffffff</color>
-
-    <color name="survey_seek_bar_checked">#efefef</color>
-    <color name="grade_values">#9b9b9b</color>
-    <color name="submit">#91c91d</color>
-    <color name="grade_thumb">#ec6895</color>
-</resources>

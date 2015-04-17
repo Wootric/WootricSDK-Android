@@ -21,7 +21,7 @@ public class PreferencesUtils {
 
     private final Context context;
 
-    static PreferencesUtils getInstance(Context context) {
+    public static PreferencesUtils getInstance(Context context) {
        if(singleton == null) {
            singleton = new PreferencesUtils(context);
        }
@@ -41,7 +41,7 @@ public class PreferencesUtils {
         return context.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    boolean wasRecentlyLastSeen() {
+    public boolean wasRecentlyLastSeen() {
         return isRecentTime(KEY_LAST_SEEN);
     }
 
@@ -60,15 +60,15 @@ public class PreferencesUtils {
         return new Date().getTime() - eventTime < ninetyDays;
     }
 
-    long getLastSeen() {
+    public long getLastSeen() {
         return prefs().getLong(KEY_LAST_SEEN, NOT_SET);
     }
 
-    boolean isLastSeenSet() {
+    public boolean isLastSeenSet() {
         return prefs().getLong(KEY_LAST_SEEN, NOT_SET) != NOT_SET;
     }
 
-    void setLastSeen(long lastSeen) {
+    public void setLastSeen(long lastSeen) {
         prefs().edit().putLong(KEY_LAST_SEEN, lastSeen).apply();
     }
 

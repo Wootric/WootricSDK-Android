@@ -6,75 +6,58 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeSelectedListener {
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+    public static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
+    public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
 
-public class SurveyActivity extends Activity implements SurveySeekBar.OnProgressChangedListener{
-
-    public static final String EXTRA_FILE_PATH = "com.wootric.androidsdk.extra.background_file";
-    public static final String STATE_FILE_PATH = "com.wootric.androidsdk.state.background_file";
     public static final String STATE_PENDING_MODAL_TRANSITION = "com.wootric.androidsdk.state.pending_modal_transition";
 
     private LinearLayout mContainer;
     private RelativeLayout mSurveyModal;
-    private SurveySeekBar mSurveySeekBar;
+    private SurveyRatingBar mSurveyRatingBar;
+    private TextView mTvSurveyQuestion;
 
-    private String mBackgroundFilePath;
+    private Bitmap mBackgroundImage;
     private boolean mPendingModalTransition = true;
     private boolean mPendingModalTransitionOut = true;
 
-    private List<TextView> mGradesTextViews = new ArrayList<>();
+    private WootricCustomMessage mCustomMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
 
-        mContainer = (LinearLayout) findViewById(R.id.survey_layout);
-        mSurveyModal = (RelativeLayout) mContainer.findViewById(R.id.survey_modal);
-        mSurveySeekBar = (SurveySeekBar) mSurveyModal.findViewById(R.id.seek_bar_survey);
+        mContainer          = (LinearLayout) findViewById(R.id.survey_layout);
+        mSurveyModal        = (RelativeLayout) mContainer.findViewById(R.id.survey_modal);
+        mTvSurveyQuestion   = (TextView) mSurveyModal.findViewById(R.id.tv_survey_question);
+        mSurveyRatingBar    = (SurveyRatingBar) mSurveyModal.findViewById(R.id.survey_rating_bar);
 
-        mSurveySeekBar.setOnProgressChangedListener(this);
+        mSurveyRatingBar.setOnGradeSelectedListener(this);
+
         setupBackground(savedInstanceState);
         slideInSurveyModal(savedInstanceState);
-        initGradesLabels();
+        setupSurveyQuestion();
     }
 
     private void setupBackground(Bundle savedInstanceState) {
         if(savedInstanceState == null) {
-            mBackgroundFilePath = getIntent().getStringExtra(EXTRA_FILE_PATH);
+            mBackgroundImage = getIntent().getParcelableExtra(ARG_BACKGROUND_IMAGE);
+            mCustomMessage   = getIntent().getParcelableExtra(ARG_CUSTOM_MESSAGE);
         } else {
-            mBackgroundFilePath = savedInstanceState.getString(STATE_FILE_PATH);
+            mBackgroundImage = savedInstanceState.getParcelable(ARG_BACKGROUND_IMAGE);
+            mCustomMessage   = savedInstanceState.getParcelable(ARG_CUSTOM_MESSAGE);
         }
 
-        if(mBackgroundFilePath != null) {
-            setBackgroundFromFile();
-        }
-    }
-
-    private void setBackgroundFromFile() {
-        File file = new File(mBackgroundFilePath);
-
-        if(file.exists()) {
-            final Bitmap bitmap = ImageUtils.fileToImage(file);
-
-            if(bitmap != null) {
-                mContainer.setBackground(new BitmapDrawable(getResources(), bitmap));
-            }
+        if(mBackgroundImage != null) {
+            mContainer.setBackground(new BitmapDrawable(getResources(), mBackgroundImage));
         }
     }
 
@@ -96,6 +79,19 @@ public class SurveyActivity extends Activity implements SurveySeekBar.OnProgress
         }
     }
 
+    private void setupSurveyQuestion() {
+        String surveyQuestion = getString(R.string.default_survey_question_prefix) + " ";
+
+        if(mCustomMessage == null || mCustomMessage.getRecommendTo().isEmpty()) {
+            surveyQuestion += getString(R.string.default_survey_question_recommend_target);
+        } else {
+            surveyQuestion += mCustomMessage.getRecommendTo();
+        }
+
+        surveyQuestion += " ?";
+        mTvSurveyQuestion.setText(surveyQuestion);
+    }
+
     private void slideOutSurveyModal() {
         mSurveyModal.animate()
                 .translationY(ScreenUtils.getScreenHeight(this))
@@ -111,23 +107,6 @@ public class SurveyActivity extends Activity implements SurveySeekBar.OnProgress
                 .start();
     }
 
-    private void initGradesLabels() {
-        LinearLayout gradesLayout = (LinearLayout)mSurveyModal.findViewById(R.id.grades_layout);
-
-        for(int i = 0; i<=10; i++) {
-            TextView label = new TextView(this);
-            label.setText(String.valueOf(i));
-            label.setTextColor(getResources().getColor(R.color.grade_values));
-            label.setWidth(0);
-            label.setGravity(Gravity.CENTER);
-            label.setBackground(null);
-            label.setLayoutParams(new TableLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-
-            mGradesTextViews.add(label);
-            gradesLayout.addView(label);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -140,23 +119,13 @@ public class SurveyActivity extends Activity implements SurveySeekBar.OnProgress
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(STATE_FILE_PATH, mBackgroundFilePath);
+        outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
+        outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
         outState.putBoolean(STATE_PENDING_MODAL_TRANSITION, mPendingModalTransition);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onProgressChanged(int value) {
-        if(mGradesTextViews == null)
-            return;
-
-        for(int i = 0; i < mGradesTextViews.size(); i++) {
-            TextView currentLabel = mGradesTextViews.get(i);
-            if(i == value) {
-                currentLabel.setTextColor(getResources().getColor(R.color.white));
-            } else {
-                currentLabel.setTextColor(getResources().getColor(R.color.grade_values));
-            }
-        }
+    public void onGradeSelected(GradeView view) {
     }
 }

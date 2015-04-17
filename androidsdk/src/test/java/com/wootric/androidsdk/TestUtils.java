@@ -1,8 +1,5 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
-
-import org.junit.Test;
 import org.robolectric.Robolectric;
 
 /**
