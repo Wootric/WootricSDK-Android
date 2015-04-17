@@ -2,12 +2,19 @@ package com.wootric.androidsdk;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +30,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
     private RelativeLayout mSurveyModal;
     private SurveyRatingBar mSurveyRatingBar;
     private TextView mTvSurveyQuestion;
+    private Button mBtnSubmit;
 
     private Bitmap mBackgroundImage;
     private boolean mPendingModalTransition = true;
@@ -37,8 +45,9 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
         mContainer          = (LinearLayout) findViewById(R.id.survey_layout);
         mSurveyModal        = (RelativeLayout) mContainer.findViewById(R.id.survey_modal);
-        mTvSurveyQuestion   = (TextView) mSurveyModal.findViewById(R.id.tv_survey_question);
-        mSurveyRatingBar    = (SurveyRatingBar) mSurveyModal.findViewById(R.id.survey_rating_bar);
+        mTvSurveyQuestion   = (TextView) mContainer.findViewById(R.id.tv_survey_question);
+        mSurveyRatingBar    = (SurveyRatingBar) mContainer.findViewById(R.id.survey_rating_bar);
+        mBtnSubmit          = (Button) mContainer.findViewById(R.id.btn_submit);
 
         mSurveyRatingBar.setOnGradeSelectedListener(this);
 
@@ -118,7 +127,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
         outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
         outState.putBoolean(STATE_PENDING_MODAL_TRANSITION, mPendingModalTransition);
@@ -127,5 +136,18 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
     @Override
     public void onGradeSelected(GradeView view) {
+        enableSubmit();
+    }
+
+    private void enableSubmit() {
+        if(mBtnSubmit.isEnabled()) {
+            return;
+        }
+
+        mBtnSubmit.setEnabled(true);
+        mBtnSubmit.setTextColor(getResources().getColor(R.color.submit));
+
+        Drawable icSubmit = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_submit, null);
+        mBtnSubmit.setCompoundDrawablesWithIntrinsicBounds(icSubmit, null, null, null);
     }
 }

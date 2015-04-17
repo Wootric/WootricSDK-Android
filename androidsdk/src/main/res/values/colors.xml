@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffff</color>
+
+    <color name="gray">#efefef</color>
+    <color name="dark_gray">#9b9b9b</color>
+    <color name="submit">#91c91d</color>
+    <color name="pink">#ec6895</color>
+    <color name="dark">#000000</color>
+</resources>

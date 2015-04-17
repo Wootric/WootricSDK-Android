@@ -4,7 +4,9 @@
 
     <string name="default_survey_question_prefix">How likely are you to recommend us to</string>
     <string name="default_survey_question_recommend_target">a friend or coworker</string>
-
     <string name="submit">Submit</string>
+    <string name="not_at_all_likely">Not at all likely</string>
+    <string name="extremely_likely">Extremely likely</string>
+    <string name="powered_by">powered by wootric</string>
 
 </resources>
