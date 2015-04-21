@@ -1,5 +1,7 @@
 package com.wootric.androidsdk;
 
+import com.wootric.androidsdk.utils.PreferencesUtils;
+
 import org.robolectric.Robolectric;
 
 /**

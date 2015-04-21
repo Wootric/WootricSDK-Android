@@ -1,4 +1,4 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+
+import com.wootric.androidsdk.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,16 +94,16 @@ public class SurveyRatingBar extends LinearLayout {
         setActiveGrades();
     }
 
-    private void setSelectedGrade(GradeView grade) {
+    public void setSelectedGrade(int selectedGrade) {
         if(mCurrentGrade != null) {
             mCurrentGrade.activate(true);
         }
 
-        mCurrentGrade = grade;
+        mCurrentGrade = mGradesViews.get(selectedGrade);
         mCurrentGrade.select();
 
         if(mOnGradeSelectedListener != null) {
-            mOnGradeSelectedListener.onGradeSelected(grade);
+            mOnGradeSelectedListener.onGradeSelected(selectedGrade);
         }
     }
 
@@ -128,7 +130,7 @@ public class SurveyRatingBar extends LinearLayout {
                 GradeView selectedGrade = getGradeViewForPosition(event.getX());
 
                 if(selectedGrade != null && selectedGrade != mCurrentGrade) {
-                    setSelectedGrade(selectedGrade);
+                    setSelectedGrade(mGradesViews.indexOf(selectedGrade));
                 }
         }
         return true;
@@ -139,6 +141,6 @@ public class SurveyRatingBar extends LinearLayout {
     }
 
     public interface OnGradeSelectedListener {
-        void onGradeSelected(GradeView view);
+        void onGradeSelected(int gradeValue);
     }
 }

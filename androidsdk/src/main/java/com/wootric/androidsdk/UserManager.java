@@ -1,47 +1,32 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
-import android.content.Context;
+
+import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.User;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by maciejwitowski on 4/10/15.
  */
 public class UserManager {
 
-    private final Context context;
-    private final String clientId;
-    private final String clientSecret;
-    private final String accountToken;
+    private final WeakReference<Activity> weakActivity;
+    private final User user;
 
-    UserManager(Context context, String clientId, String clientSecret, String accountToken) {
-        if(context == null || clientId == null || clientSecret == null || accountToken == null) {
-            throw new IllegalArgumentException("Client id, client secret and account token must not be null.");
+    UserManager(Activity activity, User user) {
+        if(activity == null || user == null) {
+            throw new IllegalArgumentException("Activity and user must not be null.");
         }
 
-        this.context = context;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.accountToken = accountToken;
-    }
-
-    Context getContext() {
-        return context;
-    }
-
-    String getClientId() {
-        return clientId;
-    }
-
-    String getClientSecret() {
-        return clientSecret;
-    }
-
-    String getAccountToken() {
-        return accountToken;
+        this.weakActivity = new WeakReference<Activity>(activity);
+        this.user = user;
     }
 
     public SurveyManager endUser(String endUserEmail, String originUrl) {
-        SurveyValidator surveyValidator = new SurveyValidator(context, accountToken, endUserEmail);
-        return new SurveyManager((Activity)context, surveyValidator, endUserEmail, originUrl);
+        EndUser endUser = new EndUser(endUserEmail);
+        SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
+        return new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
     }
 }

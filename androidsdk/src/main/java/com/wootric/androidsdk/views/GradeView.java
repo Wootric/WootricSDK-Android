@@ -1,12 +1,13 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.views;
 
 import android.content.Context;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.wootric.androidsdk.R;
 
 /**
  * Created by maciejwitowski on 4/16/15.

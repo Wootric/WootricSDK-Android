@@ -1,10 +1,17 @@
 package com.wootric.androidsdk;
 
+import android.app.Activity;
 import android.content.Context;
 
+import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.tasks.CheckEligibilityTask;
+import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import java.lang.ref.WeakReference;
 import java.util.Date;
 
-import static com.wootric.androidsdk.Constants.NOT_SET;
+import static com.wootric.androidsdk.utils.Constants.NOT_SET;
 
 /**
  * Validates if a survey should be shown to end user
@@ -12,14 +19,13 @@ import static com.wootric.androidsdk.Constants.NOT_SET;
  */
 public class SurveyValidator {
 
-    OnSurveyValidatedListener onSurveyValidatedListener;
-    private final String accountToken;
-    private final String endUserEmail;
-    private final Context context;
+    private OnSurveyValidatedListener onSurveyValidatedListener;
+    private final User user;
+    private final EndUser endUser;
+    private final WeakReference<Activity> weakActivity;
 
     // Optional
     private boolean surveyImmediately   = false;
-    private long createdAt              = NOT_SET;
     private int dailyResponseCap        = NOT_SET;
     private int registeredPercent       = NOT_SET;
     private int visitorPercent          = NOT_SET;
@@ -27,18 +33,14 @@ public class SurveyValidator {
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 
-    SurveyValidator(Context context, String accountToken, String endUserEmail) {
-        this.context = context;
-        this.accountToken = accountToken;
-        this.endUserEmail = endUserEmail;
+    SurveyValidator(WeakReference<Activity> context, User user, EndUser endUser) {
+        this.weakActivity = context;
+        this.user = user;
+        this.endUser = endUser;
     }
 
     void setSurveyImmediately(boolean surveyImmediately) {
         this.surveyImmediately = surveyImmediately;
-    }
-
-    void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
     }
 
     void setDailyResponseCap(int dailyResponseCap) {
@@ -62,7 +64,13 @@ public class SurveyValidator {
     }
 
     void validate() {
-        if(needsSurvey()) {
+        final Context context = getContext();
+
+        if(context == null) {
+            return;
+        }
+
+        if(needsSurvey(context)) {
             if(surveyImmediately) {
                 notifyShouldShowSurvey();
             } else {
@@ -71,22 +79,26 @@ public class SurveyValidator {
         }
     }
 
-    boolean needsSurvey() {
+    private Context getContext() {
+        return (weakActivity != null ? weakActivity.get() : null);
+    }
+
+    boolean needsSurvey(Context context) {
         boolean wasRecentlySurveyed = PreferencesUtils.getInstance(context).wasRecentlySurveyed();
 
         return !wasRecentlySurveyed ||
                 surveyImmediately ||
-                createdAt == NOT_SET ||
+                endUser.getCreatedAt() == NOT_SET ||
                 firstSurveyDelayPassed() ||
-                dayDelayPassed();
+                dayDelayPassed(context);
     }
 
     private boolean firstSurveyDelayPassed() {
-        long userAge = new Date().getTime() - createdAt*1000;
+        long userAge = new Date().getTime() - endUser.getCreatedAt()*1000;
         return userAge >= FIRST_SURVEY;
     }
 
-    private boolean dayDelayPassed(){
+    private boolean dayDelayPassed(Context context){
         PreferencesUtils prefs = PreferencesUtils.getInstance(context);
 
         if(!prefs.isLastSeenSet()) {
@@ -100,7 +112,7 @@ public class SurveyValidator {
 
     void checkEligibility() {
         CheckEligibilityTask checkEligibilityTask = new CheckEligibilityTask(
-                accountToken, endUserEmail, dailyResponseCap,
+                user.getAccountToken(), endUser, dailyResponseCap,
                 registeredPercent, visitorPercent, resurveyThrottle) {
             @Override
             protected void onPostExecute(Boolean eligible) {

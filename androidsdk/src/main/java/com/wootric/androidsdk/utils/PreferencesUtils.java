@@ -1,21 +1,20 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.Date;
 
-import static com.wootric.androidsdk.Constants.NOT_SET;
+import static com.wootric.androidsdk.utils.Constants.NOT_SET;
 
 /**
  * Created by maciejwitowski on 4/10/15.
  */
 public class PreferencesUtils {
 
-    static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
-
-    static final String KEY_LAST_SEEN = "last_seen";
-    static final String KEY_LAST_SURVEYED = "surveyed";
+    private static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
+    private static final String KEY_LAST_SEEN = "last_seen";
+    private static final String KEY_LAST_SURVEYED = "surveyed";
 
     private static PreferencesUtils singleton = null;
 
@@ -45,7 +44,7 @@ public class PreferencesUtils {
         return isRecentTime(KEY_LAST_SEEN);
     }
 
-    boolean wasRecentlySurveyed() {
+    public boolean wasRecentlySurveyed() {
         return isRecentTime(KEY_LAST_SURVEYED);
     }
 
@@ -72,7 +71,7 @@ public class PreferencesUtils {
         prefs().edit().putLong(KEY_LAST_SEEN, lastSeen).apply();
     }
 
-    void setLastSurveyed(long lastSurveyed) {
+    public void setLastSurveyed(long lastSurveyed) {
         prefs().edit().putLong(KEY_LAST_SURVEYED, lastSurveyed).apply();
     }
 }

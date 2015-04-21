@@ -1,4 +1,4 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,8 +12,6 @@ import android.util.Log;
 
 
 public class Blur {
-
-    private static final String TAG = "Blur";
 
     @SuppressLint("NewApi")
     public static Bitmap blur(Context context, Bitmap sentBitmap, int radius) {

@@ -2,6 +2,8 @@ package com.wootric.androidsdk;
 
 import android.content.Intent;
 
+import com.wootric.androidsdk.utils.PreferencesUtils;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

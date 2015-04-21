@@ -1,21 +1,23 @@
 package com.wootric.androidsdk;
 
-import android.content.Context;
+import android.app.Activity;
+
+import com.wootric.androidsdk.objects.User;
 
 /**
  * Created by maciejwitowski on 4/10/15.
  */
 public class Wootric {
 
-    final Context context;
+    private final Activity activity;
 
     static Wootric singleton = null;
 
-    public static Wootric with(Context context) {
+    public static Wootric with(Activity activity) {
         if(singleton == null) {
             synchronized (Wootric.class) {
                 if(singleton == null) {
-                    singleton = new Wootric(context);
+                    singleton = new Wootric(activity);
                 }
             }
         }
@@ -24,13 +26,14 @@ public class Wootric {
     }
 
     public UserManager user(String clientId, String clientSecret, String accountToken) {
-        return new UserManager(context, clientId, clientSecret, accountToken);
+        User user = new User(clientId, clientSecret, accountToken);
+        return new UserManager(activity, user);
     }
 
-    private Wootric(Context context) {
-        if(context == null) {
+    private Wootric(Activity activity) {
+        if(activity == null) {
             throw new IllegalArgumentException("Context must not be null.");
         }
-        this.context = context;
+        this.activity = activity;
     }
 }

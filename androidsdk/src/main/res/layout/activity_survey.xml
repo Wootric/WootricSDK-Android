@@ -1,0 +1,174 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:weakActivity="com.wootric.androidsdk.SurveyActivity"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_survey"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="8dp"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btn_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_close"
+            android:textColor="@color/dark"
+            android:background="@null"
+            android:text="@string/dismiss"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tv_survey_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/survey_question_text"
+                android:text="@string/default_survey_question_prefix"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"/>
+
+            <com.wootric.androidsdk.views.SurveyRatingBar
+                android:id="@+id/survey_rating_bar"
+                android:layout_below="@+id/tv_survey_question"
+                android:layout_marginTop="@dimen/survey_modal_element_margin"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_not_at_all_likely"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/survey_rating_bar"
+                android:layout_width="wrap_content"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/survey_labels_size"
+                android:text="@string/not_at_all_likely"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_extremely_likely"
+                android:layout_alignParentLeft="true"
+                android:text="@string/extremely_likely"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/survey_labels_size"
+                android:layout_below="@id/survey_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_below="@id/survey_rating_bar"
+                android:layout_marginTop="@dimen/survey_modal_element_margin"
+                android:background="@null"
+                android:text="@string/submit"
+                android:textSize="@dimen/survey_question_text"
+                android:enabled="false"
+                android:drawableLeft="@drawable/ic_submit_disabled"
+                android:textColor="@color/gray"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btn_back_to_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back"
+                android:background="@null"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/tv_thank_you_score"
+                android:layout_below="@+id/btn_back_to_rating"
+                android:text="@string/thank_you_score"
+                android:textSize="@dimen/survey_question_text"
+                android:layout_width="match_parent"
+                android:textColor="@color/pink"
+                android:gravity="center"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_thank_you"
+                android:text="@string/thank_you"
+                android:textSize="@dimen/survey_question_text"
+                android:textColor="@color/submit"
+                android:layout_below="@id/tv_thank_you_score"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <EditText
+                android:id="@+id/et_feedback"
+                android:layout_below="@+id/tv_thank_you"
+                android:layout_marginTop="@dimen/survey_modal_element_margin"
+                android:background="@drawable/survey_feedback"
+                android:hint="@string/feedback_placeholder"
+                android:textCursorDrawable="@drawable/feedback_cursor"
+                android:textSize="@dimen/survey_question_text"
+                android:gravity="top"
+                android:minLines="3"
+                android:textColorHint="@color/dark_gray"
+                android:padding="10dp"
+                android:inputType="textMultiLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_send_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_below="@id/et_feedback"
+                android:layout_marginTop="@dimen/survey_modal_element_margin"
+                android:layout_marginBottom="@dimen/survey_modal_element_margin"
+                android:background="@null"
+                android:text="@string/send_feedback"
+                android:textSize="@dimen/survey_question_text"
+                android:enabled="false"
+                android:drawableLeft="@drawable/ic_send_arrow_disabled"
+                android:textColor="@color/gray"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/ic_heart"
+            android:id="@+id/iv_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/powered_by"
+            android:layout_marginLeft="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/iv_logo"
+            android:layout_toEndOf="@+id/iv_logo" />
+
+    </RelativeLayout>
+
+</ScrollView>

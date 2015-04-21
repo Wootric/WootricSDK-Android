@@ -1,4 +1,4 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -44,8 +44,7 @@ public class WootricCustomMessage implements Parcelable {
         dest.writeString(this.placeholderText);
     }
 
-    public WootricCustomMessage() {
-    }
+    private WootricCustomMessage() {}
 
     private WootricCustomMessage(Parcel in) {
         this.recommendTo = in.readString();

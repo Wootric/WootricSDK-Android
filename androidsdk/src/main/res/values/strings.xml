@@ -5,8 +5,14 @@
     <string name="default_survey_question_prefix">How likely are you to recommend us to</string>
     <string name="default_survey_question_recommend_target">a friend or coworker</string>
     <string name="submit">Submit</string>
+    <string name="send_feedback">Send Feedback</string>
     <string name="not_at_all_likely">Not at all likely</string>
     <string name="extremely_likely">Extremely likely</string>
     <string name="powered_by">powered by wootric</string>
+    <string name="thank_you">Thank you! Care to tell us why?</string>
+    <string name="thank_you_score">You gave us</string>
+    <string name="feedback_placeholder">Help us by explaining your score.</string>
+    <string name="dismiss">Dismiss</string>
+
 
 </resources>

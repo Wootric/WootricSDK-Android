@@ -2,58 +2,203 @@ package com.wootric.androidsdk;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
+import com.wootric.androidsdk.tasks.CreateDeclineTask;
+import com.wootric.androidsdk.tasks.CreateResponseTask;
+import com.wootric.androidsdk.utils.PreferencesUtils;
+import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.views.SurveyRatingBar;
+
+import java.util.Date;
 
 public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeSelectedListener {
 
-    public static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
-    public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
+    private static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
+    private static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
+    private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
+    private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
+    private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
+    private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
 
-    public static final String STATE_PENDING_MODAL_TRANSITION = "com.wootric.androidsdk.state.pending_modal_transition";
+    private static final String STATE_SURVEY_VIEW = "com.wootric.androidsdk.state.survey_layout";
+    private static final String STATE_RESPONSE_SENT = "com.wootric.androidsdk.state.response_sent";
+    private static final String STATE_SELECTED_GRADE = "com.wootric.androidsdk.state.selected_grade";
 
-    private LinearLayout mContainer;
-    private RelativeLayout mSurveyModal;
+    private static final int STATE_RATING = 1;
+    private static final int STATE_FEEDBACK = 2;
+    private static final int STATE_RATING_BACK = 3;
+
+    private int mCurrentState;
+
+    private EndUser mEndUser;
+    private User mUser;
+    private String mOriginUrl;
+    private String mAccessToken;
+
+    private ScrollView mContainer;
+    private RelativeLayout mRlSurvey;
+
+    private RelativeLayout mRlRating;
+    private RelativeLayout mRlFeedback;
+    private ImageButton mBtnDismiss;
+
     private SurveyRatingBar mSurveyRatingBar;
     private TextView mTvSurveyQuestion;
     private Button mBtnSubmit;
 
+    private ImageButton mBtnBackToRating;
+    private EditText mEtFeedback;
+    private Button mBtnSendFeedback;
+
     private Bitmap mBackgroundImage;
-    private boolean mPendingModalTransition = true;
-    private boolean mPendingModalTransitionOut = true;
 
     private WootricCustomMessage mCustomMessage;
 
+    private boolean mResponseSent;
+
+    private int mSelectedGrade = -1;
+
+
+    static void start(Context context, Bitmap backgroundImage, String accessToken, User user,
+                      EndUser endUser, String originUrl, WootricCustomMessage customMessage) {
+
+        Intent surveyActivity = new Intent(context, SurveyActivity.class);
+        surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, backgroundImage);
+        surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, customMessage);
+
+        surveyActivity.putExtra(ARG_ACCESS_TOKEN, accessToken);
+        surveyActivity.putExtra(ARG_END_USER, endUser);
+        surveyActivity.putExtra(ARG_USER, user);
+        surveyActivity.putExtra(ARG_ORIGIN_URL, originUrl);
+
+        context.startActivity(surveyActivity);
+
+        if(context instanceof Activity) {
+            ((Activity)context).overridePendingTransition(0, 0);
+        }
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey);
 
-        mContainer          = (LinearLayout) findViewById(R.id.survey_layout);
-        mSurveyModal        = (RelativeLayout) mContainer.findViewById(R.id.survey_modal);
-        mTvSurveyQuestion   = (TextView) mContainer.findViewById(R.id.tv_survey_question);
-        mSurveyRatingBar    = (SurveyRatingBar) mContainer.findViewById(R.id.survey_rating_bar);
-        mBtnSubmit          = (Button) mContainer.findViewById(R.id.btn_submit);
+        mContainer  = (ScrollView) findViewById(R.id.container);
+        mRlSurvey   = (RelativeLayout) mContainer.findViewById(R.id.rl_survey);
+
+        mRlRating   = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_rating);
+        mRlFeedback = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_feedback);
+        mBtnDismiss = (ImageButton) mRlSurvey.findViewById(R.id.btn_dismiss);
+
+        mTvSurveyQuestion   = (TextView) mRlRating.findViewById(R.id.tv_survey_question);
+        mSurveyRatingBar    = (SurveyRatingBar) mRlRating.findViewById(R.id.survey_rating_bar);
+        mBtnSubmit          = (Button) mRlRating.findViewById(R.id.btn_submit);
+
+        mBtnBackToRating    = (ImageButton) mRlFeedback.findViewById(R.id.btn_back_to_rating);
+        mEtFeedback         = (EditText) mRlFeedback.findViewById(R.id.et_feedback);
+        mBtnSendFeedback    = (Button) mRlFeedback.findViewById(R.id.btn_send_feedback);
 
         mSurveyRatingBar.setOnGradeSelectedListener(this);
 
+        setupRequestProperties(savedInstanceState);
         setupBackground(savedInstanceState);
-        slideInSurveyModal(savedInstanceState);
-        setupSurveyQuestion();
+
+        mBtnSubmit.setOnClickListener(submitResponse());
+        mBtnSendFeedback.setOnClickListener(sendFeedback());
+        mBtnDismiss.setOnClickListener(hideSurveyListener());
+        mBtnBackToRating.setOnClickListener(goBackToRating());
+
+        setupFeedbackForm();
+        mTvSurveyQuestion.setText(getSurveyQuestion());
+
+        setupSurveyView(savedInstanceState);
+        setupSelectedGrade(savedInstanceState);
+    }
+
+
+    private void setupRequestProperties(Bundle savedInstanceState) {
+        if(savedInstanceState == null) {
+            mUser = getIntent().getParcelableExtra(ARG_USER);
+            mEndUser = getIntent().getParcelableExtra(ARG_END_USER);
+            mOriginUrl = getIntent().getStringExtra(ARG_ORIGIN_URL);
+        } else {
+            mUser = savedInstanceState.getParcelable(ARG_USER);
+            mEndUser = savedInstanceState.getParcelable(ARG_END_USER);
+            mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
+            mResponseSent = savedInstanceState.getBoolean(STATE_RESPONSE_SENT);
+        }
+    }
+
+    private void setupSelectedGrade(Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            mSelectedGrade = savedInstanceState.getInt(STATE_SELECTED_GRADE);
+            mSurveyRatingBar.setSelectedGrade(mSelectedGrade);
+
+        }
+    }
+
+    private View.OnClickListener hideSurveyListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishSurvey();
+            }
+        };
+    }
+
+    private void setupFeedbackForm() {
+        mEtFeedback.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 0) {
+                    mBtnSendFeedback.setEnabled(true);
+                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.submit));
+
+                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_arrow, null);
+                    mBtnSendFeedback.setCompoundDrawablesWithIntrinsicBounds(icFeedback, null, null, null);
+                } else {
+                    mBtnSendFeedback.setEnabled(false);
+                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.gray));
+
+                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_arrow_disabled, null);
+                    mBtnSendFeedback.setCompoundDrawablesWithIntrinsicBounds(icFeedback, null, null, null);
+                }
+            }
+        });
     }
 
     private void setupBackground(Bundle savedInstanceState) {
@@ -70,25 +215,115 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
         }
     }
 
-    private void slideInSurveyModal(Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
-            mPendingModalTransition = savedInstanceState.getBoolean(STATE_PENDING_MODAL_TRANSITION, false);
+    private void setupSurveyView(Bundle savedInstanceState) {
+        int state;
+        boolean animate = false;
+
+        if (savedInstanceState != null) {
+            state = savedInstanceState.getInt(STATE_SURVEY_VIEW);
+        } else {
+            state = STATE_RATING;
+            animate = true;
         }
 
-        if(mPendingModalTransition) {
-            mSurveyModal.setTranslationY(ScreenUtils.getScreenHeight(this));
-            mSurveyModal.animate()
-                    .translationY(0)
-                    .setInterpolator(new DecelerateInterpolator(3.f))
-                    .setDuration(700)
-                    .setStartDelay(300)
-                    .start();
+        updateState(state);
 
-            mPendingModalTransition = false;
+        if(animate) {
+            slideInSurvey();
         }
     }
 
-    private void setupSurveyQuestion() {
+    private View.OnClickListener submitResponse() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResponseRequest(false);
+                updateState(STATE_FEEDBACK);
+            }
+        };
+    }
+
+    private View.OnClickListener sendFeedback() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResponseRequest(true);
+                finishSurvey();
+            }
+        };
+    }
+
+    private void sendResponseRequest(boolean sendText) {
+        String score = String.valueOf(mSelectedGrade);
+        String text = (sendText ? mEtFeedback.getText().toString() : "");
+
+        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, score, text)
+                .execute();
+
+        touchLastSurveyed();
+
+        mResponseSent = true;
+    }
+
+    private void sendDeclineRequest() {
+        new CreateDeclineTask(mAccessToken, mEndUser).execute();
+        touchLastSurveyed();
+    }
+
+    private void updateState(int state) {
+        if(mCurrentState == state) {
+            return;
+        }
+
+        mCurrentState = state;
+
+        if(STATE_RATING == mCurrentState) {
+            mRlRating.setVisibility(View.VISIBLE);
+            mRlFeedback.setVisibility(View.GONE);
+        } else if(STATE_FEEDBACK == mCurrentState) {
+            mRlRating.setVisibility(View.GONE);
+            mRlFeedback.setVisibility(View.VISIBLE);
+            showKeyboard(true);
+        } else if(STATE_RATING_BACK == mCurrentState) {
+            mRlRating.setVisibility(View.VISIBLE);
+            mRlFeedback.setVisibility(View.GONE);
+            showKeyboard(false);
+        }
+
+    }
+
+    private void showKeyboard(boolean showKeyboard) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(showKeyboard) {
+            mEtFeedback.requestFocus();
+            imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            mEtFeedback.clearFocus();
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    private void slideInSurvey() {
+        mRlSurvey.setTranslationY(ScreenUtils.getScreenHeight(this));
+        mRlSurvey.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(700)
+                .setStartDelay(300)
+                .start();
+    }
+
+    private View.OnClickListener goBackToRating() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateState(STATE_RATING_BACK);
+            }
+        };
+    }
+
+    private String getSurveyQuestion() {
         String surveyQuestion = getString(R.string.default_survey_question_prefix) + " ";
 
         if(mCustomMessage == null || mCustomMessage.getRecommendTo().isEmpty()) {
@@ -98,19 +333,22 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
         }
 
         surveyQuestion += " ?";
-        mTvSurveyQuestion.setText(surveyQuestion);
+        return surveyQuestion;
     }
 
-    private void slideOutSurveyModal() {
-        mSurveyModal.animate()
+    private void finishSurvey() {
+        if(!mResponseSent) {
+            sendDeclineRequest();
+        }
+
+        mRlSurvey.animate()
                 .translationY(ScreenUtils.getScreenHeight(this))
                 .setInterpolator(new AccelerateInterpolator(3.f))
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        mPendingModalTransitionOut = false;
-                        onBackPressed();
+                        finish();
                     }
                 })
                 .start();
@@ -119,8 +357,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
     @Override
     public void onBackPressed() {
-        if(mPendingModalTransitionOut) {
-            slideOutSurveyModal();
+        if(STATE_FEEDBACK == mCurrentState) {
+            updateState(STATE_RATING_BACK);
         } else {
             super.onBackPressed();
         }
@@ -130,12 +368,20 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
         outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
-        outState.putBoolean(STATE_PENDING_MODAL_TRANSITION, mPendingModalTransition);
+        outState.putInt(STATE_SURVEY_VIEW, mCurrentState);
+        outState.putInt(STATE_SELECTED_GRADE, mSelectedGrade);
+        outState.putBoolean(STATE_RESPONSE_SENT, mResponseSent);
+
+        outState.putParcelable(ARG_END_USER, mEndUser);
+        outState.putString(ARG_ORIGIN_URL, mOriginUrl);
+        outState.putParcelable(ARG_USER, mUser);
+
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onGradeSelected(GradeView view) {
+    public void onGradeSelected(int gradeValue) {
+        mSelectedGrade = gradeValue;
         enableSubmit();
     }
 
@@ -149,5 +395,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
         Drawable icSubmit = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_submit, null);
         mBtnSubmit.setCompoundDrawablesWithIntrinsicBounds(icSubmit, null, null, null);
+    }
+
+    private void touchLastSurveyed() {
+        PreferencesUtils prefs = PreferencesUtils.getInstance(this);
+        prefs.setLastSurveyed(new Date().getTime());
     }
 }
