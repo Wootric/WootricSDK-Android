@@ -18,13 +18,13 @@ import java.util.List;
 public class SurveyRatingBar extends LinearLayout {
 
     private final int mGradesCount = 10;
-    private final List<GradeView> mGradesViews = new ArrayList<>();
-    private GradeView mCurrentGrade;
+    private final List<ScoreView> mScoreViews = new ArrayList<>();
+    private ScoreView mCurrentScore;
 
     private boolean mActive;
     private int mBackgroundRes = R.drawable.survey_grades_disabled;
 
-    private OnGradeSelectedListener mOnGradeSelectedListener;
+    private Callbacks mCallbacks;
 
     public SurveyRatingBar(Context context) {
         super(context);
@@ -53,7 +53,7 @@ public class SurveyRatingBar extends LinearLayout {
 
     private void initDisabledGrades() {
         for(int i = 0; i <= mGradesCount; i++) {
-            GradeView grade = GradeView.createDisabled(getContext());
+            ScoreView grade = ScoreView.createDisabled(getContext());
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
 
@@ -70,13 +70,13 @@ public class SurveyRatingBar extends LinearLayout {
             grade.setId(i);
             grade.setLayoutParams(params);
 
-            mGradesViews.add(grade);
+            mScoreViews.add(grade);
             addView(grade);
         }
     }
 
-    private GradeView getGradeViewForPosition(float x) {
-        for(GradeView grade : mGradesViews) {
+    private ScoreView getGradeViewForPosition(float x) {
+        for(ScoreView grade : mScoreViews) {
             boolean selected = (grade.getLeft() <= x && grade.getRight() >= x);
             if(selected) {
                 return grade;
@@ -95,20 +95,20 @@ public class SurveyRatingBar extends LinearLayout {
     }
 
     public void setSelectedGrade(int selectedGrade) {
-        if(mCurrentGrade != null) {
-            mCurrentGrade.activate(true);
+        if(mCurrentScore != null) {
+            mCurrentScore.activate(true);
         }
 
-        mCurrentGrade = mGradesViews.get(selectedGrade);
-        mCurrentGrade.select();
+        mCurrentScore = mScoreViews.get(selectedGrade);
+        mCurrentScore.select();
 
-        if(mOnGradeSelectedListener != null) {
-            mOnGradeSelectedListener.onGradeSelected(selectedGrade);
+        if(mCallbacks != null) {
+            mCallbacks.onScoreSelected(selectedGrade);
         }
     }
 
     private void setActiveGrades() {
-        for(GradeView grade : mGradesViews) {
+        for(ScoreView grade : mScoreViews) {
             grade.activate(false);
         }
     }
@@ -127,20 +127,20 @@ public class SurveyRatingBar extends LinearLayout {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                GradeView selectedGrade = getGradeViewForPosition(event.getX());
+                ScoreView selectedGrade = getGradeViewForPosition(event.getX());
 
-                if(selectedGrade != null && selectedGrade != mCurrentGrade) {
-                    setSelectedGrade(mGradesViews.indexOf(selectedGrade));
+                if(selectedGrade != null && selectedGrade != mCurrentScore) {
+                    setSelectedGrade(mScoreViews.indexOf(selectedGrade));
                 }
         }
         return true;
     }
 
-    public void setOnGradeSelectedListener(OnGradeSelectedListener onGradeSelectedListener) {
-        mOnGradeSelectedListener = onGradeSelectedListener;
+    public void setOnGradeSelectedListener(Callbacks callbacks) {
+        mCallbacks = callbacks;
     }
 
-    public interface OnGradeSelectedListener {
-        void onGradeSelected(int gradeValue);
+    public interface Callbacks {
+        void onScoreSelected(int gradeValue);
     }
 }

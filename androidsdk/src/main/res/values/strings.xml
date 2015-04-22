@@ -9,9 +9,9 @@
     <string name="not_at_all_likely">Not at all likely</string>
     <string name="extremely_likely">Extremely likely</string>
     <string name="powered_by">powered by wootric</string>
-    <string name="thank_you">Thank you! Care to tell us why?</string>
+    <string name="default_followup_question">Thank you! Care to tell us why?</string>
     <string name="thank_you_score">You gave us</string>
-    <string name="feedback_placeholder">Help us by explaining your score.</string>
+    <string name="default_placeholder">Help us by explaining your score.</string>
     <string name="dismiss">Dismiss</string>
 
 

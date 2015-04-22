@@ -12,24 +12,24 @@ import com.wootric.androidsdk.R;
 /**
  * Created by maciejwitowski on 4/16/15.
  */
-public class GradeView extends TextView {
+public class ScoreView extends TextView {
 
     /*
         Factory method which creates and returns disabled grade view buttons
      */
-    static GradeView createDisabled(Context context) {
-        GradeView grade = new GradeView(context);
+    static ScoreView createDisabled(Context context) {
+        ScoreView grade = new ScoreView(context);
         grade.setBackground(null);
         grade.setGravity(Gravity.CENTER);
         grade.setPadding(0,0,0,0);
         return grade;
     }
 
-    public GradeView(Context context) {
+    public ScoreView(Context context) {
         super(context);
     }
 
-    public GradeView(Context context, AttributeSet attrs) {
+    public ScoreView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

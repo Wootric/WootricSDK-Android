@@ -35,7 +35,7 @@ import com.wootric.androidsdk.views.SurveyRatingBar;
 
 import java.util.Date;
 
-public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeSelectedListener {
+public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {
 
     private static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
     private static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
@@ -73,6 +73,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
     private ImageButton mBtnBackToRating;
     private EditText mEtFeedback;
     private Button mBtnSendFeedback;
+    private TextView mTvThankYouScore;
+    private TextView mTvThankYou;
 
     private Bitmap mBackgroundImage;
 
@@ -80,7 +82,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
     private boolean mResponseSent;
 
-    private int mSelectedGrade = -1;
+    private int mSelectedScore = -1;
 
 
     static void start(Context context, Bitmap backgroundImage, String accessToken, User user,
@@ -121,6 +123,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
         mBtnBackToRating    = (ImageButton) mRlFeedback.findViewById(R.id.btn_back_to_rating);
         mEtFeedback         = (EditText) mRlFeedback.findViewById(R.id.et_feedback);
         mBtnSendFeedback    = (Button) mRlFeedback.findViewById(R.id.btn_send_feedback);
+        mTvThankYouScore    = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you_score);
+        mTvThankYou         = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you);
 
         mSurveyRatingBar.setOnGradeSelectedListener(this);
 
@@ -142,21 +146,23 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
 
     private void setupRequestProperties(Bundle savedInstanceState) {
         if(savedInstanceState == null) {
-            mUser = getIntent().getParcelableExtra(ARG_USER);
-            mEndUser = getIntent().getParcelableExtra(ARG_END_USER);
-            mOriginUrl = getIntent().getStringExtra(ARG_ORIGIN_URL);
+            mUser           = getIntent().getParcelableExtra(ARG_USER);
+            mEndUser        = getIntent().getParcelableExtra(ARG_END_USER);
+            mOriginUrl      = getIntent().getStringExtra(ARG_ORIGIN_URL);
+            mAccessToken    = getIntent().getStringExtra(ARG_ACCESS_TOKEN);
         } else {
-            mUser = savedInstanceState.getParcelable(ARG_USER);
-            mEndUser = savedInstanceState.getParcelable(ARG_END_USER);
-            mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
-            mResponseSent = savedInstanceState.getBoolean(STATE_RESPONSE_SENT);
+            mUser           = savedInstanceState.getParcelable(ARG_USER);
+            mEndUser        = savedInstanceState.getParcelable(ARG_END_USER);
+            mOriginUrl      = savedInstanceState.getString(ARG_ORIGIN_URL);
+            mResponseSent   = savedInstanceState.getBoolean(STATE_RESPONSE_SENT);
+            mAccessToken    = savedInstanceState.getString(ARG_ACCESS_TOKEN);
         }
     }
 
     private void setupSelectedGrade(Bundle savedInstanceState) {
         if(savedInstanceState != null) {
-            mSelectedGrade = savedInstanceState.getInt(STATE_SELECTED_GRADE);
-            mSurveyRatingBar.setSelectedGrade(mSelectedGrade);
+            mSelectedScore = savedInstanceState.getInt(STATE_SELECTED_GRADE);
+            mSurveyRatingBar.setSelectedGrade(mSelectedScore);
 
         }
     }
@@ -254,7 +260,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
     }
 
     private void sendResponseRequest(boolean sendText) {
-        String score = String.valueOf(mSelectedGrade);
+        String score = String.valueOf(mSelectedScore);
         String text = (sendText ? mEtFeedback.getText().toString() : "");
 
         new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, score, text)
@@ -281,15 +287,31 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
         } else if(STATE_FEEDBACK == mCurrentState) {
-            mRlRating.setVisibility(View.GONE);
-            mRlFeedback.setVisibility(View.VISIBLE);
-            showKeyboard(true);
+           showFeedbackView();
         } else if(STATE_RATING_BACK == mCurrentState) {
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
             showKeyboard(false);
         }
+    }
 
+    private void showFeedbackView() {
+        mRlRating.setVisibility(View.GONE);
+        mRlFeedback.setVisibility(View.VISIBLE);
+
+        mTvThankYouScore.setText(getString(R.string.thank_you_score) + " " + mSelectedScore);
+
+        String customFollowupQuestion = mCustomMessage.getFollowupQuestionForScore(mSelectedScore);
+        if(customFollowupQuestion != null) {
+            mTvThankYou.setText(customFollowupQuestion);
+        }
+
+        String customPlaceholder = mCustomMessage.getPlaceholderForScore(mSelectedScore);
+        if(customPlaceholder != null) {
+            mEtFeedback.setHint(customPlaceholder);
+        }
+
+        showKeyboard(true);
     }
 
     private void showKeyboard(boolean showKeyboard) {
@@ -369,19 +391,20 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.OnGradeS
         outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
         outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
         outState.putInt(STATE_SURVEY_VIEW, mCurrentState);
-        outState.putInt(STATE_SELECTED_GRADE, mSelectedGrade);
+        outState.putInt(STATE_SELECTED_GRADE, mSelectedScore);
         outState.putBoolean(STATE_RESPONSE_SENT, mResponseSent);
 
         outState.putParcelable(ARG_END_USER, mEndUser);
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
+        outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
 
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onGradeSelected(int gradeValue) {
-        mSelectedGrade = gradeValue;
+    public void onScoreSelected(int score) {
+        mSelectedScore = score;
         enableSubmit();
     }
 

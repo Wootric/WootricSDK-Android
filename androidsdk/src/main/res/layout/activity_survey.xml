@@ -110,7 +110,7 @@
 
             <TextView
                 android:id="@+id/tv_thank_you"
-                android:text="@string/thank_you"
+                android:text="@string/default_followup_question"
                 android:textSize="@dimen/survey_question_text"
                 android:textColor="@color/submit"
                 android:layout_below="@id/tv_thank_you_score"
@@ -123,7 +123,7 @@
                 android:layout_below="@+id/tv_thank_you"
                 android:layout_marginTop="@dimen/survey_modal_element_margin"
                 android:background="@drawable/survey_feedback"
-                android:hint="@string/feedback_placeholder"
+                android:hint="@string/default_placeholder"
                 android:textCursorDrawable="@drawable/feedback_cursor"
                 android:textSize="@dimen/survey_question_text"
                 android:gravity="top"
