@@ -6,6 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -49,21 +50,24 @@ public class ConnectionUtils {
 
     public static HttpResponse sendAuthorizedPost(String url, String accessToken) throws IOException {
         HttpPost request = new HttpPost(url);
-        authorize(request, accessToken);
+        return sendAuthorizedRequest(request, accessToken);
+    }
 
-        return getInstance().httpClient.execute(request);
+    public static HttpResponse sendAuthorizedPut(String url, String accessToken) throws IOException {
+        HttpPut request = new HttpPut(url);
+        return sendAuthorizedRequest(request, accessToken);
     }
 
     public static HttpResponse sendAuthorizedGet(String url, String accessToken) throws IOException {
         HttpGet request = new HttpGet(url);
-        authorize(request, accessToken);
-
-        return getInstance().httpClient.execute(request);
+        return sendAuthorizedRequest(request, accessToken);
     }
 
-    private static void authorize(org.apache.http.HttpMessage request, String accessToken) {
+    private static HttpResponse sendAuthorizedRequest(org.apache.http.client.methods.HttpRequestBase request, String accessToken) throws IOException {
         request.setHeader("HTTP_USER_AGENT", HTTP_AGENT);
         request.setHeader("Authorization", "Bearer " + accessToken);
+
+        return getInstance().httpClient.execute(request);
     }
 
     public static JSONObject toJson(HttpResponse response) throws IOException, JSONException {

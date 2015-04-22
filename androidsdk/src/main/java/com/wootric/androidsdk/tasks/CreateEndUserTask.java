@@ -14,7 +14,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by maciejwitowski on 4/21/15.
@@ -58,6 +60,14 @@ public class CreateEndUserTask extends AsyncTask<Void, Void, EndUser> {
 
         if(endUser.hasCreatedAt()) {
             params.add(new BasicNameValuePair("external_created_at", String.valueOf(endUser.getCreatedAt())));
+        }
+
+        if(endUser.hasProperties()) {
+            final HashMap<String, String> properties = endUser.getProperties();
+
+            for (Map.Entry<String, String> property : properties.entrySet()) {
+                params.add(new BasicNameValuePair("properties[" + property.getKey() + "]", property.getValue()));
+            }
         }
 
         return ConnectionUtils.encode(params);

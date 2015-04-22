@@ -11,6 +11,7 @@ import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
+import com.wootric.androidsdk.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.utils.Blur;
 import com.wootric.androidsdk.utils.ImageUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
@@ -134,20 +135,28 @@ public class SurveyManager implements
         if(endUser == null) {
             new CreateEndUserTask(mEndUser, mAccessToken, this).execute();
         } else {
-            setupSurveyForCurrentView(endUser);
+            mEndUser.setId(endUser.getId());
+            updateEndUserProperties();
+            setupSurveyForCurrentView();
+        }
+    }
+
+    private void updateEndUserProperties() {
+        if(mEndUser.hasProperties()) {
+            new UpdateEndUserTask(mEndUser, mAccessToken).execute();
         }
     }
 
     @Override
     public void onEndUserCreated(EndUser endUser) {
-        if(endUser != null) {
-            setupSurveyForCurrentView(endUser);
+        mEndUser = endUser;
+
+        if(mEndUser != null) {
+            setupSurveyForCurrentView();
         }
     }
 
-    private void setupSurveyForCurrentView(EndUser endUser) {
-        mEndUser = endUser;
-
+    private void setupSurveyForCurrentView() {
         final Activity activity = weakActivity.get();
 
         if(activity != null) {
