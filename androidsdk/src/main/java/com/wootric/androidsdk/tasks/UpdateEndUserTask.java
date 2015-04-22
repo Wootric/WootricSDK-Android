@@ -39,11 +39,7 @@ public class UpdateEndUserTask extends AsyncTask<Void, Void, Void> {
                 .append(requestParams());
 
         try {
-            HttpResponse response = ConnectionUtils.sendAuthorizedPut(builder.toString(), accessToken);
-
-            if(response != null) {
-                Log.d("asas", "sadsd");
-            }
+            ConnectionUtils.sendAuthorizedPut(builder.toString(), accessToken);
         } catch (IOException e) {
             e.printStackTrace();
         }

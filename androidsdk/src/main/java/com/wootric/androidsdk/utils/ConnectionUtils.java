@@ -48,6 +48,12 @@ public class ConnectionUtils {
         return getInstance().httpClient.execute(request);
     }
 
+    public static HttpResponse sendGet(String url) throws IOException {
+        HttpGet request = new HttpGet(url);
+        request.setHeader("HTTP_USER_AGENT", HTTP_AGENT);
+        return getInstance().httpClient.execute(request);
+    }
+
     public static HttpResponse sendAuthorizedPost(String url, String accessToken) throws IOException {
         HttpPost request = new HttpPost(url);
         return sendAuthorizedRequest(request, accessToken);

@@ -11,6 +11,7 @@ import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
+import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
 import com.wootric.androidsdk.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.utils.Blur;
 import com.wootric.androidsdk.utils.ImageUtils;
@@ -32,22 +33,23 @@ public class SurveyManager implements
     private final SurveyValidator surveyValidator;
     private WootricCustomMessage mCustomMessage;
 
-    private final String originUrl;
+    private final String mOriginUrl;
     private EndUser mEndUser;
     private User mUser;
     private String mAccessToken;
+    private String mProductName;
 
     SurveyManager(WeakReference<Activity> weakActivity, User user, EndUser endUser,
-                  SurveyValidator surveyValidator, String originUrl) {
+                  SurveyValidator surveyValidator, String mOriginUrl) {
 
-        if(weakActivity == null || surveyValidator == null || endUser == null || originUrl == null) {
+        if(weakActivity == null || surveyValidator == null || endUser == null || mOriginUrl == null) {
             throw new IllegalArgumentException
                     ("Mandatory params cannot be null.");
         }
 
         this.weakActivity = weakActivity;
         this.surveyValidator = surveyValidator;
-        this.originUrl = originUrl;
+        this.mOriginUrl = mOriginUrl;
 
         mEndUser = endUser;
         mUser = user;
@@ -84,13 +86,23 @@ public class SurveyManager implements
     }
 
     public SurveyManager customMessage(WootricCustomMessage customMessage) {
-        this.mCustomMessage = customMessage;
+        mCustomMessage = customMessage;
+        return this;
+    }
+
+    public SurveyManager productName(String productName) {
+        mProductName = productName;
         return this;
     }
 
     public void survey() {
+        getTrackingPixel();
         updateLastSeen();
         setupSurveyValidator();
+    }
+
+    private void getTrackingPixel() {
+        new GetTrackingPixelTask(mUser, mEndUser, mOriginUrl).execute();
     }
 
     void setupSurveyValidator() {
@@ -192,7 +204,7 @@ public class SurveyManager implements
         if(activity != null) {
             Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
             Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
-            SurveyActivity.start(activity, blurredScreenshot, mAccessToken, mUser, mEndUser, originUrl, mCustomMessage);
+            SurveyActivity.start(activity, blurredScreenshot, mAccessToken, mUser, mEndUser, mOriginUrl, mCustomMessage, mProductName);
         }
     }
 }
