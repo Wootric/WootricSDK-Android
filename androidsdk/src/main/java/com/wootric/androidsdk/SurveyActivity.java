@@ -14,8 +14,8 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +52,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private static final int STATE_RATING = 1;
     private static final int STATE_FEEDBACK = 2;
     private static final int STATE_RATING_BACK = 3;
+    private static final int STATE_FINISH_SURVEY_AFTER_RESPONSE = 4;
+    private static final int STATE_FINISH_SURVEY_AFTER_DECLINE = 5;
 
     private int mCurrentState;
 
@@ -75,8 +77,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private ImageButton mBtnBackToRating;
     private EditText mEtFeedback;
     private Button mBtnSendFeedback;
+
     private TextView mTvThankYouScore;
     private TextView mTvThankYou;
+    private TextView mTvFinalThankYou;
 
     private Bitmap mBackgroundImage;
 
@@ -129,6 +133,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvThankYouScore    = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you_score);
         mTvThankYou         = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you);
 
+        mTvFinalThankYou = (TextView) mContainer.findViewById(R.id.tv_final_thank_you);
+
         mSurveyRatingBar.setOnGradeSelectedListener(this);
 
         setupRequestProperties(savedInstanceState);
@@ -168,7 +174,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         if(savedInstanceState != null) {
             mSelectedScore = savedInstanceState.getInt(STATE_SELECTED_GRADE);
             mSurveyRatingBar.setSelectedGrade(mSelectedScore);
-
         }
     }
 
@@ -297,6 +302,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
             showKeyboard(false);
+        } else if(STATE_FINISH_SURVEY_AFTER_RESPONSE == mCurrentState) {
+            finishAfterResponse();
+        } else if(STATE_FINISH_SURVEY_AFTER_DECLINE == mCurrentState) {
+            finishAfterDecline();
         }
     }
 
@@ -320,14 +329,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void showKeyboard(boolean showKeyboard) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if(showKeyboard) {
             mEtFeedback.requestFocus();
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
         } else {
             mEtFeedback.clearFocus();
-            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
 
@@ -367,13 +376,37 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void finishSurvey() {
-        if(!mResponseSent) {
+        showKeyboard(false);
+
+        if (!mResponseSent) {
             sendDeclineRequest();
+            updateState(STATE_FINISH_SURVEY_AFTER_DECLINE);
+        } else {
+            updateState(STATE_FINISH_SURVEY_AFTER_RESPONSE);
         }
+    }
+
+    private void finishAfterResponse() {
+        int h = mTvFinalThankYou.getHeight();
 
         mRlSurvey.animate()
+                .translationY(mRlSurvey.getHeight()-h)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mRlSurvey.setVisibility(View.GONE);
+                        showFinalThankYou();
+                    }
+                })
+                .start();
+    }
+
+    private void finishAfterDecline() {
+        mRlSurvey.animate()
                 .translationY(ScreenUtils.getScreenHeight(this))
-                .setInterpolator(new AccelerateInterpolator(3.f))
+                .setInterpolator(new LinearInterpolator())
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -381,6 +414,22 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                         finish();
                     }
                 })
+                .start();
+    }
+
+    private void showFinalThankYou() {
+        mTvFinalThankYou.setAlpha(1);
+
+        mTvFinalThankYou.animate()
+                .translationY(ScreenUtils.getScreenHeight(this))
+                .setDuration(500)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        finish();
+                    }
+                })
+                .setStartDelay(2000)
                 .start();
     }
 

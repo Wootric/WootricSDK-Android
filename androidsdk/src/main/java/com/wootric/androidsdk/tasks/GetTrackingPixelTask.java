@@ -1,24 +1,18 @@
 package com.wootric.androidsdk.tasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by maciejwitowski on 4/21/15.
@@ -40,12 +34,7 @@ public class GetTrackingPixelTask extends AsyncTask<Void, Void, EndUser> {
         String urlWithParams = Constants.TRACKING_PIXEL + requestParams();
 
         try {
-            HttpResponse response = ConnectionUtils.sendGet(urlWithParams);
-
-            if(response != null) {
-                Log.d("sad", "asdsd");
-            }
-
+            ConnectionUtils.sendGet(urlWithParams);
         } catch (IOException e) {
             e.printStackTrace();
         }

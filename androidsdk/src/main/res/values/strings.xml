@@ -13,6 +13,7 @@
     <string name="thank_you_score">You gave us</string>
     <string name="default_placeholder">Help us by explaining your score.</string>
     <string name="dismiss">Dismiss</string>
+    <string name="final_thank_you">Thank you for your response and your feedback.</string>
 
 
 </resources>

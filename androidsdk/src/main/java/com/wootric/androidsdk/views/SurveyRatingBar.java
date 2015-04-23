@@ -1,13 +1,15 @@
 package com.wootric.androidsdk.views;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,6 @@ public class SurveyRatingBar extends LinearLayout {
     private ScoreView mCurrentScore;
 
     private boolean mActive;
-    private int mBackgroundRes = R.drawable.survey_grades_disabled;
 
     private Callbacks mCallbacks;
 
@@ -42,13 +43,31 @@ public class SurveyRatingBar extends LinearLayout {
     }
 
     private void init() {
-        setBackground();
-
+        setupBackground();
         initDisabledGrades();
     }
 
-    private void setBackground() {
-        setBackground(ResourcesCompat.getDrawable(getResources(), mBackgroundRes, null));
+    private void setupBackground() {
+        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                getViewTreeObserver().removeOnPreDrawListener(this);
+
+                GradientDrawable background = new GradientDrawable();
+                background.setCornerRadius(getHeight()/2);
+
+                if(mActive) {
+                    background.setColor(getResources().getColor(R.color.gray));
+                } else {
+                    background.setColor(getResources().getColor(R.color.white));
+                    background.setStroke(ScreenUtils.dpToPx(4), getResources().getColor(R.color.gray));
+                }
+
+                setBackground(background);
+
+                return true;
+            }
+        });
     }
 
     private void initDisabledGrades() {
@@ -57,16 +76,8 @@ public class SurveyRatingBar extends LinearLayout {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
 
-
-            if(i == 0) {
-                params.setMargins(24, 0,0,0);
-            }
-
-            if(i == mGradesCount) {
-                params.setMargins(0,0,24,0);
-            }
-
             grade.setText(String.valueOf(i));
+            grade.setTextSize(16f);
             grade.setId(i);
             grade.setLayoutParams(params);
 
@@ -88,19 +99,25 @@ public class SurveyRatingBar extends LinearLayout {
 
     private void activate() {
         mActive = true;
-
-        mBackgroundRes = R.drawable.survey_grades;
-        setBackground();
+        setupBackground();
         setActiveGrades();
     }
 
     public void setSelectedGrade(int selectedGrade) {
+        if(selectedGrade == -1) {
+            return;
+        }
+
+        if(!mActive) {
+            activate();
+        }
+
         if(mCurrentScore != null) {
-            mCurrentScore.activate(true);
+            mCurrentScore.select(false);
         }
 
         mCurrentScore = mScoreViews.get(selectedGrade);
-        mCurrentScore.select();
+        mCurrentScore.select(true);
 
         if(mCallbacks != null) {
             mCallbacks.onScoreSelected(selectedGrade);
@@ -109,7 +126,7 @@ public class SurveyRatingBar extends LinearLayout {
 
     private void setActiveGrades() {
         for(ScoreView grade : mScoreViews) {
-            grade.activate(false);
+            grade.select(false);
         }
     }
 

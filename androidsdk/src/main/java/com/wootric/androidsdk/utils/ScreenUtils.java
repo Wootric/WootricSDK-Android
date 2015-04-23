@@ -1,6 +1,7 @@
 package com.wootric.androidsdk.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.WindowManager;
@@ -22,5 +23,9 @@ public class ScreenUtils {
         }
 
         return screenHeight;
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 }
