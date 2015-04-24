@@ -58,6 +58,10 @@ public class EndUser implements Parcelable {
         return createdAt != Constants.NOT_SET;
     }
 
+    public boolean hasId() {
+        return id != Constants.INVALID_ID;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

@@ -18,23 +18,11 @@
             android:padding="8dp"
             android:gravity="center">
 
-            <ImageButton
-                android:id="@+id/btn_dismiss"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:padding="4dp"
-                android:src="@drawable/ic_close"
-                android:textColor="@color/dark"
-                android:background="@null"
-                android:text="@string/dismiss"/>
-
             <RelativeLayout
+                android:background="@null"
                 android:id="@+id/rl_rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_dismiss"
                 android:padding="12dp">
 
                 <TextView
@@ -43,13 +31,15 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/survey_question_text"
                     android:text="@string/default_survey_question_prefix"
+                    android:layout_marginTop="@dimen/nps_question_margin"
+                    android:layout_marginBottom="@dimen/nps_question_margin"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"/>
 
                 <com.wootric.androidsdk.views.SurveyRatingBar
                     android:id="@+id/survey_rating_bar"
                     android:layout_below="@+id/tv_survey_question"
-                    android:layout_marginTop="@dimen/survey_modal_element_margin"
+                    android:layout_marginTop="@dimen/survey_modal_button_margin"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -58,6 +48,8 @@
                 <TextView
                     android:id="@+id/tv_not_at_all_likely"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/labels_margin_horizontal"
+                    android:layout_marginEnd="@dimen/labels_margin_horizontal"
                     android:layout_below="@id/survey_rating_bar"
                     android:layout_width="wrap_content"
                     android:textColor="@color/dark_gray"
@@ -68,6 +60,8 @@
                 <TextView
                     android:id="@+id/tv_extremely_likely"
                     android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/labels_margin_horizontal"
+                    android:layout_marginStart="@dimen/labels_margin_horizontal"
                     android:text="@string/extremely_likely"
                     android:textColor="@color/dark_gray"
                     android:textSize="@dimen/survey_labels_size"
@@ -81,7 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_below="@id/survey_rating_bar"
-                    android:layout_marginTop="@dimen/survey_modal_element_margin"
+                    android:layout_marginTop="@dimen/survey_modal_button_margin"
+                    android:layout_marginBottom="@dimen/survey_modal_button_margin"
                     android:background="@null"
                     android:text="@string/submit"
                     android:textSize="@dimen/survey_buttons"
@@ -107,9 +102,10 @@
 
                 <TextView
                     android:id="@+id/tv_thank_you_score"
-                    android:layout_below="@+id/btn_back_to_rating"
+                    android:layout_alignParentTop="true"
                     android:text="@string/thank_you_score"
                     android:textSize="@dimen/survey_question_text"
+                    android:layout_marginTop="@dimen/survey_modal_button_margin"
                     android:layout_width="match_parent"
                     android:textColor="@color/pink"
                     android:gravity="center"
@@ -119,6 +115,7 @@
                     android:id="@+id/tv_thank_you"
                     android:text="@string/default_followup_question"
                     android:textSize="@dimen/survey_question_text"
+                    android:layout_marginBottom="@dimen/nps_question_margin"
                     android:textColor="@color/submit"
                     android:layout_below="@id/tv_thank_you_score"
                     android:gravity="center"
@@ -128,7 +125,7 @@
                 <EditText
                     android:id="@+id/et_feedback"
                     android:layout_below="@+id/tv_thank_you"
-                    android:layout_marginTop="@dimen/survey_modal_element_margin"
+                    android:layout_margin="@dimen/tv_feedback_margins"
                     android:background="@drawable/survey_feedback"
                     android:hint="@string/default_placeholder"
                     android:textCursorDrawable="@drawable/feedback_cursor"
@@ -147,34 +144,44 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_below="@id/et_feedback"
-                    android:layout_marginTop="@dimen/survey_modal_element_margin"
-                    android:layout_marginBottom="@dimen/survey_modal_element_margin"
+                    android:layout_marginTop="@dimen/survey_modal_button_margin"
+                    android:layout_marginBottom="@dimen/survey_modal_button_margin"
                     android:background="@null"
                     android:text="@string/send_feedback"
                     android:textSize="@dimen/survey_buttons"
                     android:enabled="false"
                     android:drawableLeft="@drawable/ic_send_arrow_disabled"
                     android:textColor="@color/gray"/>
-
             </RelativeLayout>
 
-            <ImageView
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_heart"
-                android:id="@+id/iv_logo" />
-
             <TextView
+                android:id="@+id/tv_powered_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/powered_by"
                 android:layout_marginLeft="4dp"
+                android:padding="4dp"
+                android:background="@null"
+                android:textSize="@dimen/survey_labels_size"
                 android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/iv_logo"
-                android:layout_toEndOf="@+id/iv_logo" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/btn_dismiss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/survey_labels_size"
+                android:padding="4dp"
+                android:drawableLeft="@drawable/ic_close"
+                android:textColor="@color/dark_gray"
+                android:background="@null"
+                android:text="@string/dismiss"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/tv_powered_by"
+                android:gravity="center" />
 
         </RelativeLayout>
 

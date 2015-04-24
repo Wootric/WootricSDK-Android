@@ -23,7 +23,6 @@ public class ScoreView extends TextView {
         ScoreView grade = new ScoreView(context);
         grade.setBackground(null);
         grade.setGravity(Gravity.CENTER);
-        grade.setPadding(0,0,0,0);
         return grade;
     }
 
@@ -57,14 +56,10 @@ public class ScoreView extends TextView {
             setBackground(drawable);
             setTextColor(getResources().getColor(R.color.white));
 
-            setTextSize(20f);
-
             setElevation(true);
         } else {
             setBackground(null);
             setTextColor(getResources().getColor(R.color.dark_gray));
-
-            setTextSize(16f);
 
             setElevation(false);
         }

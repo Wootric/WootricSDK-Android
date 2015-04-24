@@ -6,9 +6,14 @@
     <dimen name="survey_question_text">14sp</dimen>
     <dimen name="survey_buttons">16sp</dimen>
 
-    <dimen name="survey_labels_size">12sp</dimen>
-    <dimen name="survey_modal_element_margin">20dp</dimen>
+    <dimen name="survey_labels_size">10sp</dimen>
+    <dimen name="survey_modal_button_margin">24dp</dimen>
+    <dimen name="nps_question_margin">16dp</dimen>
     <dimen name="survey_modal_submit_size">16sp</dimen>
 
     <dimen name="final_thank_you_height">100dp</dimen>
+
+    <dimen name="labels_margin_horizontal">8dp</dimen>
+
+    <dimen name="tv_feedback_margins">12dp</dimen>
 </resources>

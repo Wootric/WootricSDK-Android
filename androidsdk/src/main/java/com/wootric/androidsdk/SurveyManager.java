@@ -34,10 +34,13 @@ public class SurveyManager implements
     private WootricCustomMessage mCustomMessage;
 
     private final String mOriginUrl;
-    private EndUser mEndUser;
     private User mUser;
-    private String mAccessToken;
     private String mProductName;
+
+    private static String sAccessToken;
+    private static EndUser sEndUser;
+
+    private boolean mActivityValid = true;
 
     SurveyManager(WeakReference<Activity> weakActivity, User user, EndUser endUser,
                   SurveyValidator surveyValidator, String mOriginUrl) {
@@ -51,7 +54,10 @@ public class SurveyManager implements
         this.surveyValidator = surveyValidator;
         this.mOriginUrl = mOriginUrl;
 
-        mEndUser = endUser;
+        if(sEndUser == null) {
+            sEndUser = endUser;
+        }
+
         mUser = user;
     }
 
@@ -61,7 +67,7 @@ public class SurveyManager implements
     }
 
     public SurveyManager createdAt(long createdAt) {
-        mEndUser.setCreatedAt(createdAt);
+        sEndUser.setCreatedAt(createdAt);
         return this;
     }
 
@@ -96,13 +102,21 @@ public class SurveyManager implements
     }
 
     public void survey() {
-        getTrackingPixel();
-        updateLastSeen();
-        setupSurveyValidator();
+        if(isAlreadyValidated()) {
+            setupSurveyForCurrentView();
+        } else {
+            getTrackingPixel();
+            updateLastSeen();
+            setupSurveyValidator();
+        }
+    }
+
+    private boolean isAlreadyValidated() {
+        return sAccessToken != null && sEndUser.hasId();
     }
 
     private void getTrackingPixel() {
-        new GetTrackingPixelTask(mUser, mEndUser, mOriginUrl).execute();
+        new GetTrackingPixelTask(mUser, sEndUser, mOriginUrl).execute();
     }
 
     void setupSurveyValidator() {
@@ -133,10 +147,10 @@ public class SurveyManager implements
 
     @Override
     public void onAccessTokenReceived(String accessToken) {
-        mAccessToken = accessToken;
+        sAccessToken = accessToken;
 
         new GetEndUserTask(
-                mEndUser.getEmail(),
+                sEndUser.getEmail(),
                 accessToken,
                 this
         ).execute();
@@ -145,25 +159,29 @@ public class SurveyManager implements
     @Override
     public void onEndUserReceived(EndUser endUser) {
         if(endUser == null) {
-            new CreateEndUserTask(mEndUser, mAccessToken, this).execute();
+            new CreateEndUserTask(sEndUser, sAccessToken, this).execute();
         } else {
-            mEndUser.setId(endUser.getId());
+            sEndUser.setId(endUser.getId());
             updateEndUserProperties();
             setupSurveyForCurrentView();
         }
     }
 
+    void invalidateActivity() {
+        mActivityValid = false;
+    }
+
     private void updateEndUserProperties() {
-        if(mEndUser.hasProperties()) {
-            new UpdateEndUserTask(mEndUser, mAccessToken).execute();
+        if(sEndUser.hasProperties()) {
+            new UpdateEndUserTask(sEndUser, sAccessToken).execute();
         }
     }
 
     @Override
     public void onEndUserCreated(EndUser endUser) {
-        mEndUser = endUser;
+        sEndUser = endUser;
 
-        if(mEndUser != null) {
+        if(sEndUser != null) {
             setupSurveyForCurrentView();
         }
     }
@@ -201,10 +219,17 @@ public class SurveyManager implements
     private void startSurveyActivity() {
         final Activity activity = weakActivity.get();
 
-        if(activity != null) {
+        if(activity != null && mActivityValid) {
             Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
             Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
-            SurveyActivity.start(activity, blurredScreenshot, mAccessToken, mUser, mEndUser, mOriginUrl, mCustomMessage, mProductName);
+
+            SurveyActivity.start(activity, blurredScreenshot, sAccessToken, mUser, sEndUser,
+                    mOriginUrl, mCustomMessage, mProductName);
         }
+    }
+
+    public static void clearStaticFields() {
+        sAccessToken = null;
+        sEndUser = null;
     }
 }

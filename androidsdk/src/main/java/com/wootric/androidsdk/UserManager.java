@@ -15,6 +15,7 @@ public class UserManager {
 
     private final WeakReference<Activity> weakActivity;
     private final User user;
+    private SurveyManager surveyManager;
 
     UserManager(Activity activity, User user) {
         if(activity == null || user == null) {
@@ -28,12 +29,22 @@ public class UserManager {
     public SurveyManager endUser(String endUserEmail, String originUrl) {
         EndUser endUser = new EndUser(endUserEmail);
         SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
-        return new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
+        surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
+
+        return surveyManager;
     }
 
     public SurveyManager endUser(String endUserEmail, String originUrl, HashMap properties) {
         EndUser endUser = new EndUser(endUserEmail, properties);
         SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
-        return new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
+        surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
+
+        return surveyManager;
+    }
+
+    public void invalidateActivity() {
+        if(surveyManager != null) {
+            surveyManager.invalidateActivity();
+        }
     }
 }

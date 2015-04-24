@@ -10,8 +10,9 @@ import com.wootric.androidsdk.objects.User;
 public class Wootric {
 
     private final Activity activity;
+    private UserManager userManager;
 
-    static Wootric singleton = null;
+    private static Wootric singleton;
 
     public static Wootric with(Activity activity) {
         if(singleton == null) {
@@ -27,7 +28,9 @@ public class Wootric {
 
     public UserManager user(String clientId, String clientSecret, String accountToken) {
         User user = new User(clientId, clientSecret, accountToken);
-        return new UserManager(activity, user);
+        userManager = new UserManager(activity, user);
+
+        return userManager;
     }
 
     private Wootric(Activity activity) {
@@ -35,5 +38,11 @@ public class Wootric {
             throw new IllegalArgumentException("Context must not be null.");
         }
         this.activity = activity;
+    }
+
+    public static void stop() {
+        if(singleton != null && singleton.userManager != null) {
+            singleton.userManager.invalidateActivity();
+        }
     }
 }

@@ -11,7 +11,10 @@ public class Constants {
     public static final String API_URL = "https://api.wootric.com/v1/";
     public static final String END_USERS_URL = API_URL + "end_users/";
 
-    public static final String TRACKING_PIXEL = "https://d8myem934l1zi.cloudfront.net/pixel.gif?";
+    public static final String TRACKING_PIXEL_URL = "https://d8myem934l1zi.cloudfront.net/pixel.gif?";
+
+    public static final String WOOTRIC_URL = "https://www.wootric.com";
+
 
     public static final int INVALID_ID = -1;
 

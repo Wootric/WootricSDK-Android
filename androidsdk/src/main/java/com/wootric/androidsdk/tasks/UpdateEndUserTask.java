@@ -1,13 +1,11 @@
 package com.wootric.androidsdk.tasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 

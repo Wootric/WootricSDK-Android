@@ -31,7 +31,7 @@ public class GetTrackingPixelTask extends AsyncTask<Void, Void, EndUser> {
 
     @Override
     protected EndUser doInBackground(Void... params) {
-        String urlWithParams = Constants.TRACKING_PIXEL + requestParams();
+        String urlWithParams = Constants.TRACKING_PIXEL_URL + requestParams();
 
         try {
             ConnectionUtils.sendGet(urlWithParams);
