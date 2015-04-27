@@ -12,7 +12,7 @@ public class Wootric {
     private final Activity activity;
     private UserManager userManager;
 
-    private static Wootric singleton;
+    static Wootric singleton;
 
     public static Wootric with(Activity activity) {
         if(singleton == null) {
