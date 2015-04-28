@@ -1,20 +1,11 @@
 package com.wootric.androidsdk.utils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by maciejwitowski on 4/21/15.
@@ -23,71 +14,70 @@ public class ConnectionUtils {
 
     private static final String HTTP_AGENT = "Wootric-Mobile-SDK";
 
-    private static ConnectionUtils singleton;
+    public static final String REQUEST_TYPE_GET = "GET";
+    public static final String REQUEST_TYPE_POST = "POST";
+    public static final String REQUEST_TYPE_PUT = "PUT";
 
-    private final HttpClient httpClient;
-
-    private ConnectionUtils() {
-        httpClient = new DefaultHttpClient();
+    public static String sendGet(String url) throws IOException {
+        return sendRequest(REQUEST_TYPE_GET, url, null);
     }
 
-    private static ConnectionUtils getInstance() {
-        if(singleton == null) {
-            synchronized (ConnectionUtils.class) {
-                if(singleton == null) {
-                    singleton = new ConnectionUtils();
-                }
+    public static String sendPost(String url) throws IOException {
+        return sendRequest(REQUEST_TYPE_POST, url, null);
+    }
+
+    public static String sendAuthorizedPost(String url, String accessToken) throws IOException {
+        return sendRequest(REQUEST_TYPE_POST, url, getAuthorizationHeader(accessToken));
+    }
+
+    public static String sendAuthorizedPut(String url, String accessToken) throws IOException {
+        return sendRequest(REQUEST_TYPE_PUT, url, getAuthorizationHeader(accessToken));
+    }
+
+    public static String sendAuthorizedGet(String url, String accessToken) throws IOException {
+        return sendRequest(REQUEST_TYPE_GET, url, getAuthorizationHeader(accessToken));
+    }
+
+    private static HashMap<String, String> getAuthorizationHeader(String accessToken) {
+        HashMap<String, String> authHeader = new HashMap<>();
+        authHeader.put("Authorization", "Bearer " + accessToken);
+        return authHeader;
+    }
+
+    public static String sendRequest(String type, String url, HashMap<String, String> headers) throws IOException {
+        InputStream is = null;
+
+        URL requestUrl = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) requestUrl.openConnection();
+        conn.setRequestMethod(type);
+        conn.setRequestProperty("HTTP_USER_AGENT", HTTP_AGENT);
+
+        if(headers != null) {
+            for (Map.Entry<String, String> header : headers.entrySet()) {
+                conn.setRequestProperty(header.getKey(), header.getValue());
             }
         }
-        return singleton;
-    }
 
-    public static HttpResponse sendPost(String url) throws IOException {
-        HttpPost request = new HttpPost(url);
-        request.setHeader("HTTP_USER_AGENT", HTTP_AGENT);
-        return getInstance().httpClient.execute(request);
-    }
+        conn.setDoInput(true);
 
-    public static HttpResponse sendGet(String url) throws IOException {
-        HttpGet request = new HttpGet(url);
-        request.setHeader("HTTP_USER_AGENT", HTTP_AGENT);
-        return getInstance().httpClient.execute(request);
-    }
+        conn.connect();
 
-    public static HttpResponse sendAuthorizedPost(String url, String accessToken) throws IOException {
-        HttpPost request = new HttpPost(url);
-        return sendAuthorizedRequest(request, accessToken);
-    }
+        try {
+            is = conn.getInputStream();
 
-    public static HttpResponse sendAuthorizedPut(String url, String accessToken) throws IOException {
-        HttpPut request = new HttpPut(url);
-        return sendAuthorizedRequest(request, accessToken);
-    }
-
-    public static HttpResponse sendAuthorizedGet(String url, String accessToken) throws IOException {
-        HttpGet request = new HttpGet(url);
-        return sendAuthorizedRequest(request, accessToken);
-    }
-
-    private static HttpResponse sendAuthorizedRequest(org.apache.http.client.methods.HttpRequestBase request, String accessToken) throws IOException {
-        request.setHeader("HTTP_USER_AGENT", HTTP_AGENT);
-        request.setHeader("Authorization", "Bearer " + accessToken);
-
-        return getInstance().httpClient.execute(request);
-    }
-
-    public static JSONObject toJson(HttpResponse response) throws IOException, JSONException {
-        JSONObject result = null;
-        if(response != null) {
-            HttpEntity entity = response.getEntity();
-            String stringResponse = EntityUtils.toString(entity);
-            result = new JSONObject(stringResponse);
+            return ConnectionUtils.readIt(is);
+        } finally {
+            if(is != null) {
+                is.close();
+            }
         }
-
-        return result;
     }
 
-    public static String encode(List<NameValuePair> params) {
-        return URLEncodedUtils.format(params, "utf-8");
+    public static String readIt(InputStream stream) throws IOException {
+        int ch;
+        StringBuilder sb = new StringBuilder();
+        while((ch = stream.read())!= -1)
+            sb.append((char)ch);
+        return sb.toString();
     }
 }

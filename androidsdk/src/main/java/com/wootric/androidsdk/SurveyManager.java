@@ -30,7 +30,7 @@ public class SurveyManager implements
         GetAccessTokenTask.OnAccessTokenReceivedListener {
 
     private final WeakReference<Activity> weakActivity;
-    private final SurveyValidator surveyValidator;
+    final SurveyValidator surveyValidator;
     private WootricCustomMessage mCustomMessage;
 
     private final String mOriginUrl;
@@ -38,7 +38,7 @@ public class SurveyManager implements
     private String mProductName;
 
     private static String sAccessToken;
-    private static EndUser sEndUser;
+    static EndUser sEndUser;
 
     private boolean mActivityValid = true;
 
@@ -54,10 +54,7 @@ public class SurveyManager implements
         this.surveyValidator = surveyValidator;
         this.mOriginUrl = mOriginUrl;
 
-        if(sEndUser == null) {
-            sEndUser = endUser;
-        }
-
+        sEndUser = endUser;
         mUser = user;
     }
 
@@ -138,11 +135,7 @@ public class SurveyManager implements
 
     @Override
     public void onSurveyValidated() {
-        new GetAccessTokenTask(
-                mUser.getClientId(),
-                mUser.getClientSecret(),
-                this
-        ).execute();
+        new GetAccessTokenTask(mUser, this).execute();
     }
 
     @Override
@@ -169,6 +162,10 @@ public class SurveyManager implements
 
     void invalidateActivity() {
         mActivityValid = false;
+    }
+
+    boolean isActivityValid() {
+        return mActivityValid;
     }
 
     private void updateEndUserProperties() {
@@ -219,7 +216,7 @@ public class SurveyManager implements
     private void startSurveyActivity() {
         final Activity activity = weakActivity.get();
 
-        if(activity != null && mActivityValid) {
+        if(activity != null && isActivityValid()) {
             Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
             Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
 

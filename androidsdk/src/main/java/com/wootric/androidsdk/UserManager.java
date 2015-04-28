@@ -28,22 +28,21 @@ public class UserManager {
 
     public SurveyManager endUser(String endUserEmail, String originUrl) {
         EndUser endUser = new EndUser(endUserEmail);
-        SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
-        surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
 
-        return surveyManager;
+        return getSurveyManager(endUser, originUrl);
     }
 
     public SurveyManager endUser(String endUserEmail, String originUrl, HashMap properties) {
         EndUser endUser = new EndUser(endUserEmail, properties);
+
+        return getSurveyManager(endUser, originUrl);
+    }
+
+    private SurveyManager getSurveyManager(EndUser endUser, String originUrl) {
         SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
         surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
 
         return surveyManager;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public void invalidateActivity() {

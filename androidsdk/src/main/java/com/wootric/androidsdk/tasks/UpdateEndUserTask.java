@@ -1,18 +1,14 @@
 package com.wootric.androidsdk.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,16 +42,16 @@ public class UpdateEndUserTask extends AsyncTask<Void, Void, Void> {
     }
 
     private String requestParams() {
-        List<NameValuePair> params = new ArrayList<>();
+        Uri.Builder builder = new Uri.Builder();
 
         if(endUser.hasProperties()) {
             final HashMap<String, String> properties = endUser.getProperties();
 
             for (Map.Entry<String, String> property : properties.entrySet()) {
-                params.add(new BasicNameValuePair("properties[" + property.getKey() + "]", property.getValue()));
+                builder.appendQueryParameter("properties[" + property.getKey() + "]", property.getValue());
             }
         }
 
-        return ConnectionUtils.encode(params);
+        return builder.build().getEncodedQuery();
     }
 }

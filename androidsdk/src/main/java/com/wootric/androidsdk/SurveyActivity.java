@@ -35,8 +35,6 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyRatingBar;
 
-import org.w3c.dom.Text;
-
 import java.util.Date;
 
 public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {

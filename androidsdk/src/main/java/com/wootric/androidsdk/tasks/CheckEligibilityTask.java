@@ -1,24 +1,16 @@
 package com.wootric.androidsdk.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.wootric.androidsdk.utils.Constants.NOT_SET;
 
@@ -53,18 +45,16 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
+
         String urlWithParams = Constants.ELIGIBILITY_URL + "?" + eligibilityRequestParams();
-        HttpGet request = new HttpGet(urlWithParams);
 
         try {
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response = client.execute(request);
+            String responseContent = ConnectionUtils.sendGet(urlWithParams);
 
-            HttpEntity responseEntity = response.getEntity();
-            String result = EntityUtils.toString(responseEntity);
+            JSONObject jsonObject = new JSONObject(responseContent);
+            return jsonObject.getBoolean("eligible");
 
-            return result.contains("true");
-        } catch (ClientProtocolException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,26 +63,27 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     private String eligibilityRequestParams() {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair(Constants.PARAM_ACCOUNT_TOKEN, accountToken));
-        params.add(new BasicNameValuePair(Constants.PARAM_EMAIL, endUser.getEmail()));
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter(Constants.PARAM_ACCOUNT_TOKEN, accountToken)
+                .appendQueryParameter(Constants.PARAM_EMAIL, endUser.getEmail());
 
         if(dailyResponseCap != NOT_SET) {
-            params.add(new BasicNameValuePair(Constants.PARAM_DAILY_RESPONSE_CAP, String.valueOf(dailyResponseCap)));
+            builder.appendQueryParameter(Constants.PARAM_DAILY_RESPONSE_CAP, String.valueOf(dailyResponseCap));
         }
 
+
         if(registeredPercent != NOT_SET) {
-            params.add(new BasicNameValuePair(Constants.PARAM_EMAIL, String.valueOf(registeredPercent)));
+            builder.appendQueryParameter(Constants.PARAM_REGISTERED_PERCENT, String.valueOf(registeredPercent));
         }
 
         if(visitorPercent != NOT_SET) {
-            params.add(new BasicNameValuePair(Constants.PARAM_EMAIL, String.valueOf(visitorPercent)));
+            builder.appendQueryParameter(Constants.PARAM_VISITOR_PERCENT, String.valueOf(visitorPercent));
         }
 
         if(resurveyThrottle != NOT_SET) {
-            params.add(new BasicNameValuePair(Constants.PARAM_RESURVEY_THROTTLE, String.valueOf(resurveyThrottle)));
+            builder.appendQueryParameter(Constants.PARAM_RESURVEY_THROTTLE, String.valueOf(resurveyThrottle));
         }
 
-        return URLEncodedUtils.format(params, "utf-8");
+        return builder.build().getEncodedQuery();
     }
 }

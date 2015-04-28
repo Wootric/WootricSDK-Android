@@ -10,7 +10,7 @@ import com.wootric.androidsdk.objects.User;
 public class Wootric {
 
     private final Activity activity;
-    private UserManager userManager;
+    UserManager userManager;
 
     static Wootric singleton;
 

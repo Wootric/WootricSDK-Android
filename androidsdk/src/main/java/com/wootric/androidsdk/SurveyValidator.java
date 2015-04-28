@@ -25,11 +25,11 @@ public class SurveyValidator {
     private final WeakReference<Activity> weakActivity;
 
     // Optional
-    private boolean surveyImmediately   = false;
-    private int dailyResponseCap        = NOT_SET;
-    private int registeredPercent       = NOT_SET;
-    private int visitorPercent          = NOT_SET;
-    private int resurveyThrottle        = NOT_SET;
+    boolean surveyImmediately   = false;
+    int dailyResponseCap        = NOT_SET;
+    int registeredPercent       = NOT_SET;
+    int visitorPercent          = NOT_SET;
+    int resurveyThrottle        = NOT_SET;
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 

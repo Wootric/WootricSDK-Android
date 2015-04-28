@@ -1,5 +1,6 @@
 package com.wootric.androidsdk.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
@@ -7,12 +8,7 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by maciejwitowski on 4/21/15.
@@ -43,12 +39,12 @@ public class GetTrackingPixelTask extends AsyncTask<Void, Void, EndUser> {
     }
 
     private String requestParams() {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("account_token", user.getAccountToken()));
-        params.add(new BasicNameValuePair("email", endUser.getEmail()));
-        params.add(new BasicNameValuePair("url", originUrl));
-        params.add(new BasicNameValuePair("random", String.valueOf(Math.random())));
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter(Constants.PARAM_ACCOUNT_TOKEN, user.getAccountToken())
+                .appendQueryParameter(Constants.PARAM_EMAIL, endUser.getEmail())
+                .appendQueryParameter("url", originUrl)
+                .appendQueryParameter("random", String.valueOf(Math.random()));
 
-        return ConnectionUtils.encode(params);
+        return builder.build().getEncodedQuery();
     }
 }

@@ -1,16 +1,12 @@
 package com.wootric.androidsdk.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by maciejwitowski on 4/21/15.
@@ -24,15 +20,13 @@ public class GetAccessTokenTask extends AsyncTask<Void, Void, String> {
     private static final String CLIENT_SECRET   = "client_secret";
     private static final String CLIENT_CREDENTIALS   = "client_credentials";
 
-    private final String clientId;
-    private final String clientSecret;
+    private final User user;
     private final OnAccessTokenReceivedListener onAccessTokenReceivedListener;
 
 
-    public GetAccessTokenTask(String clientId, String clientSecret,
+    public GetAccessTokenTask(User user,
                               OnAccessTokenReceivedListener onAccessTokenReceivedListener) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+        this.user = user;
         this.onAccessTokenReceivedListener = onAccessTokenReceivedListener;
     }
 
@@ -41,10 +35,10 @@ public class GetAccessTokenTask extends AsyncTask<Void, Void, String> {
         String urlWithParams = OAUTH_URL + "?" + requestParams();
 
         try {
-            HttpResponse response = ConnectionUtils.sendPost(urlWithParams);
+            String response = ConnectionUtils.sendPost(urlWithParams);
 
             if(response != null) {
-                JSONObject jsonResponse = ConnectionUtils.toJson(response);
+                JSONObject jsonResponse = new JSONObject(response);
                 return jsonResponse.getString("access_token");
             }
         } catch (Exception e) {
@@ -62,12 +56,12 @@ public class GetAccessTokenTask extends AsyncTask<Void, Void, String> {
     }
 
     private String requestParams() {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair(GRANT_TYPE, CLIENT_CREDENTIALS));
-        params.add(new BasicNameValuePair(CLIENT_ID, clientId));
-        params.add(new BasicNameValuePair(CLIENT_SECRET, clientSecret));
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter(GRANT_TYPE, CLIENT_CREDENTIALS)
+                .appendQueryParameter(CLIENT_ID, user.getClientId())
+                .appendQueryParameter(CLIENT_SECRET, user.getClientSecret());
 
-        return ConnectionUtils.encode(params);
+        return builder.build().getEncodedQuery();
     }
 
     public interface OnAccessTokenReceivedListener {

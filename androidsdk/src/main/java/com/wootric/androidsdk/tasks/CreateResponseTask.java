@@ -1,18 +1,13 @@
 package com.wootric.androidsdk.tasks;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by maciejwitowski on 4/20/15.
@@ -51,11 +46,11 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
     }
 
     private String requestParams() {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair(Constants.PARAM_RESPONSE_ORIGIN_URL, originUrl));
-        params.add(new BasicNameValuePair(Constants.PARAM_RESPONSE_SCORE, score));
-        params.add(new BasicNameValuePair(Constants.PARAM_RESPONSE_TEXT, text));
+        Uri.Builder builder = new Uri.Builder()
+                .appendQueryParameter(Constants.PARAM_RESPONSE_ORIGIN_URL, originUrl)
+                .appendQueryParameter(Constants.PARAM_RESPONSE_SCORE, score)
+                .appendQueryParameter(Constants.PARAM_RESPONSE_TEXT, text);
 
-        return URLEncodedUtils.format(params, "utf-8");
+        return builder.build().getEncodedQuery();
     }
 }
