@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
 
+
 public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyActivity> {
 
     private static final String CUSTOM_TARGET                   = "Custom Target";
@@ -36,7 +37,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     private static final String CUSTOM_DETRACTORS_PLACEHOLDER   = "Custom Detractors Placeholder";
     private static final String CUSTOM_PASSIVES_PLACEHOLDER     = "Custom Passives Placeholder";
     private static final String CUSTOM_PROMOTERS_PLACEHOLDER    = "Custom Promoters Placeholder";
-
 
     public SurveyActivityTest() {
         super(SurveyActivity.class);
@@ -54,7 +54,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         super.tearDown();
     }
 
-    @Test
     public void testRatingView_initState() {
         setupActivity(getTestIntent());
 
@@ -73,7 +72,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withText("SUBMIT")).check(matches(not(isEnabled())));
     }
 
-    @Test
     public void testFeedbackView_initState() {
         setupActivity(getTestIntent());
 
@@ -97,7 +95,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.btn_send_feedback)).check(matches(not(isEnabled())));
     }
 
-    @Test
     public void testFeedbackView_onSubmit() {
         setupActivity(getTestIntent());
 
@@ -117,7 +114,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withText(R.string.final_thank_you)).check(matches(isDisplayed()));
     }
 
-    @Test
     public void testFeedbackForm_goBackToRating() {
         setupActivity(getTestIntent());
 
@@ -138,7 +134,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.rl_feedback)).check(matches(isDisplayed()));
     }
 
-    @Test
     public void testFeedbackView_dismissBtn() {
         setupActivity(getTestIntent());
 
@@ -150,7 +145,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withText(R.string.final_thank_you)).check(matches(isDisplayed()));
     }
 
-    @Test
     public void testProductNameIsDisplayed() {
         Intent intent = getTestIntent();
         intent.putExtra(SurveyActivity.ARG_PRODUCT_NAME, CUSTOM_PRODUCT_NAME);
@@ -159,14 +153,14 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.tv_survey_question)).check(matches(withText(containsString(CUSTOM_PRODUCT_NAME))));
     }
 
+    /***********************************************************************************************
+     * Custom messages tests
+     **/
+
     private void setupActivity(Intent intent) {
         setActivityIntent(intent);
         getActivity();
     }
-
-    /***********************************************************************************************
-     * Custom messages tests
-     **/
 
     @Test
     public void testCustomTextsAreUsed() {

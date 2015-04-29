@@ -9,7 +9,7 @@ public class Constants {
             "http://wootric-eligibility.herokuapp.com/eligible.json";
 
     public static final String API_URL = "https://api.wootric.com/v1/";
-    public static final String END_USERS_URL = API_URL + "end_users/";
+    public static final String END_USERS_URL = API_URL + "end_users";
 
     public static final String TRACKING_PIXEL_URL = "https://d8myem934l1zi.cloudfront.net/pixel.gif?";
 
@@ -31,8 +31,4 @@ public class Constants {
     public static final String PARAM_RESPONSE_ORIGIN_URL   = "origin_url";
     public static final String PARAM_RESPONSE_SCORE        = "score";
     public static final String PARAM_RESPONSE_TEXT         = "text";
-
-    public static final String PARAM_END_USER_EXTERNAL_CREATED_AT  = "end_user[external_created_at]";
-    public static final String PARAM_END_USER_EMAIL                = "end_user[email]";
-    public static final String PARAM_END_USER_PROPERTIES           = "end_user[properties]";
 }

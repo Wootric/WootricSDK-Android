@@ -1,16 +1,15 @@
 package com.wootric.androidsdk;
 
-import android.content.Context;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import static com.wootric.androidsdk.TestUtils.testActivity;
+import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by maciejwitowski on 4/11/15.
@@ -20,45 +19,38 @@ import static org.assertj.core.api.Assertions.fail;
 @Config(manifest = Config.NONE, emulateSdk = 21)
 public class WootricTest {
 
-    private Context context;
-
-    @Before
-    public void setup() {
-        context = RuntimeEnvironment.application;
-    }
-
     @Test public void failsWhenContextIsInvalid() throws Exception {
         try {
             Wootric.singleton = null;
             Wootric.with(null);
-            fail("Null context should throw exception");
+            fail("Null activity should throw exception");
         } catch (IllegalArgumentException expected) {
         }
     }
 
     @Test public void initializeAndReturnsSingleton() throws Exception {
         Wootric.singleton = null;
-        Wootric newSingleton = Wootric.with(context);
+        Wootric newSingleton = Wootric.with(testActivity());
 
-        assertThat(newSingleton.context).isNotNull();
+        assertThat(newSingleton).isNotNull();
         assertThat(newSingleton).isEqualTo(Wootric.singleton);
     }
 
-    @Test public void returnsExistingSingletonFromWith() throws Exception {
-        Wootric wootric = Wootric.with(context);
-        Wootric nextWootric = Wootric.with(context);
+    @Test public void with_returnsExistingSingleton() throws Exception {
+        Wootric wootric = Wootric.with(testActivity());
+        Wootric nextWootric = Wootric.with(testActivity());
 
         assertThat(nextWootric).isEqualTo(wootric);
     }
 
-    @Test public void returnInitializedWootricUserManager() throws Exception {
-        Wootric wootric = Wootric.with(context);
-        UserManager userManager =
-                wootric.user(TestUtils.CLIENT_ID, TestUtils.CLIENT_SECRET, TestUtils.ACCOUNT_TOKEN);
+    @Test public void stop_CallsInvalidateActivityOnUserManager() throws Exception {
+        UserManager mockedUserManager = mock(UserManager.class);
 
-        assertThat(userManager).isNotNull();
-        assertThat(userManager.getClientId()).isEqualTo(TestUtils.CLIENT_ID);
-        assertThat(userManager.getClientSecret()).isEqualTo(TestUtils.CLIENT_SECRET);
-        assertThat(userManager.getAccountToken()).isEqualTo(TestUtils.ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.with(testActivity());
+        wootric.userManager = mockedUserManager;
+
+        Wootric.stop();
+
+        verify(mockedUserManager).invalidateActivity();
     }
 }

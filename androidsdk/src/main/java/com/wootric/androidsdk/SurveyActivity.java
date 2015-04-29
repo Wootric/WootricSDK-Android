@@ -30,6 +30,7 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.tasks.CreateDeclineTask;
 import com.wootric.androidsdk.tasks.CreateResponseTask;
+import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
@@ -285,10 +286,9 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void sendResponseRequest(boolean sendText) {
-        String score = String.valueOf(sSelectedScore);
         String text = (sendText ? mEtFeedback.getText().toString() : "");
 
-        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, score, text)
+        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, sSelectedScore, text, ConnectionUtils.get())
                 .execute();
 
         touchLastSurveyed();
@@ -297,7 +297,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void sendDeclineRequest() {
-        new CreateDeclineTask(mAccessToken, mEndUser).execute();
+        new CreateDeclineTask(mAccessToken, mEndUser, ConnectionUtils.get()).execute();
         touchLastSurveyed();
     }
 

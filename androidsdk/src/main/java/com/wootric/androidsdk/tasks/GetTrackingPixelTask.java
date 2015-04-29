@@ -30,7 +30,7 @@ public class GetTrackingPixelTask extends AsyncTask<Void, Void, EndUser> {
         String urlWithParams = Constants.TRACKING_PIXEL_URL + requestParams();
 
         try {
-            ConnectionUtils.sendGet(urlWithParams);
+            ConnectionUtils.get().sendGet(urlWithParams);
         } catch (IOException e) {
             e.printStackTrace();
         }

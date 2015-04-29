@@ -3,6 +3,8 @@ package com.wootric.androidsdk;
 import android.app.Activity;
 
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.ConnectionUtils;
+import com.wootric.androidsdk.utils.PreferencesUtils;
 
 /**
  * Created by maciejwitowski on 4/10/15.
@@ -27,8 +29,11 @@ public class Wootric {
     }
 
     public UserManager user(String clientId, String clientSecret, String accountToken) {
+        ConnectionUtils connectionUtils = ConnectionUtils.get();
+        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(activity);
+
         User user = new User(clientId, clientSecret, accountToken);
-        userManager = new UserManager(activity, user);
+        userManager = new UserManager(activity, user, connectionUtils, preferencesUtils);
 
         return userManager;
     }

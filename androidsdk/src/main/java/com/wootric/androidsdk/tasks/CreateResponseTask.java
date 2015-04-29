@@ -17,27 +17,32 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
     private final String accessToken;
     private final EndUser endUser;
     private final String originUrl;
-    private final String score;
+    private final int score;
     private final String text;
 
-    public CreateResponseTask(String accessToken, EndUser endUser, String originUrl, String score, String text) {
+    private final ConnectionUtils connectionUtils;
+
+    public CreateResponseTask(String accessToken, EndUser endUser, String originUrl, int score,
+                              String text, ConnectionUtils connectionUtils) {
         this.accessToken = accessToken;
         this.endUser = endUser;
         this.originUrl = originUrl;
         this.score = score;
         this.text = text;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.END_USERS_URL)
+                .append("/")
                 .append(endUser.getId())
                 .append("/responses?")
                 .append(requestParams());
 
         try {
-            ConnectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
+            connectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,7 +53,7 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
     private String requestParams() {
         Uri.Builder builder = new Uri.Builder()
                 .appendQueryParameter(Constants.PARAM_RESPONSE_ORIGIN_URL, originUrl)
-                .appendQueryParameter(Constants.PARAM_RESPONSE_SCORE, score)
+                .appendQueryParameter(Constants.PARAM_RESPONSE_SCORE, String.valueOf(score))
                 .appendQueryParameter(Constants.PARAM_RESPONSE_TEXT, text);
 
         return builder.build().getEncodedQuery();

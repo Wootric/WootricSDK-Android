@@ -22,11 +22,14 @@ public class CreateEndUserTask extends AsyncTask<Void, Void, EndUser> {
     private final EndUser endUser;
     private final String accessToken;
     private final OnEndUserCreatedListener onEndUserCreatedListener;
+    private final ConnectionUtils connectionUtils;
 
-    public CreateEndUserTask(EndUser endUser, String accessToken, OnEndUserCreatedListener onEndUserCreatedListener) {
+    public CreateEndUserTask(EndUser endUser, String accessToken,
+                             OnEndUserCreatedListener onEndUserCreatedListener, ConnectionUtils connectionUtils) {
         this.endUser = endUser;
         this.accessToken = accessToken;
         this.onEndUserCreatedListener = onEndUserCreatedListener;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
@@ -34,10 +37,12 @@ public class CreateEndUserTask extends AsyncTask<Void, Void, EndUser> {
         String urlWithParams = Constants.END_USERS_URL + "?" + requestParams();
 
         try {
-            String response = ConnectionUtils.sendAuthorizedPost(urlWithParams, accessToken);
+            String response = connectionUtils.sendAuthorizedPost(urlWithParams, accessToken);
 
-            JSONObject jsonResponse = new JSONObject(response);
-            return EndUser.fromJson(jsonResponse);
+            if(response != null) {
+                JSONObject jsonResponse = new JSONObject(response);
+                return EndUser.fromJson(jsonResponse);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

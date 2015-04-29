@@ -22,12 +22,14 @@ public class GetAccessTokenTask extends AsyncTask<Void, Void, String> {
 
     private final User user;
     private final OnAccessTokenReceivedListener onAccessTokenReceivedListener;
+    private final ConnectionUtils connectionUtils;
 
 
     public GetAccessTokenTask(User user,
-                              OnAccessTokenReceivedListener onAccessTokenReceivedListener) {
+                              OnAccessTokenReceivedListener onAccessTokenReceivedListener, ConnectionUtils connectionUtils) {
         this.user = user;
         this.onAccessTokenReceivedListener = onAccessTokenReceivedListener;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class GetAccessTokenTask extends AsyncTask<Void, Void, String> {
         String urlWithParams = OAUTH_URL + "?" + requestParams();
 
         try {
-            String response = ConnectionUtils.sendPost(urlWithParams);
+            String response = connectionUtils.sendPost(urlWithParams);
 
             if(response != null) {
                 JSONObject jsonResponse = new JSONObject(response);

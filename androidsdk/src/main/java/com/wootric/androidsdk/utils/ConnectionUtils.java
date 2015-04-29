@@ -18,33 +18,37 @@ public class ConnectionUtils {
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_PUT = "PUT";
 
-    public static String sendGet(String url) throws IOException {
+    public static ConnectionUtils get() {
+        return new ConnectionUtils();
+    }
+
+    public String sendGet(String url) throws IOException {
         return sendRequest(REQUEST_TYPE_GET, url, null);
     }
 
-    public static String sendPost(String url) throws IOException {
+    public String sendPost(String url) throws IOException {
         return sendRequest(REQUEST_TYPE_POST, url, null);
     }
 
-    public static String sendAuthorizedPost(String url, String accessToken) throws IOException {
+    public String sendAuthorizedPost(String url, String accessToken) throws IOException {
         return sendRequest(REQUEST_TYPE_POST, url, getAuthorizationHeader(accessToken));
     }
 
-    public static String sendAuthorizedPut(String url, String accessToken) throws IOException {
+    public String sendAuthorizedPut(String url, String accessToken) throws IOException {
         return sendRequest(REQUEST_TYPE_PUT, url, getAuthorizationHeader(accessToken));
     }
 
-    public static String sendAuthorizedGet(String url, String accessToken) throws IOException {
+    public String sendAuthorizedGet(String url, String accessToken) throws IOException {
         return sendRequest(REQUEST_TYPE_GET, url, getAuthorizationHeader(accessToken));
     }
 
-    private static HashMap<String, String> getAuthorizationHeader(String accessToken) {
+    private HashMap<String, String> getAuthorizationHeader(String accessToken) {
         HashMap<String, String> authHeader = new HashMap<>();
         authHeader.put("Authorization", "Bearer " + accessToken);
         return authHeader;
     }
 
-    public static String sendRequest(String type, String url, HashMap<String, String> headers) throws IOException {
+    public String sendRequest(String type, String url, HashMap<String, String> headers) throws IOException {
         InputStream is = null;
 
         URL requestUrl = new URL(url);
@@ -65,7 +69,7 @@ public class ConnectionUtils {
         try {
             is = conn.getInputStream();
 
-            return ConnectionUtils.readIt(is);
+            return readIt(is);
         } finally {
             if(is != null) {
                 is.close();
@@ -73,7 +77,7 @@ public class ConnectionUtils {
         }
     }
 
-    public static String readIt(InputStream stream) throws IOException {
+    public String readIt(InputStream stream) throws IOException {
         int ch;
         StringBuilder sb = new StringBuilder();
         while((ch = stream.read())!= -1)

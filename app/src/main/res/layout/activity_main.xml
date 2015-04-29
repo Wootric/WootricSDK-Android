@@ -1,6 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/container"
-    tools:context="com.wootric.androidsdk_demo.MainActivity"
-    android:background="@drawable/demo_background"/>
+    tools:weakActivity="com.wootric.androidsdk_demo.MainActivity"
+    android:background="@drawable/demo_background">
+
+    <Button
+        android:layout_gravity="center"
+        android:onClick="showSurvey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show survey"
+        android:background="@color/white"
+        android:padding="5dp"/>
+</LinearLayout>

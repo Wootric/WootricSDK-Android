@@ -28,19 +28,23 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
     private int visitorPercent      = NOT_SET;
     private int resurveyThrottle    = NOT_SET;
 
+    private ConnectionUtils connectionUtils;
+
     public CheckEligibilityTask(String accountToken, EndUser endUser, int dailyResponseCap,
-                         int registeredPercent, int visitorPercent, int resurveyThrottle) {
+                         int registeredPercent, int visitorPercent, int resurveyThrottle,
+                                ConnectionUtils connectionUtils) {
         if(accountToken == null || endUser == null) {
             throw new IllegalArgumentException
                     ("Account token and email must not be null.");
         }
 
         this.accountToken       = accountToken;
-        this.endUser              = endUser;
+        this.endUser            = endUser;
         this.dailyResponseCap   = dailyResponseCap;
         this.registeredPercent  = registeredPercent;
         this.visitorPercent     = visitorPercent;
         this.resurveyThrottle   = resurveyThrottle;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
@@ -49,16 +53,19 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
         String urlWithParams = Constants.ELIGIBILITY_URL + "?" + eligibilityRequestParams();
 
         try {
-            String responseContent = ConnectionUtils.sendGet(urlWithParams);
+            String responseContent = connectionUtils.sendGet(urlWithParams);
 
-            JSONObject jsonObject = new JSONObject(responseContent);
-            return jsonObject.getBoolean("eligible");
+            if(responseContent != null) {
+                JSONObject jsonObject = new JSONObject(responseContent);
+                return jsonObject.getBoolean("eligible");
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return false;
     }
 

@@ -14,6 +14,7 @@ import com.wootric.androidsdk.tasks.GetEndUserTask;
 import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
 import com.wootric.androidsdk.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.utils.Blur;
+import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.ImageUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -42,8 +43,12 @@ public class SurveyManager implements
 
     private boolean mActivityValid = true;
 
+    private final PreferencesUtils prefs;
+    private final ConnectionUtils connectionUtils;
+
     SurveyManager(WeakReference<Activity> weakActivity, User user, EndUser endUser,
-                  SurveyValidator surveyValidator, String mOriginUrl) {
+                  SurveyValidator surveyValidator, String mOriginUrl,
+                  PreferencesUtils prefs, ConnectionUtils connectionUtils) {
 
         if(weakActivity == null || surveyValidator == null || endUser == null || mOriginUrl == null) {
             throw new IllegalArgumentException
@@ -53,6 +58,8 @@ public class SurveyManager implements
         this.weakActivity = weakActivity;
         this.surveyValidator = surveyValidator;
         this.mOriginUrl = mOriginUrl;
+        this.prefs = prefs;
+        this.connectionUtils = connectionUtils;
 
         sEndUser = endUser;
         mUser = user;
@@ -122,20 +129,14 @@ public class SurveyManager implements
     }
 
     void updateLastSeen() {
-        final Activity activity = weakActivity.get();
-
-        if(activity != null) {
-            PreferencesUtils prefs = PreferencesUtils.getInstance(activity);
-
-            if(!prefs.wasRecentlyLastSeen()) {
-                prefs.setLastSeen(new Date().getTime());
-            }
+        if(!prefs.wasRecentlyLastSeen()) {
+            prefs.setLastSeen(new Date().getTime());
         }
     }
 
     @Override
     public void onSurveyValidated() {
-        new GetAccessTokenTask(mUser, this).execute();
+        new GetAccessTokenTask(mUser, this, connectionUtils).execute();
     }
 
     @Override
@@ -145,14 +146,14 @@ public class SurveyManager implements
         new GetEndUserTask(
                 sEndUser.getEmail(),
                 accessToken,
-                this
-        ).execute();
+                this,
+                connectionUtils).execute();
     }
 
     @Override
     public void onEndUserReceived(EndUser endUser) {
         if(endUser == null) {
-            new CreateEndUserTask(sEndUser, sAccessToken, this).execute();
+            new CreateEndUserTask(sEndUser, sAccessToken, this, connectionUtils).execute();
         } else {
             sEndUser.setId(endUser.getId());
             updateEndUserProperties();
@@ -170,7 +171,7 @@ public class SurveyManager implements
 
     private void updateEndUserProperties() {
         if(sEndUser.hasProperties()) {
-            new UpdateEndUserTask(sEndUser, sAccessToken).execute();
+            new UpdateEndUserTask(sEndUser, sAccessToken, connectionUtils).execute();
         }
     }
 

@@ -19,21 +19,26 @@ public class UpdateEndUserTask extends AsyncTask<Void, Void, Void> {
     private final EndUser endUser;
     private final String accessToken;
 
-    public UpdateEndUserTask(EndUser endUser, String accessToken) {
+    private final ConnectionUtils connectionUtils;
+
+    public UpdateEndUserTask(EndUser endUser, String accessToken, ConnectionUtils connectionUtils) {
         this.endUser = endUser;
         this.accessToken = accessToken;
+        this.connectionUtils = connectionUtils;
     }
+
 
     @Override
     protected Void doInBackground(Void... params) {
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.END_USERS_URL)
+                .append("/")
                 .append(endUser.getId())
                 .append("?")
                 .append(requestParams());
 
         try {
-            ConnectionUtils.sendAuthorizedPut(builder.toString(), accessToken);
+            connectionUtils.sendAuthorizedPut(builder.toString(), accessToken);
         } catch (IOException e) {
             e.printStackTrace();
         }

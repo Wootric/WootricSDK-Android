@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.ConnectionUtils;
+import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -17,7 +19,12 @@ public class UserManager {
     private final User user;
     private SurveyManager surveyManager;
 
-    UserManager(Activity activity, User user) {
+    private final ConnectionUtils connectionUtils;
+    private final PreferencesUtils preferencesUtils;
+
+    UserManager(Activity activity, User user, ConnectionUtils connectionUtils, PreferencesUtils preferencesUtils) {
+        this.connectionUtils = connectionUtils;
+        this.preferencesUtils = preferencesUtils;
         if(activity == null || user == null) {
             throw new IllegalArgumentException("Activity and user must not be null.");
         }
@@ -39,8 +46,8 @@ public class UserManager {
     }
 
     private SurveyManager getSurveyManager(EndUser endUser, String originUrl) {
-        SurveyValidator surveyValidator = new SurveyValidator(weakActivity, user, endUser);
-        surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl);
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, connectionUtils, preferencesUtils);
+        surveyManager = new SurveyManager(weakActivity, user, endUser, surveyValidator, originUrl, preferencesUtils, connectionUtils);
 
         return surveyManager;
     }

@@ -46,6 +46,10 @@ public class EndUser implements Parcelable {
         return createdAt;
     }
 
+    public void setProperties(HashMap<String, String> properties) {
+        this.properties = properties;
+    }
+
     public HashMap<String, String> getProperties() {
         return properties;
     }

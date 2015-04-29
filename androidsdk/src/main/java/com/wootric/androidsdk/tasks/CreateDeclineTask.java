@@ -15,21 +15,24 @@ public class CreateDeclineTask extends AsyncTask<Void, Void, Void> {
 
     private final String accessToken;
     private final EndUser endUser;
+    private final ConnectionUtils connectionUtils;
 
-    public CreateDeclineTask(String accessToken, EndUser endUser) {
+    public CreateDeclineTask(String accessToken, EndUser endUser, ConnectionUtils connectionUtils) {
         this.accessToken = accessToken;
         this.endUser = endUser;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         StringBuilder builder = new StringBuilder();
         builder.append(Constants.END_USERS_URL)
+                .append("/")
                 .append(endUser.getId())
                 .append("/declines");
 
         try {
-            ConnectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
+            connectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
         } catch (IOException e) {
             e.printStackTrace();
         }

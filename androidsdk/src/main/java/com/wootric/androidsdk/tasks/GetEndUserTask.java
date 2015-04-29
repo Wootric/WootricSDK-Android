@@ -21,12 +21,14 @@ public class GetEndUserTask extends AsyncTask<Void, Void, EndUser> {
     private final String endUserEmail;
     private final String accessToken;
     private final OnEndUserReceivedListener onEndUserReceivedListener;
+    private final ConnectionUtils connectionUtils;
 
 
-    public GetEndUserTask(String endUserEmail, String accessToken, OnEndUserReceivedListener onEndUserReceivedListener) {
+    public GetEndUserTask(String endUserEmail, String accessToken, OnEndUserReceivedListener onEndUserReceivedListener, ConnectionUtils connectionUtils) {
         this.endUserEmail = endUserEmail;
         this.accessToken  = accessToken;
         this.onEndUserReceivedListener = onEndUserReceivedListener;
+        this.connectionUtils = connectionUtils;
     }
 
     @Override
@@ -34,12 +36,14 @@ public class GetEndUserTask extends AsyncTask<Void, Void, EndUser> {
         String urlWithParams = Constants.END_USERS_URL + "?" + requestParams();
 
         try {
-            String response = ConnectionUtils.sendAuthorizedGet(urlWithParams, accessToken);
-            JSONArray jsonArray = new JSONArray(response);
-            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            String response = connectionUtils.sendAuthorizedGet(urlWithParams, accessToken);
 
-            return EndUser.fromJson(jsonObject);
+            if(response != null) {
+                JSONArray jsonArray = new JSONArray(response);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
 
+                return EndUser.fromJson(jsonObject);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
