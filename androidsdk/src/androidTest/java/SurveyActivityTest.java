@@ -8,8 +8,6 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.objects.WootricCustomMessage;
 
-import org.junit.Test;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -162,7 +160,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         getActivity();
     }
 
-    @Test
     public void testCustomTextsAreUsed() {
         Intent intent = getTestIntent();
 
@@ -182,7 +179,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_PLACEHOLDER)));
     }
 
-    @Test
     public void testCustomDetractorsTextsAreUsed() {
         Intent intent = getTestIntent();
 
@@ -199,7 +195,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_DETRACTORS_PLACEHOLDER)));
     }
 
-    @Test
     public void testCustomPassivesTextsAreUsed() {
         Intent intent = getTestIntent();
 
@@ -217,7 +212,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_PASSIVES_PLACEHOLDER)));
     }
 
-    @Test
     public void testCustomPromotersTextsAreUsed() {
         Intent intent = getTestIntent();
 
