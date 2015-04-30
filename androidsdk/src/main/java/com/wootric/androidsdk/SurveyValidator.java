@@ -77,11 +77,14 @@ public class SurveyValidator {
     boolean needsSurvey() {
         boolean wasRecentlySurveyed = preferencesUtils.wasRecentlySurveyed();
 
-        return !wasRecentlySurveyed ||
-                surveyImmediately ||
-                endUser.getCreatedAt() == NOT_SET ||
-                firstSurveyDelayPassed() ||
-                dayDelayPassed();
+        if(wasRecentlySurveyed) {
+            return false;
+        }
+
+        return surveyImmediately ||
+            endUser.getCreatedAt() == NOT_SET ||
+            firstSurveyDelayPassed() ||
+            dayDelayPassed();
     }
 
     private boolean firstSurveyDelayPassed() {

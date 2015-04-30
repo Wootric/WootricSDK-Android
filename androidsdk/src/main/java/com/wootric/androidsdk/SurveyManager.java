@@ -106,13 +106,9 @@ public class SurveyManager implements
     }
 
     public void survey() {
-        if(isAlreadyValidated()) {
-            setupSurveyForCurrentView();
-        } else {
-            getTrackingPixel();
-            updateLastSeen();
-            setupSurveyValidator();
-        }
+        getTrackingPixel();
+        updateLastSeen();
+        setupSurveyValidator();
     }
 
     private boolean isAlreadyValidated() {
@@ -136,7 +132,11 @@ public class SurveyManager implements
 
     @Override
     public void onSurveyValidated() {
-        new GetAccessTokenTask(mUser, this, connectionUtils).execute();
+        if(isAlreadyValidated()) {
+            setupSurveyForCurrentView();
+        } else {
+            new GetAccessTokenTask(mUser, this, connectionUtils).execute();
+        }
     }
 
     @Override

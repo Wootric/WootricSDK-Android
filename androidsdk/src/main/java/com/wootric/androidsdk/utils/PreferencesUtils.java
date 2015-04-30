@@ -18,6 +18,7 @@ public class PreferencesUtils {
 
     private static PreferencesUtils singleton = null;
 
+    private static final long NINETY_DAYS = 1000L *60L *60L *24L *90L;
     private final Context context;
 
     public static PreferencesUtils getInstance(Context context) {
@@ -55,8 +56,7 @@ public class PreferencesUtils {
             return false;
         }
 
-        long ninetyDays = 1000*60*60*24*90;
-        return new Date().getTime() - eventTime < ninetyDays;
+        return new Date().getTime() - eventTime < NINETY_DAYS;
     }
 
     public long getLastSeen() {

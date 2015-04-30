@@ -5,7 +5,6 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
-import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import org.robolectric.Robolectric;
 
@@ -30,10 +29,6 @@ public class TestUtils {
         }
 
         return TEST_ACTVITY;
-    }
-
-    public static PreferencesUtils sharedPrefs() {
-        return PreferencesUtils.getInstance(testActivity());
     }
 
     public static User testUser() {
