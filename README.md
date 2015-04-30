@@ -1,5 +1,25 @@
 # Wootric SDK for Android
 
+Installation
+=========================
+This library is distributed as Android library project so it can be included by referencing it as a library project.
+
+If you use Maven, you can include this library as a dependency:
+
+```xml
+<dependency>
+    <groupId>com.wootric</groupId>
+    <artifactId>wootric-sdk-android</artifactId>
+    <version>1</version>
+</dependency>
+```
+	
+For Gradle users:
+
+```xml
+compile 'com.wootric:wootric-sdk-android:1'
+```
+
 Usage
 =====
 
