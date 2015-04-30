@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionName project.VERSION_NAME
+        versionCode Integer.parseInt(project.VERSION_CODE)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,6 +23,21 @@ android {
     }
 }
 
+allprojects {
+    version = VERSION_NAME
+    group = GROUP
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
+apply from: 'maven_push.gradle'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
@@ -30,7 +45,7 @@ dependencies {
     // Mockito
     testCompile 'org.mockito:mockito-core:1.9.5'
 
-//    // Robolectric
+    // Robolectric
     testCompile 'junit:junit:4.12'
     testCompile "org.assertj:assertj-core:1.7.0"
     testCompile('org.robolectric:robolectric:3.0-rc2') {
