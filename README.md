@@ -10,14 +10,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>1</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 	
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:1'
+compile 'com.wootric:wootric-sdk-android:1.0.1'
 ```
 
 Usage

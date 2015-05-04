@@ -45,7 +45,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     public static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     public static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     public static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
-    public static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
     public static final String ARG_PRODUCT_NAME = "com.wootric.androidsdk.arg.product_name";
 
     private static final int STATE_RATING = 1;
@@ -57,7 +56,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private EndUser mEndUser;
     private User mUser;
     private String mOriginUrl;
-    private String mAccessToken;
     private String mProductName;
 
     private ScrollView mContainer;
@@ -85,9 +83,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private WootricCustomMessage mCustomMessage;
 
     private boolean mResponseSent;
-    private int mSelectedScore;
+    private int mSelectedScore = Constants.NOT_SET;
     private String mFeedbackInputValue;
     private int mCurrentState;
+    private boolean mContinueAfterConfigChange;
 
     private PreferencesUtils mPrefs;
 
@@ -99,7 +98,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, backgroundImage);
         surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, customMessage);
 
-        surveyActivity.putExtra(ARG_ACCESS_TOKEN, accessToken);
         surveyActivity.putExtra(ARG_END_USER, endUser);
         surveyActivity.putExtra(ARG_USER, user);
         surveyActivity.putExtra(ARG_ORIGIN_URL, originUrl);
@@ -119,7 +117,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
         setupRequestProperties(savedInstanceState);
 
-        if(mUser == null || mEndUser == null || mOriginUrl == null || mAccessToken == null) {
+        if(mUser == null || mEndUser == null || mOriginUrl == null) {
             finish();
             return;
         }
@@ -180,13 +178,11 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             mUser           = getIntent().getParcelableExtra(ARG_USER);
             mEndUser        = getIntent().getParcelableExtra(ARG_END_USER);
             mOriginUrl      = getIntent().getStringExtra(ARG_ORIGIN_URL);
-            mAccessToken    = getIntent().getStringExtra(ARG_ACCESS_TOKEN);
             mProductName    = getIntent().getStringExtra(ARG_PRODUCT_NAME);
         } else {
             mUser           = savedInstanceState.getParcelable(ARG_USER);
             mEndUser        = savedInstanceState.getParcelable(ARG_END_USER);
             mOriginUrl      = savedInstanceState.getString(ARG_ORIGIN_URL);
-            mAccessToken    = savedInstanceState.getString(ARG_ACCESS_TOKEN);
             mProductName    = savedInstanceState.getString(ARG_PRODUCT_NAME);
         }
     }
@@ -312,8 +308,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private void sendResponseRequest(boolean sendText) {
         String text = (sendText ? mEtFeedback.getText().toString() : "");
 
-        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, mSelectedScore, text, ConnectionUtils.get())
-                .execute();
+        new CreateResponseTask(
+                mPrefs.getAccessToken(),
+                mEndUser,
+                mOriginUrl,
+                mSelectedScore,
+                text,
+                ConnectionUtils.get()
+        ).execute();
 
         touchLastSurveyed();
 
@@ -321,7 +323,12 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void sendDeclineRequest() {
-        new CreateDeclineTask(mAccessToken, mEndUser, ConnectionUtils.get()).execute();
+        new CreateDeclineTask(
+                mPrefs.getAccessToken(),
+                mEndUser,
+                ConnectionUtils.get()
+        ).execute();
+
         touchLastSurveyed();
     }
 
@@ -500,10 +507,9 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         outState.putParcelable(ARG_END_USER, mEndUser);
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
-        outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
         outState.putString(ARG_PRODUCT_NAME, mProductName);
 
-
+        mContinueAfterConfigChange = true;
 
         super.onSaveInstanceState(outState);
     }
@@ -535,7 +541,11 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     protected void onStop() {
         super.onStop();
 
-        storeInputValues();
+        if(mContinueAfterConfigChange) {
+            storeInputValues();
+        } else {
+            clearAfterSurvey();
+        }
     }
 
     private void storeInputValues() {
