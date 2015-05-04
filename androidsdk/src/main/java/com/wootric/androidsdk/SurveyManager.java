@@ -15,6 +15,7 @@ import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
 import com.wootric.androidsdk.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.utils.Blur;
 import com.wootric.androidsdk.utils.ConnectionUtils;
+import com.wootric.androidsdk.utils.Constants;
 import com.wootric.androidsdk.utils.ImageUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -38,8 +39,7 @@ public class SurveyManager implements
     private User mUser;
     private String mProductName;
 
-    private static String sAccessToken;
-    static EndUser sEndUser;
+    private EndUser mEndUser;
 
     private boolean mActivityValid = true;
 
@@ -61,7 +61,7 @@ public class SurveyManager implements
         this.prefs = prefs;
         this.connectionUtils = connectionUtils;
 
-        sEndUser = endUser;
+        mEndUser = endUser;
         mUser = user;
     }
 
@@ -71,7 +71,7 @@ public class SurveyManager implements
     }
 
     public SurveyManager createdAt(long createdAt) {
-        sEndUser.setCreatedAt(createdAt);
+        mEndUser.setCreatedAt(createdAt);
         return this;
     }
 
@@ -105,6 +105,15 @@ public class SurveyManager implements
         return this;
     }
 
+    public SurveyManager forceSurvey() {
+        surveyValidator.forceSurvey();
+        return this;
+    }
+
+    EndUser getEndUser() {
+        return mEndUser;
+    }
+
     public void survey() {
         getTrackingPixel();
         updateLastSeen();
@@ -112,11 +121,11 @@ public class SurveyManager implements
     }
 
     private boolean isAlreadyValidated() {
-        return sAccessToken != null && sEndUser.hasId();
+        return prefs.getAccessToken() != null && prefs.getEndUserId() != Constants.INVALID_ID;
     }
 
     private void getTrackingPixel() {
-        new GetTrackingPixelTask(mUser, sEndUser, mOriginUrl).execute();
+        new GetTrackingPixelTask(mUser, mEndUser, mOriginUrl).execute();
     }
 
     void setupSurveyValidator() {
@@ -133,6 +142,8 @@ public class SurveyManager implements
     @Override
     public void onSurveyValidated() {
         if(isAlreadyValidated()) {
+            mEndUser.setId(prefs.getEndUserId());
+
             setupSurveyForCurrentView();
         } else {
             new GetAccessTokenTask(mUser, this, connectionUtils).execute();
@@ -141,10 +152,10 @@ public class SurveyManager implements
 
     @Override
     public void onAccessTokenReceived(String accessToken) {
-        sAccessToken = accessToken;
+        prefs.setAccessToken(accessToken);
 
         new GetEndUserTask(
-                sEndUser.getEmail(),
+                mEndUser.getEmail(),
                 accessToken,
                 this,
                 connectionUtils).execute();
@@ -153,9 +164,12 @@ public class SurveyManager implements
     @Override
     public void onEndUserReceived(EndUser endUser) {
         if(endUser == null) {
-            new CreateEndUserTask(sEndUser, sAccessToken, this, connectionUtils).execute();
+            new CreateEndUserTask(mEndUser, prefs.getAccessToken(), this, connectionUtils).execute();
         } else {
-            sEndUser.setId(endUser.getId());
+            mEndUser.setId(endUser.getId());
+
+            prefs.setEndUserId(mEndUser.getId());
+
             updateEndUserProperties();
             setupSurveyForCurrentView();
         }
@@ -170,16 +184,18 @@ public class SurveyManager implements
     }
 
     private void updateEndUserProperties() {
-        if(sEndUser.hasProperties()) {
-            new UpdateEndUserTask(sEndUser, sAccessToken, connectionUtils).execute();
+        if(mEndUser.hasProperties()) {
+            new UpdateEndUserTask(mEndUser, prefs.getAccessToken(), connectionUtils).execute();
         }
     }
 
     @Override
     public void onEndUserCreated(EndUser endUser) {
-        sEndUser = endUser;
+        mEndUser = endUser;
 
-        if(sEndUser != null) {
+        prefs.setEndUserId(mEndUser.getId());
+
+        if(mEndUser != null) {
             setupSurveyForCurrentView();
         }
     }
@@ -221,13 +237,8 @@ public class SurveyManager implements
             Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
             Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
 
-            SurveyActivity.start(activity, blurredScreenshot, sAccessToken, mUser, sEndUser,
+            SurveyActivity.start(activity, blurredScreenshot, prefs.getAccessToken(), mUser, mEndUser,
                     mOriginUrl, mCustomMessage, mProductName);
         }
-    }
-
-    public static void clearStaticFields() {
-        sAccessToken = null;
-        sEndUser = null;
     }
 }

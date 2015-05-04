@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import java.util.Date;
 
+import static com.wootric.androidsdk.utils.Constants.INVALID_ID;
 import static com.wootric.androidsdk.utils.Constants.NOT_SET;
 
 /**
@@ -15,6 +16,13 @@ public class PreferencesUtils {
     private static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
     private static final String KEY_LAST_SEEN = "last_seen";
     private static final String KEY_LAST_SURVEYED = "surveyed";
+    private static final String KEY_ACCESS_TOKEN = "access_token";
+    private static final String KEY_END_USER_ID = "end_user_id";
+
+    private static final String KEY_SELECTED_SCORE = "selected_score";
+    private static final String KEY_FEEDBACK_INPUT_VALUE = "feedback_input_value";
+    private static final String KEY_CURRENT_STATE = "current_state";
+    private static final String KEY_RESPONSE_SENT = "response_sent";
 
     private static PreferencesUtils singleton = null;
 
@@ -73,5 +81,69 @@ public class PreferencesUtils {
 
     public void setLastSurveyed(long lastSurveyed) {
         prefs().edit().putLong(KEY_LAST_SURVEYED, lastSurveyed).apply();
+    }
+
+    public void setAccessToken(String accessToken) {
+        prefs().edit().putString(KEY_ACCESS_TOKEN, accessToken).apply();
+    }
+
+    public String getAccessToken() {
+        return prefs().getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    public void clearAccessToken() {
+        setAccessToken(null);
+    }
+
+    public void setEndUserId(long endUserId) {
+        prefs().edit().putLong(KEY_END_USER_ID, endUserId).apply();
+    }
+
+    public long getEndUserId() {
+        return prefs().getLong(KEY_END_USER_ID, INVALID_ID);
+    }
+
+    public void clearEndUserId() {
+        setEndUserId(Constants.INVALID_ID);
+    }
+
+    public void setSelectedScore(int selectedScore) {
+        prefs().edit().putInt(KEY_SELECTED_SCORE, selectedScore).apply();
+    }
+
+    public int getSelectedScore() {
+        return prefs().getInt(KEY_SELECTED_SCORE, Constants.NOT_SET);
+    }
+
+    public void clearSelectedScore() {
+        setSelectedScore(Constants.NOT_SET);
+    }
+
+    public void setFeedbackInputValue(String feedbackInputValue) {
+        prefs().edit().putString(KEY_FEEDBACK_INPUT_VALUE, feedbackInputValue).apply();
+    }
+
+    public String getFeedbackInputValue() {
+        return prefs().getString(KEY_FEEDBACK_INPUT_VALUE, null);
+    }
+
+    public void clearFeedbackInputValue() {
+        setFeedbackInputValue(null);
+    }
+
+    public void setCurrentState(int currentState) {
+        prefs().edit().putInt(KEY_CURRENT_STATE, currentState).apply();
+    }
+
+    public int getCurrentState() {
+        return prefs().getInt(KEY_CURRENT_STATE, NOT_SET);
+    }
+
+    public void setResponseSent(boolean responseSent) {
+        prefs().edit().putBoolean(KEY_RESPONSE_SENT, responseSent).apply();
+    }
+
+    public boolean getResponseSent() {
+        return prefs().getBoolean(KEY_RESPONSE_SENT, false);
     }
 }

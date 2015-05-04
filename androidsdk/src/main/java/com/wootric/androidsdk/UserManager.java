@@ -52,7 +52,7 @@ public class UserManager {
         return surveyManager;
     }
 
-    public void invalidateActivity() {
+    void invalidateActivity() {
         if(surveyManager != null) {
             surveyManager.invalidateActivity();
         }

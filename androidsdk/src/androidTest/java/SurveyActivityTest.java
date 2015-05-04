@@ -48,7 +48,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
     @Override
     public void tearDown() throws Exception {
-        getActivity().clearStaticFields();
+        getActivity().clearAfterSurvey();
         super.tearDown();
     }
 

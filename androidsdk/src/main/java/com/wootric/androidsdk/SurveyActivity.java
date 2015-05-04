@@ -84,10 +84,12 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private WootricCustomMessage mCustomMessage;
 
-    private static boolean sResponseSent;
-    private static int sSelectedScore = Constants.NOT_SET;
-    private static String sFeedbackInputValue;
-    private static int sCurrentState = STATE_RATING;
+    private boolean mResponseSent;
+    private int mSelectedScore;
+    private String mFeedbackInputValue;
+    private int mCurrentState;
+
+    private PreferencesUtils mPrefs;
 
 
     static void start(Context context, Bitmap backgroundImage, String accessToken, User user,
@@ -122,6 +124,36 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             return;
         }
 
+        mPrefs = PreferencesUtils.getInstance(this);
+        setupLayoutElements();
+
+        setupStoredValues();
+
+        setupBackground(savedInstanceState);
+        setupCustomMessage(savedInstanceState);
+
+        mSurveyRatingBar.setOnGradeSelectedListener(this);
+        mBtnSubmit.setOnClickListener(submitResponse());
+        mBtnSendFeedback.setOnClickListener(sendFeedback());
+        mBtnDismiss.setOnClickListener(hideSurveyListener());
+        mBtnBackToRating.setOnClickListener(goBackToRating());
+
+        mTvSurveyQuestion.setText(getSurveyQuestion());
+        mTvPoweredBy.setOnClickListener(goToWootricPage());
+
+        setupFeedbackForm();
+
+        slideInSurvey();
+    }
+
+    private void setupStoredValues() {
+        setupCurrentState();
+        setupSelectedGrade();
+        setupFeedbackInputValue();
+        mResponseSent = mPrefs.getResponseSent();
+    }
+
+    private void setupLayoutElements() {
         mContainer = (ScrollView) findViewById(R.id.container);
         mRlSurvey = (RelativeLayout) mContainer.findViewById(R.id.rl_survey);
 
@@ -141,25 +173,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvThankYou = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you);
 
         mTvFinalThankYou = (TextView) mContainer.findViewById(R.id.tv_final_thank_you);
-
-        mSurveyRatingBar.setOnGradeSelectedListener(this);
-
-        setupBackground(savedInstanceState);
-        setupCustomMessage(savedInstanceState);
-
-        mBtnSubmit.setOnClickListener(submitResponse());
-        mBtnSendFeedback.setOnClickListener(sendFeedback());
-        mBtnDismiss.setOnClickListener(hideSurveyListener());
-        mBtnBackToRating.setOnClickListener(goBackToRating());
-
-        setupFeedbackForm();
-        mTvSurveyQuestion.setText(getSurveyQuestion());
-        mTvPoweredBy.setOnClickListener(goToWootricPage());
-
-        updateState(sCurrentState);
-        slideInSurvey();
-        setupSelectedGrade();
-        setupFeedbackInputValue();
     }
 
     private void setupRequestProperties(Bundle savedInstanceState) {
@@ -179,17 +192,28 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void setupSelectedGrade() {
-        if(sSelectedScore != Constants.NOT_SET) {
-            mSurveyRatingBar.setSelectedGrade(sSelectedScore);
+        int storedScore = mPrefs.getSelectedScore();
+
+        if(storedScore != Constants.NOT_SET) {
+            mSurveyRatingBar.setSelectedGrade(storedScore);
+            onScoreSelected(storedScore);
         }
     }
 
     private void setupFeedbackInputValue() {
-        if (sFeedbackInputValue != null) {
-            mEtFeedback.setText(sFeedbackInputValue);
+        mFeedbackInputValue = mPrefs.getFeedbackInputValue();
+
+        if (mFeedbackInputValue != null) {
+            mEtFeedback.setText(mFeedbackInputValue);
         } else {
             mEtFeedback.setText(null);
         }
+    }
+
+    private void setupCurrentState() {
+        int storedState = mPrefs.getCurrentState();
+
+        updateState(storedState == Constants.NOT_SET ? STATE_RATING : storedState);
     }
 
     private View.OnClickListener hideSurveyListener() {
@@ -288,12 +312,12 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private void sendResponseRequest(boolean sendText) {
         String text = (sendText ? mEtFeedback.getText().toString() : "");
 
-        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, sSelectedScore, text, ConnectionUtils.get())
+        new CreateResponseTask(mAccessToken, mEndUser, mOriginUrl, mSelectedScore, text, ConnectionUtils.get())
                 .execute();
 
         touchLastSurveyed();
 
-        sResponseSent = true;
+        mResponseSent = true;
     }
 
     private void sendDeclineRequest() {
@@ -302,19 +326,19 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void updateState(int state) {
-        sCurrentState = state;
+        mCurrentState = state;
 
-        if(STATE_RATING == sCurrentState) {
+        if(STATE_RATING == mCurrentState) {
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
-        } else if(STATE_FEEDBACK == sCurrentState) {
+        } else if(STATE_FEEDBACK == mCurrentState) {
            showFeedbackView();
-        } else if(STATE_RATING_BACK == sCurrentState) {
+        } else if(STATE_RATING_BACK == mCurrentState) {
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
             showKeyboard(false);
-        } else if(STATE_FINISH_SURVEY == sCurrentState) {
-            if (sResponseSent) {
+        } else if(STATE_FINISH_SURVEY == mCurrentState) {
+            if (mResponseSent) {
                 finishAfterResponse();
             } else {
                 finishAfterDecline();
@@ -326,14 +350,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mRlRating.setVisibility(View.GONE);
         mRlFeedback.setVisibility(View.VISIBLE);
 
-        mTvThankYouScore.setText(getString(R.string.thank_you_score) + " " + sSelectedScore);
+        mTvThankYouScore.setText(getString(R.string.thank_you_score) + " " + mSelectedScore);
 
         String customFollowupQuestion = null;
         String customPlaceholder = null;
 
         if(mCustomMessage != null) {
-            customFollowupQuestion = mCustomMessage.getFollowupQuestionForScore(sSelectedScore);
-            customPlaceholder = mCustomMessage.getPlaceholderForScore(sSelectedScore);
+            customFollowupQuestion = mCustomMessage.getFollowupQuestionForScore(mSelectedScore);
+            customPlaceholder = mCustomMessage.getPlaceholderForScore(mSelectedScore);
         }
 
         if(customFollowupQuestion != null) {
@@ -397,7 +421,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private void finishSurvey() {
         showKeyboard(false);
 
-        if (!sResponseSent) {
+        if (!mResponseSent) {
             sendDeclineRequest();
         }
 
@@ -414,7 +438,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        clearStaticFields();
+                        clearAfterSurvey();
 
                         mRlSurvey.setVisibility(View.GONE);
                         showFinalThankYou();
@@ -431,7 +455,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        clearStaticFields();
+                        clearAfterSurvey();
 
                         finish();
                     }
@@ -458,13 +482,13 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     @Override
     public void onBackPressed() {
-        if(STATE_FEEDBACK == sCurrentState) {
+        if(STATE_FEEDBACK == mCurrentState) {
             updateState(STATE_RATING_BACK);
-        } else if (STATE_RATING == sCurrentState || STATE_RATING_BACK == sCurrentState) {
+        } else if (STATE_RATING == mCurrentState || STATE_RATING_BACK == mCurrentState) {
             updateState(STATE_FINISH_SURVEY);
         } else {
             super.onBackPressed();
-            clearStaticFields();
+            clearAfterSurvey();
         }
     }
 
@@ -479,12 +503,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
         outState.putString(ARG_PRODUCT_NAME, mProductName);
 
+
+
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onScoreSelected(int score) {
-        sSelectedScore = score;
+        mSelectedScore = score;
         enableSubmit();
     }
 
@@ -509,19 +535,28 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     protected void onStop() {
         super.onStop();
 
-        if(mEtFeedback.getText().toString().length() > 0) {
-            sFeedbackInputValue = mEtFeedback.getText().toString();
-        }
-
-        finish();
+        storeInputValues();
     }
 
-    public void clearStaticFields() {
-        sSelectedScore = Constants.NOT_SET;
-        sFeedbackInputValue = null;
-        sCurrentState = STATE_RATING;
-        sResponseSent = false;
+    private void storeInputValues() {
+        final String feedbackValue = mEtFeedback.getText().toString();
 
-        SurveyManager.clearStaticFields();
+        if(feedbackValue.length() > 0) {
+            mPrefs.setFeedbackInputValue(feedbackValue);
+        }
+
+        mPrefs.setResponseSent(mResponseSent);
+        mPrefs.setCurrentState(mCurrentState);
+        mPrefs.setSelectedScore(mSelectedScore);
+    }
+
+    public void clearAfterSurvey() {
+        PreferencesUtils prefs = PreferencesUtils.getInstance(this);
+        prefs.clearAccessToken();
+        prefs.clearEndUserId();
+        prefs.clearSelectedScore();
+        prefs.clearFeedbackInputValue();
+        prefs.setCurrentState(STATE_RATING);
+        prefs.setResponseSent(false);
     }
 }

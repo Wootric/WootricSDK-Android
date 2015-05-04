@@ -54,6 +54,6 @@ public class UserManagerTest {
                 .endUser(END_USER_EMAIL, ORIGIN_URL);
 
         assertThat(surveyManager).isNotNull();
-        assertThat(SurveyManager.sEndUser.getEmail()).isEqualTo(END_USER_EMAIL);
+        assertThat(surveyManager.getEndUser().getEmail()).isEqualTo(END_USER_EMAIL);
     }
 }

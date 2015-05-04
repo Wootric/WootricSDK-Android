@@ -22,6 +22,7 @@ public class SurveyValidator {
 
     // Optional
     boolean surveyImmediately   = false;
+    boolean forceSurvey         = false;
     int dailyResponseCap        = NOT_SET;
     int registeredPercent       = NOT_SET;
     int visitorPercent          = NOT_SET;
@@ -60,11 +61,20 @@ public class SurveyValidator {
         this.resurveyThrottle = resurveyThrottle;
     }
 
+
+    public void forceSurvey() {
+        this.forceSurvey = true;
+    }
+
     public void setOnSurveyValidatedListener(OnSurveyValidatedListener onSurveyValidatedListener) {
         this.onSurveyValidatedListener = onSurveyValidatedListener;
     }
 
     void validate() {
+        if(forceSurvey) {
+            notifyShouldShowSurvey();
+        }
+
         if(needsSurvey()) {
             if(surveyImmediately) {
                 notifyShouldShowSurvey();
