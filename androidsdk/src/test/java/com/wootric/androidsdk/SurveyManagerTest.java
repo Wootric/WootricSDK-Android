@@ -55,7 +55,7 @@ public class SurveyManagerTest {
 
     @Test
     public void survey_doesNotUpdateLastSeen_ifRecentlyUpdated() throws Exception {
-        when(preferencesUtils.wasRecentlyLastSeen()).thenReturn(true);
+        when(preferencesUtils.wasRecentlySeen()).thenReturn(true);
 
         surveyManager.survey();
 
@@ -64,7 +64,7 @@ public class SurveyManagerTest {
 
     @Test
     public void survey_updatesLastSeen_ifNotRecentlyUpdated() throws Exception {
-        when(preferencesUtils.wasRecentlyLastSeen()).thenReturn(false);
+        when(preferencesUtils.wasRecentlySeen()).thenReturn(false);
 
         surveyManager.survey();
 

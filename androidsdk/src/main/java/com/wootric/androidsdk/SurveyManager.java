@@ -134,7 +134,7 @@ public class SurveyManager implements
     }
 
     void updateLastSeen() {
-        if(!prefs.wasRecentlyLastSeen()) {
+        if(!prefs.wasRecentlySeen()) {
             prefs.setLastSeen(new Date().getTime());
         }
     }

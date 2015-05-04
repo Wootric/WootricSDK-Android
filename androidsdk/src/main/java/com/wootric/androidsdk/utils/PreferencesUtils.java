@@ -49,7 +49,7 @@ public class PreferencesUtils {
         return context.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public boolean wasRecentlyLastSeen() {
+    public boolean wasRecentlySeen() {
         return isRecentTime(KEY_LAST_SEEN);
     }
 
@@ -145,5 +145,9 @@ public class PreferencesUtils {
 
     public boolean getResponseSent() {
         return prefs().getBoolean(KEY_RESPONSE_SENT, false);
+    }
+
+    public void clear() {
+        prefs().edit().clear().apply();
     }
 }
