@@ -25,9 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.tasks.CreateDeclineTask;
 import com.wootric.androidsdk.tasks.CreateResponseTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
@@ -80,7 +81,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private Bitmap mBackgroundImage;
 
-    private WootricCustomMessage mCustomMessage;
+    private CustomMessage mCustomMessage;
 
     private boolean mResponseSent;
     private int mSelectedScore = Constants.NOT_SET;
@@ -91,17 +92,16 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private PreferencesUtils mPrefs;
 
 
-    static void start(Context context, Bitmap backgroundImage, String accessToken, User user,
-                      EndUser endUser, String originUrl, WootricCustomMessage customMessage, String productName) {
+    static void start(Context context, Bitmap backgroundImage, User user, EndUser endUser, String originUrl, Settings settings) {
 
         Intent surveyActivity = new Intent(context, SurveyActivity.class);
         surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, backgroundImage);
-        surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, customMessage);
+        surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, settings.getCustomMessage());
 
         surveyActivity.putExtra(ARG_END_USER, endUser);
         surveyActivity.putExtra(ARG_USER, user);
         surveyActivity.putExtra(ARG_ORIGIN_URL, originUrl);
-        surveyActivity.putExtra(ARG_PRODUCT_NAME, productName);
+        surveyActivity.putExtra(ARG_PRODUCT_NAME, settings.getProductName());
 
         context.startActivity(surveyActivity);
 
@@ -415,10 +415,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         surveyQuestion += (mProductName == null ? "us" : mProductName);
         surveyQuestion += " to ";
 
-        if(mCustomMessage == null || mCustomMessage.getRecommendTo() == null) {
+        if(mCustomMessage == null || mCustomMessage.getRecommendTarget() == null) {
             surveyQuestion += getString(R.string.default_survey_question_recommend_target);
         } else {
-            surveyQuestion += mCustomMessage.getRecommendTo();
+            surveyQuestion += mCustomMessage.getRecommendTarget();
         }
 
         surveyQuestion += " ?";

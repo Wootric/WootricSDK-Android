@@ -1,10 +1,14 @@
 package com.wootric.androidsdk;
 
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.tasks.CheckEligibilityTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -72,12 +76,12 @@ public class SurveyValidator {
 
     void validate() {
         if(forceSurvey) {
-            notifyShouldShowSurvey();
+            notifyShouldShowSurvey(null);
         }
 
         if(needsSurvey()) {
             if(surveyImmediately) {
-                notifyShouldShowSurvey();
+                notifyShouldShowSurvey(null);
             } else {
                 checkEligibility();
             }
@@ -117,9 +121,9 @@ public class SurveyValidator {
                 user.getAccountToken(), endUser, dailyResponseCap,
                 registeredPercent, visitorPercent, resurveyThrottle, connectionUtils) {
             @Override
-            protected void onPostExecute(Boolean eligible) {
-                if(eligible) {
-                    notifyShouldShowSurvey();
+            protected void onPostExecute(JSONObject response) {
+                if(response != null) {
+                    parseEligibilityResponse(response);
                 }
             }
         };
@@ -127,13 +131,31 @@ public class SurveyValidator {
         checkEligibilityTask.execute();
     }
 
-    void notifyShouldShowSurvey() {
+    private void parseEligibilityResponse(JSONObject response) {
+        try {
+            boolean eligible = response.getBoolean("eligible");
+
+            if(eligible) {
+                JSONObject settingsJson = response.getJSONObject("settings");
+                if(settingsJson != null) {
+                    Settings settings = Settings.fromJson(settingsJson);
+
+                    notifyShouldShowSurvey(settings);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void notifyShouldShowSurvey(Settings settings) {
         if(onSurveyValidatedListener != null) {
-            onSurveyValidatedListener.onSurveyValidated();
+            onSurveyValidatedListener.onSurveyValidated(settings);
         }
     }
 
     interface OnSurveyValidatedListener {
-        void onSurveyValidated();
+        void onSurveyValidated(Settings settings);
     }
 }

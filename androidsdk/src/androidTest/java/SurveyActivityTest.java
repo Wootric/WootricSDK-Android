@@ -6,7 +6,7 @@ import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.SurveyActivity;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
+import com.wootric.androidsdk.objects.CustomMessage;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -163,8 +163,8 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     public void testCustomTextsAreUsed() {
         Intent intent = getTestIntent();
 
-        WootricCustomMessage customMessage = WootricCustomMessage.create()
-                .recommendTo(CUSTOM_TARGET)
+        CustomMessage customMessage = CustomMessage.create()
+                .recommendTarget(CUSTOM_TARGET)
                 .placeholder(CUSTOM_PLACEHOLDER)
                 .followupQuestion(CUSTOM_FOLLOWUP_QUESTION);
 
@@ -182,7 +182,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     public void testCustomDetractorsTextsAreUsed() {
         Intent intent = getTestIntent();
 
-        WootricCustomMessage customMessage = WootricCustomMessage.create()
+        CustomMessage customMessage = CustomMessage.create()
                 .detractorFollowupQuestion(CUSTOM_DETRACTORS_QUESTION)
                 .detractorPlaceholder(CUSTOM_DETRACTORS_PLACEHOLDER);
 
@@ -198,7 +198,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     public void testCustomPassivesTextsAreUsed() {
         Intent intent = getTestIntent();
 
-        WootricCustomMessage customMessage = WootricCustomMessage.create()
+        CustomMessage customMessage = CustomMessage.create()
                 .passiveFollowupQuestion(CUSTOM_PASSIVES_QUESTION)
                 .passivePlaceholder(CUSTOM_PASSIVES_PLACEHOLDER);
 
@@ -215,7 +215,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     public void testCustomPromotersTextsAreUsed() {
         Intent intent = getTestIntent();
 
-        WootricCustomMessage customMessage = WootricCustomMessage.create()
+        CustomMessage customMessage = CustomMessage.create()
                 .promoterFollowupQuestion(CUSTOM_PROMOTERS_QUESTION)
                 .promoterPlaceholder(CUSTOM_PROMOTERS_PLACEHOLDER);
 

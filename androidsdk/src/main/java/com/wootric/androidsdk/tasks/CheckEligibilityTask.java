@@ -17,7 +17,7 @@ import static com.wootric.androidsdk.utils.Constants.NOT_SET;
 /**
  * Created by maciejwitowski on 4/11/15.
  */
-public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
+public class CheckEligibilityTask extends AsyncTask<Void, Void, JSONObject> {
 
     private String accountToken;
     private EndUser endUser;
@@ -48,7 +48,7 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected JSONObject doInBackground(Void... params) {
 
         String urlWithParams = Constants.ELIGIBILITY_URL + "?" + eligibilityRequestParams();
 
@@ -56,8 +56,7 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
             String responseContent = connectionUtils.sendGet(urlWithParams);
 
             if(responseContent != null) {
-                JSONObject jsonObject = new JSONObject(responseContent);
-                return jsonObject.getBoolean("eligible");
+                return new JSONObject(responseContent);
             }
 
         } catch (JSONException e) {
@@ -66,7 +65,7 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, Boolean> {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     private String eligibilityRequestParams() {

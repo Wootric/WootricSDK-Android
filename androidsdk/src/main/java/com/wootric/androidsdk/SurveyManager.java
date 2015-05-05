@@ -2,12 +2,14 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
@@ -33,11 +35,11 @@ public class SurveyManager implements
 
     private final WeakReference<Activity> weakActivity;
     final SurveyValidator surveyValidator;
-    private WootricCustomMessage mCustomMessage;
 
     private final String mOriginUrl;
     private User mUser;
-    private String mProductName;
+
+    private Settings mSettings = new Settings();
 
     private EndUser mEndUser;
 
@@ -95,13 +97,13 @@ public class SurveyManager implements
         return this;
     }
 
-    public SurveyManager customMessage(WootricCustomMessage customMessage) {
-        mCustomMessage = customMessage;
+    public SurveyManager customMessage(CustomMessage customMessage) {
+        mSettings.setCustomMessage(customMessage);
         return this;
     }
 
     public SurveyManager productName(String productName) {
-        mProductName = productName;
+        mSettings.setProductName(productName);
         return this;
     }
 
@@ -120,7 +122,7 @@ public class SurveyManager implements
         setupSurveyValidator();
     }
 
-    private boolean isAlreadyValidated() {
+    private boolean isAlreadyAuthorized() {
         return prefs.getAccessToken() != null && prefs.getEndUserId() != Constants.INVALID_ID;
     }
 
@@ -140,8 +142,14 @@ public class SurveyManager implements
     }
 
     @Override
-    public void onSurveyValidated() {
-        if(isAlreadyValidated()) {
+    public void onSurveyValidated(Settings settings) {
+        mSettings.merge(settings);
+
+        if(!mSettings.firstSurveyDelayPassed(mEndUser.getCreatedAt())) {
+            return;
+        }
+
+        if(isAlreadyAuthorized()) {
             mEndUser.setId(prefs.getEndUserId());
 
             setupSurveyForCurrentView();
@@ -234,11 +242,29 @@ public class SurveyManager implements
         final Activity activity = weakActivity.get();
 
         if(activity != null && isActivityValid()) {
-            Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
-            Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
-
-            SurveyActivity.start(activity, blurredScreenshot, prefs.getAccessToken(), mUser, mEndUser,
-                    mOriginUrl, mCustomMessage, mProductName);
+            if(mSettings.getTimeDelay() > 0) {
+                startActivityWithDelay(activity, mSettings.getTimeDelay());
+            } else {
+                startActivity(activity);
+            }
         }
+    }
+
+    private void startActivity(Activity activity) {
+        Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
+        Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
+
+        SurveyActivity.start(activity, blurredScreenshot, mUser, mEndUser, mOriginUrl, mSettings);
+    }
+
+    private void startActivityWithDelay(final Activity activity, int delayInSeconds) {
+        int delayMillis = delayInSeconds * 1000;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(activity);
+            }
+        }, delayMillis);
     }
 }

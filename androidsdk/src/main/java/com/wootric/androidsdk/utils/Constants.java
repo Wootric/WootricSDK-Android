@@ -15,6 +15,8 @@ public class Constants {
 
     public static final String WOOTRIC_URL = "https://www.wootric.com";
 
+    public static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
+
 
     public static final int INVALID_ID = -1;
 

@@ -1,6 +1,7 @@
 package com.wootric.androidsdk;
 
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -14,7 +15,9 @@ import org.robolectric.annotation.Config;
 
 import static com.wootric.androidsdk.TestUtils.END_USER_EMAIL;
 import static com.wootric.androidsdk.TestUtils.testUser;
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -54,7 +57,7 @@ public class SurveyValidatorTest {
         surveyValidator.setSurveyImmediately(false);
         surveyValidator.validate();
 
-        verify(listener, never()).onSurveyValidated();
+        verify(listener, never()).onSurveyValidated(null);
     }
 
     @Test
@@ -67,7 +70,7 @@ public class SurveyValidatorTest {
         surveyValidator.setSurveyImmediately(true);
         surveyValidator.validate();
 
-        verify(listener, times(1)).onSurveyValidated();
+        verify(listener, times(1)).onSurveyValidated(null);
     }
 
     @Test
