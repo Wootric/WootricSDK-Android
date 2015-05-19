@@ -199,13 +199,13 @@ public class SurveyManager implements
 
     @Override
     public void onEndUserCreated(EndUser endUser) {
-        mEndUser = endUser;
-
-        prefs.setEndUserId(mEndUser.getId());
-
-        if(mEndUser != null) {
-            setupSurveyForCurrentView();
+        if(endUser == null) {
+            return;
         }
+
+        mEndUser = endUser;
+        prefs.setEndUserId(mEndUser.getId());
+        setupSurveyForCurrentView();
     }
 
     private void setupSurveyForCurrentView() {
