@@ -14,5 +14,6 @@
     <string name="default_placeholder">Help us by explaining your score.</string>
     <string name="dismiss">DISMISS</string>
     <string name="final_thank_you">Thank you for your response and your feedback.</string>
+    <string name="drag_to_change_score">Drag to change score</string>
 
 </resources>

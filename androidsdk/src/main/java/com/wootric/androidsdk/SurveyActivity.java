@@ -8,13 +8,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -78,6 +82,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private TextView mTvThankYou;
     private TextView mTvFinalThankYou;
     private TextView mTvPoweredBy;
+    private TextView mTvDragToChangeScore;
+    private TextView mTvSelectedGradeLabel;
 
     private Bitmap mBackgroundImage;
 
@@ -163,6 +169,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvSurveyQuestion = (TextView) mRlRating.findViewById(R.id.tv_survey_question);
         mSurveyRatingBar = (SurveyRatingBar) mRlRating.findViewById(R.id.survey_rating_bar);
         mBtnSubmit = (Button) mRlRating.findViewById(R.id.btn_submit);
+        mTvDragToChangeScore = (TextView) mRlRating.findViewById(R.id.tv_drag_to_change_score);
 
         mBtnBackToRating = (ImageButton) mRlFeedback.findViewById(R.id.btn_back_to_rating);
         mEtFeedback = (EditText) mRlFeedback.findViewById(R.id.et_feedback);
@@ -514,12 +521,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onScoreSelected(int score) {
-        mSelectedScore = score;
-        enableSubmit();
-    }
-
     private void enableSubmit() {
         if(mBtnSubmit.isEnabled()) {
             return;
@@ -568,5 +569,67 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         prefs.clearFeedbackInputValue();
         prefs.setCurrentState(STATE_RATING);
         prefs.setResponseSent(false);
+    }
+
+    @Override
+    public void onScoreSelected(int gradeValue) {
+        mSelectedScore = gradeValue;
+        enableSubmit();
+
+        mTvDragToChangeScore.setVisibility(View.VISIBLE);
+
+        if(mTvSelectedGradeLabel != null) {
+            mTvSelectedGradeLabel.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onScoreDragged(int gradeValue, int xCenter) {
+        mSelectedScore = gradeValue;
+        enableSubmit();
+
+        mTvDragToChangeScore.setVisibility(View.INVISIBLE);
+
+        if(mTvSelectedGradeLabel == null) {
+            mTvSelectedGradeLabel = new TextView(this);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ScreenUtils.dpToPx(18), ScreenUtils.dpToPx(18));
+            lp.addRule(RelativeLayout.ABOVE, mSurveyRatingBar.getId());
+            lp.setMargins(0,0,0,ScreenUtils.dpToPx(2));
+            mTvSelectedGradeLabel.setLayoutParams(lp);
+            mTvSelectedGradeLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            mTvSelectedGradeLabel.setTextColor(getResources().getColor(R.color.dark_gray));
+            mTvSelectedGradeLabel.setGravity(Gravity.CENTER);
+
+            mRlRating.addView(mTvSelectedGradeLabel, lp);
+
+            mTvSelectedGradeLabel.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mTvSelectedGradeLabel.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                    GradientDrawable background = new GradientDrawable();
+                    background.setStroke(ScreenUtils.dpToPx(1), getResources().getColor(R.color.dark_gray));
+                    mTvSelectedGradeLabel.setBackground(background);
+                    return true;
+                }
+            });
+        }
+
+        mTvSelectedGradeLabel.setText(String.valueOf(gradeValue));
+
+        mTvSelectedGradeLabel.animate()
+                .translationX(xCenter-mTvSelectedGradeLabel.getWidth()/2)
+                .setDuration(0)
+                .start();
+
+        mTvSelectedGradeLabel.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onScoreTouchReleased() {
+        mTvDragToChangeScore.setVisibility(View.VISIBLE);
+        if(mTvSelectedGradeLabel != null) {
+            mTvSelectedGradeLabel.setVisibility(View.INVISIBLE);
+        }
     }
 }

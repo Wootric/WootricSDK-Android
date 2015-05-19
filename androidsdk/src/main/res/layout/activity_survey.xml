@@ -36,10 +36,20 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"/>
 
+                <TextView
+                    android:id="@+id/tv_drag_to_change_score"
+                    android:text="@string/drag_to_change_score"
+                    android:gravity="center"
+                    android:textColor="@color/dark_gray"
+                    android:layout_marginTop="@dimen/survey_modal_button_margin"
+                    android:textSize="@dimen/survey_labels_size"
+                    android:layout_below="@+id/tv_survey_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <com.wootric.androidsdk.views.SurveyRatingBar
                     android:id="@+id/survey_rating_bar"
-                    android:layout_below="@+id/tv_survey_question"
-                    android:layout_marginTop="@dimen/survey_modal_button_margin"
+                    android:layout_below="@+id/tv_drag_to_change_score"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

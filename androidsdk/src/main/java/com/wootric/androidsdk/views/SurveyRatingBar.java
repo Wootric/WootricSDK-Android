@@ -54,9 +54,9 @@ public class SurveyRatingBar extends LinearLayout {
                 getViewTreeObserver().removeOnPreDrawListener(this);
 
                 GradientDrawable background = new GradientDrawable();
-                background.setCornerRadius(getHeight()/2);
+                background.setCornerRadius(getHeight() / 2);
 
-                if(mActive) {
+                if (mActive) {
                     background.setColor(getResources().getColor(R.color.gray));
                 } else {
                     background.setColor(getResources().getColor(R.color.white));
@@ -118,10 +118,6 @@ public class SurveyRatingBar extends LinearLayout {
 
         mCurrentScore = mScoreViews.get(selectedGrade);
         mCurrentScore.select(true);
-
-        if(mCallbacks != null) {
-            mCallbacks.onScoreSelected(selectedGrade);
-        }
     }
 
     private void setActiveGrades() {
@@ -141,16 +137,36 @@ public class SurveyRatingBar extends LinearLayout {
             activate();
         }
 
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-                ScoreView selectedGrade = getGradeViewForPosition(event.getX());
+        int action = event.getAction();
 
-                if(selectedGrade != null && selectedGrade != mCurrentScore) {
-                    setSelectedGrade(mScoreViews.indexOf(selectedGrade));
-                }
+        if(action == MotionEvent.ACTION_UP && mCallbacks != null) {
+            mCallbacks.onScoreTouchReleased();
+        } else if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE){
+            ScoreView selectedGrade = getGradeViewForPosition(event.getX());
+
+            if(selectedGrade != null && selectedGrade != mCurrentScore) {
+                updateScore(action, selectedGrade);
+            }
         }
+
         return true;
+    }
+
+    private void updateScore(int eventAction, ScoreView selectedGrade) {
+        int gradeValue = mScoreViews.indexOf(selectedGrade);
+        setSelectedGrade(gradeValue);
+
+        if(mCallbacks == null) {
+            return;
+        }
+
+        if(eventAction == MotionEvent.ACTION_DOWN) {
+            mCallbacks.onScoreSelected(gradeValue);
+        } else if(eventAction == MotionEvent.ACTION_MOVE) {
+            int xCenter = selectedGrade.getLeft() + selectedGrade.getWidth()/2;
+//            selectedGrade.getLocationOnScreen(location);
+            mCallbacks.onScoreDragged(gradeValue, xCenter);
+        }
     }
 
     public void setOnGradeSelectedListener(Callbacks callbacks) {
@@ -159,5 +175,7 @@ public class SurveyRatingBar extends LinearLayout {
 
     public interface Callbacks {
         void onScoreSelected(int gradeValue);
+        void onScoreDragged(int gradeValue, int xCenter);
+        void onScoreTouchReleased();
     }
 }
