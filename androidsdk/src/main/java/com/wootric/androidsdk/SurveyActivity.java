@@ -145,8 +145,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void setupStoredValues() {
-        setupCurrentState();
         setupSelectedGrade();
+        setupCurrentState();
         setupFeedbackInputValue();
         mResponseSent = mPrefs.getResponseSent();
     }
