@@ -54,7 +54,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
     public void testRatingView_initState() {
         setupActivity(getTestIntent());
-
         // Rating is displayed
         onView(withId(R.id.rl_rating)).check(matches(isDisplayed()));
 
@@ -241,7 +240,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     private Intent getTestIntent() {
         Intent surveyIntent = new Intent(getInstrumentation().getContext(), SurveyActivity.class);
 
-        surveyIntent.putExtra(SurveyActivity.ARG_ACCESS_TOKEN, "testToken");
+//        surveyIntent.putExtra(SurveyActivity.ARG_ACCESS_TOKEN, "testToken");
 
         EndUser endUser = new EndUser(1, "nps@example.com");
         surveyIntent.putExtra(SurveyActivity.ARG_END_USER, endUser);

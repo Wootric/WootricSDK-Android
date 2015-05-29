@@ -57,7 +57,7 @@
 
                 <TextView
                     android:id="@+id/tv_not_at_all_likely"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_marginRight="@dimen/labels_margin_horizontal"
                     android:layout_marginEnd="@dimen/labels_margin_horizontal"
                     android:layout_below="@id/survey_rating_bar"
@@ -69,7 +69,7 @@
 
                 <TextView
                     android:id="@+id/tv_extremely_likely"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/labels_margin_horizontal"
                     android:layout_marginStart="@dimen/labels_margin_horizontal"
                     android:text="@string/extremely_likely"
