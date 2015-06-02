@@ -1,5 +1,7 @@
 package com.wootric.androidsdk.tasks;
 
+import com.wootric.androidsdk.TestActivity;
+import com.wootric.androidsdk.TestUtils;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 
@@ -38,7 +40,7 @@ public class CreateResponseTaskTest {
 
         EndUser endUser = new EndUser(1, END_USER_EMAIL);
         createResponseTask = new CreateResponseTask(TEST_ACCESS_TOKEN, endUser, ORIGIN_URL,
-                TEST_SCORE, TEST_TEXT, connectionUtilsMock);
+                TEST_SCORE, TEST_TEXT, connectionUtilsMock,  TestUtils.testActivity());
     }
 
     @Test

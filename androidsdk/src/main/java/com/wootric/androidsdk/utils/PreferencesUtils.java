@@ -18,6 +18,7 @@ public class PreferencesUtils {
     private static final String KEY_LAST_SURVEYED = "surveyed";
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_END_USER_ID = "end_user_id";
+    private static final String KEY_PREVIOUS_FAILED_RESPONSE = "last_unsent_response";
 
     private static final String KEY_SELECTED_SCORE = "selected_score";
     private static final String KEY_FEEDBACK_INPUT_VALUE = "feedback_input_value";
@@ -76,6 +77,13 @@ public class PreferencesUtils {
 
     public void setLastSeen(long lastSeen) {
         prefs().edit().putLong(KEY_LAST_SEEN, lastSeen).apply();
+    }
+    public String getUnsentResponse() {
+        return prefs().getString(KEY_PREVIOUS_FAILED_RESPONSE, null);
+    }
+
+    public void setUnsent_response(String unsent_response) {
+        prefs().edit().putString(KEY_PREVIOUS_FAILED_RESPONSE, unsent_response).apply();
     }
 
     public void setLastSurveyed(long lastSurveyed) {

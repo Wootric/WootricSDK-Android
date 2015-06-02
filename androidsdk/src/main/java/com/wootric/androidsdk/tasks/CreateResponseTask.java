@@ -1,11 +1,17 @@
 package com.wootric.androidsdk.tasks;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -19,17 +25,19 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
     private final String originUrl;
     private final int score;
     private final String text;
+    private final Context mContext;
 
     private final ConnectionUtils connectionUtils;
 
     public CreateResponseTask(String accessToken, EndUser endUser, String originUrl, int score,
-                              String text, ConnectionUtils connectionUtils) {
+                              String text, ConnectionUtils connectionUtils, Context mContext) {
         this.accessToken = accessToken;
         this.endUser = endUser;
         this.originUrl = originUrl;
         this.score = score;
         this.text = text;
         this.connectionUtils = connectionUtils;
+        this.mContext = mContext;
     }
 
     @Override
@@ -44,12 +52,43 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
         try {
             connectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
         } catch (IOException e) {
+            PreferencesUtils prefs = PreferencesUtils.getInstance(mContext);
+            prefs.setUnsent_response(this.toJSON());
             e.printStackTrace();
         }
-
         return null;
     }
-
+    public String toJSON(){
+        String json = "";
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("endUser", endUser.toJson());
+            obj.put("originUrl", originUrl);
+            obj.put("score", score);
+            obj.put("text", text);
+            json = obj.toString();
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return json;
+    }
+    public static boolean restartIfUnsentMessageExist(Context context, ConnectionUtils connectionUtils, String accessToken){
+        PreferencesUtils prefs = PreferencesUtils.getInstance(context);
+        String json = prefs.getUnsentResponse();
+        if(json==null){
+            return false;
+        }
+        try {
+            JSONObject obj = new JSONObject(json);
+            CreateResponseTask task = new CreateResponseTask(accessToken,EndUser.fromJson(obj.getJSONObject("endUser")),
+                    obj.getString("originUrl"),obj.getInt("score"),obj.getString("text"), connectionUtils,context);
+            task.execute();
+            prefs.setUnsent_response(null);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
     private String requestParams() {
         Uri.Builder builder = new Uri.Builder()
                 .appendQueryParameter(Constants.PARAM_RESPONSE_ORIGIN_URL, originUrl)

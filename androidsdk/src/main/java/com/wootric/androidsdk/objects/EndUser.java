@@ -78,6 +78,12 @@ public class EndUser implements Parcelable {
         this.createdAt = createdAt;
     }
 
+    public JSONObject toJson() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("id",id);
+        obj.put("email",email);
+        return obj;
+    }
     public static EndUser fromJson(JSONObject jsonObject) throws JSONException {
         return new EndUser(
                 jsonObject.getLong("id"),
