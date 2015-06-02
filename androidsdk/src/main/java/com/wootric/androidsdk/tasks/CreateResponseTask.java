@@ -53,24 +53,10 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
             connectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
         } catch (IOException e) {
             PreferencesUtils prefs = PreferencesUtils.getInstance(mContext);
-            prefs.setUnsent_response(this.toJSON());
+            prefs.saveUnsentResponse(endUser, text, score, originUrl);
             e.printStackTrace();
         }
         return null;
-    }
-    public String toJSON(){
-        String json = "";
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("endUser", endUser.toJson());
-            obj.put("originUrl", originUrl);
-            obj.put("score", score);
-            obj.put("text", text);
-            json = obj.toString();
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return json;
     }
     public static boolean restartIfUnsentMessageExist(Context context, ConnectionUtils connectionUtils, String accessToken){
         PreferencesUtils prefs = PreferencesUtils.getInstance(context);
@@ -83,7 +69,7 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
             CreateResponseTask task = new CreateResponseTask(accessToken,EndUser.fromJson(obj.getJSONObject("endUser")),
                     obj.getString("originUrl"),obj.getInt("score"),obj.getString("text"), connectionUtils,context);
             task.execute();
-            prefs.setUnsent_response(null);
+            prefs.clearUnsentResponse();
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -11,6 +11,7 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
+import com.wootric.androidsdk.tasks.CreateResponseTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
 import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
@@ -119,7 +120,17 @@ public class SurveyManager implements
     public void survey() {
         getTrackingPixel();
         updateLastSeen();
+
+
+        if(shouldResendUnsentResponse()) {
+            new GetAccessTokenTask(mUser, this, connectionUtils).execute();
+        }
         setupSurveyValidator();
+    }
+
+    private boolean shouldResendUnsentResponse(){
+        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(weakActivity.get());
+        return preferencesUtils.getUnsentResponse()!=null && !(preferencesUtils.getAccessToken() != null && preferencesUtils.getEndUserId() != Constants.INVALID_ID);
     }
 
     private boolean isAlreadyAuthorized() {
@@ -160,6 +171,9 @@ public class SurveyManager implements
 
     @Override
     public void onAccessTokenReceived(String accessToken) {
+        if(shouldResendUnsentResponse()) {
+            CreateResponseTask.restartIfUnsentMessageExist(weakActivity.get(), ConnectionUtils.get(), accessToken);
+        }
         prefs.setAccessToken(accessToken);
 
         new GetEndUserTask(
