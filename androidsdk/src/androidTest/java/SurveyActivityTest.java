@@ -1,7 +1,12 @@
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.SurveyActivity;
@@ -11,6 +16,7 @@ import com.wootric.androidsdk.objects.CustomMessage;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
@@ -102,8 +108,12 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         // Add text in feedback edit text
         onView(withId(R.id.et_feedback)).perform(typeText("Great service"));
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 
+            onView(withId(R.id.et_feedback)).perform(closeSoftKeyboard());
+        }
         // Check if feedback btn is enabled
+        wait(500);
         onView(withId(R.id.btn_send_feedback))
                 .check(matches(isEnabled()))
                 .perform(click());
