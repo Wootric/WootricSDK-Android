@@ -1,6 +1,7 @@
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.SurveyActivity;
@@ -54,6 +55,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
     public void testRatingView_initState() {
         setupActivity(getTestIntent());
+        wait(1000);
         // Rating is displayed
         onView(withId(R.id.rl_rating)).check(matches(isDisplayed()));
 
@@ -115,7 +117,6 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         setupActivity(getTestIntent());
 
         goToFeedbackView(4);
-
         // Go back to rating
         onView(withId(R.id.btn_back_to_rating)).perform(click());
 
@@ -231,10 +232,17 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     /**
      ***********************************************************************************************
      **/
-
+    private void wait(int milliseconds){
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     private void goToFeedbackView(int score) {
+        wait(1000);
         onView(withText(String.valueOf(score))).perform(click());
-        onView(withText("SUBMIT")).perform(click());
+        onView(withText(R.string.submit)).perform(click());
     }
 
     private Intent getTestIntent() {
