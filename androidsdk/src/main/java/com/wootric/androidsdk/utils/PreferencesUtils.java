@@ -3,6 +3,11 @@ package com.wootric.androidsdk.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.wootric.androidsdk.objects.EndUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 import static com.wootric.androidsdk.utils.Constants.INVALID_ID;
@@ -18,6 +23,7 @@ public class PreferencesUtils {
     private static final String KEY_LAST_SURVEYED = "surveyed";
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_END_USER_ID = "end_user_id";
+    private static final String KEY_PREVIOUS_FAILED_RESPONSE = "last_unsent_response";
 
     private static final String KEY_SELECTED_SCORE = "selected_score";
     private static final String KEY_FEEDBACK_INPUT_VALUE = "feedback_input_value";
@@ -77,7 +83,27 @@ public class PreferencesUtils {
     public void setLastSeen(long lastSeen) {
         prefs().edit().putLong(KEY_LAST_SEEN, lastSeen).apply();
     }
+    public String getUnsentResponse() {
+        return prefs().getString(KEY_PREVIOUS_FAILED_RESPONSE, null);
+    }
 
+    public void saveUnsentResponse(EndUser endUser, String text, int score, String originUrl) {
+        String json = "";
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("endUser", endUser.toJson());
+            obj.put("originUrl", originUrl);
+            obj.put("score", score);
+            obj.put("text", text);
+            json = obj.toString();
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        prefs().edit().putString(KEY_PREVIOUS_FAILED_RESPONSE, json).apply();
+    }
+    public void clearUnsentResponse(){
+        prefs().edit().putString(KEY_PREVIOUS_FAILED_RESPONSE, null).apply();
+    }
     public void setLastSurveyed(long lastSurveyed) {
         prefs().edit().putLong(KEY_LAST_SURVEYED, lastSurveyed).apply();
     }

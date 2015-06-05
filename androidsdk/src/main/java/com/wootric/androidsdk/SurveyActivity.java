@@ -321,7 +321,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                 mOriginUrl,
                 mSelectedScore,
                 text,
-                ConnectionUtils.get()
+                ConnectionUtils.get(),
+                this
         ).execute();
 
         touchLastSurveyed();
