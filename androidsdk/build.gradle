@@ -61,3 +61,5 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 }
+
+apply from: 'maven_push.gradle'
