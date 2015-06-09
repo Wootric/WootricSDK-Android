@@ -58,6 +58,7 @@
                 <TextView
                     android:id="@+id/tv_not_at_all_likely"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginRight="@dimen/labels_margin_horizontal"
                     android:layout_marginEnd="@dimen/labels_margin_horizontal"
                     android:layout_below="@id/survey_rating_bar"
@@ -70,6 +71,7 @@
                 <TextView
                     android:id="@+id/tv_extremely_likely"
                     android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginLeft="@dimen/labels_margin_horizontal"
                     android:layout_marginStart="@dimen/labels_margin_horizontal"
                     android:text="@string/extremely_likely"
@@ -92,6 +94,7 @@
                     android:textSize="@dimen/survey_buttons"
                     android:enabled="false"
                     android:drawableLeft="@drawable/ic_submit_disabled"
+                    android:drawableStart="@drawable/ic_submit_disabled"
                     android:textColor="@color/gray"/>
             </RelativeLayout>
 
@@ -108,7 +111,8 @@
                     android:background="@null"
                     android:padding="4dp"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:id="@+id/tv_thank_you_score"
@@ -161,6 +165,7 @@
                     android:textSize="@dimen/survey_buttons"
                     android:enabled="false"
                     android:drawableLeft="@drawable/ic_send_arrow_disabled"
+                    android:drawableStart="@drawable/ic_send_arrow_disabled"
                     android:textColor="@color/gray"/>
             </RelativeLayout>
 
@@ -170,6 +175,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/powered_by"
                 android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:padding="4dp"
                 android:background="@null"
                 android:textSize="@dimen/survey_labels_size"
@@ -184,6 +190,7 @@
                 android:textSize="@dimen/survey_labels_size"
                 android:padding="4dp"
                 android:drawableLeft="@drawable/ic_close"
+                android:drawableStart="@drawable/ic_close"
                 android:textColor="@color/dark_gray"
                 android:background="@null"
                 android:text="@string/dismiss"

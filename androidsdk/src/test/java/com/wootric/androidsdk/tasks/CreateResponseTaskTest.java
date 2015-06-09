@@ -1,6 +1,5 @@
 package com.wootric.androidsdk.tasks;
 
-import com.wootric.androidsdk.TestActivity;
 import com.wootric.androidsdk.TestUtils;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;

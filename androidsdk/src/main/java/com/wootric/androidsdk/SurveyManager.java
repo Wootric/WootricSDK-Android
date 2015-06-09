@@ -40,7 +40,7 @@ public class SurveyManager implements
     private final String mOriginUrl;
     private User mUser;
 
-    private Settings mSettings = new Settings();
+    private final Settings mSettings = new Settings();
 
     private EndUser mEndUser;
 
