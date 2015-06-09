@@ -2,9 +2,14 @@ package com.wootric.androidsdk;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -25,9 +31,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
@@ -37,11 +45,13 @@ import com.wootric.androidsdk.tasks.CreateDeclineTask;
 import com.wootric.androidsdk.tasks.CreateResponseTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.utils.ShareReview;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyRatingBar;
 
 import java.util.Date;
+import java.util.List;
 
 public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {
 
@@ -68,6 +78,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private RelativeLayout mRlRating;
     private RelativeLayout mRlFeedback;
+    private RelativeLayout mRlShare;
     private TextView mBtnDismiss;
 
     private SurveyRatingBar mSurveyRatingBar;
@@ -96,7 +107,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private boolean mContinueAfterConfigChange;
 
     private PreferencesUtils mPrefs;
-
+    private ImageView mShareFacebook;
+    private ImageView mShareTwitter;
+    private ImageView mShareGooglePlus;
+    private ImageView mSharePlaystore;
 
     static void start(Context context, Bitmap backgroundImage, User user, EndUser endUser, String originUrl, Settings settings) {
 
@@ -122,7 +136,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         setContentView(R.layout.activity_survey);
 
         setupRequestProperties(savedInstanceState);
-
         if(mUser == null || mEndUser == null || mOriginUrl == null) {
             finish();
             return;
@@ -145,10 +158,15 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvSurveyQuestion.setText(getSurveyQuestion());
         mTvPoweredBy.setOnClickListener(goToWootricPage());
 
+        mShareFacebook.setOnClickListener(startFacebook());
+        mShareTwitter.setOnClickListener(startTwitter());
+        mShareGooglePlus.setOnClickListener(startGooglePlus());
+        mSharePlaystore.setOnClickListener(startPlaystore());
         setupFeedbackForm();
 
         slideInSurvey();
     }
+
 
     private void setupStoredValues() {
         setupSelectedGrade();
@@ -160,6 +178,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private void setupLayoutElements() {
         mContainer = (ScrollView) findViewById(R.id.container);
         mRlSurvey = (RelativeLayout) mContainer.findViewById(R.id.rl_survey);
+        mRlShare = (RelativeLayout) mContainer.findViewById(R.id.rl_share);
 
         mRlRating = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_rating);
         mRlFeedback = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_feedback);
@@ -178,6 +197,11 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvThankYou = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you);
 
         mTvFinalThankYou = (TextView) mContainer.findViewById(R.id.tv_final_thank_you);
+
+        mShareFacebook = (ImageView) mRlShare.findViewById(R.id.iv_share_facebook);
+        mShareTwitter = (ImageView) mRlShare.findViewById(R.id.iv_share_twitter);
+        mShareGooglePlus = (ImageView) mRlShare.findViewById(R.id.iv_share_google_plus);
+        mSharePlaystore = (ImageView) mRlShare.findViewById(R.id.iv_share_playstore);
     }
 
     private void setupRequestProperties(Bundle savedInstanceState) {
@@ -238,7 +262,66 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             }
         };
     }
+    private View.OnClickListener startFacebook() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareReview.startFacebook(SurveyActivity.this, "Review of ...", mEtFeedback.getText().toString());
+            }
+        };
+    }
 
+    private View.OnClickListener startTwitter() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareReview.startTwitter(SurveyActivity.this, "Review of ...", mEtFeedback.getText().toString());
+            }
+        };
+    }
+
+    private View.OnClickListener startGooglePlus() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareReview.startGooglePlus(SurveyActivity.this, "Review of ...", mEtFeedback.getText().toString());
+            }
+        };
+    }
+
+    private View.OnClickListener startPlaystore() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copyToClipboard(SurveyActivity.this, mEtFeedback.getText().toString());
+                Toast.makeText(SurveyActivity.this,"Your review has been copied to clipboard.",Toast.LENGTH_LONG).show();
+                ShareReview.startPlaystore(SurveyActivity.this);
+            }
+        };
+    }
+    @SuppressLint("NewApi")
+    @SuppressWarnings("deprecation")
+    public boolean copyToClipboard(Context context, String text) {
+        try {
+            int sdk = android.os.Build.VERSION.SDK_INT;
+            if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
+                        .getSystemService(context.CLIPBOARD_SERVICE);
+                clipboard.setText(text);
+            } else {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context
+                        .getSystemService(context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData
+                        .newPlainText(
+                                context.getResources().getString(
+                                        R.string.review), text);
+                clipboard.setPrimaryClip(clip);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private void setupFeedbackForm() {
         mEtFeedback.addTextChangedListener(new TextWatcher() {
             @Override
@@ -346,6 +429,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         if(STATE_RATING == mCurrentState) {
             mRlRating.setVisibility(View.VISIBLE);
             mRlFeedback.setVisibility(View.GONE);
+            mRlShare.setVisibility(View.GONE);
         } else if(STATE_FEEDBACK == mCurrentState) {
            showFeedbackView();
         } else if(STATE_RATING_BACK == mCurrentState) {
@@ -444,19 +528,21 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void finishAfterResponse() {
-        int finalThankYouHeight = mTvFinalThankYou.getHeight();
+        int finalHeight = mRlSurvey.getHeight() - mSelectedScore >= 8 ? 0 :mTvFinalThankYou.getHeight();
 
         mRlSurvey.animate()
-                .translationY(mRlSurvey.getHeight() - finalThankYouHeight)
+                .translationY(finalHeight)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         clearAfterSurvey();
-
-                        mRlSurvey.setVisibility(View.GONE);
-                        showFinalThankYou();
+                        if (mSelectedScore<8) {
+                            showFinalThankYou();
+                        } else {
+                            showSharePage();
+                        }
                     }
                 })
                 .start();
@@ -477,10 +563,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                 })
                 .start();
     }
-
+    private void showSharePage() {
+        mRlRating.setVisibility(View.GONE);
+        mRlFeedback.setVisibility(View.GONE);
+        mRlShare.setVisibility(View.VISIBLE);
+    }
     private void showFinalThankYou() {
+        mRlSurvey.setVisibility(View.GONE);
         mTvFinalThankYou.setAlpha(1);
-
         mTvFinalThankYou.animate()
                 .translationY(ScreenUtils.getScreenHeight(this))
                 .setDuration(500)
