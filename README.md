@@ -19,6 +19,7 @@ For Gradle users:
 ```xml
 compile 'com.wootric:wootric-sdk-android:1.1.0’
 ```
+Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
 Usage
 =====
