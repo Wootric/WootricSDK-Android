@@ -13,6 +13,8 @@
 
     <dimen name="final_thank_you_height">100dp</dimen>
 
+    <dimen name="share_icon_size">48dp</dimen>
+
     <dimen name="labels_margin_horizontal">8dp</dimen>
 
     <dimen name="tv_feedback_margins">12dp</dimen>

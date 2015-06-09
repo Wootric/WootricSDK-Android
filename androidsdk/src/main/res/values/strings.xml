@@ -15,5 +15,6 @@
     <string name="dismiss">DISMISS</string>
     <string name="final_thank_you">Thank you for your response and your feedback.</string>
     <string name="drag_to_change_score">Drag to change score</string>
-
+    <string name="tv_would_you_like_to_share">Would you like to share your review?</string>
+    <string name="review">Review Text</string>
 </resources>
