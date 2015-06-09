@@ -342,29 +342,34 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private void updateState(int state) {
         mCurrentState = state;
+        configureKeyboard();
 
-        if(STATE_RATING == mCurrentState) {
-            mRlRating.setVisibility(View.VISIBLE);
-            mRlFeedback.setVisibility(View.GONE);
-        } else if(STATE_FEEDBACK == mCurrentState) {
-           showFeedbackView();
-        } else if(STATE_RATING_BACK == mCurrentState) {
-            mRlRating.setVisibility(View.VISIBLE);
-            mRlFeedback.setVisibility(View.GONE);
-            showKeyboard(false);
-        } else if(STATE_FINISH_SURVEY == mCurrentState) {
-            if (mResponseSent) {
-                finishAfterResponse();
-            } else {
-                finishAfterDecline();
+        if(STATE_FINISH_SURVEY != mCurrentState) {
+            updateLayoutVisibility();
+
+            if (isFeedbackView()) {
+                configureFeedbackView();
             }
         }
     }
 
-    private void showFeedbackView() {
-        mRlRating.setVisibility(View.GONE);
-        mRlFeedback.setVisibility(View.VISIBLE);
+    private void updateLayoutVisibility() {
+        mRlRating.setVisibility(
+                isRatingView() ? View.VISIBLE : View.GONE);
 
+        mRlFeedback.setVisibility(
+                isFeedbackView() ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean isRatingView() {
+        return mCurrentState == STATE_RATING || mCurrentState == STATE_RATING_BACK;
+    }
+
+    private boolean isFeedbackView() {
+        return mCurrentState == STATE_FEEDBACK;
+    }
+
+    private void configureFeedbackView() {
         mTvThankYouScore.setText(getString(R.string.thank_you_score) + " " + mSelectedScore);
 
         String customFollowupQuestion = null;
@@ -382,19 +387,19 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         if(customPlaceholder != null) {
             mEtFeedback.setHint(customPlaceholder);
         }
-
-        showKeyboard(true);
     }
 
-    private void showKeyboard(boolean showKeyboard) {
-        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private void configureKeyboard() {
+        final InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if(showKeyboard) {
+        if(isFeedbackView()) {
             mEtFeedback.requestFocus();
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
         } else {
             mEtFeedback.clearFocus();
-            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(),
+                    InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
 
@@ -434,13 +439,17 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void finishSurvey() {
-        showKeyboard(false);
+        updateState(STATE_FINISH_SURVEY);
 
         if (!mResponseSent) {
             sendDeclineRequest();
         }
 
-        updateState(STATE_FINISH_SURVEY);
+        if (mResponseSent) {
+            finishAfterResponse();
+        } else {
+            finishAfterDecline();
+        }
     }
 
     private void finishAfterResponse() {
@@ -497,10 +506,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     @Override
     public void onBackPressed() {
-        if(STATE_FEEDBACK == mCurrentState) {
+        if(isFeedbackView()) {
             updateState(STATE_RATING_BACK);
-        } else if (STATE_RATING == mCurrentState || STATE_RATING_BACK == mCurrentState) {
-            updateState(STATE_FINISH_SURVEY);
+        } else if (isRatingView()) {
+            finishSurvey();
         } else {
             super.onBackPressed();
             clearAfterSurvey();
@@ -593,7 +602,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
         if(mTvSelectedGradeLabel == null) {
             mTvSelectedGradeLabel = new TextView(this);
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ScreenUtils.dpToPx(18), ScreenUtils.dpToPx(18));
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    ScreenUtils.dpToPx(18), ScreenUtils.dpToPx(18));
+
             lp.addRule(RelativeLayout.ABOVE, mSurveyRatingBar.getId());
             lp.setMargins(0,0,0,ScreenUtils.dpToPx(2));
             mTvSelectedGradeLabel.setLayoutParams(lp);
@@ -609,7 +621,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                     mTvSelectedGradeLabel.getViewTreeObserver().removeOnPreDrawListener(this);
 
                     GradientDrawable background = new GradientDrawable();
-                    background.setStroke(ScreenUtils.dpToPx(1), getResources().getColor(R.color.dark_gray));
+                    background.setStroke(ScreenUtils.dpToPx(1),
+                            getResources().getColor(R.color.dark_gray));
                     mTvSelectedGradeLabel.setBackground(background);
                     return true;
                 }
