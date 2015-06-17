@@ -3,10 +3,7 @@ package com.wootric.androidsdk;
 import android.app.Activity;
 
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.tasks.CreateResponseTask;
-import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
-import com.wootric.androidsdk.utils.Constants;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 /**

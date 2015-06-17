@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 

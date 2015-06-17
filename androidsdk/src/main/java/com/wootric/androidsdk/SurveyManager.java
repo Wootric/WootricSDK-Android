@@ -22,8 +22,10 @@ import com.wootric.androidsdk.utils.Constants;
 import com.wootric.androidsdk.utils.ImageUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
-import java.util.Date;
 
 /**
  * Created by maciejwitowski on 4/10/15.
@@ -118,38 +120,60 @@ public class SurveyManager implements
     }
 
     public void survey() {
-        getTrackingPixel();
-        updateLastSeen();
+        sendGetTrackingPixelRequest();
+        prefs.touchLastSeen();
 
-
-        if(shouldResendUnsentResponse()) {
-            new GetAccessTokenTask(mUser, this, connectionUtils).execute();
-        }
+        checkUnsentResponse();
         setupSurveyValidator();
     }
 
-    private boolean shouldResendUnsentResponse(){
-        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(weakActivity.get());
-        return preferencesUtils.getUnsentResponse()!=null && !(preferencesUtils.getAccessToken() != null && preferencesUtils.getEndUserId() != Constants.INVALID_ID);
+    private void checkUnsentResponse() {
+        if(prefs.getUnsentResponse() == null) {
+            return;
+        }
+
+        if(prefs.getAccessToken() == null) {
+            sendGetAccessTokenRequest();
+        } else if(prefs.getEndUserId() == Constants.INVALID_ID) {
+            sendGetEndUserRequest();
+        } else {
+            sendUnsentResponse();
+        }
+    }
+
+    private void sendUnsentResponse() {
+        String unsentResponse = prefs.getUnsentResponse();
+
+        if(unsentResponse == null){
+            return;
+        }
+
+        try {
+            JSONObject obj = new JSONObject(unsentResponse);
+
+            new CreateResponseTask(
+                    prefs.getAccessToken(),
+                    EndUser.fromJson(obj.getJSONObject("endUser")),
+                    obj.getString("originUrl"),
+                    obj.getInt("score"),
+                    obj.getString("text"),
+                    connectionUtils,
+                    prefs
+            ).execute();
+
+            prefs.clearUnsentResponse();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isAlreadyAuthorized() {
         return prefs.getAccessToken() != null && prefs.getEndUserId() != Constants.INVALID_ID;
     }
 
-    private void getTrackingPixel() {
-        new GetTrackingPixelTask(mUser, mEndUser, mOriginUrl).execute();
-    }
-
     void setupSurveyValidator() {
         surveyValidator.setOnSurveyValidatedListener(this);
         surveyValidator.validate();
-    }
-
-    void updateLastSeen() {
-        if(!prefs.wasRecentlySeen()) {
-            prefs.setLastSeen(new Date().getTime());
-        }
     }
 
     @Override
@@ -165,34 +189,73 @@ public class SurveyManager implements
 
             setupSurveyForCurrentView();
         } else {
-            new GetAccessTokenTask(mUser, this, connectionUtils).execute();
+            sendGetAccessTokenRequest();
         }
     }
 
     @Override
     public void onAccessTokenReceived(String accessToken) {
-        if(shouldResendUnsentResponse()) {
-            CreateResponseTask.restartIfUnsentMessageExist(weakActivity.get(), ConnectionUtils.get(), accessToken);
-        }
         prefs.setAccessToken(accessToken);
+        checkUnsentResponse();
 
+        sendGetEndUserRequest();
+    }
+
+    private void sendGetEndUserRequest() {
         new GetEndUserTask(
                 mEndUser.getEmail(),
-                accessToken,
+                prefs.getAccessToken(),
                 this,
-                connectionUtils).execute();
+                connectionUtils
+        ).execute();
+    }
+
+    private void sendGetAccessTokenRequest() {
+        new GetAccessTokenTask(
+                mUser,
+                this,
+                connectionUtils
+        ).execute();
+    }
+
+    private void sendGetTrackingPixelRequest() {
+        new GetTrackingPixelTask(
+                mUser,
+                mEndUser,
+                mOriginUrl
+        ).execute();
+    }
+
+    private void sendCreateEndUserRequest() {
+        new CreateEndUserTask(
+                mEndUser,
+                prefs.getAccessToken(),
+                this,
+                connectionUtils
+        ).execute();
+    }
+
+    private void sendUpdateEndUserRequest() {
+        new UpdateEndUserTask(
+                mEndUser,
+                prefs.getAccessToken(),
+                connectionUtils
+        ).execute();
     }
 
     @Override
     public void onEndUserReceived(EndUser endUser) {
         if(endUser == null) {
-            new CreateEndUserTask(mEndUser, prefs.getAccessToken(), this, connectionUtils).execute();
+            sendCreateEndUserRequest();
         } else {
             mEndUser.setId(endUser.getId());
 
             prefs.setEndUserId(mEndUser.getId());
 
-            updateEndUserProperties();
+            if(mEndUser.hasProperties()) {
+                sendUpdateEndUserRequest();
+            }
+
             setupSurveyForCurrentView();
         }
     }
@@ -203,12 +266,6 @@ public class SurveyManager implements
 
     boolean isActivityValid() {
         return mActivityValid;
-    }
-
-    private void updateEndUserProperties() {
-        if(mEndUser.hasProperties()) {
-            new UpdateEndUserTask(mEndUser, prefs.getAccessToken(), connectionUtils).execute();
-        }
     }
 
     @Override

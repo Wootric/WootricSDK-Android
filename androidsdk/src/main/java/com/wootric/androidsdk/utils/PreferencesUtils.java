@@ -175,4 +175,10 @@ public class PreferencesUtils {
     public void clear() {
         prefs().edit().clear().apply();
     }
+
+    public void touchLastSeen() {
+        if(!wasRecentlySeen()) {
+            setLastSeen(new Date().getTime());
+        }
+    }
 }
