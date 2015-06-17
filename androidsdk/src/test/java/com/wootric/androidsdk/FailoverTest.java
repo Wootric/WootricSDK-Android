@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLog;
 
 import java.net.URLEncoder;
 
@@ -66,7 +65,7 @@ public class FailoverTest {
 
         // simulate failed request without text
         CreateResponseTask createResponseTask = new CreateResponseTask(TEST_ACCESS_TOKEN, endUser, ORIGIN_URL,
-                TEST_SCORE, "", realConnectionUtil, activity);
+                TEST_SCORE, "", realConnectionUtil, prefs);
         createResponseTask.execute();
         assertThat(prefs.getUnsentResponse()).isNotNull();
 
@@ -75,37 +74,11 @@ public class FailoverTest {
 
         // simulate failed request with text
         CreateResponseTask createResponseWithTextTask = new CreateResponseTask(TEST_ACCESS_TOKEN, endUser, ORIGIN_URL,
-                TEST_SCORE, TEST_TEXT, realConnectionUtil, activity);
+                TEST_SCORE, TEST_TEXT, realConnectionUtil, prefs);
         createResponseWithTextTask.execute();
         assertThat(prefs.getUnsentResponse()).isNotNull();
 
         Log.v("message", prefs.getUnsentResponse());
         prefs.clear();
     }
-
-
-    @Test
-    public void onConnectionEnabled() throws Exception{
-        PreferencesUtils prefs = PreferencesUtils.getInstance(activity);
-        prefs.clear();
-        // no message in database
-        assertThat(CreateResponseTask.restartIfUnsentMessageExist(activity,mockConnectionUtil,TEST_ACCESS_TOKEN)).isFalse();
-
-        // create a message (realConnectionUtil causes 401 error hence failover takes place)
-        CreateResponseTask createResponseTask = new CreateResponseTask(TEST_ACCESS_TOKEN, endUser, ORIGIN_URL,
-                TEST_SCORE, TEST_TEXT, realConnectionUtil, activity);
-        createResponseTask.execute();
-
-        // test for failover
-        assertThat(CreateResponseTask.restartIfUnsentMessageExist(activity,mockConnectionUtil,TEST_ACCESS_TOKEN)).isTrue();
-
-        String url = "https://api.wootric.com/v1/end_users/1/responses?origin_url=" + URLEncoder.encode(ORIGIN_URL)
-                + "&score=" + String.valueOf(TEST_SCORE) + "&text=" + TEST_TEXT;
-
-        createResponseTask.execute();
-
-        verify(mockConnectionUtil).sendAuthorizedPost(url, TEST_ACCESS_TOKEN);
-        prefs.clear();
-    }
-
 }

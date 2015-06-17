@@ -322,7 +322,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
                 mSelectedScore,
                 text,
                 ConnectionUtils.get(),
-                this
+                mPrefs
         ).execute();
 
         touchLastSurveyed();

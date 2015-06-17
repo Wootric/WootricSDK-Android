@@ -16,6 +16,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 import static com.wootric.androidsdk.TestUtils.END_USER_EMAIL;
 import static com.wootric.androidsdk.TestUtils.ORIGIN_URL;
@@ -57,21 +58,10 @@ public class SurveyManagerTest {
     }
 
     @Test
-    public void survey_doesNotUpdateLastSeen_ifRecentlyUpdated() throws Exception {
-        when(preferencesUtils.wasRecentlySeen()).thenReturn(true);
-
+    public void survey_updatesLastSeen() throws Exception {
         surveyManager.survey();
 
-        verify(preferencesUtils, never()).setLastSeen(Mockito.anyLong());
-    }
-
-    @Test
-    public void survey_updatesLastSeen_ifNotRecentlyUpdated() throws Exception {
-        when(preferencesUtils.wasRecentlySeen()).thenReturn(false);
-
-        surveyManager.survey();
-
-        verify(preferencesUtils, times(1)).setLastSeen(Mockito.anyLong());
+        verify(preferencesUtils, times(1)).touchLastSeen();
     }
 
     @Test
