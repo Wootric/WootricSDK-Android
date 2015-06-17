@@ -46,11 +46,10 @@ import java.util.Date;
 public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {
 
     public static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
-    public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
     public static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     public static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     public static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
-    public static final String ARG_PRODUCT_NAME = "com.wootric.androidsdk.arg.product_name";
+    public static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
 
     private static final int STATE_RATING = 1;
     private static final int STATE_FEEDBACK = 2;
@@ -61,7 +60,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private EndUser mEndUser;
     private User mUser;
     private String mOriginUrl;
-    private String mProductName;
+    private Settings mSettings;
 
     private ScrollView mContainer;
     private RelativeLayout mRlSurvey;
@@ -87,8 +86,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private Bitmap mBackgroundImage;
 
-    private CustomMessage mCustomMessage;
-
     private boolean mResponseSent;
     private int mSelectedScore = Constants.NOT_SET;
     private String mFeedbackInputValue;
@@ -102,12 +99,11 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
         Intent surveyActivity = new Intent(context, SurveyActivity.class);
         surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, backgroundImage);
-        surveyActivity.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, settings.getCustomMessage());
 
         surveyActivity.putExtra(ARG_END_USER, endUser);
         surveyActivity.putExtra(ARG_USER, user);
         surveyActivity.putExtra(ARG_ORIGIN_URL, originUrl);
-        surveyActivity.putExtra(ARG_PRODUCT_NAME, settings.getProductName());
+        surveyActivity.putExtra(ARG_SETTINGS, settings);
 
         context.startActivity(surveyActivity);
 
@@ -134,7 +130,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         setupStoredValues();
 
         setupBackground(savedInstanceState);
-        setupCustomMessage(savedInstanceState);
 
         mSurveyRatingBar.setOnGradeSelectedListener(this);
         mBtnSubmit.setOnClickListener(submitResponse());
@@ -185,12 +180,12 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             mUser           = getIntent().getParcelableExtra(ARG_USER);
             mEndUser        = getIntent().getParcelableExtra(ARG_END_USER);
             mOriginUrl      = getIntent().getStringExtra(ARG_ORIGIN_URL);
-            mProductName    = getIntent().getStringExtra(ARG_PRODUCT_NAME);
+            mSettings       = getIntent().getParcelableExtra(ARG_SETTINGS);
         } else {
             mUser           = savedInstanceState.getParcelable(ARG_USER);
             mEndUser        = savedInstanceState.getParcelable(ARG_END_USER);
             mOriginUrl      = savedInstanceState.getString(ARG_ORIGIN_URL);
-            mProductName    = savedInstanceState.getString(ARG_PRODUCT_NAME);
+            mSettings       = savedInstanceState.getParcelable(ARG_SETTINGS);
         }
     }
 
@@ -273,22 +268,12 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private void setupBackground(Bundle savedInstanceState) {
         if(savedInstanceState == null) {
             mBackgroundImage = getIntent().getParcelableExtra(ARG_BACKGROUND_IMAGE);
-            mCustomMessage   = getIntent().getParcelableExtra(ARG_CUSTOM_MESSAGE);
         } else {
             mBackgroundImage = savedInstanceState.getParcelable(ARG_BACKGROUND_IMAGE);
-            mCustomMessage   = savedInstanceState.getParcelable(ARG_CUSTOM_MESSAGE);
         }
 
         if(mBackgroundImage != null) {
             mContainer.setBackground(new BitmapDrawable(getResources(), mBackgroundImage));
-        }
-    }
-
-    private void setupCustomMessage(Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
-            mCustomMessage   = getIntent().getParcelableExtra(ARG_CUSTOM_MESSAGE);
-        } else {
-            mCustomMessage   = savedInstanceState.getParcelable(ARG_CUSTOM_MESSAGE);
         }
     }
 
@@ -375,9 +360,10 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         String customFollowupQuestion = null;
         String customPlaceholder = null;
 
-        if(mCustomMessage != null) {
-            customFollowupQuestion = mCustomMessage.getFollowupQuestionForScore(mSelectedScore);
-            customPlaceholder = mCustomMessage.getPlaceholderForScore(mSelectedScore);
+        CustomMessage customMessage = mSettings.getCustomMessage();
+        if(customMessage != null) {
+            customFollowupQuestion = customMessage.getFollowupQuestionForScore(mSelectedScore);
+            customPlaceholder = customMessage.getPlaceholderForScore(mSelectedScore);
         }
 
         if(customFollowupQuestion != null) {
@@ -425,13 +411,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private String getSurveyQuestion() {
         String surveyQuestion = getString(R.string.default_survey_question_prefix) + " ";
 
-        surveyQuestion += (mProductName == null ? "us" : mProductName);
+        surveyQuestion += (mSettings.getProductName() == null ? "us" : mSettings.getProductName());
         surveyQuestion += " to ";
 
-        if(mCustomMessage == null || mCustomMessage.getRecommendTarget() == null) {
+        CustomMessage customMessage = mSettings.getCustomMessage();
+        if(customMessage == null || customMessage.getRecommendTarget() == null) {
             surveyQuestion += getString(R.string.default_survey_question_recommend_target);
         } else {
-            surveyQuestion += mCustomMessage.getRecommendTarget();
+            surveyQuestion += customMessage.getRecommendTarget();
         }
 
         surveyQuestion += " ?";
@@ -519,12 +506,11 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
-        outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
 
         outState.putParcelable(ARG_END_USER, mEndUser);
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
-        outState.putString(ARG_PRODUCT_NAME, mProductName);
+        outState.putParcelable(ARG_SETTINGS, mSettings);
 
         mContinueAfterConfigChange = true;
 

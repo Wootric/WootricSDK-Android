@@ -1,12 +1,7 @@
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.SurveyActivity;
@@ -155,7 +150,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
     public void testProductNameIsDisplayed() {
         Intent intent = getTestIntent();
-        intent.putExtra(SurveyActivity.ARG_PRODUCT_NAME, CUSTOM_PRODUCT_NAME);
+        intent.putExtra(SurveyActivity.ARG_SETTINGS, CUSTOM_PRODUCT_NAME);
         setupActivity(intent);
 
         onView(withId(R.id.tv_survey_question)).check(matches(withText(containsString(CUSTOM_PRODUCT_NAME))));
