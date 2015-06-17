@@ -1,5 +1,8 @@
 package com.wootric.androidsdk.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.wootric.androidsdk.utils.Constants;
 
 import org.json.JSONException;
@@ -10,7 +13,7 @@ import java.util.Date;
 /**
  * Created by maciejwitowski on 5/5/15.
  */
-public class Settings {
+public class Settings implements Parcelable {
 
     private int firstSurvey = Constants.NOT_SET;
     private int language = Constants.NOT_SET;
@@ -124,4 +127,39 @@ public class Settings {
 
         return new Date().getTime() - firstSurvey *  Constants.DAY_IN_MILLIS > timeFrom;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.firstSurvey);
+        dest.writeInt(this.language);
+        dest.writeParcelable(this.customMessage, 0);
+        dest.writeString(this.productName);
+        dest.writeInt(this.timeDelay);
+    }
+
+    public Settings() {
+    }
+
+    private Settings(Parcel in) {
+        this.firstSurvey = in.readInt();
+        this.language = in.readInt();
+        this.customMessage = in.readParcelable(CustomMessage.class.getClassLoader());
+        this.productName = in.readString();
+        this.timeDelay = in.readInt();
+    }
+
+    public static final Parcelable.Creator<Settings> CREATOR = new Parcelable.Creator<Settings>() {
+        public Settings createFromParcel(Parcel source) {
+            return new Settings(source);
+        }
+
+        public Settings[] newArray(int size) {
+            return new Settings[size];
+        }
+    };
 }
