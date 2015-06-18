@@ -10,16 +10,15 @@ import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.tasks.BlurBackgroundTask;
 import com.wootric.androidsdk.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.tasks.CreateResponseTask;
 import com.wootric.androidsdk.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.tasks.GetEndUserTask;
 import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
 import com.wootric.androidsdk.tasks.UpdateEndUserTask;
-import com.wootric.androidsdk.utils.Blur;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.Constants;
-import com.wootric.androidsdk.utils.ImageUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import org.json.JSONException;
@@ -316,16 +315,25 @@ public class SurveyManager implements
             if(mSettings.getTimeDelay() > 0) {
                 startActivityWithDelay(activity, mSettings.getTimeDelay());
             } else {
-                startActivity(activity);
+                prepareSurveyActivity();
             }
         }
     }
 
-    private void startActivity(Activity activity) {
-        Bitmap screenshot = ImageUtils.takeActivityScreenshot(activity, 4);
-        Bitmap blurredScreenshot = Blur.blur(activity, screenshot, 8);
+    private void prepareSurveyActivity() {
+        new BlurBackgroundTask(weakActivity) {
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                startSurveyActivity(bitmap);
+            }
+        }.execute();
+    }
 
-        SurveyActivity.start(activity, blurredScreenshot, mUser, mEndUser, mOriginUrl, mSettings);
+    private void startSurveyActivity(Bitmap background) {
+        Activity activity = weakActivity.get();
+        if(activity != null && !activity.isFinishing() && mActivityValid) {
+            SurveyActivity.start(activity, background, mUser, mEndUser, mOriginUrl, mSettings);
+        }
     }
 
     private void startActivityWithDelay(final Activity activity, int delayInSeconds) {
@@ -334,7 +342,7 @@ public class SurveyManager implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(activity);
+                prepareSurveyActivity();
             }
         }, delayMillis);
     }

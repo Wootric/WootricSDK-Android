@@ -14,7 +14,8 @@ public class ImageUtils {
         View view = activity.findViewById(android.R.id.content);
         Bitmap screenshot;
         view.setDrawingCacheEnabled(true);
-        screenshot = Bitmap.createScaledBitmap(view.getDrawingCache(), view.getWidth()/scale, view.getHeight()/scale, true);
+        screenshot = Bitmap.createScaledBitmap(view.getDrawingCache(),
+                view.getWidth()/scale, view.getHeight()/scale, true);
         view.setDrawingCacheEnabled(false);
         return screenshot;
     }
