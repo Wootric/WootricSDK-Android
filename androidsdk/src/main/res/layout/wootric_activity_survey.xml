@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -58,7 +58,6 @@
                 <TextView
                     android:id="@+id/wootric_tv_not_at_all_likely"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_marginRight="@dimen/wootric_labels_margin_horizontal"
                     android:layout_marginEnd="@dimen/wootric_labels_margin_horizontal"
                     android:layout_below="@id/wootric_survey_rating_bar"
@@ -71,7 +70,6 @@
                 <TextView
                     android:id="@+id/wootric_tv_extremely_likely"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginLeft="@dimen/wootric_labels_margin_horizontal"
                     android:layout_marginStart="@dimen/wootric_labels_margin_horizontal"
                     android:text="@string/wootric_extremely_likely"
@@ -94,7 +92,6 @@
                     android:textSize="@dimen/wootric_survey_buttons"
                     android:enabled="false"
                     android:drawableLeft="@drawable/wootric_ic_submit_disabled"
-                    android:drawableStart="@drawable/wootric_ic_submit_disabled"
                     android:textColor="@color/wootric_gray"/>
             </RelativeLayout>
 
@@ -111,8 +108,7 @@
                     android:background="@null"
                     android:padding="4dp"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
+                    android:layout_alignParentLeft="true"/>
 
                 <TextView
                     android:id="@+id/wootric_tv_thank_you_score"
@@ -165,7 +161,6 @@
                     android:textSize="@dimen/wootric_survey_buttons"
                     android:enabled="false"
                     android:drawableLeft="@drawable/wootric_ic_send_arrow_disabled"
-                    android:drawableStart="@drawable/wootric_ic_send_arrow_disabled"
                     android:textColor="@color/wootric_gray"/>
             </RelativeLayout>
 
@@ -175,7 +170,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/wootric_powered_by"
                 android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
                 android:padding="4dp"
                 android:background="@null"
                 android:textSize="@dimen/wootric_survey_labels_size"
@@ -190,7 +184,6 @@
                 android:textSize="@dimen/wootric_survey_labels_size"
                 android:padding="4dp"
                 android:drawableLeft="@drawable/wootric_ic_close"
-                android:drawableStart="@drawable/wootric_ic_close"
                 android:textColor="@color/wootric_dark_gray"
                 android:background="@null"
                 android:text="@string/wootric_dismiss"
@@ -212,6 +205,6 @@
             android:textColor="@color/wootric_pink"
             android:alpha="0"/>
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </ScrollView>

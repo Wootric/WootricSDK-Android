@@ -58,10 +58,10 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         setupActivity(getTestIntent());
         wait(1000);
         // Rating is displayed
-        onView(withId(R.id.rl_rating)).check(matches(isDisplayed()));
+        onView(withId(R.id.wootric_rl_rating)).check(matches(isDisplayed()));
 
         // Feedback is not displayed
-        onView(withId(R.id.rl_feedback)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.wootric_rl_feedback)).check(matches(not(isDisplayed())));
 
         // NPS question is displayed
         onView(
@@ -79,20 +79,20 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         goToFeedbackView(4);
 
         // Check is feedback layout is displayed
-        onView(withId(R.id.rl_rating)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.rl_feedback)).check(matches(isDisplayed()));
+        onView(withId(R.id.wootric_rl_rating)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.wootric_rl_feedback)).check(matches(isDisplayed()));
 
         // Show thank you texts
-        onView(withId(R.id.tv_thank_you_score)).check(matches(withText("You gave us 4")));
-        onView(withId(R.id.tv_thank_you)).check(matches(withText(R.string.default_followup_question)));
+        onView(withId(R.id.wootric_tv_thank_you_score)).check(matches(withText("You gave us 4")));
+        onView(withId(R.id.wootric_tv_thank_you)).check(matches(withText(R.string.wootric_default_followup_question)));
 
         // Check feedback edit text state
-        onView(withId(R.id.et_feedback))
+        onView(withId(R.id.wootric_et_feedback))
                 .check(matches(hasFocus()))
-                .check(matches(withHint(R.string.default_placeholder)));
+                .check(matches(withHint(R.string.wootric_default_placeholder)));
 
         // Check feedback btn is disabled
-        onView(withId(R.id.btn_send_feedback)).check(matches(not(isEnabled())));
+        onView(withId(R.id.wootric_btn_send_feedback)).check(matches(not(isEnabled())));
     }
 
     public void testFeedbackView_onSubmit() {
@@ -102,20 +102,19 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         goToFeedbackView(4);
 
         // Add text in feedback edit text
-        onView(withId(R.id.et_feedback)).perform(typeText("Great service"));
+        onView(withId(R.id.wootric_et_feedback)).perform(typeText("Great service"));
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-
-            onView(withId(R.id.et_feedback)).perform(closeSoftKeyboard());
+            onView(withId(R.id.wootric_et_feedback)).perform(closeSoftKeyboard());
         }
         // Check if feedback btn is enabled
         wait(500);
-        onView(withId(R.id.btn_send_feedback))
+        onView(withId(R.id.wootric_btn_send_feedback))
                 .check(matches(isEnabled()))
                 .perform(click());
 
-        onView(withId(R.id.rl_rating)).check(matches(not(isDisplayed())));
-        onView(withId(R.id.rl_feedback)).check(matches(not(isDisplayed())));
-        onView(withText(R.string.final_thank_you)).check(matches(isDisplayed()));
+        onView(withId(R.id.wootric_rl_rating)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.wootric_rl_feedback)).check(matches(not(isDisplayed())));
+        onView(withText(R.string.wootric_final_thank_you)).check(matches(isDisplayed()));
     }
 
     public void testFeedbackForm_goBackToRating() {
@@ -123,18 +122,18 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         goToFeedbackView(4);
         // Go back to rating
-        onView(withId(R.id.btn_back_to_rating)).perform(click());
+        onView(withId(R.id.wootric_btn_back_to_rating)).perform(click());
 
         // Check rating is displayed but feedback not
-        onView(withId(R.id.rl_rating)).check(matches(isDisplayed()));
-        onView(withId(R.id.rl_feedback)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.wootric_rl_rating)).check(matches(isDisplayed()));
+        onView(withId(R.id.wootric_rl_feedback)).check(matches(not(isDisplayed())));
 
         // Go back to feedback
-        onView(withText(R.string.submit)).check(matches(isEnabled()))
+        onView(withText(R.string.wootric_submit)).check(matches(isEnabled()))
                 .perform(click());
 
         // Check is feedback state saved
-        onView(withId(R.id.rl_feedback)).check(matches(isDisplayed()));
+        onView(withId(R.id.wootric_rl_feedback)).check(matches(isDisplayed()));
     }
 
     public void testFeedbackView_dismissBtn() {
@@ -142,10 +141,10 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         goToFeedbackView(4);
 
-        onView(withId(R.id.btn_dismiss)).perform(click());
+        onView(withId(R.id.wootric_btn_dismiss)).perform(click());
 
         // Check that final thank you is shown
-        onView(withText(R.string.final_thank_you)).check(matches(isDisplayed()));
+        onView(withText(R.string.wootric_final_thank_you)).check(matches(isDisplayed()));
     }
 
     public void testProductNameIsDisplayed() {
@@ -153,7 +152,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         intent.putExtra(SurveyActivity.ARG_SETTINGS, CUSTOM_PRODUCT_NAME);
         setupActivity(intent);
 
-        onView(withId(R.id.tv_survey_question)).check(matches(withText(containsString(CUSTOM_PRODUCT_NAME))));
+        onView(withId(R.id.wootric_tv_survey_question)).check(matches(withText(containsString(CUSTOM_PRODUCT_NAME))));
     }
 
     /***********************************************************************************************
@@ -176,12 +175,12 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
         intent.putExtra(SurveyActivity.ARG_CUSTOM_MESSAGE, customMessage);
         setupActivity(intent);
 
-        onView(withId(R.id.tv_survey_question)).check(matches(withText(endsWith(CUSTOM_TARGET + " ?"))));
+        onView(withId(R.id.wootric_tv_survey_question)).check(matches(withText(endsWith(CUSTOM_TARGET + " ?"))));
 
         goToFeedbackView(2);
 
-        onView(withId(R.id.tv_thank_you)).check(matches(withText(CUSTOM_FOLLOWUP_QUESTION)));
-        onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_PLACEHOLDER)));
+        onView(withId(R.id.wootric_tv_thank_you)).check(matches(withText(CUSTOM_FOLLOWUP_QUESTION)));
+        onView(withId(R.id.wootric_et_feedback)).check(matches(withHint(CUSTOM_PLACEHOLDER)));
     }
 
     public void testCustomDetractorsTextsAreUsed() {
@@ -196,8 +195,8 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         goToFeedbackView(2);
 
-        onView(withId(R.id.tv_thank_you)).check(matches(withText(CUSTOM_DETRACTORS_QUESTION)));
-        onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_DETRACTORS_PLACEHOLDER)));
+        onView(withId(R.id.wootric_tv_thank_you)).check(matches(withText(CUSTOM_DETRACTORS_QUESTION)));
+        onView(withId(R.id.wootric_et_feedback)).check(matches(withHint(CUSTOM_DETRACTORS_PLACEHOLDER)));
     }
 
     public void testCustomPassivesTextsAreUsed() {
@@ -213,8 +212,8 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         goToFeedbackView(7);
 
-        onView(withId(R.id.tv_thank_you)).check(matches(withText(CUSTOM_PASSIVES_QUESTION)));
-        onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_PASSIVES_PLACEHOLDER)));
+        onView(withId(R.id.wootric_tv_thank_you)).check(matches(withText(CUSTOM_PASSIVES_QUESTION)));
+        onView(withId(R.id.wootric_et_feedback)).check(matches(withHint(CUSTOM_PASSIVES_PLACEHOLDER)));
     }
 
     public void testCustomPromotersTextsAreUsed() {
@@ -230,13 +229,10 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
 
         goToFeedbackView(9);
 
-        onView(withId(R.id.tv_thank_you)).check(matches(withText(CUSTOM_PROMOTERS_QUESTION)));
-        onView(withId(R.id.et_feedback)).check(matches(withHint(CUSTOM_PROMOTERS_PLACEHOLDER)));
+        onView(withId(R.id.wootric_tv_thank_you)).check(matches(withText(CUSTOM_PROMOTERS_QUESTION)));
+        onView(withId(R.id.wootric_et_feedback)).check(matches(withHint(CUSTOM_PROMOTERS_PLACEHOLDER)));
     }
 
-    /**
-     ***********************************************************************************************
-     **/
     private void wait(int milliseconds){
         try {
             Thread.sleep(milliseconds);
@@ -247,7 +243,7 @@ public class SurveyActivityTest extends ActivityInstrumentationTestCase2<SurveyA
     private void goToFeedbackView(int score) {
         wait(1000);
         onView(withText(String.valueOf(score))).perform(click());
-        onView(withText(R.string.submit)).perform(click());
+        onView(withText(R.string.wootric_submit)).perform(click());
     }
 
     private Intent getTestIntent() {

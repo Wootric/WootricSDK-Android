@@ -52,14 +52,14 @@ public class ScoreView extends TextView {
     void select(boolean selected) {
         if(selected) {
             ShapeDrawable drawable = new ShapeDrawable(new OvalShape());
-            drawable.getPaint().setColor(getResources().getColor(R.color.pink));
+            drawable.getPaint().setColor(getResources().getColor(R.color.wootric_pink));
             setBackground(drawable);
-            setTextColor(getResources().getColor(R.color.white));
+            setTextColor(getResources().getColor(R.color.wootric_white));
 
             setElevation(true);
         } else {
             setBackground(null);
-            setTextColor(getResources().getColor(R.color.dark_gray));
+            setTextColor(getResources().getColor(R.color.wootric_dark_gray));
 
             setElevation(false);
         }
