@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -45,7 +46,6 @@ import java.util.Date;
 
 public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {
 
-    public static final String ARG_BACKGROUND_IMAGE = "com.wootric.androidsdk.arg.background_image";
     public static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     public static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     public static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
@@ -84,8 +84,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private TextView mTvDragToChangeScore;
     private TextView mTvSelectedGradeLabel;
 
-    private Bitmap mBackgroundImage;
-
     private boolean mResponseSent;
     private int mSelectedScore = Constants.NOT_SET;
     private String mFeedbackInputValue;
@@ -94,11 +92,13 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     private PreferencesUtils mPrefs;
 
+    public static Bitmap sBackgroundImage;
 
     static void start(Context context, Bitmap backgroundImage, User user, EndUser endUser, String originUrl, Settings settings) {
 
         Intent surveyActivity = new Intent(context, SurveyActivity.class);
-        surveyActivity.putExtra(SurveyActivity.ARG_BACKGROUND_IMAGE, backgroundImage);
+
+        sBackgroundImage = backgroundImage;
 
         surveyActivity.putExtra(ARG_END_USER, endUser);
         surveyActivity.putExtra(ARG_USER, user);
@@ -129,7 +129,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
         setupStoredValues();
 
-        setupBackground(savedInstanceState);
+        setupBackground();
 
         mSurveyRatingBar.setOnGradeSelectedListener(this);
         mBtnSubmit.setOnClickListener(submitResponse());
@@ -265,15 +265,9 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         });
     }
 
-    private void setupBackground(Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
-            mBackgroundImage = getIntent().getParcelableExtra(ARG_BACKGROUND_IMAGE);
-        } else {
-            mBackgroundImage = savedInstanceState.getParcelable(ARG_BACKGROUND_IMAGE);
-        }
-
-        if(mBackgroundImage != null) {
-            mContainer.setBackground(new BitmapDrawable(getResources(), mBackgroundImage));
+    private void setupBackground() {
+        if(sBackgroundImage != null) {
+            mContainer.setBackground(new BitmapDrawable(getResources(), sBackgroundImage));
         }
     }
 
@@ -505,8 +499,6 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(ARG_BACKGROUND_IMAGE, mBackgroundImage);
-
         outState.putParcelable(ARG_END_USER, mEndUser);
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
@@ -565,6 +557,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         prefs.clearFeedbackInputValue();
         prefs.setCurrentState(STATE_RATING);
         prefs.setResponseSent(false);
+        sBackgroundImage = null;
     }
 
     @Override
