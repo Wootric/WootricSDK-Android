@@ -57,10 +57,10 @@ public class SurveyRatingBar extends LinearLayout {
                 background.setCornerRadius(getHeight() / 2);
 
                 if (mActive) {
-                    background.setColor(getResources().getColor(R.color.gray));
+                    background.setColor(getResources().getColor(R.color.wootric_gray));
                 } else {
-                    background.setColor(getResources().getColor(R.color.white));
-                    background.setStroke(ScreenUtils.dpToPx(4), getResources().getColor(R.color.gray));
+                    background.setColor(getResources().getColor(R.color.wootric_white));
+                    background.setStroke(ScreenUtils.dpToPx(4), getResources().getColor(R.color.wootric_gray));
                 }
 
                 setBackground(background);

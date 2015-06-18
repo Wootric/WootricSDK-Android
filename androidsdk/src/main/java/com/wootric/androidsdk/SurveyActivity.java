@@ -115,7 +115,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_survey);
+        setContentView(R.layout.wootric_activity_survey);
 
         setupRequestProperties(savedInstanceState);
 
@@ -153,26 +153,26 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void setupLayoutElements() {
-        mContainer = (ScrollView) findViewById(R.id.container);
-        mRlSurvey = (RelativeLayout) mContainer.findViewById(R.id.rl_survey);
+        mContainer = (ScrollView) findViewById(R.id.wootric_container);
+        mRlSurvey = (RelativeLayout) mContainer.findViewById(R.id.wootric_rl_survey);
 
-        mRlRating = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_rating);
-        mRlFeedback = (RelativeLayout) mRlSurvey.findViewById(R.id.rl_feedback);
-        mBtnDismiss = (TextView) mRlSurvey.findViewById(R.id.btn_dismiss);
-        mTvPoweredBy = (TextView) mRlSurvey.findViewById(R.id.tv_powered_by);
+        mRlRating = (RelativeLayout) mRlSurvey.findViewById(R.id.wootric_rl_rating);
+        mRlFeedback = (RelativeLayout) mRlSurvey.findViewById(R.id.wootric_rl_feedback);
+        mBtnDismiss = (TextView) mRlSurvey.findViewById(R.id.wootric_btn_dismiss);
+        mTvPoweredBy = (TextView) mRlSurvey.findViewById(R.id.wootric_tv_powered_by);
 
-        mTvSurveyQuestion = (TextView) mRlRating.findViewById(R.id.tv_survey_question);
-        mSurveyRatingBar = (SurveyRatingBar) mRlRating.findViewById(R.id.survey_rating_bar);
-        mBtnSubmit = (Button) mRlRating.findViewById(R.id.btn_submit);
-        mTvDragToChangeScore = (TextView) mRlRating.findViewById(R.id.tv_drag_to_change_score);
+        mTvSurveyQuestion = (TextView) mRlRating.findViewById(R.id.wootric_tv_survey_question);
+        mSurveyRatingBar = (SurveyRatingBar) mRlRating.findViewById(R.id.wootric_survey_rating_bar);
+        mBtnSubmit = (Button) mRlRating.findViewById(R.id.wootric_btn_submit);
+        mTvDragToChangeScore = (TextView) mRlRating.findViewById(R.id.wootric_tv_drag_to_change_score);
 
-        mBtnBackToRating = (ImageButton) mRlFeedback.findViewById(R.id.btn_back_to_rating);
-        mEtFeedback = (EditText) mRlFeedback.findViewById(R.id.et_feedback);
-        mBtnSendFeedback = (Button) mRlFeedback.findViewById(R.id.btn_send_feedback);
-        mTvThankYouScore = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you_score);
-        mTvThankYou = (TextView) mRlFeedback.findViewById(R.id.tv_thank_you);
+        mBtnBackToRating = (ImageButton) mRlFeedback.findViewById(R.id.wootric_btn_back_to_rating);
+        mEtFeedback = (EditText) mRlFeedback.findViewById(R.id.wootric_et_feedback);
+        mBtnSendFeedback = (Button) mRlFeedback.findViewById(R.id.wootric_btn_send_feedback);
+        mTvThankYouScore = (TextView) mRlFeedback.findViewById(R.id.wootric_tv_thank_you_score);
+        mTvThankYou = (TextView) mRlFeedback.findViewById(R.id.wootric_tv_thank_you);
 
-        mTvFinalThankYou = (TextView) mContainer.findViewById(R.id.tv_final_thank_you);
+        mTvFinalThankYou = (TextView) mContainer.findViewById(R.id.wootric_tv_final_thank_you);
     }
 
     private void setupRequestProperties(Bundle savedInstanceState) {
@@ -250,15 +250,15 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0) {
                     mBtnSendFeedback.setEnabled(true);
-                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.submit));
+                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.wootric_submit));
 
-                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_arrow, null);
+                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.wootric_ic_send_arrow, null);
                     mBtnSendFeedback.setCompoundDrawablesWithIntrinsicBounds(icFeedback, null, null, null);
                 } else {
                     mBtnSendFeedback.setEnabled(false);
-                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.gray));
+                    mBtnSendFeedback.setTextColor(getResources().getColor(R.color.wootric_gray));
 
-                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_arrow_disabled, null);
+                    Drawable icFeedback = ResourcesCompat.getDrawable(getResources(), R.drawable.wootric_ic_send_arrow_disabled, null);
                     mBtnSendFeedback.setCompoundDrawablesWithIntrinsicBounds(icFeedback, null, null, null);
                 }
             }
@@ -355,7 +355,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private void configureFeedbackView() {
-        mTvThankYouScore.setText(getString(R.string.thank_you_score) + " " + mSelectedScore);
+        mTvThankYouScore.setText(getString(R.string.wootric_thank_you_score) + " " + mSelectedScore);
 
         String customFollowupQuestion = null;
         String customPlaceholder = null;
@@ -409,14 +409,14 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     }
 
     private String getSurveyQuestion() {
-        String surveyQuestion = getString(R.string.default_survey_question_prefix) + " ";
+        String surveyQuestion = getString(R.string.wootric_default_survey_question_prefix) + " ";
 
         surveyQuestion += (mSettings.getProductName() == null ? "us" : mSettings.getProductName());
         surveyQuestion += " to ";
 
         CustomMessage customMessage = mSettings.getCustomMessage();
         if(customMessage == null || customMessage.getRecommendTarget() == null) {
-            surveyQuestion += getString(R.string.default_survey_question_recommend_target);
+            surveyQuestion += getString(R.string.wootric_default_survey_question_recommend_target);
         } else {
             surveyQuestion += customMessage.getRecommendTarget();
         }
@@ -523,9 +523,9 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         }
 
         mBtnSubmit.setEnabled(true);
-        mBtnSubmit.setTextColor(getResources().getColor(R.color.submit));
+        mBtnSubmit.setTextColor(getResources().getColor(R.color.wootric_submit));
 
-        Drawable icSubmit = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_submit, null);
+        Drawable icSubmit = ResourcesCompat.getDrawable(getResources(), R.drawable.wootric_ic_submit, null);
         mBtnSubmit.setCompoundDrawablesWithIntrinsicBounds(icSubmit, null, null, null);
     }
 
@@ -596,7 +596,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
             lp.setMargins(0,0,0,ScreenUtils.dpToPx(2));
             mTvSelectedGradeLabel.setLayoutParams(lp);
             mTvSelectedGradeLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-            mTvSelectedGradeLabel.setTextColor(getResources().getColor(R.color.dark_gray));
+            mTvSelectedGradeLabel.setTextColor(getResources().getColor(R.color.wootric_dark_gray));
             mTvSelectedGradeLabel.setGravity(Gravity.CENTER);
 
             mRlRating.addView(mTvSelectedGradeLabel, lp);
@@ -608,7 +608,8 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
 
                     GradientDrawable background = new GradientDrawable();
                     background.setStroke(ScreenUtils.dpToPx(1),
-                            getResources().getColor(R.color.dark_gray));
+                            getResources().getColor(R.color.wootric_dark_gray));
+
                     mTvSelectedGradeLabel.setBackground(background);
                     return true;
                 }

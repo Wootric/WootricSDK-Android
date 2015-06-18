@@ -21,7 +21,8 @@
         android:background="@drawable/button_bg"
         android:text="Manually Start Survey"
         android:padding="20dp"
-        android:textColor="@color/white"
+        android:textColor="#ffffff"
         android:paddingLeft="30px"
         android:paddingRight="30px"/>
 </RelativeLayout>
+
