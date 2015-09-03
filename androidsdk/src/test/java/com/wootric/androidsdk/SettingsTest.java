@@ -2,7 +2,6 @@ package com.wootric.androidsdk;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.Settings;
-import com.wootric.androidsdk.utils.Constants;
 
 import org.json.JSONObject;
 import org.junit.Before;

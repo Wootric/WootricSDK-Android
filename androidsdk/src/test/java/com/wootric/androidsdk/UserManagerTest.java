@@ -50,10 +50,10 @@ public class UserManagerTest {
     }
 
     @Test public void endUser_returnsSurveyManagerWithEndUser() throws Exception {
-        SurveyManager surveyManager = userManager
+        SurveyManager_OLD surveyManagerOLD = userManager
                 .endUser(END_USER_EMAIL, ORIGIN_URL);
 
-        assertThat(surveyManager).isNotNull();
-        assertThat(surveyManager.getEndUser().getEmail()).isEqualTo(END_USER_EMAIL);
+        assertThat(surveyManagerOLD).isNotNull();
+        assertThat(surveyManagerOLD.getEndUser().getEmail()).isEqualTo(END_USER_EMAIL);
     }
 }

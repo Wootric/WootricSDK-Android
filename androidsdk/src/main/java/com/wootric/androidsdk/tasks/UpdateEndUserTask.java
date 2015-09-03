@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
-import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.Constants;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -3,7 +3,7 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +19,8 @@ public class EndUser implements Parcelable {
     private String email;
     private long createdAt = Constants.NOT_SET;
     private HashMap<String, String> properties = new HashMap<>();
+
+    public EndUser() {}
 
     public EndUser(long id, String email) {
         this.id = id;

@@ -1,12 +1,11 @@
 package com.wootric.androidsdk.tasks;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
-import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import java.io.IOException;

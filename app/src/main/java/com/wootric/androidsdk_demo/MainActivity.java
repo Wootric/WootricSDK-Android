@@ -10,7 +10,7 @@ public class MainActivity extends Activity {
 
     private static final String CLIENT_ID = "CLIENT ID";
     private static final String CLIENT_SECRET = "CLIENT SECRET";
-    private static final String ACCOUNT_TOKEN = "ACCOUNT TOKEN";
+    private static final String ACCOUNT_TOKEN = "NPS-5a38583e";
 
 
     @Override
@@ -18,23 +18,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Wootric.with(this)
-                .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-                .endUser("END USER EMAIL", "ORIGIN URL")
-                .survey();
+        Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        wootric.setEndUserEmail("nps@example.com");
+        wootric.survey();
     }
 
     public void showSurvey(View view) {
-        Wootric.with(this)
-                .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-                .endUser("END USER EMAIL", "ORIGIN URL")
-                .forceSurvey()
-                .survey();
-    }
-
-    @Override
-    protected void onStop() {
-        Wootric.stop();
-        super.onStop();
+        Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        wootric.setSurveyImmediately(true);
+        wootric.survey();
     }
 }

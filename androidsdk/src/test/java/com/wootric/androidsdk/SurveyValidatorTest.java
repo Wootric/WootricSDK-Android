@@ -1,7 +1,6 @@
 package com.wootric.androidsdk;
 
 import com.wootric.androidsdk.objects.EndUser;
-import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.when;
 @Config(manifest = Config.NONE, emulateSdk = 21)
 public class SurveyValidatorTest {
 
-    private SurveyValidator surveyValidator;
+    private SurveyValidator_OLD surveyValidatorOLD;
 
     @Mock ConnectionUtils connectionUtils;
     @Mock PreferencesUtils preferencesUtils;
@@ -40,7 +39,7 @@ public class SurveyValidatorTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        surveyValidator = new SurveyValidator(
+        surveyValidatorOLD = new SurveyValidator_OLD(
                 testUser(),
                 new EndUser(1, END_USER_EMAIL),
                 connectionUtils,
@@ -51,11 +50,11 @@ public class SurveyValidatorTest {
     public void doesNotNeedSurvey_whenSurveyedRecently() throws Exception {
         when(preferencesUtils.wasRecentlySurveyed()).thenReturn(true);
 
-        SurveyValidator.OnSurveyValidatedListener listener = mock(SurveyValidator.OnSurveyValidatedListener.class);
+        SurveyValidator_OLD.OnSurveyValidatedListener listener = mock(SurveyValidator_OLD.OnSurveyValidatedListener.class);
 
-        surveyValidator.setOnSurveyValidatedListener(listener);
-        surveyValidator.setSurveyImmediately(false);
-        surveyValidator.validate();
+        surveyValidatorOLD.setOnSurveyValidatedListener(listener);
+        surveyValidatorOLD.setSurveyImmediately(false);
+        surveyValidatorOLD.validate();
 
         verify(listener, never()).onSurveyValidated(null);
     }
@@ -64,31 +63,31 @@ public class SurveyValidatorTest {
     public void showsSurvey_whenNotSurveyedRecentlyAndSurveyImmediatelyIsSet() throws Exception {
         when(preferencesUtils.wasRecentlySurveyed()).thenReturn(false);
 
-        SurveyValidator.OnSurveyValidatedListener listener = mock(SurveyValidator.OnSurveyValidatedListener.class);
+        SurveyValidator_OLD.OnSurveyValidatedListener listener = mock(SurveyValidator_OLD.OnSurveyValidatedListener.class);
 
-        surveyValidator.setOnSurveyValidatedListener(listener);
-        surveyValidator.setSurveyImmediately(true);
-        surveyValidator.validate();
+        surveyValidatorOLD.setOnSurveyValidatedListener(listener);
+        surveyValidatorOLD.setSurveyImmediately(true);
+        surveyValidatorOLD.validate();
 
         verify(listener, times(1)).onSurveyValidated(null);
     }
 
     @Test
     public void setters_setProperties() throws Exception {
-        surveyValidator.setSurveyImmediately(true);
-        assertThat(surveyValidator.surveyImmediately).isTrue();
+        surveyValidatorOLD.setSurveyImmediately(true);
+        assertThat(surveyValidatorOLD.surveyImmediately).isTrue();
 
-        surveyValidator.setDailyResponseCap(100);
-        assertThat(surveyValidator.dailyResponseCap).isEqualTo(100);
+        surveyValidatorOLD.setDailyResponseCap(100);
+        assertThat(surveyValidatorOLD.dailyResponseCap).isEqualTo(100);
 
-        surveyValidator.setRegisteredPercent(100);
-        assertThat(surveyValidator.registeredPercent).isEqualTo(100);
+        surveyValidatorOLD.setRegisteredPercent(100);
+        assertThat(surveyValidatorOLD.registeredPercent).isEqualTo(100);
 
-        surveyValidator.setResurveyThrottle(100);
-        assertThat(surveyValidator.resurveyThrottle).isEqualTo(100);
+        surveyValidatorOLD.setResurveyThrottle(100);
+        assertThat(surveyValidatorOLD.resurveyThrottle).isEqualTo(100);
 
-        surveyValidator.setVisitorPercent(100);
-        assertThat(surveyValidator.visitorPercent).isEqualTo(100);
+        surveyValidatorOLD.setVisitorPercent(100);
+        assertThat(surveyValidatorOLD.visitorPercent).isEqualTo(100);
     }
 
 

@@ -1,4 +1,4 @@
-package com.wootric.androidsdk.utils;
+package com.wootric.androidsdk;
 
 /**
  * Created by maciejwitowski on 4/10/15.
@@ -25,10 +25,8 @@ public class Constants {
     // Request params
     public static final String PARAM_ACCOUNT_TOKEN         = "account_token";
     public static final String PARAM_EMAIL                 = "email";
-    public static final String PARAM_DAILY_RESPONSE_CAP    = "daily_response_cap";
-    public static final String PARAM_REGISTERED_PERCENT    = "registered_percent";
-    public static final String PARAM_VISITOR_PERCENT       = "visitor_percent";
-    public static final String PARAM_RESURVEY_THROTTLE     = "resurvey_throttle";
+    public static final String PARAM_SURVEY_IMMEDIATELY    = "survey_immediately";
+    public static final String PARAM_END_USER_CREATED_AT   = "end_user_created_at";
 
     public static final String PARAM_RESPONSE_ORIGIN_URL   = "origin_url";
     public static final String PARAM_RESPONSE_SCORE        = "score";

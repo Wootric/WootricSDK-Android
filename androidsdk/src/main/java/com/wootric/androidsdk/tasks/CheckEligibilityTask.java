@@ -3,48 +3,34 @@ package com.wootric.androidsdk.tasks;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.utils.ConnectionUtils;
-import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import static com.wootric.androidsdk.utils.Constants.NOT_SET;
-
 /**
  * Created by maciejwitowski on 4/11/15.
  */
 public class CheckEligibilityTask extends AsyncTask<Void, Void, JSONObject> {
 
-    private String accountToken;
-    private EndUser endUser;
+    private final String accountToken;
+    private final String endUserEmail;
+    private final boolean surveyImmediately;
+    private final long endUserCreatedAt;
 
-    // Optional
-    private int dailyResponseCap    = NOT_SET;
-    private int registeredPercent   = NOT_SET;
-    private int visitorPercent      = NOT_SET;
-    private int resurveyThrottle    = NOT_SET;
+    private final ConnectionUtils connectionUtils;
 
-    private ConnectionUtils connectionUtils;
-
-    public CheckEligibilityTask(String accountToken, EndUser endUser, int dailyResponseCap,
-                         int registeredPercent, int visitorPercent, int resurveyThrottle,
+    public CheckEligibilityTask(String accountToken, String endUserEmail, long endUserCreatedAt, boolean surveyImmediately,
                                 ConnectionUtils connectionUtils) {
-        if(accountToken == null || endUser == null) {
-            throw new IllegalArgumentException
-                    ("Account token and email must not be null.");
-        }
 
         this.accountToken       = accountToken;
-        this.endUser            = endUser;
-        this.dailyResponseCap   = dailyResponseCap;
-        this.registeredPercent  = registeredPercent;
-        this.visitorPercent     = visitorPercent;
-        this.resurveyThrottle   = resurveyThrottle;
-        this.connectionUtils = connectionUtils;
+        this.endUserEmail       = endUserEmail;
+        this.endUserCreatedAt   = endUserCreatedAt;
+        this.surveyImmediately  = surveyImmediately;
+        this.connectionUtils    = connectionUtils;
     }
 
     @Override
@@ -71,24 +57,9 @@ public class CheckEligibilityTask extends AsyncTask<Void, Void, JSONObject> {
     private String eligibilityRequestParams() {
         Uri.Builder builder = new Uri.Builder()
                 .appendQueryParameter(Constants.PARAM_ACCOUNT_TOKEN, accountToken)
-                .appendQueryParameter(Constants.PARAM_EMAIL, endUser.getEmail());
-
-        if(dailyResponseCap != NOT_SET) {
-            builder.appendQueryParameter(Constants.PARAM_DAILY_RESPONSE_CAP, String.valueOf(dailyResponseCap));
-        }
-
-
-        if(registeredPercent != NOT_SET) {
-            builder.appendQueryParameter(Constants.PARAM_REGISTERED_PERCENT, String.valueOf(registeredPercent));
-        }
-
-        if(visitorPercent != NOT_SET) {
-            builder.appendQueryParameter(Constants.PARAM_VISITOR_PERCENT, String.valueOf(visitorPercent));
-        }
-
-        if(resurveyThrottle != NOT_SET) {
-            builder.appendQueryParameter(Constants.PARAM_RESURVEY_THROTTLE, String.valueOf(resurveyThrottle));
-        }
+                .appendQueryParameter(Constants.PARAM_EMAIL, endUserEmail)
+                .appendQueryParameter(Constants.PARAM_SURVEY_IMMEDIATELY, String.valueOf(surveyImmediately))
+                .appendQueryParameter(Constants.PARAM_END_USER_CREATED_AT, String.valueOf(endUserCreatedAt));
 
         return builder.build().getEncodedQuery();
     }

@@ -10,25 +10,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
-import java.util.Date;
 
 import static com.wootric.androidsdk.TestUtils.END_USER_EMAIL;
 import static com.wootric.androidsdk.TestUtils.ORIGIN_URL;
 import static com.wootric.androidsdk.TestUtils.testActivity;
 import static com.wootric.androidsdk.TestUtils.testUser;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -36,11 +29,12 @@ import static org.mockito.Mockito.when;
 */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE, emulateSdk = 21)
-public class SurveyManagerTest {
+public class SurveyManagerOLDTest {
 
-    private SurveyManager surveyManager;
+    private SurveyManager_OLD surveyManagerOLD;
 
-    @Mock SurveyValidator surveyValidator;
+    @Mock
+    SurveyValidator_OLD surveyValidatorOLD;
     @Mock ConnectionUtils connectionUtils;
     @Mock PreferencesUtils preferencesUtils;
 
@@ -48,10 +42,10 @@ public class SurveyManagerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        surveyManager = new SurveyManager(new WeakReference<Activity>(testActivity()),
+        surveyManagerOLD = new SurveyManager_OLD(new WeakReference<Activity>(testActivity()),
                 testUser(),
                 new EndUser(1, END_USER_EMAIL),
-                surveyValidator,
+                surveyValidatorOLD,
                 ORIGIN_URL,
                 preferencesUtils,
                 connectionUtils);
@@ -59,15 +53,15 @@ public class SurveyManagerTest {
 
     @Test
     public void survey_updatesLastSeen() throws Exception {
-        surveyManager.survey();
+        surveyManagerOLD.survey();
 
         verify(preferencesUtils, times(1)).touchLastSeen();
     }
 
     @Test
     public void survey_startsValidation() throws Exception {
-        surveyManager.survey();
+        surveyManagerOLD.survey();
 
-        verify(surveyValidator, times(1)).validate();
+        verify(surveyValidatorOLD, times(1)).validate();
     }
 }

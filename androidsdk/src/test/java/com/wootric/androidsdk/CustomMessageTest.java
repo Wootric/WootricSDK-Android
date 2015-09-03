@@ -2,7 +2,6 @@ package com.wootric.androidsdk;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.Settings;
-import com.wootric.androidsdk.utils.Constants;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -10,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

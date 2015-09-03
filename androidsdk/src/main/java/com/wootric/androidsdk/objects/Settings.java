@@ -3,7 +3,7 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.wootric.androidsdk.utils.Constants;
+import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +19,7 @@ public class Settings implements Parcelable {
     private int language = Constants.NOT_SET;
 
     private CustomMessage customMessage;
+    private LocalizedTexts localizedTexts;
 
     private String productName;
     private int timeDelay = Constants.NOT_SET;
@@ -34,20 +35,16 @@ public class Settings implements Parcelable {
             settings.firstSurvey = json.getInt("first_survey");
         }
 
-        if(json.has("language")) {
-            settings.language = json.getInt("language");
-        }
-
         if(json.has("time_delay")) {
             settings.timeDelay = json.getInt("time_delay");
         }
 
-        if(json.has("product_name")) {
-            settings.productName = json.getString("product_name");
-        }
-
         if(json.has("messages")) {
             settings.customMessage = CustomMessage.fromJson(json.getJSONObject("messages"));
+        }
+
+        if(json.has("localized_texts")) {
+            settings.localizedTexts = LocalizedTexts.fromJson(json.getJSONObject("localized_texts"));
         }
 
         return settings;
