@@ -29,7 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -38,11 +37,10 @@ import com.wootric.androidsdk.tasks.CreateResponseTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
-import com.wootric.androidsdk.views.SurveyRatingBar;
 
 import java.util.Date;
 
-public class SurveyActivity extends Activity implements SurveyRatingBar.Callbacks {
+public class SurveyActivity extends Activity implements SurveyRatingBar_OLD.Callbacks {
 
     public static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     public static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -67,7 +65,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private RelativeLayout mRlFeedback;
     private TextView mBtnDismiss;
 
-    private SurveyRatingBar mSurveyRatingBar;
+    private SurveyRatingBar_OLD mSurveyRatingBar;
     private TextView mTvSurveyQuestion;
     private Button mBtnSubmit;
 
@@ -101,7 +99,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         surveyActivity.putExtra(ARG_END_USER, endUser);
         surveyActivity.putExtra(ARG_USER, user);
         surveyActivity.putExtra(ARG_ORIGIN_URL, originUrl);
-        surveyActivity.putExtra(ARG_SETTINGS, settings);
+//        surveyActivity.putExtra(ARG_SETTINGS, settings);
 
         context.startActivity(surveyActivity);
 
@@ -160,7 +158,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         mTvPoweredBy = (TextView) mRlSurvey.findViewById(R.id.wootric_tv_powered_by);
 
         mTvSurveyQuestion = (TextView) mRlRating.findViewById(R.id.wootric_tv_survey_question);
-        mSurveyRatingBar = (SurveyRatingBar) mRlRating.findViewById(R.id.wootric_survey_rating_bar);
+        mSurveyRatingBar = (SurveyRatingBar_OLD) mRlRating.findViewById(R.id.wootric_survey_rating_bar);
         mBtnSubmit = (Button) mRlRating.findViewById(R.id.wootric_btn_submit);
         mTvDragToChangeScore = (TextView) mRlRating.findViewById(R.id.wootric_tv_drag_to_change_score);
 
@@ -352,19 +350,19 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         String customFollowupQuestion = null;
         String customPlaceholder = null;
 
-        CustomMessage customMessage = mSettings.getCustomMessage();
-        if(customMessage != null) {
-            customFollowupQuestion = customMessage.getFollowupQuestionForScore(mSelectedScore);
-            customPlaceholder = customMessage.getPlaceholderForScore(mSelectedScore);
-        }
+//        CustomMessage customMessage = mSettings.getCustomMessage();
+//        if(customMessage != null) {
+//            customFollowupQuestion = customMessage.getFollowupQuestionForScore(mSelectedScore);
+//            customPlaceholder = customMessage.getPlaceholderForScore(mSelectedScore);
+//        }
 
-        if(customFollowupQuestion != null) {
-            mTvThankYou.setText(customFollowupQuestion);
-        }
-
-        if(customPlaceholder != null) {
-            mEtFeedback.setHint(customPlaceholder);
-        }
+//        if(customFollowupQuestion != null) {
+//            mTvThankYou.setText(customFollowupQuestion);
+//        }
+//
+//        if(customPlaceholder != null) {
+//            mEtFeedback.setHint(customPlaceholder);
+//        }
     }
 
     private void configureKeyboard() {
@@ -403,15 +401,15 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
     private String getSurveyQuestion() {
         String surveyQuestion = getString(R.string.wootric_default_survey_question_prefix) + " ";
 
-        surveyQuestion += (mSettings.getProductName() == null ? "us" : mSettings.getProductName());
+//        surveyQuestion += (mSettings.getProductName() == null ? "us" : mSettings.getProductName());
         surveyQuestion += " to ";
 
-        CustomMessage customMessage = mSettings.getCustomMessage();
-        if(customMessage == null || customMessage.getRecommendTarget() == null) {
-            surveyQuestion += getString(R.string.wootric_default_survey_question_recommend_target);
-        } else {
-            surveyQuestion += customMessage.getRecommendTarget();
-        }
+//        CustomMessage customMessage = mSettings.getCustomMessage();
+//        if(customMessage == null || customMessage.getRecommendTarget() == null) {
+//            surveyQuestion += getString(R.string.wootric_default_survey_question_recommend_target);
+//        } else {
+//            surveyQuestion += customMessage.getRecommendTarget();
+//        }
 
         surveyQuestion += " ?";
         return surveyQuestion;
@@ -500,7 +498,7 @@ public class SurveyActivity extends Activity implements SurveyRatingBar.Callback
         outState.putParcelable(ARG_END_USER, mEndUser);
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
-        outState.putParcelable(ARG_SETTINGS, mSettings);
+//        outState.putParcelable(ARG_SETTINGS, mSettings);
 
         mContinueAfterConfigChange = true;
 

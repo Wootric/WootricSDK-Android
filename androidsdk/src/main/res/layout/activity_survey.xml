@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <com.wootric.androidsdk.views.SurveyRatingBar
+                <com.wootric.androidsdk.views.SurveyRatingBar_OLD
                     android:id="@+id/wootric_survey_rating_bar"
                     android:layout_below="@+id/wootric_tv_drag_to_change_score"
                     android:gravity="center"

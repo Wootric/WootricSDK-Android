@@ -1,23 +1,33 @@
 package com.wootric.androidsdk.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.Html;
+
+import com.wootric.androidsdk.utils.TextUtils;
+
+import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class LocalizedTexts {
+public class LocalizedTexts implements Parcelable {
 
-    final String npsQuestion;
-    final String anchorLikely;
-    final String anchorNotLikely;
-    final String followupQuestion;
-    final String followupPlaceholder;
-    final String finalThankYou;
-    final String send;
-    final String dismiss;
-    final String socialShareQuestion;
-    final String socialShareDecline;
+    private final String npsQuestion;
+    private final String anchorLikely;
+    private final String anchorNotLikely;
+    private final String followupQuestion;
+    private final String followupPlaceholder;
+    private final String finalThankYou;
+    private final String send;
+    private final String dismiss;
+    private final String socialShareQuestion;
+    private final String socialShareDecline;
 
     public LocalizedTexts(String npsQuestion, String anchorLikely, String anchorNotLikely,
                           String followupQuestion, String followupPlaceholder, String finalThankYou,
@@ -56,4 +66,86 @@ public class LocalizedTexts {
             return null;
         }
     }
+
+    public String getNpsQuestion() {
+        return TextUtils.decode(npsQuestion);
+    }
+
+    public String getAnchorLikely() {
+        return TextUtils.decode(anchorLikely);
+    }
+
+    public String getAnchorNotLikely() {
+        return TextUtils.decode(anchorNotLikely);
+    }
+
+    public String getFollowupQuestion() {
+        return TextUtils.decode(followupQuestion);
+    }
+
+    public String getFollowupPlaceholder() {
+        return TextUtils.decode(followupPlaceholder);
+    }
+
+    public String getFinalThankYou() {
+        return TextUtils.decode(finalThankYou);
+    }
+
+    public String getSend() {
+        return TextUtils.decode(send);
+    }
+
+    public String getDismiss() {
+        return TextUtils.decode(dismiss);
+    }
+
+    public String getSocialShareQuestion() {
+        return TextUtils.decode(socialShareQuestion);
+    }
+
+    public String getSocialShareDecline() {
+        return TextUtils.decode(socialShareDecline);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.npsQuestion);
+        dest.writeString(this.anchorLikely);
+        dest.writeString(this.anchorNotLikely);
+        dest.writeString(this.followupQuestion);
+        dest.writeString(this.followupPlaceholder);
+        dest.writeString(this.finalThankYou);
+        dest.writeString(this.send);
+        dest.writeString(this.dismiss);
+        dest.writeString(this.socialShareQuestion);
+        dest.writeString(this.socialShareDecline);
+    }
+
+    private LocalizedTexts(Parcel in) {
+        this.npsQuestion = in.readString();
+        this.anchorLikely = in.readString();
+        this.anchorNotLikely = in.readString();
+        this.followupQuestion = in.readString();
+        this.followupPlaceholder = in.readString();
+        this.finalThankYou = in.readString();
+        this.send = in.readString();
+        this.dismiss = in.readString();
+        this.socialShareQuestion = in.readString();
+        this.socialShareDecline = in.readString();
+    }
+
+    public static final Parcelable.Creator<LocalizedTexts> CREATOR = new Parcelable.Creator<LocalizedTexts>() {
+        public LocalizedTexts createFromParcel(Parcel source) {
+            return new LocalizedTexts(source);
+        }
+
+        public LocalizedTexts[] newArray(int size) {
+            return new LocalizedTexts[size];
+        }
+    };
 }

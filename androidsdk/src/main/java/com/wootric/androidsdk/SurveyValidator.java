@@ -26,17 +26,17 @@ public class SurveyValidator {
     private final ConnectionUtils connectionUtils;
     private final PreferencesUtils preferencesUtils;
 
-    private final boolean surveyImmediately;
+    private final Settings settings;
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 
-    SurveyValidator(User user, EndUser endUser, boolean surveyImmediately,
+    SurveyValidator(User user, EndUser endUser, Settings settings,
                         ConnectionUtils connectionUtils, PreferencesUtils preferencesUtils) {
         this.user = user;
         this.endUser = endUser;
         this.connectionUtils = connectionUtils;
         this.preferencesUtils = preferencesUtils;
-        this.surveyImmediately = surveyImmediately;
+        this.settings = settings;
     }
 
     public void setOnSurveyValidatedListener(OnSurveyValidatedListener onSurveyValidatedListener) {
@@ -54,7 +54,7 @@ public class SurveyValidator {
         if(wasRecentlySurveyed)
             return false;
 
-        return surveyImmediately ||
+        return settings.isSurveyImmediately() ||
                 endUser.getCreatedAt() == NOT_SET ||
                 firstSurveyDelayPassed() ||
                 dayDelayPassed();
@@ -77,7 +77,12 @@ public class SurveyValidator {
 
     void checkEligibility() {
         CheckEligibilityTask checkEligibilityTask = new CheckEligibilityTask(
-                user.getAccountToken(), endUser.getEmail(), endUser.getCreatedAt(), surveyImmediately, connectionUtils) {
+                user.getAccountToken(),
+                endUser.getEmail(),
+                endUser.getCreatedAt(),
+                settings.isSurveyImmediately(),
+                connectionUtils) {
+
             @Override
             protected void onPostExecute(JSONObject response) {
                 if(response != null) {

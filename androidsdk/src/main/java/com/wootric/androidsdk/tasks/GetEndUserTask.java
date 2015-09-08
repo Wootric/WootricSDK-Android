@@ -18,14 +18,14 @@ import java.io.IOException;
  */
 public class GetEndUserTask extends AsyncTask<Void, Void, EndUser> {
 
-    private final String endUserEmail;
+    private final EndUser endUser;
     private final String accessToken;
     private final OnEndUserReceivedListener onEndUserReceivedListener;
     private final ConnectionUtils connectionUtils;
 
 
-    public GetEndUserTask(String endUserEmail, String accessToken, OnEndUserReceivedListener onEndUserReceivedListener, ConnectionUtils connectionUtils) {
-        this.endUserEmail = endUserEmail;
+    public GetEndUserTask(EndUser endUser, String accessToken, OnEndUserReceivedListener onEndUserReceivedListener, ConnectionUtils connectionUtils) {
+        this.endUser = endUser;
         this.accessToken  = accessToken;
         this.onEndUserReceivedListener = onEndUserReceivedListener;
         this.connectionUtils = connectionUtils;
@@ -62,7 +62,7 @@ public class GetEndUserTask extends AsyncTask<Void, Void, EndUser> {
 
     private String requestParams() {
         Uri.Builder builder = new Uri.Builder()
-                .appendQueryParameter(Constants.PARAM_EMAIL, endUserEmail);
+                .appendQueryParameter(Constants.PARAM_EMAIL, endUser.getEmail());
 
         return builder.build().getEncodedQuery();
     }

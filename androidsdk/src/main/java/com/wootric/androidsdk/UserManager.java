@@ -17,7 +17,7 @@ public class UserManager {
 
     private final WeakReference<Activity> weakActivity;
     private final User user;
-    private SurveyManager_OLD surveyManagerOLD;
+    private SurveyManager surveyManagerOLD;
 
     private final ConnectionUtils connectionUtils;
     private final PreferencesUtils preferencesUtils;
@@ -33,28 +33,28 @@ public class UserManager {
         this.user = user;
     }
 
-    public SurveyManager_OLD endUser(String endUserEmail, String originUrl) {
+    public SurveyManager endUser(String endUserEmail, String originUrl) {
         EndUser endUser = new EndUser(endUserEmail);
 
         return getSurveyManager(endUser, originUrl);
     }
 
-    public SurveyManager_OLD endUser(String endUserEmail, String originUrl, HashMap properties) {
+    public SurveyManager endUser(String endUserEmail, String originUrl, HashMap properties) {
         EndUser endUser = new EndUser(endUserEmail, properties);
 
         return getSurveyManager(endUser, originUrl);
     }
 
-    private SurveyManager_OLD getSurveyManager(EndUser endUser, String originUrl) {
-        SurveyValidator_OLD surveyValidatorOLD = new SurveyValidator_OLD(user, endUser, connectionUtils, preferencesUtils);
-        surveyManagerOLD = new SurveyManager_OLD(weakActivity, user, endUser, surveyValidatorOLD, originUrl, preferencesUtils, connectionUtils);
+    private SurveyManager getSurveyManager(EndUser endUser, String originUrl) {
+//        SurveyValidator_OLD surveyValidatorOLD = new SurveyValidator_OLD(user, endUser, connectionUtils, preferencesUtils);
+//        surveyManagerOLD = new SurveyManager_OLD(weakActivity, user, endUser, surveyValidatorOLD, originUrl, preferencesUtils, connectionUtils);
 
         return surveyManagerOLD;
     }
 
     void invalidateActivity() {
         if(surveyManagerOLD != null) {
-            surveyManagerOLD.invalidateActivity();
+//            surveyManagerOLD.invalidateActivity();
         }
     }
 }

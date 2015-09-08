@@ -16,4 +16,13 @@
     <dimen name="wootric_labels_margin_horizontal">8dp</dimen>
 
     <dimen name="wootric_tv_feedback_margins">12dp</dimen>
+
+
+    <!-- NEW -->
+    <dimen name="wootric_dialog_header_padding">32dp</dimen>
+    <dimen name="wootric_dialog_header_text_size">24sp</dimen>
+
+    <dimen name="wootric_rating_notch_radius">4dp</dimen>
+    <dimen name="wootric_rating_notch_margin_horizontal">8dp</dimen>
+    <dimen name="wootric_rating_track_width">2dp</dimen>
 </resources>

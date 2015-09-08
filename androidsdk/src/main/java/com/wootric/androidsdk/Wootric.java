@@ -1,29 +1,32 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.wootric.androidsdk.objects.EndUser;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by maciejwitowski on 4/10/15.
  */
 public class Wootric {
 
+    private final WeakReference<Context> mWeakContext;
     private final EndUser endUser;
     private final User user;
-    private final Activity activity;
     private String originUrl;
-
-    private boolean surveyImmediately = false;
+    private final Settings settings;
 
     static Wootric singleton;
 
-    public static Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
+    public static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
         if(singleton == null) {
-            singleton = new Wootric(activity, clientId, clientSecret, accountToken);
+            singleton = new Wootric(context, clientId, clientSecret, accountToken);
         }
 
         return singleton;
@@ -37,21 +40,24 @@ public class Wootric {
         this.originUrl = originUrl;
     }
 
-    public void setSurveyImmediately(boolean forceSurvey) {
-        this.surveyImmediately = forceSurvey;
+    public void setSurveyImmediately(boolean surveyImmediately) {
+        this.settings.setSurveyImmediately(surveyImmediately);
     }
 
     public void survey() {
         ConnectionUtils connectionUtils = ConnectionUtils.get();
-        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(activity);
-        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, surveyImmediately, connectionUtils, preferencesUtils);
-        SurveyManager surveyManager = new SurveyManager(this, connectionUtils, preferencesUtils, surveyValidator);
+        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(mWeakContext.get());
+
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings, connectionUtils, preferencesUtils);
+
+        SurveyManager surveyManager = new SurveyManager(mWeakContext, user, endUser, originUrl,
+                settings, connectionUtils, preferencesUtils, surveyValidator);
 
         surveyManager.start();
     }
 
-    private Wootric(Activity activity, String clientId, String clientSecret, String accountToken) {
-        if(activity == null) {
+    private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
+        if(context == null) {
             throw new IllegalArgumentException("Context must not be null.");
         }
 
@@ -59,9 +65,10 @@ public class Wootric {
             throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
         }
 
-        this.activity = activity;
+        mWeakContext = new WeakReference<Context>(context);
         this.endUser = new EndUser();
         this.user = new User(clientId, clientSecret, accountToken);
+        this.settings = new Settings();
     }
 
     EndUser getEndUser() {

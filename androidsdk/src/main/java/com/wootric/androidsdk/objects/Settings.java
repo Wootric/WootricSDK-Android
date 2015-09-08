@@ -13,16 +13,16 @@ import java.util.Date;
 /**
  * Created by maciejwitowski on 5/5/15.
  */
-public class Settings implements Parcelable {
+public class Settings {
 
     private int firstSurvey = Constants.NOT_SET;
-    private int language = Constants.NOT_SET;
+
+    private int timeDelay = 0;
 
     private CustomMessage customMessage;
     private LocalizedTexts localizedTexts;
 
-    private String productName;
-    private int timeDelay = Constants.NOT_SET;
+    private boolean surveyImmediately;
 
     public static Settings fromJson(JSONObject json) throws JSONException {
         Settings settings = new Settings();
@@ -50,45 +50,6 @@ public class Settings implements Parcelable {
         return settings;
     }
 
-    public void setFirstSurvey(int firstSurvey) {
-        this.firstSurvey = firstSurvey;
-    }
-
-    public void setLanguage(int language) {
-        this.language = language;
-    }
-
-    public void setCustomMessage(CustomMessage customMessage) {
-        this.customMessage = customMessage;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public void setTimeDelay(int timeDelay) {
-        this.timeDelay = timeDelay;
-    }
-
-    public int getFirstSurvey() {
-        return firstSurvey;
-    }
-
-    public int getLanguage() {
-        return language;
-    }
-
-    public CustomMessage getCustomMessage() {
-        return customMessage;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public int getTimeDelay() {
-        return timeDelay;
-    }
 
     // Sets values from the argument settings only if they are not provided yet
     public void merge(Settings settings) {
@@ -96,25 +57,15 @@ public class Settings implements Parcelable {
             return;
         }
 
-        if(this.productName == null) {
-            this.productName = settings.productName;
-        }
-
         if(this.customMessage == null) {
             this.customMessage = settings.customMessage;
-        }
-
-        if(this.firstSurvey == Constants.NOT_SET) {
-            this.firstSurvey = settings.firstSurvey;
-        }
-
-        if(this.language == Constants.NOT_SET) {
-            this.language = settings.language;
         }
 
         if(this.timeDelay == Constants.NOT_SET) {
             this.timeDelay = settings.timeDelay;
         }
+
+        this.localizedTexts = settings.localizedTexts;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -125,38 +76,23 @@ public class Settings implements Parcelable {
         return new Date().getTime() - firstSurvey *  Constants.DAY_IN_MILLIS > timeFrom;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setSurveyImmediately(boolean surveyImmediately) {
+        this.surveyImmediately = surveyImmediately;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.firstSurvey);
-        dest.writeInt(this.language);
-        dest.writeParcelable(this.customMessage, 0);
-        dest.writeString(this.productName);
-        dest.writeInt(this.timeDelay);
+    public boolean isSurveyImmediately() {
+        return surveyImmediately;
     }
 
-    public Settings() {
+    public int getTimeDelay() {
+        return timeDelay;
     }
 
-    private Settings(Parcel in) {
-        this.firstSurvey = in.readInt();
-        this.language = in.readInt();
-        this.customMessage = in.readParcelable(CustomMessage.class.getClassLoader());
-        this.productName = in.readString();
-        this.timeDelay = in.readInt();
+    public CustomMessage getCustomMessage() {
+        return customMessage;
     }
 
-    public static final Parcelable.Creator<Settings> CREATOR = new Parcelable.Creator<Settings>() {
-        public Settings createFromParcel(Parcel source) {
-            return new Settings(source);
-        }
-
-        public Settings[] newArray(int size) {
-            return new Settings[size];
-        }
-    };
+    public LocalizedTexts getLocalizedTexts() {
+        return localizedTexts;
+    }
 }
