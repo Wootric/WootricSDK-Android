@@ -7,12 +7,6 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/wootric_app_name" >
-        <activity
-            android:name=".SurveyActivity"
-            android:label="@string/wootric_title_activity_survey"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-    </application>
+        android:label="@string/wootric_app_name" ></application>
 
 </manifest>

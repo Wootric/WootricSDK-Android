@@ -4,7 +4,6 @@ import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.wootric.androidsdk.R;
-import com.wootric.androidsdk.SurveyActivity;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.objects.CustomMessage;

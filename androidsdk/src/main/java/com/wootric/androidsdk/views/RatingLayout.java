@@ -21,20 +21,17 @@ public class RatingLayout extends RelativeLayout
 
     private Context mContext;
 
-    private final int MAX_SCORE = 10;
-
     private RatingBar mRatingBar;
 
-    private static int SCORE_LAYOUT_PADDING_HORIZONTAL = ScreenUtils.dpToPx(4);
-
-    private static final int SCORE_LAYOUT_ID = 1;
-    private static final int SCORE_TEXT_VIEW_ID_OFFSET = 100;
-
-    private static final float SCORE_TEXT_SIZE_NOT_SELECTED = 12f;
-    private static final float SCORE_TEXT_SIZE_SELECTED = 18f;
+    private int mScoreLayoutPaddingHorizontal;
+    private float mScoreTextSizeSelected;
+    private float mScoreTextSizeNotSelected;
 
     private int mColorSelected;
     private int mColorNotSelected;
+
+    private static final int SCORE_LAYOUT_ID = 1;
+    private static final int SCORE_TEXT_VIEW_ID_OFFSET = 100;
 
     public RatingLayout(Context context) {
         super(context);
@@ -57,6 +54,12 @@ public class RatingLayout extends RelativeLayout
         Resources res = mContext.getResources();
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
         mColorSelected = res.getColor(R.color.wootric_brand_color);
+
+        mScoreLayoutPaddingHorizontal = res.getDimensionPixelSize(
+                R.dimen.wootric_score_layout_padding_horizontal);
+
+        mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
+        mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
 
         initScoreLayout();
         initRatingBar();
@@ -85,22 +88,29 @@ public class RatingLayout extends RelativeLayout
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         scoreLayout.setLayoutParams(layoutParams);
-        scoreLayout.setPadding(SCORE_LAYOUT_PADDING_HORIZONTAL, 0, SCORE_LAYOUT_PADDING_HORIZONTAL, 0);
+        scoreLayout.setPadding(mScoreLayoutPaddingHorizontal, 0, mScoreLayoutPaddingHorizontal, 0);
 
-        for(int i = 0; i <= MAX_SCORE; i++) {
-            TextView textView = new TextView(mContext);
-            textView.setId(SCORE_TEXT_VIEW_ID_OFFSET + i);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-            textView.setLayoutParams(params);
-
-            textView.setGravity(Gravity.CENTER);
-            textView.setText(String.valueOf(i));
-            textView.setTextSize(SCORE_TEXT_SIZE_NOT_SELECTED);
-            textView.setTextColor(mColorNotSelected);
-            scoreLayout.addView(textView);
+        int maxScore = mContext.getResources().getInteger(R.integer.wootric_max_score);
+        for(int score = 0; score <= maxScore; score++) {
+            TextView scoreView = buildScoreView(score);
+            scoreLayout.addView(scoreView);
         }
 
         addView(scoreLayout);
+    }
+
+    private TextView buildScoreView(int score) {
+        TextView scoreView = new TextView(mContext);
+        scoreView.setId(SCORE_TEXT_VIEW_ID_OFFSET + score);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
+        scoreView.setLayoutParams(params);
+
+        scoreView.setGravity(Gravity.CENTER);
+        scoreView.setText(String.valueOf(score));
+        scoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
+        scoreView.setTextColor(mColorNotSelected);
+
+        return scoreView;
     }
 
     @Override
@@ -108,11 +118,11 @@ public class RatingLayout extends RelativeLayout
         if(oldScore != Constants.INVALID_ID) {
             TextView oldScoreView = (TextView) findViewById(SCORE_TEXT_VIEW_ID_OFFSET + oldScore);
             oldScoreView.setTextColor(mColorNotSelected);
-            oldScoreView.setTextSize(SCORE_TEXT_SIZE_NOT_SELECTED);
+            oldScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
         }
 
         TextView newScoreView = (TextView) findViewById(SCORE_TEXT_VIEW_ID_OFFSET + newScore);
         newScoreView.setTextColor(mColorSelected);
-        newScoreView.setTextSize(SCORE_TEXT_SIZE_SELECTED);
+        newScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeSelected));
     }
 }

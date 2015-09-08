@@ -22,7 +22,14 @@
     <dimen name="wootric_dialog_header_padding">32dp</dimen>
     <dimen name="wootric_dialog_header_text_size">24sp</dimen>
 
+    <!-- RatingBar-->
+    <dimen name="wootric_rating_bar_padding_vertical">24dp</dimen>
     <dimen name="wootric_rating_notch_radius">4dp</dimen>
     <dimen name="wootric_rating_notch_margin_horizontal">8dp</dimen>
     <dimen name="wootric_rating_track_width">2dp</dimen>
+
+    <!-- RatingLayout -->
+    <dimen name="wootric_selected_score_text_size">18dp</dimen>
+    <dimen name="wootric_not_selected_score_text_size">12dp</dimen>
+    <dimen name="wootric_score_layout_padding_horizontal">4dp</dimen>
 </resources>

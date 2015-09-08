@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="wootric_min_score">0</integer>
+    <integer name="wootric_max_score">10</integer>
+</resources>

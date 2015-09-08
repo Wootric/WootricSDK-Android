@@ -25,7 +25,11 @@ public class ScreenUtils {
         return screenHeight;
     }
 
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+//    public static int dpToPx(int dp) {
+//        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+//    }
+
+    public static float pxToDp(float px) {
+        return px / Resources.getSystem().getDisplayMetrics().density;
     }
 }

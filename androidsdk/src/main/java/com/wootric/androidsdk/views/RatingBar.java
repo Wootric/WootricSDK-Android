@@ -29,21 +29,19 @@ public class RatingBar extends View implements View.OnTouchListener {
     private float mNotchRadius;
     private float mNotchMarginHorizontal;
     private float mTrackWidth;
+    private int mRatingBarPaddingVertical;
 
     private Paint mNotSelectedNotchPaint;
     private Paint mSelectedNotchPaint;
     private Paint mNotSelectedTrackPaint;
     private Paint mSelectedTrackPaint;
 
-
-    private final int mNotchCount = 11;
-    private float[] mNotchesLeftXCoordinates = new float[mNotchCount];
+    private int mNotchCount;
+    private float[] mNotchesLeftXCoordinates;
 
     private int mCurrentSelectedScore = Constants.INVALID_ID;
 
     private OnScoreChangedListener mOnScoreChangedListener;
-
-    private static final int RATING_BAR_MARGINS = ScreenUtils.dpToPx(24);
 
     public RatingBar(Context context) {
         super(context);
@@ -66,7 +64,7 @@ public class RatingBar extends View implements View.OnTouchListener {
         initResources();
         initPaints();
 
-        setPadding(0, RATING_BAR_MARGINS, 0, RATING_BAR_MARGINS);
+        setPadding(0, mRatingBarPaddingVertical, 0, mRatingBarPaddingVertical);
 
         setOnTouchListener(this);
     }
@@ -78,6 +76,10 @@ public class RatingBar extends View implements View.OnTouchListener {
         mNotchMarginHorizontal = res.getDimension(R.dimen.wootric_rating_notch_margin_horizontal);
         mNotchRadius = res.getDimension(R.dimen.wootric_rating_notch_radius);
         mTrackWidth = res.getDimension(R.dimen.wootric_rating_track_width);
+        mRatingBarPaddingVertical = (int) res.getDimension(R.dimen.wootric_rating_bar_padding_vertical);
+
+        mNotchCount = res.getInteger(R.integer.wootric_max_score) + 1;
+        mNotchesLeftXCoordinates = new float[mNotchCount];
     }
 
     private void initPaints() {
