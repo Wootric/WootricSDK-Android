@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,50 +15,51 @@ import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.utils.ScreenUtils;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by maciejwitowski on 9/7/15.
  */
-public class RatingLayout extends RelativeLayout
+public class NpsLayout extends RelativeLayout
     implements RatingBar.OnScoreChangedListener {
 
     private Context mContext;
 
+    private TextView mNpsQuestion;
     private RatingBar mRatingBar;
     private LinearLayout mScoreLayout;
     private TextView[] mScoreViews;
     private TextView mAnchorNotLikely;
     private TextView mAnchorLikely;
 
-    private int mScoreLayoutPaddingHorizontal;
     private float mScoreTextSizeSelected;
     private float mScoreTextSizeNotSelected;
-    private int mAnchorsMarginBottom;
 
     private int mColorSelected;
     private int mColorNotSelected;
-    private int mColorAnchorNotSelected = Color.BLACK;
 
     private int mScoresCount;
 
     private static final float ALPHA_ANCHOR_SELECTED = 1f;
     private static final float ALPHA_ANCHOR_NOT_SELECTED = 0.38f;
 
-    private static final int SCORE_LAYOUT_ID = 1;
-    private static final int RATING_BAR_ID = 2;
-
-    public RatingLayout(Context context) {
+    public NpsLayout(Context context) {
         super(context);
         init(context);
     }
 
-    public RatingLayout(Context context, AttributeSet attrs) {
+    public NpsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public RatingLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public NpsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public void setNpsQuestion(String value) {
+        mNpsQuestion.setText(value);
     }
 
     public void setAnchorNotLikely(String value) {
@@ -71,10 +73,17 @@ public class RatingLayout extends RelativeLayout
     private void init(Context context) {
         mContext = context;
 
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.wootric_nps_layout, this);
+
+        mNpsQuestion = (TextView) findViewById(R.id.wootric_tv_nps_question);
+        mScoreLayout = (LinearLayout) findViewById(R.id.wootric_score_layout);
+        mAnchorLikely = (TextView) findViewById(R.id.wootric_anchor_likely);
+        mAnchorNotLikely = (TextView) findViewById(R.id.wootric_anchor_not_likely);
+        mRatingBar = (RatingBar) findViewById(R.id.wootric_rating_bar);
+
         initResources();
         initScoreLayout();
-        initRatingBar();
-        initAnchors();
 
         mRatingBar.setOnScoreChangedListener(this);
     }
@@ -84,47 +93,19 @@ public class RatingLayout extends RelativeLayout
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
         mColorSelected = res.getColor(R.color.wootric_brand_color);
 
-        mScoreLayoutPaddingHorizontal = res.getDimensionPixelSize(
-                R.dimen.wootric_score_layout_padding_horizontal);
-
         mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
         mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
-        mAnchorsMarginBottom = res.getDimensionPixelSize(R.dimen.wootric_anchors_margin_bottom);
 
         mScoresCount = res.getInteger(R.integer.wootric_max_score) + 1;
     }
 
     private void initScoreLayout() {
-        mScoreLayout = new LinearLayout(mContext);
-        mScoreLayout.setId(SCORE_LAYOUT_ID);
-
-        mScoreLayout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mScoreLayout.setLayoutParams(layoutParams);
-        mScoreLayout.setPadding(mScoreLayoutPaddingHorizontal, 0, mScoreLayoutPaddingHorizontal, 0);
-
         mScoreViews = new TextView[mScoresCount];
         for(int score = 0; score < mScoreViews.length; score++) {
             TextView scoreView = buildScoreView(score);
             mScoreViews[score] = scoreView;
             mScoreLayout.addView(scoreView);
         }
-
-        addView(mScoreLayout);
-    }
-
-    private void initRatingBar() {
-        mRatingBar = new RatingBar(mContext);
-        mRatingBar.setId(RATING_BAR_ID);
-
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        layoutParams.addRule(BELOW, mScoreLayout.getId());
-        mRatingBar.setLayoutParams(layoutParams);
-
-        addView(mRatingBar);
     }
 
     private TextView buildScoreView(int score) {
@@ -138,34 +119,6 @@ public class RatingLayout extends RelativeLayout
         scoreView.setTextColor(mColorNotSelected);
 
         return scoreView;
-    }
-
-    private void initAnchors() {
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(BELOW, mRatingBar.getId());
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        layoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
-
-        mAnchorNotLikely = getAnchorTextView();
-        mAnchorNotLikely.setLayoutParams(layoutParams);
-        addView(mAnchorNotLikely);
-
-        layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(BELOW, mRatingBar.getId());
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
-
-        mAnchorLikely = getAnchorTextView();
-        mAnchorLikely.setLayoutParams(layoutParams);
-        addView(mAnchorLikely);
-    }
-
-    private TextView getAnchorTextView() {
-        TextView anchorTextView = new TextView(mContext);
-        anchorTextView.setTextColor(mColorAnchorNotSelected);
-        anchorTextView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
-        anchorTextView.setAlpha(ALPHA_ANCHOR_NOT_SELECTED);
-        return anchorTextView;
     }
 
     @Override
@@ -188,19 +141,11 @@ public class RatingLayout extends RelativeLayout
 
     private void updateAnchors(int newScore) {
         boolean selectAnchorNotLikely = (newScore == 0);
-<<<<<<< HEAD
-        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : mColorNotSelected);
+        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : Color.BLACK);
         mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
 
         boolean selectAnchorLikely = (newScore == 10);
-        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : mColorNotSelected);
-=======
-        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : mColorAnchorNotSelected);
-        mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
-
-        boolean selectAnchorLikely = (newScore == 10);
-        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : mColorAnchorNotSelected);
->>>>>>> Add anchors
+        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : Color.BLACK);
         mAnchorLikely.setAlpha(selectAnchorLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
     }
 }

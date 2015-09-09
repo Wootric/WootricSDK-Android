@@ -18,6 +18,8 @@
 
     <!-- NEW -->
     <string name="wootric_example_nps_question">How likely are you to recommend Wootric to a friend or coworker</string>
+    <string name="wootric_example_anchor_not_likely">Not at all likely</string>
+    <string name="wootric_example_anchor_likely">Extremely ikely</string>
     <string name="wootric_powered_by">"Powered by "</string>
     <string name="wootric">"Wootric"</string>
 

@@ -1,68 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:gravity="center">
 
-    <FrameLayout
-        android:id="@+id/wootric_dialog_header"
+    <com.wootric.androidsdk.views.NpsLayout
+        android:id="@+id/wootric_nps_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/wootric_tv_nps_question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/wootric_dialog_header_padding"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/wootric_dialog_header_text_size"
-            android:text="@string/wootric_example_nps_question"
-            android:background="@color/wootric_dialog_header_background"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/wootric_dialog_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:layout_gravity="center_vertical">
-
-        <com.wootric.androidsdk.views.RatingLayout
-            android:id="@+id/wootric_rating_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="24dp"
-            android:gravity="center"/>
-    </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"
-        android:alpha="0.08"/>
-
-    <LinearLayout
-        android:id="@+id/wootric_dialog_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:padding="4dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wootric_powered_by"
-            android:textColor="@android:color/black"
-            android:alpha="0.3"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wootric"
-            android:textColor="@color/wootric_brand_color" />
-    </LinearLayout>
-</LinearLayout>
+        android:layout_height="wrap_content" />
+</RelativeLayout>

@@ -6,13 +6,12 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.LocalizedTexts;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.views.RatingLayout;
+import com.wootric.androidsdk.views.NpsLayout;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -25,8 +24,7 @@ public class SurveyFragment extends DialogFragment {
     public static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
     public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
 
-    private RatingLayout mRatingLayout;
-    private TextView mTvNpsQuestion;
+    private NpsLayout mNpsLayout;
 
     private EndUser mEndUser;
     private User mUser;
@@ -88,14 +86,13 @@ public class SurveyFragment extends DialogFragment {
     }
 
     private void setupLayoutElements(View view) {
-        mTvNpsQuestion = (TextView) view.findViewById(R.id.wootric_tv_nps_question);
-        mRatingLayout = (RatingLayout) view.findViewById(R.id.wootric_rating_layout);
+        mNpsLayout = (NpsLayout) view.findViewById(R.id.wootric_nps_layout);
     }
 
     private void setupLayoutElementsValues() {
-        mTvNpsQuestion.setText(mLocalizedTexts.getNpsQuestion());
-        mRatingLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
-        mRatingLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
+        mNpsLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
+        mNpsLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
+        mNpsLayout.setNpsQuestion(mLocalizedTexts.getNpsQuestion());
     }
 
     @Override
