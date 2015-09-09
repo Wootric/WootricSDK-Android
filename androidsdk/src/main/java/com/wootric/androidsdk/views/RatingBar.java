@@ -56,6 +56,10 @@ public class RatingBar extends View implements View.OnTouchListener {
         init(context);
     }
 
+    public int getCurrentSelectedScore() {
+        return mCurrentSelectedScore;
+    }
+
     private void init(Context context) {
         mContext = context;
 

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ public class NpsLayout extends RelativeLayout
     private TextView mAnchorNotLikely;
     private TextView mAnchorLikely;
     private TextView mBtnSubmit;
-    private TextView mBtnCancel;
+    private TextView mBtnDismiss;
 
     private float mScoreTextSizeSelected;
     private float mScoreTextSizeNotSelected;
@@ -38,6 +39,8 @@ public class NpsLayout extends RelativeLayout
     private int mColorNotSelected;
 
     private int mScoresCount;
+
+    private OnButtonClickListener mOnButtonClickListener;
 
     public NpsLayout(Context context) {
         super(context);
@@ -67,17 +70,17 @@ public class NpsLayout extends RelativeLayout
     }
 
     public void setSubmitBtn(String value) {
-        mBtnSubmit.setText(value);
+        mBtnSubmit.setText(value.toUpperCase());
     }
 
     public void setBtnCancel(String value) {
-        mBtnCancel.setText(value);
+        mBtnDismiss.setText(value.toUpperCase());
     }
 
     private void init(Context context) {
         mContext = context;
 
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.wootric_nps_layout, this);
 
         mNpsQuestion = (TextView) findViewById(R.id.wootric_tv_nps_question);
@@ -86,12 +89,14 @@ public class NpsLayout extends RelativeLayout
         mAnchorNotLikely = (TextView) findViewById(R.id.wootric_anchor_not_likely);
         mRatingBar = (RatingBar) findViewById(R.id.wootric_rating_bar);
         mBtnSubmit = (TextView) findViewById(R.id.wootric_btn_submit);
-        mBtnCancel = (TextView) findViewById(R.id.wootric_btn_cancel);
+        mBtnDismiss = (TextView) findViewById(R.id.wootric_btn_dismiss);
 
         initResources();
         initScoreLayout();
 
         mRatingBar.setOnScoreChangedListener(this);
+        mBtnSubmit.setOnClickListener(onSubmitClick());
+        mBtnDismiss.setOnClickListener(onDismissClick());
     }
 
     private void initResources() {
@@ -160,5 +165,37 @@ public class NpsLayout extends RelativeLayout
         boolean selectAnchorLikely = (newScore == 10);
         mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : Color.BLACK);
         mAnchorLikely.setAlpha(selectAnchorLikely ? 1f : 0.38f);
+    }
+
+    private OnClickListener onSubmitClick() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnButtonClickListener != null) {
+                    int currentScore = mRatingBar.getCurrentSelectedScore();
+                    mOnButtonClickListener.onSubmit(currentScore);
+                }
+            }
+        };
+    }
+
+    private OnClickListener onDismissClick() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnButtonClickListener != null) {
+                    mOnButtonClickListener.onDismiss();
+                }
+            }
+        };
+    }
+
+    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
+        mOnButtonClickListener = onButtonClickListener;
+    }
+
+    public interface OnButtonClickListener {
+        void onSubmit(int score);
+        void onDismiss();
     }
 }

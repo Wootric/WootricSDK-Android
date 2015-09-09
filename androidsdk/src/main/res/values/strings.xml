@@ -15,14 +15,13 @@
     <string name="wootric_final_thank_you">Thank you for your response and your feedback.</string>
     <string name="wootric_drag_to_change_score">Drag to change score</string>
 
-
     <!-- NEW -->
     <string name="wootric_example_nps_question">How likely are you to recommend Wootric to a friend or coworker</string>
     <string name="wootric_example_anchor_not_likely">Not at all likely</string>
     <string name="wootric_example_anchor_likely">Extremely likely</string>
     <string name="wootric_powered_by">"Powered by "</string>
     <string name="wootric">"Wootric"</string>
-    <string name="wootric_example_btn_cancel">CANCEL</string>
+    <string name="wootric_example_btn_dismiss">DISMISS</string>
     <string name="wootric_example_btn_submit">SUBMIT</string>
 
 </resources>

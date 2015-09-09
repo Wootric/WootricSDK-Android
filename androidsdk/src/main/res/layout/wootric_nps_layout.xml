@@ -70,10 +70,11 @@
             android:textColor="@android:color/black"
             android:gravity="center"
             android:alpha="0.26"
+            android:enabled="false"
             android:text="@string/wootric_example_btn_submit"/>
 
         <TextView
-            android:id="@+id/wootric_btn_cancel"
+            android:id="@+id/wootric_btn_dismiss"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/wootric_button_height"
             android:layout_below="@+id/wootric_anchor_likely"
@@ -83,7 +84,7 @@
             android:textColor="@color/wootric_dialog_header_background"
             android:layout_marginRight="@dimen/wootric_button_margin"
             android:layout_marginEnd="@dimen/wootric_button_margin"
-            android:text="@string/wootric_example_btn_cancel"/>
+            android:text="@string/wootric_example_btn_dismiss"/>
 
     </RelativeLayout>
 
