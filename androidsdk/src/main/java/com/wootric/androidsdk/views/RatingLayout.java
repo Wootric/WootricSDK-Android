@@ -35,6 +35,7 @@ public class RatingLayout extends RelativeLayout
 
     private int mColorSelected;
     private int mColorNotSelected;
+    private int mColorAnchorNotSelected = Color.BLACK;
 
     private int mScoresCount;
 
@@ -140,25 +141,31 @@ public class RatingLayout extends RelativeLayout
     }
 
     private void initAnchors() {
-        LayoutParams anchorNotLikelyLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        anchorNotLikelyLayoutParams.addRule(BELOW, mRatingBar.getId());
-        anchorNotLikelyLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        anchorNotLikelyLayoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
-        mAnchorNotLikely = new TextView(mContext);
-        mAnchorNotLikely.setLayoutParams(anchorNotLikelyLayoutParams);
-        mAnchorNotLikely.setTextColor(Color.BLACK);
-        mAnchorNotLikely.setAlpha(0.38f);
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(BELOW, mRatingBar.getId());
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
+
+        mAnchorNotLikely = getAnchorTextView();
+        mAnchorNotLikely.setLayoutParams(layoutParams);
         addView(mAnchorNotLikely);
 
-        LayoutParams anchorLikelyLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        anchorLikelyLayoutParams.addRule(BELOW, mRatingBar.getId());
-        anchorLikelyLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        anchorNotLikelyLayoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
-        mAnchorLikely = new TextView(mContext);
-        mAnchorLikely.setLayoutParams(anchorLikelyLayoutParams);
-        mAnchorLikely.setTextColor(Color.BLACK);
-        mAnchorLikely.setAlpha(0.38f);
+        layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(BELOW, mRatingBar.getId());
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
+
+        mAnchorLikely = getAnchorTextView();
+        mAnchorLikely.setLayoutParams(layoutParams);
         addView(mAnchorLikely);
+    }
+
+    private TextView getAnchorTextView() {
+        TextView anchorTextView = new TextView(mContext);
+        anchorTextView.setTextColor(mColorAnchorNotSelected);
+        anchorTextView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
+        anchorTextView.setAlpha(ALPHA_ANCHOR_NOT_SELECTED);
+        return anchorTextView;
     }
 
     @Override
@@ -181,11 +188,19 @@ public class RatingLayout extends RelativeLayout
 
     private void updateAnchors(int newScore) {
         boolean selectAnchorNotLikely = (newScore == 0);
+<<<<<<< HEAD
         mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : mColorNotSelected);
         mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
 
         boolean selectAnchorLikely = (newScore == 10);
         mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : mColorNotSelected);
+=======
+        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : mColorAnchorNotSelected);
+        mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
+
+        boolean selectAnchorLikely = (newScore == 10);
+        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : mColorAnchorNotSelected);
+>>>>>>> Add anchors
         mAnchorLikely.setAlpha(selectAnchorLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
     }
 }
