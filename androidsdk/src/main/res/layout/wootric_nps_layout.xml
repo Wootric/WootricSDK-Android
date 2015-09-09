@@ -59,6 +59,32 @@
             android:layout_alignParentEnd="true"
             android:textSize="@dimen/wootric_anchors_text_size"
             android:text="@string/wootric_example_anchor_likely"/>
+
+        <TextView
+            android:id="@+id/wootric_btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/wootric_button_height"
+            android:layout_below="@+id/wootric_anchor_likely"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:alpha="0.26"
+            android:text="@string/wootric_example_btn_submit"/>
+
+        <TextView
+            android:id="@+id/wootric_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/wootric_button_height"
+            android:layout_below="@+id/wootric_anchor_likely"
+            android:layout_toLeftOf="@+id/wootric_btn_submit"
+            android:layout_toStartOf="@+id/wootric_btn_submit"
+            android:gravity="center"
+            android:textColor="@color/wootric_dialog_header_background"
+            android:layout_marginRight="@dimen/wootric_button_margin"
+            android:layout_marginEnd="@dimen/wootric_button_margin"
+            android:text="@string/wootric_example_btn_cancel"/>
+
     </RelativeLayout>
 
     <include layout="@layout/wootric_footer"

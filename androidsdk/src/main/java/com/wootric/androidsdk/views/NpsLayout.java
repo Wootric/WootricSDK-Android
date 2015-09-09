@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ public class NpsLayout extends RelativeLayout
     private TextView[] mScoreViews;
     private TextView mAnchorNotLikely;
     private TextView mAnchorLikely;
+    private TextView mBtnSubmit;
+    private TextView mBtnCancel;
 
     private float mScoreTextSizeSelected;
     private float mScoreTextSizeNotSelected;
@@ -39,9 +42,6 @@ public class NpsLayout extends RelativeLayout
     private int mColorNotSelected;
 
     private int mScoresCount;
-
-    private static final float ALPHA_ANCHOR_SELECTED = 1f;
-    private static final float ALPHA_ANCHOR_NOT_SELECTED = 0.38f;
 
     public NpsLayout(Context context) {
         super(context);
@@ -70,6 +70,14 @@ public class NpsLayout extends RelativeLayout
         mAnchorLikely.setText(value);
     }
 
+    public void setSubmitBtn(String value) {
+        mBtnSubmit.setText(value);
+    }
+
+    public void setBtnCancel(String value) {
+        mBtnCancel.setText(value);
+    }
+
     private void init(Context context) {
         mContext = context;
 
@@ -81,6 +89,8 @@ public class NpsLayout extends RelativeLayout
         mAnchorLikely = (TextView) findViewById(R.id.wootric_anchor_likely);
         mAnchorNotLikely = (TextView) findViewById(R.id.wootric_anchor_not_likely);
         mRatingBar = (RatingBar) findViewById(R.id.wootric_rating_bar);
+        mBtnSubmit = (TextView) findViewById(R.id.wootric_btn_submit);
+        mBtnCancel = (TextView) findViewById(R.id.wootric_btn_cancel);
 
         initResources();
         initScoreLayout();
@@ -123,8 +133,15 @@ public class NpsLayout extends RelativeLayout
 
     @Override
     public void onScoreChanged(int oldScore, int newScore) {
+        enableSubmit();
         updateSelectedScore(oldScore, newScore);
         updateAnchors(newScore);
+    }
+
+    private void enableSubmit() {
+        mBtnSubmit.setTextColor(mContext.getResources().getColor(R.color.wootric_dialog_header_background));
+        mBtnSubmit.setAlpha(1f);
+        mBtnSubmit.setEnabled(true);
     }
 
     private void updateSelectedScore(int oldScore, int newScore) {
@@ -142,10 +159,10 @@ public class NpsLayout extends RelativeLayout
     private void updateAnchors(int newScore) {
         boolean selectAnchorNotLikely = (newScore == 0);
         mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : Color.BLACK);
-        mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
+        mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? 1f : 0.38f);
 
         boolean selectAnchorLikely = (newScore == 10);
         mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : Color.BLACK);
-        mAnchorLikely.setAlpha(selectAnchorLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
+        mAnchorLikely.setAlpha(selectAnchorLikely ? 1f : 0.38f);
     }
 }

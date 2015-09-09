@@ -90,9 +90,11 @@ public class SurveyFragment extends DialogFragment {
     }
 
     private void setupLayoutElementsValues() {
-        mNpsLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
-        mNpsLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
-        mNpsLayout.setNpsQuestion(mLocalizedTexts.getNpsQuestion());
+//        mNpsLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
+//        mNpsLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
+//        mNpsLayout.setNpsQuestion(mLocalizedTexts.getNpsQuestion());
+//        mNpsLayout.setSubmitBtn(mLocalizedTexts.getSend());
+//        mNpsLayout.setBtnCancel(mLocalizedTexts.getDismiss());
     }
 
     @Override

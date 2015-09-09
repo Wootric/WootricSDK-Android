@@ -22,5 +22,7 @@
     <string name="wootric_example_anchor_likely">Extremely ikely</string>
     <string name="wootric_powered_by">"Powered by "</string>
     <string name="wootric">"Wootric"</string>
+    <string name="wootric_example_btn_cancel">CANCEL</string>
+    <string name="wootric_example_btn_submit">SUBMIT</string>
 
 </resources>
