@@ -2,16 +2,11 @@ package com.wootric.androidsdk.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
 
 import com.wootric.androidsdk.utils.TextUtils;
 
-import org.apache.http.entity.StringEntity;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by maciejwitowski on 9/3/15.

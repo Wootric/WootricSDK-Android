@@ -5,13 +5,11 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
-import com.wootric.androidsdk.utils.ScreenUtils;
 
 /**
  * Created by maciejwitowski on 9/7/15.
@@ -127,22 +125,28 @@ public class RatingBar extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        float totalNotchesLength = mNotchCount * mNotchRadius * 2;
+        float totalNotchesLength = (mNotchCount + 1) * mNotchRadius * 2;
         float totalMarginHorizontal = mWidthSize - totalNotchesLength;
         mNotchMarginHorizontal = totalMarginHorizontal / (mNotchCount - 1);
 
-        float dX = (mWidthSize - totalNotchesLength - totalMarginHorizontal) / 2.0f + mNotchRadius;
+        float dX = (mWidthSize - totalNotchesLength - totalMarginHorizontal) / 2.0f + mNotchRadius*2;
         float dY = mHeightSize / 2;
         for (int i = 0; i < mNotchCount; i++) {
             initNotchCoordinates(i, dX);
 
-            boolean selected = (i <= mCurrentSelectedScore);
-            canvas.drawCircle(dX, dY, mNotchRadius, selected ? mSelectedNotchPaint : mNotSelectedNotchPaint);
+            boolean markNotchSelected = (i <= mCurrentSelectedScore);
+
+            float thisNotchRadius = mNotchRadius;
+            if(i == mCurrentSelectedScore) {
+                thisNotchRadius *= 1.5f;
+            }
+
+            canvas.drawCircle(dX, dY, thisNotchRadius , markNotchSelected ? mSelectedNotchPaint : mNotSelectedNotchPaint);
 
             float nextDx = dX + (2 * mNotchRadius + mNotchMarginHorizontal);
             if(i < mNotchCount - 1) {
-                selected = (i < mCurrentSelectedScore);
-                canvas.drawLine(dX + mNotchRadius, dY, nextDx - mNotchRadius, dY, selected ? mSelectedTrackPaint : mNotSelectedTrackPaint);
+                boolean markTrackSelected = (i < mCurrentSelectedScore);
+                canvas.drawLine(dX + thisNotchRadius, dY, nextDx - mNotchRadius, dY, markTrackSelected ? mSelectedTrackPaint : mNotSelectedTrackPaint);
             }
 
             dX = nextDx;

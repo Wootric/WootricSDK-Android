@@ -34,10 +34,11 @@
     <dimen name="wootric_score_layout_padding_horizontal">4dp</dimen>
     <dimen name="wootric_anchors_margin_bottom">24dp</dimen>
     <dimen name="wootric_anchors_text_size">12sp</dimen>
-    <dimen name="wootric_nps_layout_body_margin">24dp</dimen>
+    <dimen name="wootric_nps_layout_body_padding">24dp</dimen>
 
     <!--  Buttons -->
     <dimen name="wootric_button_height">36dp</dimen>
     <dimen name="wootric_button_padding">8dp</dimen>
     <dimen name="wootric_button_margin">8dp</dimen>
+    <dimen name="wootric_score_layout_height">24dp</dimen>
 </resources>

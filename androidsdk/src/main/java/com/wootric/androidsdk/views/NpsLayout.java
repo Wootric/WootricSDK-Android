@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,8 +13,6 @@ import android.widget.TextView;
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.utils.ScreenUtils;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by maciejwitowski on 9/7/15.

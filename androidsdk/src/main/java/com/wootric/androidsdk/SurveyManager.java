@@ -1,7 +1,6 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;

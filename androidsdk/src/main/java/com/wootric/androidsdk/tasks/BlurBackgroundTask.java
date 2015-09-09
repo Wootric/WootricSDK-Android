@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import com.wootric.androidsdk.utils.Blur;
 import com.wootric.androidsdk.utils.ImageUtils;
 
-
 import java.lang.ref.WeakReference;
 
 /**

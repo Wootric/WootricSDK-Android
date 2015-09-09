@@ -1,6 +1,5 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.wootric.androidsdk.objects.EndUser;
