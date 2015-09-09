@@ -32,4 +32,5 @@
     <dimen name="wootric_selected_score_text_size">18dp</dimen>
     <dimen name="wootric_not_selected_score_text_size">12dp</dimen>
     <dimen name="wootric_score_layout_padding_horizontal">4dp</dimen>
+    <dimen name="wootric_anchors_margin_bottom">24dp</dimen>
 </resources>
