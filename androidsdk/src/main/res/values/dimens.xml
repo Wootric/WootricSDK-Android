@@ -11,7 +11,7 @@
     <dimen name="wootric_nps_question_margin">16dp</dimen>
     <dimen name="wootric_survey_modal_submit_size">16sp</dimen>
 
-    <dimen name="wootric_final_thank_you_height">100dp</dimen>
+    <dimen name="wootric_final_thank_you_height">48dp</dimen>
 
     <dimen name="wootric_labels_margin_horizontal">8dp</dimen>
 
