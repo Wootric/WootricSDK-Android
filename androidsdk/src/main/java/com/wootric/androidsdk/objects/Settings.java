@@ -1,8 +1,5 @@
 package com.wootric.androidsdk.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;

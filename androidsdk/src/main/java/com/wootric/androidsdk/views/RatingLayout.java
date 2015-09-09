@@ -2,6 +2,7 @@ package com.wootric.androidsdk.views;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -23,19 +24,25 @@ public class RatingLayout extends RelativeLayout
 
     private RatingBar mRatingBar;
     private LinearLayout mScoreLayout;
+    private TextView[] mScoreViews;
+    private TextView mAnchorNotLikely;
+    private TextView mAnchorLikely;
 
     private int mScoreLayoutPaddingHorizontal;
     private float mScoreTextSizeSelected;
     private float mScoreTextSizeNotSelected;
+    private int mAnchorsMarginBottom;
 
     private int mColorSelected;
     private int mColorNotSelected;
 
     private int mScoresCount;
 
-    private static final int SCORE_LAYOUT_ID = 1;
+    private static final float ALPHA_ANCHOR_SELECTED = 1f;
+    private static final float ALPHA_ANCHOR_NOT_SELECTED = 0.38f;
 
-    private TextView[] mScoreViews;
+    private static final int SCORE_LAYOUT_ID = 1;
+    private static final int RATING_BAR_ID = 2;
 
     public RatingLayout(Context context) {
         super(context);
@@ -52,12 +59,21 @@ public class RatingLayout extends RelativeLayout
         init(context);
     }
 
+    public void setAnchorNotLikely(String value) {
+        mAnchorNotLikely.setText(value);
+    }
+
+    public void setAnchorLikely(String value) {
+        mAnchorLikely.setText(value);
+    }
+
     private void init(Context context) {
         mContext = context;
 
         initResources();
         initScoreLayout();
         initRatingBar();
+        initAnchors();
 
         mRatingBar.setOnScoreChangedListener(this);
     }
@@ -72,6 +88,7 @@ public class RatingLayout extends RelativeLayout
 
         mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
         mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
+        mAnchorsMarginBottom = res.getDimensionPixelSize(R.dimen.wootric_anchors_margin_bottom);
 
         mScoresCount = res.getInteger(R.integer.wootric_max_score) + 1;
     }
@@ -98,6 +115,7 @@ public class RatingLayout extends RelativeLayout
 
     private void initRatingBar() {
         mRatingBar = new RatingBar(mContext);
+        mRatingBar.setId(RATING_BAR_ID);
 
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -121,9 +139,32 @@ public class RatingLayout extends RelativeLayout
         return scoreView;
     }
 
+    private void initAnchors() {
+        LayoutParams anchorNotLikelyLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        anchorNotLikelyLayoutParams.addRule(BELOW, mRatingBar.getId());
+        anchorNotLikelyLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        anchorNotLikelyLayoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
+        mAnchorNotLikely = new TextView(mContext);
+        mAnchorNotLikely.setLayoutParams(anchorNotLikelyLayoutParams);
+        mAnchorNotLikely.setTextColor(Color.BLACK);
+        mAnchorNotLikely.setAlpha(0.38f);
+        addView(mAnchorNotLikely);
+
+        LayoutParams anchorLikelyLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        anchorLikelyLayoutParams.addRule(BELOW, mRatingBar.getId());
+        anchorLikelyLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        anchorNotLikelyLayoutParams.setMargins(0, 0, 0, mAnchorsMarginBottom);
+        mAnchorLikely = new TextView(mContext);
+        mAnchorLikely.setLayoutParams(anchorLikelyLayoutParams);
+        mAnchorLikely.setTextColor(Color.BLACK);
+        mAnchorLikely.setAlpha(0.38f);
+        addView(mAnchorLikely);
+    }
+
     @Override
     public void onScoreChanged(int oldScore, int newScore) {
         updateSelectedScore(oldScore, newScore);
+        updateAnchors(newScore);
     }
 
     private void updateSelectedScore(int oldScore, int newScore) {
@@ -136,5 +177,15 @@ public class RatingLayout extends RelativeLayout
         TextView newScoreView = mScoreViews[newScore];
         newScoreView.setTextColor(mColorSelected);
         newScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeSelected));
+    }
+
+    private void updateAnchors(int newScore) {
+        boolean selectAnchorNotLikely = (newScore == 0);
+        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : mColorNotSelected);
+        mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
+
+        boolean selectAnchorLikely = (newScore == 10);
+        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : mColorNotSelected);
+        mAnchorLikely.setAlpha(selectAnchorLikely ? ALPHA_ANCHOR_SELECTED : ALPHA_ANCHOR_NOT_SELECTED);
     }
 }

@@ -56,11 +56,10 @@ public class SurveyManager implements
     }
 
     void start() {
-        showSurvey();
-//        sendGetTrackingPixelRequest();
-//        mPreferencesUtils.touchLastSeen();
-//
-//        validateSurvey();
+        sendGetTrackingPixelRequest();
+        mPreferencesUtils.touchLastSeen();
+
+        validateSurvey();
     }
 
     void validateSurvey() {

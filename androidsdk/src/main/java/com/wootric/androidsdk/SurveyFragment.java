@@ -2,7 +2,6 @@ package com.wootric.androidsdk;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,8 @@ import android.widget.TextView;
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.LocalizedTexts;
-import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.views.RatingLayout;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -26,13 +25,14 @@ public class SurveyFragment extends DialogFragment {
     public static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
     public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
 
+    private RatingLayout mRatingLayout;
+    private TextView mTvNpsQuestion;
+
     private EndUser mEndUser;
     private User mUser;
     private String mOriginUrl;
     private LocalizedTexts mLocalizedTexts;
     private CustomMessage mCustomMessage;
-
-    private TextView mTvNpsQuestion;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, LocalizedTexts localizedTexts, CustomMessage customMessage) {
         SurveyFragment fragment = new SurveyFragment();
@@ -67,7 +67,7 @@ public class SurveyFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        mTvNpsQuestion.setText(mLocalizedTexts.getNpsQuestion());
+        setupLayoutElementsValues();
     }
 
     private void setupState(Bundle savedInstanceState) {
@@ -89,6 +89,13 @@ public class SurveyFragment extends DialogFragment {
 
     private void setupLayoutElements(View view) {
         mTvNpsQuestion = (TextView) view.findViewById(R.id.wootric_tv_nps_question);
+        mRatingLayout = (RatingLayout) view.findViewById(R.id.wootric_rating_layout);
+    }
+
+    private void setupLayoutElementsValues() {
+        mTvNpsQuestion.setText(mLocalizedTexts.getNpsQuestion());
+        mRatingLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
+        mRatingLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
     }
 
     @Override
