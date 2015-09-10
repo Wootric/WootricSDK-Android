@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -55,10 +56,11 @@ public class SurveyManager implements
     }
 
     void start() {
-        sendGetTrackingPixelRequest();
-        mPreferencesUtils.touchLastSeen();
-
-        validateSurvey();
+        showSurvey();
+//        sendGetTrackingPixelRequest();
+//        mPreferencesUtils.touchLastSeen();
+//
+//        validateSurvey();
     }
 
     void validateSurvey() {

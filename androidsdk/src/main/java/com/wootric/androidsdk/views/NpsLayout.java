@@ -18,7 +18,7 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 /**
  * Created by maciejwitowski on 9/7/15.
  */
-public class NpsLayout extends RelativeLayout
+public class NpsLayout extends LinearLayout
     implements RatingBar.OnScoreChangedListener {
 
     private Context mContext;

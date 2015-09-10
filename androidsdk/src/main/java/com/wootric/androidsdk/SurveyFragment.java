@@ -1,16 +1,25 @@
 package com.wootric.androidsdk;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.LocalizedTexts;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.NpsLayout;
 
 /**
@@ -66,6 +75,23 @@ public class SurveyFragment extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupLayoutElementsValues();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        final Activity activity = getActivity();
+
+        int orientation = activity.getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Dialog dialog = getDialog();
+            if (dialog != null) {
+                int screenWidth = ScreenUtils.getScreenWidth(activity);
+                int screenHeight = ScreenUtils.getScreenHeight(activity);
+                dialog.getWindow().setLayout(screenWidth, screenHeight);
+            }
+        }
     }
 
     private void setupState(Bundle savedInstanceState) {
