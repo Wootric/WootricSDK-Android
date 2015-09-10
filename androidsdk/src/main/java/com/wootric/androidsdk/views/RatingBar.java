@@ -37,7 +37,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     private int mNotchCount;
     private float[] mNotchesLeftXCoordinates;
 
-    private int mCurrentSelectedScore = Constants.INVALID_ID;
+    private int mSelectedScore = Constants.INVALID_ID;
 
     private OnScoreChangedListener mOnScoreChangedListener;
 
@@ -54,10 +54,6 @@ public class RatingBar extends View implements View.OnTouchListener {
     public RatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-    public int getCurrentSelectedScore() {
-        return mCurrentSelectedScore;
     }
 
     private void init(Context context) {
@@ -138,10 +134,10 @@ public class RatingBar extends View implements View.OnTouchListener {
         for (int i = 0; i < mNotchCount; i++) {
             initNotchCoordinates(i, dX);
 
-            boolean markNotchSelected = (i <= mCurrentSelectedScore);
+            boolean markNotchSelected = (i <= mSelectedScore);
 
             float thisNotchRadius = mNotchRadius;
-            if(i == mCurrentSelectedScore) {
+            if(i == mSelectedScore) {
                 thisNotchRadius *= 1.5f;
             }
 
@@ -149,7 +145,7 @@ public class RatingBar extends View implements View.OnTouchListener {
 
             float nextDx = dX + (2 * mNotchRadius + mNotchMarginHorizontal);
             if(i < mNotchCount - 1) {
-                boolean markTrackSelected = (i < mCurrentSelectedScore);
+                boolean markTrackSelected = (i < mSelectedScore);
                 canvas.drawLine(dX + thisNotchRadius, dY, nextDx - mNotchRadius, dY, markTrackSelected ? mSelectedTrackPaint : mNotSelectedTrackPaint);
             }
 
@@ -171,17 +167,7 @@ public class RatingBar extends View implements View.OnTouchListener {
 
         if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE){
             int touchedScore = getTouchedScore(event.getX());
-
-            boolean scoreChanged = (touchedScore != Constants.INVALID_ID && touchedScore != mCurrentSelectedScore);
-
-            if(scoreChanged) {
-                if(mOnScoreChangedListener != null) {
-                    mOnScoreChangedListener.onScoreChanged(mCurrentSelectedScore, touchedScore);
-                }
-
-                mCurrentSelectedScore = touchedScore;
-                invalidate();
-            }
+            setSelectedScore(touchedScore);
         }
 
         return true;
@@ -212,6 +198,23 @@ public class RatingBar extends View implements View.OnTouchListener {
 
     public void setOnScoreChangedListener(OnScoreChangedListener onScoreChangedListener) {
         mOnScoreChangedListener = onScoreChangedListener;
+    }
+
+    public int getSelectedScore() {
+        return mSelectedScore;
+    }
+
+    public void setSelectedScore(int selectedScore) {
+        boolean scoreChanged = (selectedScore != Constants.INVALID_ID && selectedScore != mSelectedScore);
+
+        if(scoreChanged) {
+            if(mOnScoreChangedListener != null) {
+                mOnScoreChangedListener.onScoreChanged(mSelectedScore, selectedScore);
+            }
+
+            mSelectedScore = selectedScore;
+            invalidate();
+        }
     }
 
     public interface OnScoreChangedListener {

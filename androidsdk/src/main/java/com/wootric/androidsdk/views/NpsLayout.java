@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.Constants;
@@ -55,26 +54,6 @@ public class NpsLayout extends LinearLayout
     public NpsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
-    }
-
-    public void setNpsQuestion(String value) {
-        mNpsQuestion.setText(value);
-    }
-
-    public void setAnchorNotLikely(String value) {
-        mAnchorNotLikely.setText(value);
-    }
-
-    public void setAnchorLikely(String value) {
-        mAnchorLikely.setText(value);
-    }
-
-    public void setSubmitBtn(String value) {
-        mBtnSubmit.setText(value.toUpperCase());
-    }
-
-    public void setBtnCancel(String value) {
-        mBtnDismiss.setText(value.toUpperCase());
     }
 
     private void init(Context context) {
@@ -172,8 +151,7 @@ public class NpsLayout extends LinearLayout
             @Override
             public void onClick(View v) {
                 if(mOnButtonClickListener != null) {
-                    int currentScore = mRatingBar.getCurrentSelectedScore();
-                    mOnButtonClickListener.onSubmit(currentScore);
+                    mOnButtonClickListener.onSubmit(getSelectedScore());
                 }
             }
         };
@@ -192,6 +170,34 @@ public class NpsLayout extends LinearLayout
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
         mOnButtonClickListener = onButtonClickListener;
+    }
+
+    public void setNpsQuestion(String value) {
+        mNpsQuestion.setText(value);
+    }
+
+    public void setAnchorNotLikely(String value) {
+        mAnchorNotLikely.setText(value);
+    }
+
+    public void setAnchorLikely(String value) {
+        mAnchorLikely.setText(value);
+    }
+
+    public void setSubmitBtn(String value) {
+        mBtnSubmit.setText(value.toUpperCase());
+    }
+
+    public void setBtnCancel(String value) {
+        mBtnDismiss.setText(value.toUpperCase());
+    }
+
+    public int getSelectedScore() {
+        return mRatingBar.getSelectedScore();
+    }
+
+    public void setSelectedScore(int selectedScore) {
+        mRatingBar.setSelectedScore(selectedScore);
     }
 
     public interface OnButtonClickListener {

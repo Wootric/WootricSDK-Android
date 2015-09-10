@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
@@ -32,6 +27,7 @@ public class SurveyFragment extends DialogFragment {
     public static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
     public static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
     public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
+    public static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
 
     private NpsLayout mNpsLayout;
 
@@ -74,7 +70,7 @@ public class SurveyFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupLayoutElementsValues();
+        setupLayoutElementsValues(savedInstanceState);
     }
 
     @Override
@@ -115,12 +111,16 @@ public class SurveyFragment extends DialogFragment {
         mNpsLayout = (NpsLayout) view.findViewById(R.id.wootric_nps_layout);
     }
 
-    private void setupLayoutElementsValues() {
+    private void setupLayoutElementsValues(Bundle savedInstanceState) {
         mNpsLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
         mNpsLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
         mNpsLayout.setNpsQuestion(mLocalizedTexts.getNpsQuestion());
         mNpsLayout.setSubmitBtn(mLocalizedTexts.getSend());
         mNpsLayout.setBtnCancel(mLocalizedTexts.getDismiss());
+
+        if(savedInstanceState != null) {
+            mNpsLayout.setSelectedScore(savedInstanceState.getInt(ARG_SELECTED_SCORE));
+        }
     }
 
     @Override
@@ -130,6 +130,7 @@ public class SurveyFragment extends DialogFragment {
         outState.putParcelable(ARG_USER, mUser);
         outState.putParcelable(ARG_LOCALIZED_TEXTS, mLocalizedTexts);
         outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
+        outState.putInt(ARG_SELECTED_SCORE, mNpsLayout.getSelectedScore());
 
         super.onSaveInstanceState(outState);
     }

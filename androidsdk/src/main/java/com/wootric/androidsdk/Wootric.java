@@ -21,6 +21,7 @@ public class Wootric {
     private String originUrl;
     private final Settings settings;
 
+    private boolean mSurveyInProgress = false;
     static Wootric singleton;
 
     public static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
@@ -44,6 +45,9 @@ public class Wootric {
     }
 
     public void survey() {
+        if(mSurveyInProgress)
+            return;
+
         ConnectionUtils connectionUtils = ConnectionUtils.get();
         PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(mWeakContext.get());
 
@@ -53,6 +57,8 @@ public class Wootric {
                 settings, connectionUtils, preferencesUtils, surveyValidator);
 
         surveyManager.start();
+
+        mSurveyInProgress = true;
     }
 
     private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
