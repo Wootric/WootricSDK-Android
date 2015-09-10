@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
