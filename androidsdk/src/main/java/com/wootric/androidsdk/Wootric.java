@@ -15,13 +15,14 @@ import java.lang.ref.WeakReference;
  */
 public class Wootric {
 
-    private final WeakReference<Context> mWeakContext;
-    private final EndUser endUser;
-    private final User user;
-    private String originUrl;
-    private final Settings settings;
+    final Context context;
+    final EndUser endUser;
+    final User user;
+    final Settings settings;
+    String originUrl;
 
-    private boolean mSurveyInProgress = false;
+    boolean surveyInProgress;
+
     static Wootric singleton;
 
     public static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
@@ -45,20 +46,20 @@ public class Wootric {
     }
 
     public void survey() {
-        if(mSurveyInProgress)
+        if(surveyInProgress)
             return;
 
         ConnectionUtils connectionUtils = ConnectionUtils.get();
-        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(mWeakContext.get());
+        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(context);
+        SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
+                connectionUtils, preferencesUtils);
+        SurveyManager surveyManager = buildSurveyManager(context, user, endUser, settings, originUrl,
+                connectionUtils, preferencesUtils, surveyValidator);
 
-        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings, connectionUtils, preferencesUtils);
+        boolean started = surveyManager.start();
 
-        SurveyManager surveyManager = new SurveyManager(mWeakContext, user, endUser, originUrl,
-                settings, connectionUtils, preferencesUtils, surveyValidator);
-
-        surveyManager.start();
-
-        mSurveyInProgress = true;
+        if(started)
+            surveyInProgress = true;
     }
 
     private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
@@ -70,21 +71,21 @@ public class Wootric {
             throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
         }
 
-        mWeakContext = new WeakReference<Context>(context);
-        this.endUser = new EndUser();
-        this.user = new User(clientId, clientSecret, accountToken);
-        this.settings = new Settings();
+        this.context = context;
+        endUser = new EndUser();
+        user = new User(clientId, clientSecret, accountToken);
+        settings = new Settings();
     }
 
-    EndUser getEndUser() {
-        return endUser;
+    SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,
+                                         ConnectionUtils connectionUtils, PreferencesUtils preferencesUtils) {
+        return new SurveyValidator(user, endUser, settings, connectionUtils, preferencesUtils);
     }
 
-    User getUser() {
-        return user;
-    }
-
-    String getOriginUrl() {
-        return originUrl;
+     SurveyManager buildSurveyManager(Context context, User user, EndUser endUser, Settings settings, String originUrl,
+                                      ConnectionUtils connectionUtils, PreferencesUtils preferencesUtils,
+                                      SurveyValidator surveyValidator) {
+        return new SurveyManager(context, user, endUser, settings, originUrl,
+                connectionUtils, preferencesUtils, surveyValidator);
     }
 }

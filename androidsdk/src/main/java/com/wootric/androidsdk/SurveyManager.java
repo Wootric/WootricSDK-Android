@@ -18,8 +18,6 @@ import com.wootric.androidsdk.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by maciejwitowski on 9/3/15.
  */
@@ -31,45 +29,48 @@ public class SurveyManager implements
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
-    private final WeakReference<Context> mWeakContext;
-    private final User mUser;
-    private final EndUser mEndUser;
-    private final String mOriginUrl;
-    private final SurveyValidator mSurveyValidator;
-    private final Settings mSettings;
-    private final ConnectionUtils mConnectionUtils;
-    private final PreferencesUtils mPreferencesUtils;
+    final Context context;
+    final User user;
+    final EndUser endUser;
+    final SurveyValidator surveyValidator;
+    final Settings settings;
+    final ConnectionUtils connectionUtils;
+    final PreferencesUtils preferencesUtils;
 
-    SurveyManager(WeakReference<Context> weakContext, User user, EndUser endUser, String originUrl,
-                  Settings settings, ConnectionUtils connectionUtils,
+    private String accessToken;
+    String originUrl;
+
+    SurveyManager(Context context, User user, EndUser endUser,
+                  Settings settings, String originUrl, ConnectionUtils connectionUtils,
                   PreferencesUtils preferencesUtils, SurveyValidator surveyValidator) {
 
-        mWeakContext = weakContext;
-        mUser = user;
-        mEndUser = endUser;
-        mOriginUrl = originUrl;
-        mSurveyValidator = surveyValidator;
-        mSettings = settings;
-        mConnectionUtils = connectionUtils;
-        mPreferencesUtils = preferencesUtils;
+        this.context = context;
+        this.user = user;
+        this.endUser = endUser;
+        this.surveyValidator = surveyValidator;
+        this.settings = settings;
+        this.originUrl = originUrl;
+        this.connectionUtils = connectionUtils;
+        this.preferencesUtils = preferencesUtils;
     }
 
-    void start() {
-        showSurvey();
-//        sendGetTrackingPixelRequest();
-//        mPreferencesUtils.touchLastSeen();
-//
-//        validateSurvey();
+    boolean start() {
+        sendGetTrackingPixelRequest();
+        preferencesUtils.touchLastSeen();
+
+        validateSurvey();
+
+        return true;
     }
 
-    void validateSurvey() {
-        mSurveyValidator.setOnSurveyValidatedListener(this);
-        mSurveyValidator.validate();
+    private void validateSurvey() {
+        surveyValidator.setOnSurveyValidatedListener(this);
+        surveyValidator.validate();
     }
 
     @Override
     public void onSurveyValidated(Settings surveyServerSettings) {
-        mSettings.merge(surveyServerSettings);
+        settings.merge(surveyServerSettings);
 
         sendGetAccessTokenRequest();
     }
@@ -81,7 +82,7 @@ public class SurveyManager implements
             return;
         }
 
-        mPreferencesUtils.setAccessToken(accessToken);
+        this.accessToken = accessToken;
         sendGetEndUserRequest();
     }
 
@@ -90,9 +91,9 @@ public class SurveyManager implements
         if(endUser == null) {
             sendCreateEndUserRequest();
         } else {
-            mEndUser.setId(endUser.getId());
+            this.endUser.setId(endUser.getId());
 
-            if(mEndUser.hasProperties()) {
+            if(this.endUser.hasProperties()) {
                 sendUpdateEndUserRequest();
             }
 
@@ -104,15 +105,12 @@ public class SurveyManager implements
     public void onEndUserCreated(EndUser endUser) {
         if(endUser == null) return;
 
-        mEndUser.setId(endUser.getId());
+        this.endUser.setId(endUser.getId());
 
         showSurvey();
     }
 
     private void showSurvey() {
-        final Context context = mWeakContext.get();
-        if(context == null) return;
-
         final String surveyDialogTag = "survey_dialog_tag";
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
         Fragment prev = fragmentManager.findFragmentByTag(surveyDialogTag);
@@ -121,10 +119,10 @@ public class SurveyManager implements
             fragmentManager.beginTransaction().remove(prev).commit();
         }
 
-        final SurveyFragment surveyFragment = SurveyFragment.newInstance(mUser, mEndUser,
-                mOriginUrl, mSettings.getLocalizedTexts(), mSettings.getCustomMessage());
+        final SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser,
+                originUrl, settings.getLocalizedTexts(), settings.getCustomMessage());
 
-        int delayMillis = mSettings.getTimeDelay() * 1000;
+        int delayMillis = settings.getTimeDelay() * 1000;
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -139,27 +137,27 @@ public class SurveyManager implements
     }
 
     private void sendGetTrackingPixelRequest() {
-        new GetTrackingPixelTask(mUser, mEndUser, mOriginUrl)
+        new GetTrackingPixelTask(user, endUser, originUrl)
                 .execute();
     }
 
     private void sendGetAccessTokenRequest() {
-        new GetAccessTokenTask(mUser, this, mConnectionUtils)
+        new GetAccessTokenTask(user, this, connectionUtils)
                 .execute();
     }
 
     private void sendGetEndUserRequest() {
-        new GetEndUserTask(mEndUser, mPreferencesUtils.getAccessToken(), this, mConnectionUtils)
+        new GetEndUserTask(endUser, accessToken, this, connectionUtils)
                 .execute();
     }
 
     private void sendCreateEndUserRequest() {
-        new CreateEndUserTask(mEndUser, mPreferencesUtils.getAccessToken(), this, mConnectionUtils)
+        new CreateEndUserTask(endUser, accessToken, this, connectionUtils)
                 .execute();
     }
 
     private void sendUpdateEndUserRequest() {
-        new UpdateEndUserTask(mEndUser, mPreferencesUtils.getAccessToken(), mConnectionUtils)
+        new UpdateEndUserTask(endUser, accessToken, connectionUtils)
                 .execute();
     }
 }

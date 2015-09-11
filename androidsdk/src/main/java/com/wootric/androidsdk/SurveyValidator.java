@@ -20,13 +20,13 @@ import static com.wootric.androidsdk.Constants.NOT_SET;
 public class SurveyValidator {
 
     private OnSurveyValidatedListener onSurveyValidatedListener;
-    private final User user;
-    private final EndUser endUser;
+    final User user;
+    final EndUser endUser;
 
-    private final ConnectionUtils connectionUtils;
-    private final PreferencesUtils preferencesUtils;
+    final ConnectionUtils connectionUtils;
+    final PreferencesUtils preferencesUtils;
 
-    private final Settings settings;
+    final Settings settings;
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 

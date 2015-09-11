@@ -22,17 +22,15 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
     private final String text;
 
     private final ConnectionUtils connectionUtils;
-    private final PreferencesUtils prefUtils;
 
     public CreateResponseTask(String accessToken, EndUser endUser, String originUrl, int score,
-                              String text, ConnectionUtils connectionUtils, PreferencesUtils prefUtils) {
+                              String text, ConnectionUtils connectionUtils) {
         this.accessToken = accessToken;
         this.endUser = endUser;
         this.originUrl = originUrl;
         this.score = score;
         this.text = text;
         this.connectionUtils = connectionUtils;
-        this.prefUtils = prefUtils;
     }
 
     @Override
@@ -47,7 +45,6 @@ public class CreateResponseTask extends AsyncTask<Void, Void, Void>{
         try {
             connectionUtils.sendAuthorizedPost(builder.toString(), accessToken);
         } catch (IOException e) {
-            prefUtils.saveUnsentResponse(endUser, text, score, originUrl);
             e.printStackTrace();
         }
         return null;
