@@ -1,5 +1,6 @@
 package com.wootric.androidsdk.objects;
 
+import com.google.gson.annotations.SerializedName;
 import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;
@@ -12,12 +13,16 @@ import java.util.Date;
  */
 public class Settings {
 
-    private int firstSurvey = Constants.NOT_SET;
+    @SerializedName("first_survey")
+    int firstSurvey = Constants.NOT_SET;
 
-    private int timeDelay = 0;
+    @SerializedName("time_delay")
+    int timeDelay = 0;
 
-    private CustomMessage customMessage;
-    private LocalizedTexts localizedTexts;
+    @SerializedName("localized_texts")
+    LocalizedTexts localizedTexts;
+
+    CustomMessage customMessage;
 
     private boolean surveyImmediately;
 
@@ -81,8 +86,8 @@ public class Settings {
         return surveyImmediately;
     }
 
-    public int getTimeDelay() {
-        return timeDelay;
+    public int getTimeDelayInMillis() {
+        return timeDelay * 1000;
     }
 
     public CustomMessage getCustomMessage() {

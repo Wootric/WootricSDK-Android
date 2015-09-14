@@ -1,14 +1,11 @@
 package com.wootric.androidsdk;
 
+import com.wootric.androidsdk.network.SurveyClient;
+import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.tasks.CheckEligibilityTask;
-import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -17,26 +14,24 @@ import static com.wootric.androidsdk.Constants.NOT_SET;
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class SurveyValidator {
+public class SurveyValidator implements SurveyClient.SurveyCallback {
 
     private OnSurveyValidatedListener onSurveyValidatedListener;
     final User user;
     final EndUser endUser;
-
-    final ConnectionUtils connectionUtils;
-    final PreferencesUtils preferencesUtils;
-
     final Settings settings;
+    final SurveyClient surveyClient;
+    final PreferencesUtils preferencesUtils;
 
     private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
 
     SurveyValidator(User user, EndUser endUser, Settings settings,
-                        ConnectionUtils connectionUtils, PreferencesUtils preferencesUtils) {
+                        SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
         this.user = user;
         this.endUser = endUser;
-        this.connectionUtils = connectionUtils;
-        this.preferencesUtils = preferencesUtils;
         this.settings = settings;
+        this.surveyClient = surveyClient;
+        this.preferencesUtils = preferencesUtils;
     }
 
     public void setOnSurveyValidatedListener(OnSurveyValidatedListener onSurveyValidatedListener) {
@@ -76,39 +71,13 @@ public class SurveyValidator {
     }
 
     void checkEligibility() {
-        CheckEligibilityTask checkEligibilityTask = new CheckEligibilityTask(
-                user.getAccountToken(),
-                endUser.getEmail(),
-                endUser.getCreatedAt(),
-                settings.isSurveyImmediately(),
-                connectionUtils) {
-
-            @Override
-            protected void onPostExecute(JSONObject response) {
-                if(response != null) {
-                    parseEligibilityResponse(response);
-                }
-            }
-        };
-
-        checkEligibilityTask.execute();
+        surveyClient.checkEligibility(user, endUser, settings, this);
     }
 
-    private void parseEligibilityResponse(JSONObject response) {
-        try {
-            boolean eligible = response.getBoolean("eligible");
-
-            if(eligible) {
-                JSONObject settingsJson = response.getJSONObject("settings");
-                if(settingsJson != null) {
-                    Settings settings = Settings.fromJson(settingsJson);
-
-                    notifyShouldShowSurvey(settings);
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+    @Override
+    public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
+        if(eligibilityResponse.isEligible()) {
+            notifyShouldShowSurvey(eligibilityResponse.getSettings());
         }
     }
 
@@ -117,7 +86,6 @@ public class SurveyValidator {
             onSurveyValidatedListener.onSurveyValidated(settings);
         }
     }
-
 
     interface OnSurveyValidatedListener {
         void onSurveyValidated(Settings settings);

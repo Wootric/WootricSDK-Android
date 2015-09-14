@@ -48,6 +48,10 @@ public class EndUser implements Parcelable {
         return createdAt;
     }
 
+    public boolean isCreatedAtSet() {
+        return createdAt != Constants.NOT_SET;
+    }
+
     public void setProperties(HashMap<String, String> properties) {
         this.properties = properties;
     }
@@ -58,10 +62,6 @@ public class EndUser implements Parcelable {
 
     public boolean hasProperties() {
         return properties != null && properties.size() > 0;
-    }
-
-    public boolean hasCreatedAt() {
-        return createdAt != Constants.NOT_SET;
     }
 
     public boolean hasId() {
@@ -122,4 +122,8 @@ public class EndUser implements Parcelable {
             return new EndUser[size];
         }
     };
+
+    public Long getCreatedAtOrNull() {
+        return isCreatedAtSet() ? getCreatedAt() : null;
+    }
 }

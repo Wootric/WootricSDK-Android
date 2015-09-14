@@ -7,50 +7,54 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.wootric.androidsdk.network.TrackingPixelClient;
+import com.wootric.androidsdk.network.WootricApiClient;
+import com.wootric.androidsdk.network.responses.AuthenticationResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.tasks.CreateEndUserTask;
-import com.wootric.androidsdk.tasks.GetAccessTokenTask;
-import com.wootric.androidsdk.tasks.GetEndUserTask;
-import com.wootric.androidsdk.tasks.GetTrackingPixelTask;
-import com.wootric.androidsdk.tasks.UpdateEndUserTask;
-import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import java.util.List;
+
+import retrofit.RetrofitError;
 
 /**
  * Created by maciejwitowski on 9/3/15.
  */
 public class SurveyManager implements
         SurveyValidator.OnSurveyValidatedListener,
-        GetAccessTokenTask.OnAccessTokenReceivedListener,
-        GetEndUserTask.OnEndUserReceivedListener,
-        CreateEndUserTask.OnEndUserCreatedListener {
+        WootricApiClient.WootricApiCallback {
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
     final Context context;
+    final WootricApiClient wootricApiClient;
+    final TrackingPixelClient trackingPixelClient;
     final User user;
     final EndUser endUser;
     final SurveyValidator surveyValidator;
     final Settings settings;
-    final ConnectionUtils connectionUtils;
     final PreferencesUtils preferencesUtils;
 
     private String accessToken;
     String originUrl;
 
-    SurveyManager(Context context, User user, EndUser endUser,
-                  Settings settings, String originUrl, ConnectionUtils connectionUtils,
-                  PreferencesUtils preferencesUtils, SurveyValidator surveyValidator) {
+    private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
+
+
+    SurveyManager(Context context, WootricApiClient wootricApiClient, TrackingPixelClient trackingPixelClient, User user, EndUser endUser,
+                  Settings settings, String originUrl, PreferencesUtils preferencesUtils,
+                  SurveyValidator surveyValidator) {
 
         this.context = context;
+        this.wootricApiClient = wootricApiClient;
+        this.trackingPixelClient = trackingPixelClient;
         this.user = user;
         this.endUser = endUser;
         this.surveyValidator = surveyValidator;
         this.settings = settings;
         this.originUrl = originUrl;
-        this.connectionUtils = connectionUtils;
         this.preferencesUtils = preferencesUtils;
     }
 
@@ -75,89 +79,84 @@ public class SurveyManager implements
         sendGetAccessTokenRequest();
     }
 
-    @Override
-    public void onAccessTokenReceived(String accessToken) {
-        if(accessToken == null) {
-            Log.d(LOG_TAG, "NULL access token received");
-            return;
-        }
+    private void sendGetTrackingPixelRequest() {
+        trackingPixelClient.getTrackingPixel(user, endUser, originUrl);
+    }
 
-        this.accessToken = accessToken;
-        sendGetEndUserRequest();
+    private void sendGetAccessTokenRequest() {
+        wootricApiClient.authenticate(user, this);
+    }
+
+    private void getEndUser() {
+        wootricApiClient.getEndUserByEmail(endUser.getEmail(), accessToken, this);
     }
 
     @Override
-    public void onEndUserReceived(EndUser endUser) {
-        if(endUser == null) {
-            sendCreateEndUserRequest();
-        } else {
-            this.endUser.setId(endUser.getId());
+    public void onGetEndUserSuccess(List<EndUser> endUsers) {
+        if(endUsers.size() > 0) {
+            long endUserId = endUsers.get(0).getId();
+            endUser.setId(endUserId);
 
             if(this.endUser.hasProperties()) {
-                sendUpdateEndUserRequest();
+                updateEndUser();
             }
 
             showSurvey();
+        } else {
+            createEndUser();
         }
     }
 
-    @Override
-    public void onEndUserCreated(EndUser endUser) {
-        if(endUser == null) return;
+    private void createEndUser() {
+        wootricApiClient.createEndUser(endUser, accessToken, this);
+    }
 
+    @Override
+    public void onCreateEndUserSuccess(EndUser endUser) {
         this.endUser.setId(endUser.getId());
 
         showSurvey();
     }
 
+    private void updateEndUser() {
+        wootricApiClient.updateEndUser(endUser, accessToken);
+    }
+
+    @Override
+    public void onAuthenticateSuccess(AuthenticationResponse authenticationResponse) {
+        this.accessToken = authenticationResponse.accessToken;
+        getEndUser();
+    }
+
+    @Override
+    public void onApiError(RetrofitError error) {
+        // TODO Handle API Request Error
+    }
+
     private void showSurvey() {
-        final String surveyDialogTag = "survey_dialog_tag";
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    showSurveyFragment();
+                } catch (IllegalStateException e) {
+                    Log.d(LOG_TAG, e.getLocalizedMessage());
+                }
+            }
+        }, settings.getTimeDelayInMillis());
+    }
+
+    private void showSurveyFragment() {
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
-        Fragment prev = fragmentManager.findFragmentByTag(surveyDialogTag);
+        Fragment prev = fragmentManager.findFragmentByTag(SURVEY_DIALOG_TAG);
 
         if(prev != null) {
             fragmentManager.beginTransaction().remove(prev).commit();
         }
 
-        final SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser,
+        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser,
                 originUrl, settings.getLocalizedTexts(), settings.getCustomMessage());
 
-        int delayMillis = settings.getTimeDelay() * 1000;
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    surveyFragment.show(fragmentManager, surveyDialogTag);
-                } catch (IllegalStateException e) {
-                    Log.d(LOG_TAG, e.getLocalizedMessage());
-                }
-            }
-        }, delayMillis);
-    }
-
-    private void sendGetTrackingPixelRequest() {
-        new GetTrackingPixelTask(user, endUser, originUrl)
-                .execute();
-    }
-
-    private void sendGetAccessTokenRequest() {
-        new GetAccessTokenTask(user, this, connectionUtils)
-                .execute();
-    }
-
-    private void sendGetEndUserRequest() {
-        new GetEndUserTask(endUser, accessToken, this, connectionUtils)
-                .execute();
-    }
-
-    private void sendCreateEndUserRequest() {
-        new CreateEndUserTask(endUser, accessToken, this, connectionUtils)
-                .execute();
-    }
-
-    private void sendUpdateEndUserRequest() {
-        new UpdateEndUserTask(endUser, accessToken, connectionUtils)
-                .execute();
+        surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
     }
 }

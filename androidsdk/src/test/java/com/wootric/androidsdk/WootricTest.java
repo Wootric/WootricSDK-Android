@@ -2,8 +2,10 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 
+import com.wootric.androidsdk.network.SurveyClient;
+import com.wootric.androidsdk.network.TrackingPixelClient;
+import com.wootric.androidsdk.network.WootricApiClient;
 import com.wootric.androidsdk.objects.User;
-import com.wootric.androidsdk.utils.ConnectionUtils;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import org.junit.Before;
@@ -124,12 +126,12 @@ public class WootricTest {
         wootric.originUrl = "test.com";
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
-                eq(wootric.endUser), eq(wootric.settings),
-                any(ConnectionUtils.class), any(PreferencesUtils.class));
+                eq(wootric.endUser), eq(wootric.settings), any(SurveyClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context), eq(wootric.user),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+                any(WootricApiClient.class), any(TrackingPixelClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
-                any(ConnectionUtils.class), any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator));
 
         doReturn(true).when(mockSurveyManager).start();
 

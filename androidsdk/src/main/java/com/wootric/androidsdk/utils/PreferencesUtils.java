@@ -4,14 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.wootric.androidsdk.Constants;
-import com.wootric.androidsdk.objects.EndUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 
-import static com.wootric.androidsdk.Constants.INVALID_ID;
 import static com.wootric.androidsdk.Constants.NOT_SET;
 
 /**
