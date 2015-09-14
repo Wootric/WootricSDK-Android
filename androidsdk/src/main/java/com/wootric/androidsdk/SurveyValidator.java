@@ -21,7 +21,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     private final SurveyClient surveyClient;
     private final PreferencesUtils preferencesUtils;
 
-    private static final long FIRST_SURVEY = 31*86400000; // 31 days
+    public static final long FIRST_SURVEY = 31L*1000L *60L *60L *24L; // 31 days
 
     SurveyValidator(User user, EndUser endUser, Settings settings,
                         SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
@@ -36,26 +36,31 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
         this.onSurveyValidatedListener = onSurveyValidatedListener;
     }
 
-    void validate() {
+    public void validate() {
         if(needsSurvey())
             checkEligibility();
     }
 
-    private boolean needsSurvey() {
-        boolean wasRecentlySurveyed = preferencesUtils.wasRecentlySurveyed();
+    @Override
+    public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
+        if(eligibilityResponse.isEligible()) {
+            notifyShouldShowSurvey(eligibilityResponse.getSettings());
+        }
+    }
 
-        return !wasRecentlySurveyed &&
+    private boolean needsSurvey() {
+        return !preferencesUtils.wasRecentlySurveyed() &&
                 (settings.isSurveyImmediately() ||
                 !endUser.isCreatedAtSet() ||
-                firstSurveyDelayPassed() || dayDelayPassed());
+                firstSurveyDelayPassed() || lastSeenDelayPassed());
     }
 
     private boolean firstSurveyDelayPassed() {
-        long userAge = new Date().getTime() - endUser.getCreatedAt()*1000;
+        long userAge = new Date().getTime() - endUser.getCreatedAt();
         return userAge >= FIRST_SURVEY;
     }
 
-    private boolean dayDelayPassed(){
+    private boolean lastSeenDelayPassed(){
         if(!preferencesUtils.isLastSeenSet()) {
             return false;
         }
@@ -67,13 +72,6 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
 
     private void checkEligibility() {
         surveyClient.checkEligibility(user, endUser, settings, this);
-    }
-
-    @Override
-    public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
-        if(eligibilityResponse.isEligible()) {
-            notifyShouldShowSurvey(eligibilityResponse.getSettings());
-        }
     }
 
     private void notifyShouldShowSurvey(Settings settings) {

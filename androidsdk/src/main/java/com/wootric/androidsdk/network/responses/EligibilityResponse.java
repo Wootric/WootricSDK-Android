@@ -10,6 +10,11 @@ public class EligibilityResponse {
     private boolean eligible;
     private Settings settings;
 
+    public EligibilityResponse(boolean eligible, Settings settings) {
+        this.eligible = eligible;
+        this.settings = settings;
+    }
+
     public boolean isEligible() {
         return eligible;
     }
