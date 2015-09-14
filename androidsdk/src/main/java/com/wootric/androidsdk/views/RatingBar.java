@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 
 /**
@@ -37,7 +36,8 @@ public class RatingBar extends View implements View.OnTouchListener {
     private int mNotchCount;
     private float[] mNotchesLeftXCoordinates;
 
-    private int mSelectedScore = Constants.INVALID_ID;
+    public static final int SCORE_NOT_SET = -1;
+    private int mSelectedScore = SCORE_NOT_SET;
 
     private OnScoreChangedListener mOnScoreChangedListener;
 
@@ -176,7 +176,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     private int getTouchedScore(float touchedXCoordinate) {
         int lastNotchIndex = mNotchCount - 1;
 
-        int touchedScore = Constants.INVALID_ID;
+        int touchedScore = SCORE_NOT_SET;
 
         if(touchedXCoordinate >= mNotchesLeftXCoordinates[lastNotchIndex]) {
             touchedScore = lastNotchIndex;
@@ -205,7 +205,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     }
 
     public void setSelectedScore(int selectedScore) {
-        boolean scoreChanged = (selectedScore != Constants.INVALID_ID && selectedScore != mSelectedScore);
+        boolean scoreChanged = (selectedScore != SCORE_NOT_SET && selectedScore != mSelectedScore);
 
         if(scoreChanged) {
             if(mOnScoreChangedListener != null) {

@@ -9,21 +9,19 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import java.util.Date;
 
-import static com.wootric.androidsdk.Constants.NOT_SET;
-
 /**
  * Created by maciejwitowski on 9/3/15.
  */
 public class SurveyValidator implements SurveyClient.SurveyCallback {
 
     private OnSurveyValidatedListener onSurveyValidatedListener;
-    final User user;
-    final EndUser endUser;
-    final Settings settings;
-    final SurveyClient surveyClient;
-    final PreferencesUtils preferencesUtils;
+    private final User user;
+    private final EndUser endUser;
+    private final Settings settings;
+    private final SurveyClient surveyClient;
+    private final PreferencesUtils preferencesUtils;
 
-    private static final int FIRST_SURVEY = 31*60*60*24*1000; // 31 days
+    private static final long FIRST_SURVEY = 31*86400000; // 31 days
 
     SurveyValidator(User user, EndUser endUser, Settings settings,
                         SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
@@ -46,13 +44,10 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     private boolean needsSurvey() {
         boolean wasRecentlySurveyed = preferencesUtils.wasRecentlySurveyed();
 
-        if(wasRecentlySurveyed)
-            return false;
-
-        return settings.isSurveyImmediately() ||
-                endUser.getCreatedAt() == NOT_SET ||
-                firstSurveyDelayPassed() ||
-                dayDelayPassed();
+        return !wasRecentlySurveyed &&
+                (settings.isSurveyImmediately() ||
+                !endUser.isCreatedAtSet() ||
+                firstSurveyDelayPassed() || dayDelayPassed());
     }
 
     private boolean firstSurveyDelayPassed() {
@@ -70,7 +65,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
         return timeSinceLastSeen >= FIRST_SURVEY;
     }
 
-    void checkEligibility() {
+    private void checkEligibility() {
         surveyClient.checkEligibility(user, endUser, settings, this);
     }
 
@@ -81,7 +76,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
         }
     }
 
-    void notifyShouldShowSurvey(Settings settings) {
+    private void notifyShouldShowSurvey(Settings settings) {
         if(onSurveyValidatedListener != null) {
             onSurveyValidatedListener.onSurveyValidated(settings);
         }

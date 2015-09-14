@@ -24,9 +24,9 @@ public class LocalizedTexts implements Parcelable {
     private final String socialShareQuestion;
     private final String socialShareDecline;
 
-    public LocalizedTexts(String npsQuestion, String anchorLikely, String anchorNotLikely,
-                          String followupQuestion, String followupPlaceholder, String finalThankYou,
-                          String send, String dismiss, String socialShareQuestion, String socialShareDecline) {
+    private LocalizedTexts(String npsQuestion, String anchorLikely, String anchorNotLikely,
+                           String followupQuestion, String followupPlaceholder, String finalThankYou,
+                           String send, String dismiss, String socialShareQuestion, String socialShareDecline) {
         this.npsQuestion = npsQuestion;
         this.anchorLikely = anchorLikely;
         this.anchorNotLikely = anchorNotLikely;

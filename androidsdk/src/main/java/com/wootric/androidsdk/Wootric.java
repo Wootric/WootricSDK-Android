@@ -49,8 +49,7 @@ public class Wootric {
         if(surveyInProgress)
             return;
 
-        PreferencesUtils preferencesUtils = PreferencesUtils.getInstance(context);
-
+        PreferencesUtils preferencesUtils = new PreferencesUtils(context);
         WootricApiClient wootricApiClient = new WootricApiClient();
         TrackingPixelClient trackingPixelClient = new TrackingPixelClient();
         SurveyClient surveyClient = new SurveyClient();

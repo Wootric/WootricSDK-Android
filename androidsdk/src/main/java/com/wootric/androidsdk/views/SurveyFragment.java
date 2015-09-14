@@ -1,4 +1,4 @@
-package com.wootric.androidsdk;
+package com.wootric.androidsdk.views;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -10,24 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.LocalizedTexts;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ScreenUtils;
-import com.wootric.androidsdk.views.NpsLayout;
 
 /**
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment {
 
-    public static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
-    public static final String ARG_USER = "com.wootric.androidsdk.arg.user";
-    public static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
-    public static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
-    public static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
-    public static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
+    private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
+    private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
+    private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
+    private static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
+    private static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
+    private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
 
     private NpsLayout mNpsLayout;
 

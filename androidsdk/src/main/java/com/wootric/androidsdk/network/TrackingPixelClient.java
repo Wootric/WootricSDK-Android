@@ -21,7 +21,7 @@ public class TrackingPixelClient {
 
     private static final String TRACKING_PIXEL_BASE_URL = "https://d8myem934l1zi.cloudfront.net";
 
-    private TrackingPixelInterface trackingPixelInterface;
+    private final TrackingPixelInterface trackingPixelInterface;
 
     public TrackingPixelClient() {
         RestAdapter retrofit = new RestAdapter.Builder()

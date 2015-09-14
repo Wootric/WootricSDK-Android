@@ -1,7 +1,6 @@
 package com.wootric.androidsdk.objects;
 
 import com.google.gson.annotations.SerializedName;
-import com.wootric.androidsdk.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,16 +12,19 @@ import java.util.Date;
  */
 public class Settings {
 
+    private static final int NOT_SET = -1;
+    private static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
+
     @SerializedName("first_survey")
-    int firstSurvey = Constants.NOT_SET;
+    private int firstSurvey = NOT_SET;
 
     @SerializedName("time_delay")
-    int timeDelay = 0;
+    private int timeDelay = 0;
 
     @SerializedName("localized_texts")
-    LocalizedTexts localizedTexts;
+    private LocalizedTexts localizedTexts;
 
-    CustomMessage customMessage;
+    private CustomMessage customMessage;
 
     private boolean surveyImmediately;
 
@@ -63,7 +65,7 @@ public class Settings {
             this.customMessage = settings.customMessage;
         }
 
-        if(this.timeDelay == Constants.NOT_SET) {
+        if(this.timeDelay == NOT_SET) {
             this.timeDelay = settings.timeDelay;
         }
 
@@ -71,11 +73,10 @@ public class Settings {
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
-        if(firstSurvey == Constants.NOT_SET || timeFrom == Constants.NOT_SET) {
-            return true;
-        }
+        return firstSurvey == NOT_SET ||
+                timeFrom == NOT_SET ||
+                new Date().getTime() - firstSurvey * DAY_IN_MILLIS > timeFrom;
 
-        return new Date().getTime() - firstSurvey *  Constants.DAY_IN_MILLIS > timeFrom;
     }
 
     public void setSurveyImmediately(boolean surveyImmediately) {

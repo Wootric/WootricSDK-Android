@@ -22,7 +22,7 @@ public class SurveyClient {
 
     private static final String LOG_TAG = SurveyClient.class.getName();
 
-    private SurveyInterface surveyInterface;
+    private final SurveyInterface surveyInterface;
 
     public SurveyClient() {
         RestAdapter retrofit = new RestAdapter.Builder()

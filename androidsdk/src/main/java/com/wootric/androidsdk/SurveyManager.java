@@ -14,6 +14,7 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+import com.wootric.androidsdk.views.SurveyFragment;
 
 import java.util.List;
 
@@ -28,17 +29,17 @@ public class SurveyManager implements
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
-    final Context context;
-    final WootricApiClient wootricApiClient;
-    final TrackingPixelClient trackingPixelClient;
-    final User user;
-    final EndUser endUser;
-    final SurveyValidator surveyValidator;
-    final Settings settings;
-    final PreferencesUtils preferencesUtils;
+    private final Context context;
+    private final WootricApiClient wootricApiClient;
+    private final TrackingPixelClient trackingPixelClient;
+    private final User user;
+    private final EndUser endUser;
+    private final SurveyValidator surveyValidator;
+    private final Settings settings;
+    private final PreferencesUtils preferencesUtils;
 
     private String accessToken;
-    String originUrl;
+    private final String originUrl;
 
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 

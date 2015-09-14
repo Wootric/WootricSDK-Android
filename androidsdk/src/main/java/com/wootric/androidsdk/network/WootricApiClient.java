@@ -24,11 +24,11 @@ public class WootricApiClient {
 
     private static final String API_ENDPOINT = "https://api.wootric.com";
     private static final String AUTH_TOKEN_URL = "/oauth/token";
-    public static final String END_USERS_URL = "/v1/end_users";
+    private static final String END_USERS_URL = "/v1/end_users";
 
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS   = "client_credentials";
 
-    private WootricApiInterface wootricApiInterface;
+    private final WootricApiInterface wootricApiInterface;
 
     public WootricApiClient() {
         RestAdapter restAdapter = new RestAdapter.Builder()

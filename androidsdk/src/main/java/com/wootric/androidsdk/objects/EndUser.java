@@ -3,8 +3,6 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.wootric.androidsdk.Constants;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,14 +13,14 @@ import java.util.HashMap;
  */
 public class EndUser implements Parcelable {
 
-    private long id = Constants.INVALID_ID;
+    private long id = -1;
     private String email;
-    private long createdAt = Constants.NOT_SET;
+    private long createdAt = -1;
     private HashMap<String, String> properties = new HashMap<>();
 
     public EndUser() {}
 
-    public EndUser(long id, String email) {
+    private EndUser(long id, String email) {
         this.id = id;
         this.email = email;
     }
@@ -49,7 +47,7 @@ public class EndUser implements Parcelable {
     }
 
     public boolean isCreatedAtSet() {
-        return createdAt != Constants.NOT_SET;
+        return createdAt != -1;
     }
 
     public void setProperties(HashMap<String, String> properties) {
@@ -62,10 +60,6 @@ public class EndUser implements Parcelable {
 
     public boolean hasProperties() {
         return properties != null && properties.size() > 0;
-    }
-
-    public boolean hasId() {
-        return id != Constants.INVALID_ID;
     }
 
     public void setId(long id) {

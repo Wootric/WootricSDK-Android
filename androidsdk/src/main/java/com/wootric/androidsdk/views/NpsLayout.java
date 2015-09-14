@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.utils.ScreenUtils;
 
@@ -125,7 +124,7 @@ public class NpsLayout extends LinearLayout
     }
 
     private void updateSelectedScore(int oldScore, int newScore) {
-        if(oldScore != Constants.INVALID_ID) {
+        if(oldScore != RatingBar.SCORE_NOT_SET) {
             TextView oldScoreView = mScoreViews[oldScore];
             oldScoreView.setTextColor(mColorNotSelected);
             oldScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
