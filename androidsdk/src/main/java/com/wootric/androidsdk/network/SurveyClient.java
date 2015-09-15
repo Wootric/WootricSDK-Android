@@ -34,7 +34,7 @@ public class SurveyClient {
 
     public void checkEligibility(User user, EndUser endUser, Settings settings, final SurveyCallback surveyCallback) {
         surveyInterface.eligible(user.getAccountToken(), endUser.getEmail(),
-            settings.isSurveyImmediately(), endUser.getCreatedAtOrNull(), new Callback<EligibilityResponse>() {
+            settings.isSurveyImmediately(), endUser.getCreatedAtOrNull(), settings.getFirstSurveyDelay(), new Callback<EligibilityResponse>() {
                 @Override
                 public void success(EligibilityResponse eligibilityResponse, Response response) {
                     surveyCallback.onEligibilityChecked(eligibilityResponse);
@@ -57,6 +57,7 @@ public class SurveyClient {
                       @Query("email") String email,
                       @Query("survey_immediately") boolean surveyImmediately,
                       @Query("end_user_created_at") Long endUserCreatedAt,
+                      @Query("first_survey_delay") long firstSurveyDelay,
                       Callback<EligibilityResponse> eligibilityResponseCallback);
     }
 }

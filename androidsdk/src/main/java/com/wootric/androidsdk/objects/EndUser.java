@@ -3,9 +3,6 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 /**
@@ -16,14 +13,9 @@ public class EndUser implements Parcelable {
     private long id = -1;
     private String email;
     private long createdAt = -1;
-    private HashMap<String, String> properties = new HashMap<>();
+    private HashMap properties = new HashMap<>();
 
     public EndUser() {}
-
-    private EndUser(long id, String email) {
-        this.id = id;
-        this.email = email;
-    }
 
     public EndUser(String email) {
         this.email      = email;
@@ -50,7 +42,7 @@ public class EndUser implements Parcelable {
         return createdAt != -1;
     }
 
-    public void setProperties(HashMap<String, String> properties) {
+    public void setProperties(HashMap properties) {
         this.properties = properties;
     }
 
@@ -72,19 +64,6 @@ public class EndUser implements Parcelable {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public JSONObject toJson() throws JSONException {
-        JSONObject obj = new JSONObject();
-        obj.put("id",id);
-        obj.put("email",email);
-        return obj;
-    }
-    public static EndUser fromJson(JSONObject jsonObject) throws JSONException {
-        return new EndUser(
-                jsonObject.getLong("id"),
-                jsonObject.getString("email")
-        );
     }
 
     @Override

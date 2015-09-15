@@ -7,8 +7,6 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
-import java.util.Date;
-
 /**
  * Created by maciejwitowski on 9/3/15.
  */
@@ -20,8 +18,6 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     private final Settings settings;
     private final SurveyClient surveyClient;
     private final PreferencesUtils preferencesUtils;
-
-    public static final long FIRST_SURVEY = 31L*1000L *60L *60L *24L; // 31 days
 
     SurveyValidator(User user, EndUser endUser, Settings settings,
                         SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
@@ -56,8 +52,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     }
 
     private boolean firstSurveyDelayPassed() {
-        long userAge = new Date().getTime() - endUser.getCreatedAt();
-        return userAge >= FIRST_SURVEY;
+        return settings.firstSurveyDelayPassed(endUser.getCreatedAt());
     }
 
     private boolean lastSeenDelayPassed(){
@@ -65,9 +60,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
             return false;
         }
 
-        long timeSinceLastSeen = new Date().getTime() - preferencesUtils.getLastSeen();
-
-        return timeSinceLastSeen >= FIRST_SURVEY;
+        return settings.firstSurveyDelayPassed(preferencesUtils.getLastSeen());
     }
 
     private void checkEligibility() {

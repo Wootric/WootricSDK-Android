@@ -3,9 +3,6 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by maciejwitowski on 4/17/15.
  */
@@ -23,9 +20,7 @@ public class CustomMessage implements Parcelable {
     private String passiveFollowupQuestion;
     private String promoterFollowupQuestion;
 
-    public static CustomMessage create() {
-        return new CustomMessage();
-    }
+    public CustomMessage() {}
 
     public CustomMessage recommendTarget(String value) {
         recommendTarget = value;
@@ -108,8 +103,6 @@ public class CustomMessage implements Parcelable {
         return promoterFollowupQuestion;
     }
 
-    private CustomMessage() {}
-
     @Override
     public int describeContents() {
         return 0;
@@ -172,59 +165,5 @@ public class CustomMessage implements Parcelable {
         } else {
             return placeholder;
         }
-    }
-
-    public static CustomMessage fromJson(JSONObject json) throws JSONException {
-        CustomMessage message = new CustomMessage();
-
-        if(json.has("followup_question")) {
-            message.followupQuestion = json.getString("followup_question");
-        }
-
-        if(json.has("followup_questions_list")) {
-            JSONObject followupQuestions = json.getJSONObject("followup_questions_list");
-
-            if(followupQuestions != null) {
-                if (followupQuestions.has("detractor_question")) {
-                    message.detractorFollowupQuestion = followupQuestions.getString("detractor_question");
-                }
-
-                if (followupQuestions.has("passive_question")) {
-                    message.passiveFollowupQuestion = followupQuestions.getString("passive_question");
-                }
-
-                if (followupQuestions.has("promoter_question")) {
-                    message.promoterFollowupQuestion = followupQuestions.getString("promoter_question");
-                }
-            }
-        }
-
-        if(json.has("placeholder_text")) {
-            message.placeholder = json.getString("placeholder_text");
-        }
-
-        if(json.has("placeholder_texts_list")) {
-            JSONObject placeholderQuestions = json.getJSONObject("placeholder_texts_list");
-
-            if(placeholderQuestions != null) {
-                if (placeholderQuestions.has("detractor_text")) {
-                    message.detractorPlaceholder = placeholderQuestions.getString("detractor_text");
-                }
-
-                if (placeholderQuestions.has("passive_text")) {
-                    message.passivePlaceholder = placeholderQuestions.getString("passive_text");
-                }
-
-                if (placeholderQuestions.has("promoter_text")) {
-                    message.promoterPlaceholder = placeholderQuestions.getString("promoter_text");
-                }
-            }
-        }
-
-        if(json.has("wootric_recommend_target")) {
-            message.recommendTarget = json.getString("wootric_recommend_target");
-        }
-
-        return message;
     }
 }

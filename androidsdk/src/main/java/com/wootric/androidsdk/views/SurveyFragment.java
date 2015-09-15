@@ -37,7 +37,8 @@ public class SurveyFragment extends DialogFragment {
     private LocalizedTexts mLocalizedTexts;
     private CustomMessage mCustomMessage;
 
-    public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, LocalizedTexts localizedTexts, CustomMessage customMessage) {
+    public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl,
+                                             LocalizedTexts localizedTexts, CustomMessage customMessage) {
         SurveyFragment fragment = new SurveyFragment();
 
         Bundle args = new Bundle();

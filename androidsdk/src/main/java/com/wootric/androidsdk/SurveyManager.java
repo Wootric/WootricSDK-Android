@@ -65,19 +65,55 @@ public class SurveyManager implements
 
         validateSurvey();
 
+        // TODO Don't return true and test it in some other way
         return true;
-    }
-
-    private void validateSurvey() {
-        surveyValidator.setOnSurveyValidatedListener(this);
-        surveyValidator.validate();
     }
 
     @Override
     public void onSurveyValidated(Settings surveyServerSettings) {
-        settings.merge(surveyServerSettings);
+        settings.mergeWithSurveyServerSettings(surveyServerSettings);
 
         sendGetAccessTokenRequest();
+    }
+
+    @Override
+    public void onAuthenticateSuccess(AuthenticationResponse authenticationResponse) {
+        setAccessToken(authenticationResponse.accessToken);
+        sendGetEndUserRequest();
+    }
+
+    @Override
+    public void onGetEndUserSuccess(List<EndUser> endUsers) {
+        if(endUsers.size() > 0) {
+            long endUserId = endUsers.get(0).getId();
+            endUser.setId(endUserId);
+
+            if(this.endUser.hasProperties()) {
+                sendUpdateEndUserRequest();
+            }
+
+            showSurvey();
+        } else {
+            sendCreateEndUserRequest();
+        }
+    }
+
+    @Override
+    public void onCreateEndUserSuccess(EndUser endUser) {
+        this.endUser.setId(endUser.getId());
+
+        showSurvey();
+    }
+
+    @Override
+    public void onApiError(RetrofitError error) {
+        // TODO Handle API Request Error
+    }
+
+
+    private void validateSurvey() {
+        surveyValidator.setOnSurveyValidatedListener(this);
+        surveyValidator.validate();
     }
 
     private void sendGetTrackingPixelRequest() {
@@ -88,53 +124,19 @@ public class SurveyManager implements
         wootricApiClient.authenticate(user, this);
     }
 
-    private void getEndUser() {
+    private void sendGetEndUserRequest() {
         wootricApiClient.getEndUserByEmail(endUser.getEmail(), accessToken, this);
     }
 
-    @Override
-    public void onGetEndUserSuccess(List<EndUser> endUsers) {
-        if(endUsers.size() > 0) {
-            long endUserId = endUsers.get(0).getId();
-            endUser.setId(endUserId);
-
-            if(this.endUser.hasProperties()) {
-                updateEndUser();
-            }
-
-            showSurvey();
-        } else {
-            createEndUser();
-        }
-    }
-
-    private void createEndUser() {
+    private void sendCreateEndUserRequest() {
         wootricApiClient.createEndUser(endUser, accessToken, this);
     }
 
-    @Override
-    public void onCreateEndUserSuccess(EndUser endUser) {
-        this.endUser.setId(endUser.getId());
-
-        showSurvey();
-    }
-
-    private void updateEndUser() {
+    private void sendUpdateEndUserRequest() {
         wootricApiClient.updateEndUser(endUser, accessToken);
     }
 
-    @Override
-    public void onAuthenticateSuccess(AuthenticationResponse authenticationResponse) {
-        this.accessToken = authenticationResponse.accessToken;
-        getEndUser();
-    }
-
-    @Override
-    public void onApiError(RetrofitError error) {
-        // TODO Handle API Request Error
-    }
-
-    private void showSurvey() {
+    void showSurvey() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -159,5 +161,9 @@ public class SurveyManager implements
                 originUrl, settings.getLocalizedTexts(), settings.getCustomMessage());
 
         surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+    }
+
+    void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

@@ -16,9 +16,7 @@ import java.util.Date;
 
 import static com.wootric.androidsdk.TestHelper.testEndUser;
 import static com.wootric.androidsdk.TestHelper.testUser;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -118,7 +116,7 @@ public class SurveyValidatorTest {
     public void checksEligibility_whenFirstSurveyDelayPassed() throws Exception {
         User user = testUser();
         EndUser endUser = testEndUser();
-        long timeBeforeFirstSurveyDelay = new Date().getTime() - SurveyValidator.FIRST_SURVEY - 100;
+        long timeBeforeFirstSurveyDelay = new Date().getTime() - Constants.DAY_IN_MILLIS * 32;
         endUser.setCreatedAt(timeBeforeFirstSurveyDelay);
 
         Settings settings = new Settings();
@@ -145,7 +143,7 @@ public class SurveyValidatorTest {
 
         doReturn(false).when(preferencesUtils).wasRecentlySurveyed();
         doReturn(true).when(preferencesUtils).isLastSeenSet();
-        long timeBeforeFirstSurveyDelay = new Date().getTime() - SurveyValidator.FIRST_SURVEY - 100;
+        long timeBeforeFirstSurveyDelay = new Date().getTime() - Constants.DAY_IN_MILLIS * 32;
         doReturn(timeBeforeFirstSurveyDelay).when(preferencesUtils).getLastSeen();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
@@ -157,7 +155,7 @@ public class SurveyValidatorTest {
     }
 
     /**
-     * onEligibilityChecked()
+     * onEligibilityChecked(EligibilityResponse eligibilityResponse)
      */
     @Test
     public void notifiesListener_whenEligibleEqualsTrue() throws Exception {

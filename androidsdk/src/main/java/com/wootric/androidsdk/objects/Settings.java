@@ -1,9 +1,7 @@
 package com.wootric.androidsdk.objects;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.wootric.androidsdk.Constants;
 
 import java.util.Date;
 
@@ -12,11 +10,8 @@ import java.util.Date;
  */
 public class Settings {
 
-    private static final int NOT_SET = -1;
-    private static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
-
     @SerializedName("first_survey")
-    private int firstSurvey = NOT_SET;
+    private long firstSurvey = 31L;
 
     @SerializedName("time_delay")
     private int timeDelay = 0;
@@ -28,35 +23,8 @@ public class Settings {
 
     private boolean surveyImmediately;
 
-    public static Settings fromJson(JSONObject json) throws JSONException {
-        Settings settings = new Settings();
-
-        if(json == null) {
-            return settings;
-        }
-
-        if(json.has("first_survey")) {
-            settings.firstSurvey = json.getInt("first_survey");
-        }
-
-        if(json.has("time_delay")) {
-            settings.timeDelay = json.getInt("time_delay");
-        }
-
-        if(json.has("messages")) {
-            settings.customMessage = CustomMessage.fromJson(json.getJSONObject("messages"));
-        }
-
-        if(json.has("localized_texts")) {
-            settings.localizedTexts = LocalizedTexts.fromJson(json.getJSONObject("localized_texts"));
-        }
-
-        return settings;
-    }
-
-
     // Sets values from the argument settings only if they are not provided yet
-    public void merge(Settings settings) {
+    public void mergeWithSurveyServerSettings(Settings settings) {
         if(settings == null) {
             return;
         }
@@ -65,7 +33,7 @@ public class Settings {
             this.customMessage = settings.customMessage;
         }
 
-        if(this.timeDelay == NOT_SET) {
+        if(this.timeDelay == Constants.TIME_NOT_SET) {
             this.timeDelay = settings.timeDelay;
         }
 
@@ -73,10 +41,8 @@ public class Settings {
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
-        return firstSurvey == NOT_SET ||
-                timeFrom == NOT_SET ||
-                new Date().getTime() - firstSurvey * DAY_IN_MILLIS > timeFrom;
-
+        return timeFrom == Constants.TIME_NOT_SET ||
+                new Date().getTime() - firstSurvey * Constants.DAY_IN_MILLIS >= timeFrom;
     }
 
     public void setSurveyImmediately(boolean surveyImmediately) {
@@ -97,5 +63,13 @@ public class Settings {
 
     public LocalizedTexts getLocalizedTexts() {
         return localizedTexts;
+    }
+
+    public long getFirstSurveyDelay() {
+        return firstSurvey;
+    }
+
+    public void setCustomMessage(CustomMessage customMessage) {
+        this.customMessage = customMessage;
     }
 }
