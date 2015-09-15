@@ -65,6 +65,10 @@ public class Settings {
         return localizedTexts;
     }
 
+    public void setFirstSurveyDelay(long firstSurvey) {
+        this.firstSurvey = firstSurvey;
+    }
+
     public long getFirstSurveyDelay() {
         return firstSurvey;
     }

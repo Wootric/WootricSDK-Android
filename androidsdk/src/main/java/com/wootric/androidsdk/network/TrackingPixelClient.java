@@ -9,8 +9,6 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.GET;
-import retrofit.http.Query;
 
 /**
  * Created by maciejwitowski on 9/11/15.
@@ -31,8 +29,12 @@ public class TrackingPixelClient {
         trackingPixelInterface = retrofit.create(TrackingPixelInterface.class);
     }
 
-    public void getTrackingPixel(User user, EndUser endUser, String originUrl) {
+    // For testing purposes
+    public TrackingPixelClient(TrackingPixelInterface trackingPixelInterface) {
+        this.trackingPixelInterface = trackingPixelInterface;
+    }
 
+    public void getTrackingPixel(User user, EndUser endUser, String originUrl) {
         trackingPixelInterface.getTrackingPixel(user.getAccountToken(), endUser.getEmail(),
                 originUrl, String.valueOf(Math.random()), new Callback<Object>() {
                     @Override
@@ -45,14 +47,5 @@ public class TrackingPixelClient {
                         Log.d(LOG_TAG, "failure: " + error.toString());
                     }
                 });
-    }
-
-    public interface TrackingPixelInterface {
-        @GET("/pixel.gif")
-        void getTrackingPixel(@Query("account_token") String accountToken,
-                              @Query("email") String email,
-                              @Query("url") String url,
-                              @Query("random") String random,
-                              Callback<Object> objectCallback);
     }
 }

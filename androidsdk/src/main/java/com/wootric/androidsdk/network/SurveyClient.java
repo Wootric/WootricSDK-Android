@@ -11,8 +11,6 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.GET;
-import retrofit.http.Query;
 
 /**
  * Created by maciejwitowski on 9/14/15.
@@ -32,6 +30,10 @@ public class SurveyClient {
         surveyInterface = retrofit.create(SurveyInterface.class);
     }
 
+    public SurveyClient(SurveyInterface surveyInterface) {
+        this.surveyInterface = surveyInterface;
+    }
+
     public void checkEligibility(User user, EndUser endUser, Settings settings, final SurveyCallback surveyCallback) {
         surveyInterface.eligible(user.getAccountToken(), endUser.getEmail(),
             settings.isSurveyImmediately(), endUser.getCreatedAtOrNull(), settings.getFirstSurveyDelay(), new Callback<EligibilityResponse>() {
@@ -49,15 +51,5 @@ public class SurveyClient {
 
     public interface SurveyCallback {
         void onEligibilityChecked(EligibilityResponse eligibilityResponse);
-    }
-
-    public interface SurveyInterface {
-        @GET("//eligible.json")
-        void eligible(@Query("account_token") String accountToken,
-                      @Query("email") String email,
-                      @Query("survey_immediately") boolean surveyImmediately,
-                      @Query("end_user_created_at") Long endUserCreatedAt,
-                      @Query("first_survey_delay") long firstSurveyDelay,
-                      Callback<EligibilityResponse> eligibilityResponseCallback);
     }
 }
