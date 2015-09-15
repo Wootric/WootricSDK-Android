@@ -7,5 +7,5 @@ public class Constants {
 
     public static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
 
-    public static final int TIME_NOT_SET = -1;
+    public static final int NOT_SET = -1;
 }

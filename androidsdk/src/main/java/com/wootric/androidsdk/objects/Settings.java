@@ -33,15 +33,12 @@ public class Settings {
             this.customMessage = settings.customMessage;
         }
 
-        if(this.timeDelay == Constants.TIME_NOT_SET) {
-            this.timeDelay = settings.timeDelay;
-        }
-
+        this.timeDelay = settings.timeDelay;
         this.localizedTexts = settings.localizedTexts;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
-        return timeFrom == Constants.TIME_NOT_SET ||
+        return timeFrom == Constants.NOT_SET ||
                 new Date().getTime() - firstSurvey * Constants.DAY_IN_MILLIS >= timeFrom;
     }
 
@@ -75,5 +72,9 @@ public class Settings {
 
     public void setCustomMessage(CustomMessage customMessage) {
         this.customMessage = customMessage;
+    }
+
+    public void setLocalizedTexts(LocalizedTexts localizedTexts) {
+        this.localizedTexts = localizedTexts;
     }
 }

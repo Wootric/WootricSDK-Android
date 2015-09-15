@@ -13,54 +13,18 @@ import org.json.JSONObject;
  */
 public class LocalizedTexts implements Parcelable {
 
-    private final String npsQuestion;
-    private final String anchorLikely;
-    private final String anchorNotLikely;
-    private final String followupQuestion;
-    private final String followupPlaceholder;
-    private final String finalThankYou;
-    private final String send;
-    private final String dismiss;
-    private final String socialShareQuestion;
-    private final String socialShareDecline;
+    private String npsQuestion;
+    private String anchorLikely;
+    private String anchorNotLikely;
+    private String followupQuestion;
+    private String followupPlaceholder;
+    private String finalThankYou;
+    private String send;
+    private String dismiss;
+    private String socialShareQuestion;
+    private String socialShareDecline;
 
-    private LocalizedTexts(String npsQuestion, String anchorLikely, String anchorNotLikely,
-                           String followupQuestion, String followupPlaceholder, String finalThankYou,
-                           String send, String dismiss, String socialShareQuestion, String socialShareDecline) {
-        this.npsQuestion = npsQuestion;
-        this.anchorLikely = anchorLikely;
-        this.anchorNotLikely = anchorNotLikely;
-        this.followupQuestion = followupQuestion;
-        this.followupPlaceholder = followupPlaceholder;
-        this.finalThankYou = finalThankYou;
-        this.send = send;
-        this.dismiss = dismiss;
-        this.socialShareQuestion = socialShareQuestion;
-        this.socialShareDecline = socialShareDecline;
-    }
-
-
-    public static LocalizedTexts fromJson(JSONObject jsonObject) {
-        if(jsonObject == null) return null;
-
-        try {
-            return new LocalizedTexts(
-                    jsonObject.getString("nps_question"),
-                    jsonObject.getJSONObject("anchors").getString("likely"),
-                    jsonObject.getJSONObject("anchors").getString("not_likely"),
-                    jsonObject.getString("followup_question"),
-                    jsonObject.getString("followup_placeholder"),
-                    jsonObject.getString("final_thank_you"),
-                    jsonObject.getString("send"),
-                    jsonObject.getString("dismiss"),
-                    jsonObject.getJSONObject("social_share").getString("question"),
-                    jsonObject.getJSONObject("social_share").getString("decline")
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public LocalizedTexts() {}
 
     public String getNpsQuestion() {
         return TextUtils.decode(npsQuestion);
