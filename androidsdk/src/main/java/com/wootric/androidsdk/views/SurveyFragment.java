@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.LocalizedTexts;
@@ -20,7 +21,8 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 /**
  * Created by maciejwitowski on 9/4/15.
  */
-public class SurveyFragment extends DialogFragment {
+public class SurveyFragment extends DialogFragment
+    implements NpsLayout.NpsLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -110,6 +112,7 @@ public class SurveyFragment extends DialogFragment {
 
     private void setupLayoutElements(View view) {
         mNpsLayout = (NpsLayout) view.findViewById(R.id.wootric_nps_layout);
+        mNpsLayout.setNpsLayoutListener(this);
     }
 
     private void setupLayoutElementsValues(Bundle savedInstanceState) {
@@ -134,5 +137,16 @@ public class SurveyFragment extends DialogFragment {
         outState.putInt(ARG_SELECTED_SCORE, mNpsLayout.getSelectedScore());
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onNpsLayoutSubmit(int score) {
+
+    }
+
+    @Override
+    public void onNpsLayoutDismiss() {
+        Wootric.notifySurveyFinished();
+        dismiss();
     }
 }

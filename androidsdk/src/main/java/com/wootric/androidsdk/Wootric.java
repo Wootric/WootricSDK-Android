@@ -22,6 +22,7 @@ public class Wootric {
     String originUrl;
 
     boolean surveyInProgress;
+    PreferencesUtils preferencesUtils;
 
     static Wootric singleton;
 
@@ -31,6 +32,17 @@ public class Wootric {
         }
 
         return singleton;
+    }
+
+    public static void notifySurveyFinished() {
+        if(singleton != null) {
+            singleton.setSurveyFinished();
+        }
+    }
+
+    private void setSurveyFinished() {
+        surveyInProgress = false;
+        preferencesUtils.touchLastSurveyed();
     }
     
     public void setEndUserEmail(String email) {
@@ -49,7 +61,6 @@ public class Wootric {
         if(surveyInProgress)
             return;
 
-        PreferencesUtils preferencesUtils = new PreferencesUtils(context);
         WootricApiClient wootricApiClient = new WootricApiClient();
         TrackingPixelClient trackingPixelClient = new TrackingPixelClient();
         SurveyClient surveyClient = new SurveyClient();
@@ -78,6 +89,7 @@ public class Wootric {
         endUser = new EndUser();
         user = new User(clientId, clientSecret, accountToken);
         settings = new Settings();
+        preferencesUtils = new PreferencesUtils(context);
     }
 
     SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,

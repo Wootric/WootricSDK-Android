@@ -10,8 +10,10 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,15 +21,19 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by maciejwitowski on 4/11/15.
  */
 
+@RunWith(MockitoJUnitRunner.class)
 public class WootricTest {
 
     @Mock SurveyManager mockSurveyManager;
     @Mock SurveyValidator mockSurveyValidator;
+    @Mock PreferencesUtils mockPreferencesUtils;
 
     private static final String CLIENT_ID = "client_id";
     private static final String CLIENT_SECRET = "client_secret";
@@ -37,7 +43,6 @@ public class WootricTest {
     public void setUp() {
         Wootric.singleton = null;
         Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test public void fails_whenContextIsNull() throws Exception {
@@ -138,5 +143,17 @@ public class WootricTest {
         assertThat(wootric.surveyInProgress).isFalse();
         wootric.survey();
         assertThat(wootric.surveyInProgress).isTrue();
+    }
+
+    /**
+     * notifySurveyFinished()
+     */
+    @Test
+    public void setsSingletonSurveyInProgressToFalseAndUpdatesLastSurveyed() {
+        Wootric.singleton.preferencesUtils = mockPreferencesUtils;
+        Wootric.notifySurveyFinished();
+
+        assertThat(Wootric.singleton.surveyInProgress).isFalse();
+        verify(Wootric.singleton.preferencesUtils, times(1)).touchLastSurveyed();
     }
 }

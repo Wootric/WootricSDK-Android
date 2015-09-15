@@ -3,26 +3,41 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
 import com.wootric.androidsdk.utils.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * Created by maciejwitowski on 9/3/15.
  */
 public class LocalizedTexts implements Parcelable {
 
+    @SerializedName("nps_question")
     private String npsQuestion;
-    private String anchorLikely;
-    private String anchorNotLikely;
+
+    private HashMap<String, String> anchors;
+
+    @SerializedName("followup_question")
     private String followupQuestion;
+
+    @SerializedName("followup_placeholder")
     private String followupPlaceholder;
+
+    @SerializedName("final_thank_you")
     private String finalThankYou;
+
+    @SerializedName("send")
     private String send;
+
+    @SerializedName("dismiss")
     private String dismiss;
-    private String socialShareQuestion;
-    private String socialShareDecline;
+
+    @SerializedName("social_share")
+    private HashMap<String, String> socialShare;
 
     public LocalizedTexts() {}
 
@@ -31,11 +46,11 @@ public class LocalizedTexts implements Parcelable {
     }
 
     public String getAnchorLikely() {
-        return TextUtils.decode(anchorLikely);
+        return TextUtils.decode(anchors.get("likely"));
     }
 
     public String getAnchorNotLikely() {
-        return TextUtils.decode(anchorNotLikely);
+        return TextUtils.decode(anchors.get("not_likely"));
     }
 
     public String getFollowupQuestion() {
@@ -59,11 +74,11 @@ public class LocalizedTexts implements Parcelable {
     }
 
     public String getSocialShareQuestion() {
-        return TextUtils.decode(socialShareQuestion);
+        return TextUtils.decode(socialShare.get("question"));
     }
 
     public String getSocialShareDecline() {
-        return TextUtils.decode(socialShareDecline);
+        return TextUtils.decode(socialShare.get("decline"));
     }
 
     @Override
@@ -74,31 +89,27 @@ public class LocalizedTexts implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.npsQuestion);
-        dest.writeString(this.anchorLikely);
-        dest.writeString(this.anchorNotLikely);
+        dest.writeSerializable(this.anchors);
         dest.writeString(this.followupQuestion);
         dest.writeString(this.followupPlaceholder);
         dest.writeString(this.finalThankYou);
         dest.writeString(this.send);
         dest.writeString(this.dismiss);
-        dest.writeString(this.socialShareQuestion);
-        dest.writeString(this.socialShareDecline);
+        dest.writeSerializable(this.socialShare);
     }
 
     private LocalizedTexts(Parcel in) {
         this.npsQuestion = in.readString();
-        this.anchorLikely = in.readString();
-        this.anchorNotLikely = in.readString();
+        this.anchors = (HashMap<String, String>) in.readSerializable();
         this.followupQuestion = in.readString();
         this.followupPlaceholder = in.readString();
         this.finalThankYou = in.readString();
         this.send = in.readString();
         this.dismiss = in.readString();
-        this.socialShareQuestion = in.readString();
-        this.socialShareDecline = in.readString();
+        this.socialShare = (HashMap<String, String>) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<LocalizedTexts> CREATOR = new Parcelable.Creator<LocalizedTexts>() {
+    public static final Creator<LocalizedTexts> CREATOR = new Creator<LocalizedTexts>() {
         public LocalizedTexts createFromParcel(Parcel source) {
             return new LocalizedTexts(source);
         }

@@ -38,7 +38,7 @@ public class NpsLayout extends LinearLayout
 
     private int mScoresCount;
 
-    private OnButtonClickListener mOnButtonClickListener;
+    private NpsLayoutListener mNpsLayoutListener;
 
     public NpsLayout(Context context) {
         super(context);
@@ -149,8 +149,8 @@ public class NpsLayout extends LinearLayout
         return new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnButtonClickListener != null) {
-                    mOnButtonClickListener.onSubmit(getSelectedScore());
+                if(mNpsLayoutListener != null) {
+                    mNpsLayoutListener.onNpsLayoutSubmit(getSelectedScore());
                 }
             }
         };
@@ -160,15 +160,15 @@ public class NpsLayout extends LinearLayout
         return new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnButtonClickListener != null) {
-                    mOnButtonClickListener.onDismiss();
+                if(mNpsLayoutListener != null) {
+                    mNpsLayoutListener.onNpsLayoutDismiss();
                 }
             }
         };
     }
 
-    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
-        mOnButtonClickListener = onButtonClickListener;
+    public void setNpsLayoutListener(NpsLayoutListener npsLayoutListener) {
+        mNpsLayoutListener = npsLayoutListener;
     }
 
     public void setNpsQuestion(String value) {
@@ -199,8 +199,8 @@ public class NpsLayout extends LinearLayout
         mRatingBar.setSelectedScore(selectedScore);
     }
 
-    public interface OnButtonClickListener {
-        void onSubmit(int score);
-        void onDismiss();
+    public interface NpsLayoutListener {
+        void onNpsLayoutSubmit(int score);
+        void onNpsLayoutDismiss();
     }
 }

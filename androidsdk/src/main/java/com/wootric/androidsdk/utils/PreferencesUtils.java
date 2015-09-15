@@ -35,7 +35,6 @@ public class PreferencesUtils {
         prefs().edit().clear().apply();
     }
 
-    // TODO Use after creating response/decline
     public void touchLastSurveyed() {
         prefs().edit().putLong(KEY_LAST_SURVEYED, new Date().getTime()).apply();
     }
