@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.wootric.androidsdk.utils.TextUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 /**

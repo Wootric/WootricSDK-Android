@@ -7,7 +7,7 @@ import retrofit.http.Query;
 /**
  * Created by maciejwitowski on 9/15/15.
  */
-public interface TrackingPixelInterface {
+interface TrackingPixelInterface {
     @GET("/pixel.gif")
     void getTrackingPixel(@Query("account_token") String accountToken,
                           @Query("email") String email,

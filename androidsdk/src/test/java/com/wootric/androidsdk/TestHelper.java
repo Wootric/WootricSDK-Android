@@ -8,9 +8,9 @@ import com.wootric.androidsdk.objects.User;
  */
 public class TestHelper {
 
-    public static final String CLIENT_ID = "testClientId";
-    public static final String CLIENT_SECRET = "testClientSecret";
-    public static final String ACCOUNT_TOKEN = "testAccountToken";
+    private static final String CLIENT_ID = "testClientId";
+    private static final String CLIENT_SECRET = "testClientSecret";
+    private static final String ACCOUNT_TOKEN = "testAccountToken";
     public static final String END_USER_EMAIL = "nps@example.com";
     public static final String ORIGIN_URL = "http://example.com";
     public static final String TEST_ACCESS_TOKEN = "123abc";

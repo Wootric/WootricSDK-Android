@@ -150,7 +150,7 @@ public class NpsLayout extends LinearLayout
             @Override
             public void onClick(View v) {
                 if(mNpsLayoutListener != null) {
-                    mNpsLayoutListener.onNpsLayoutSubmit(getSelectedScore());
+                    mNpsLayoutListener.onNpsLayoutSubmit();
                 }
             }
         };
@@ -208,7 +208,7 @@ public class NpsLayout extends LinearLayout
     }
 
     public interface NpsLayoutListener {
-        void onNpsLayoutSubmit(int score);
+        void onNpsLayoutSubmit();
         void onNpsLayoutDismiss();
     }
 }

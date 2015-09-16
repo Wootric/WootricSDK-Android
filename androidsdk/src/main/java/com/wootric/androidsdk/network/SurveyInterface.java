@@ -9,7 +9,7 @@ import retrofit.http.Query;
 /**
  * Created by maciejwitowski on 9/15/15.
  */
-public interface SurveyInterface {
+interface SurveyInterface {
     @GET("//eligible.json")
     void eligible(@Query("account_token") String accountToken,
                   @Query("email") String email,

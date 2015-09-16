@@ -1,7 +1,6 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Handler;
@@ -151,14 +150,9 @@ public class SurveyManager implements
 
     private void showSurveyFragment() {
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
-        Fragment prev = fragmentManager.findFragmentByTag(SURVEY_DIALOG_TAG);
 
-        if(prev != null) {
-            fragmentManager.beginTransaction().remove(prev).commit();
-        }
-
-        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser,
-                originUrl, settings.getLocalizedTexts(), settings.getCustomMessage());
+        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, originUrl,
+                accessToken, settings.getLocalizedTexts(), settings.getCustomMessage());
 
         surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
     }

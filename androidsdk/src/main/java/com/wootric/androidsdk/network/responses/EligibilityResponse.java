@@ -7,8 +7,8 @@ import com.wootric.androidsdk.objects.Settings;
  */
 public class EligibilityResponse {
 
-    private boolean eligible;
-    private Settings settings;
+    private final boolean eligible;
+    private final Settings settings;
 
     public EligibilityResponse(boolean eligible, Settings settings) {
         this.eligible = eligible;

@@ -28,7 +28,7 @@ public class FeedbackLayout extends LinearLayout {
     private TextView mBtnEditScore;
     private TextView mBtnSubmit;
 
-    FeedbackLayoutListener mFeedbackLayoutListener;
+    private FeedbackLayoutListener mFeedbackLayoutListener;
 
     private int mColorDefault;
     private int mColorEtFocused;
@@ -47,6 +47,10 @@ public class FeedbackLayout extends LinearLayout {
     public FeedbackLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public String getFeedback() {
+        return mEtFeedback.getText().toString();
     }
 
     public void setScore(int score) {
@@ -73,6 +77,7 @@ public class FeedbackLayout extends LinearLayout {
         mEtFeedback.addTextChangedListener(etFeedbackTextWatcher());
 
         mBtnDismiss.setOnClickListener(onDismissClick());
+        mBtnSubmit.setOnClickListener(onSubmitClick());
         mBtnEditScore.setOnClickListener(onEditScoreClick());
     }
 
@@ -131,6 +136,18 @@ public class FeedbackLayout extends LinearLayout {
         };
     }
 
+    private OnClickListener onSubmitClick() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mFeedbackLayoutListener != null) {
+                    mFeedbackLayoutListener.onFeedbackSubmit();
+                }
+            }
+        };
+    }
+
+
     private OnClickListener onEditScoreClick() {
         return new OnClickListener() {
             @Override
@@ -146,13 +163,9 @@ public class FeedbackLayout extends LinearLayout {
         mFeedbackLayoutListener = feedbackLayoutListener;
     }
 
-    public void hide() {
-        setVisibility(GONE);
-    }
-
     public interface FeedbackLayoutListener {
         void onFeedbackDismiss();
-        void onFeedbackSubmit(String text);
+        void onFeedbackSubmit();
         void onFeedbackEditScoreClick();
     }
 }

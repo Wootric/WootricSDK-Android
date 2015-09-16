@@ -151,7 +151,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);;
+        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     /**

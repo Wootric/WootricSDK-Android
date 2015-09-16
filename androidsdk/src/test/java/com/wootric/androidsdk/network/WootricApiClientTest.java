@@ -15,6 +15,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
+import static com.wootric.androidsdk.TestHelper.ORIGIN_URL;
 import static com.wootric.androidsdk.TestHelper.testUser;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -83,6 +84,41 @@ public class WootricApiClientTest {
     @Test
     public void sendsCorrectUpdateEndUserRequest() throws Exception {
         // TODO
+    }
+
+    /**
+     * createDecline(EndUser endUser, String accessToken, String originUrl)
+     */
+    @Test
+    public void sendsCorrectCreateDeclineRequest() throws Exception {
+        WootricApiClient wootricApiClient = new WootricApiClient(wootricApiInterface);
+
+        EndUser endUser = new EndUser();
+        final long endUserId = 123;
+        endUser.setId(endUserId);
+        final String accessToken = "123test";
+
+        wootricApiClient.createDecline(endUser, accessToken, ORIGIN_URL);
+
+        verify(wootricApiInterface, times(1)).createDecline(eq("Bearer " + accessToken), eq(endUserId),
+                eq(ORIGIN_URL), any(Callback.class));
+    }
+
+    @Test
+    public void sendsCorrectCreateResponseRequest() throws Exception {
+        WootricApiClient wootricApiClient = new WootricApiClient(wootricApiInterface);
+
+        EndUser endUser = new EndUser();
+        final long endUserId = 123;
+        endUser.setId(endUserId);
+        final String accessToken = "123test";
+        final int score = 10;
+        final String text = "Great work!";
+
+        wootricApiClient.createResponse(endUser, accessToken, ORIGIN_URL, score, text);
+
+        verify(wootricApiInterface, times(1)).createResponse(eq("Bearer " + accessToken), eq(endUserId),
+                eq(ORIGIN_URL), eq(score), eq(text), any(Callback.class));
     }
 
     private class MockWootricApiCallback implements WootricApiClient.WootricApiCallback {

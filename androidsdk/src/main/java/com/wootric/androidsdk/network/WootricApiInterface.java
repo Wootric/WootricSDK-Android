@@ -11,12 +11,13 @@ import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
  * Created by maciejwitowski on 9/15/15.
  */
-public interface WootricApiInterface {
+interface WootricApiInterface {
 
     String AUTH_TOKEN_URL = "/oauth/token";
     String END_USERS_URL = "/v1/end_users";
@@ -39,4 +40,20 @@ public interface WootricApiInterface {
                        @Field("email") String email,
                        @Field("external_created_at") Long externalCreatedAt,
                        Callback<EndUser> objectCallback);
+
+    @FormUrlEncoded
+    @POST(END_USERS_URL + "/{id}/declines")
+    void createDecline(@Header("Authorization") String accessToken,
+                       @Path("id") long endUserId,
+                       @Field("origin_url") String originUrl,
+                       Callback<Object> objectCallback);
+
+    @FormUrlEncoded
+    @POST(END_USERS_URL + "/{id}/responses")
+    void createResponse(@Header("Authorization") String accessToken,
+                       @Path("id") long endUserId,
+                       @Field("origin_url") String originUrl,
+                       @Field("score") int score,
+                       @Field("text") String text,
+                       Callback<Object> objectCallback);
 }
