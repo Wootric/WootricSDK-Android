@@ -150,10 +150,13 @@ public class WootricTest {
      */
     @Test
     public void setsSingletonSurveyInProgressToFalseAndUpdatesLastSurveyed() {
-        Wootric.singleton.preferencesUtils = mockPreferencesUtils;
+        Wootric wootric = Wootric.singleton;
+        wootric.preferencesUtils = mockPreferencesUtils;
+        wootric.surveyInProgress = true;
+
         Wootric.notifySurveyFinished();
 
-        assertThat(Wootric.singleton.surveyInProgress).isFalse();
-        verify(Wootric.singleton.preferencesUtils, times(1)).touchLastSurveyed();
+        assertThat(wootric.surveyInProgress).isFalse();
+        verify(wootric.preferencesUtils, times(1)).touchLastSurveyed();
     }
 }

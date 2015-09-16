@@ -41,4 +41,8 @@
     <dimen name="wootric_button_padding">8dp</dimen>
     <dimen name="wootric_button_margin">8dp</dimen>
     <dimen name="wootric_score_layout_height">24dp</dimen>
+
+    <!-- Feedback Layout -->
+    <dimen name="wootric_et_feedback_text_size">16sp</dimen>
+    <dimen name="wootric_et_feedback_padding">16dp</dimen>
 </resources>

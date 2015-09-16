@@ -23,5 +23,7 @@
     <string name="wootric">"Wootric"</string>
     <string name="wootric_example_btn_dismiss">DISMISS</string>
     <string name="wootric_example_btn_submit">SUBMIT</string>
+    <string name="wootric_example_followup_placeholder">Anything else we should know?</string>
+    <string name="wootric_example_btn_edit_score">EDIT SCORE</string>
 
 </resources>

@@ -22,7 +22,7 @@ import com.wootric.androidsdk.utils.ScreenUtils;
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment
-    implements NpsLayout.NpsLayoutListener {
+    implements NpsLayout.NpsLayoutListener, FeedbackLayout.FeedbackLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -32,12 +32,15 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
 
     private NpsLayout mNpsLayout;
+    private FeedbackLayout mFeedbackLayout;
 
     private EndUser mEndUser;
     private User mUser;
     private String mOriginUrl;
     private LocalizedTexts mLocalizedTexts;
     private CustomMessage mCustomMessage;
+
+    private boolean mSurveyFinished;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl,
                                              LocalizedTexts localizedTexts, CustomMessage customMessage) {
@@ -65,7 +68,7 @@ public class SurveyFragment extends DialogFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_survey, container, false);
+        View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
         setupLayoutElements(view);
         return view;
     }
@@ -88,6 +91,13 @@ public class SurveyFragment extends DialogFragment
             if (dialog != null) {
                 int screenWidth = ScreenUtils.getScreenWidth(activity);
                 int screenHeight = ScreenUtils.getScreenHeight(activity);
+                dialog.getWindow().setLayout(screenWidth, screenHeight);
+            }
+        } else {
+            Dialog dialog = getDialog();
+            if (dialog != null) {
+                int screenWidth = ScreenUtils.getScreenWidth(activity);
+                int screenHeight = ScreenUtils.getScreenHeight(activity) *4/5;
                 dialog.getWindow().setLayout(screenWidth, screenHeight);
             }
         }
@@ -113,6 +123,9 @@ public class SurveyFragment extends DialogFragment
     private void setupLayoutElements(View view) {
         mNpsLayout = (NpsLayout) view.findViewById(R.id.wootric_nps_layout);
         mNpsLayout.setNpsLayoutListener(this);
+
+        mFeedbackLayout = (FeedbackLayout) view.findViewById(R.id.wootric_feedback_layout);
+        mFeedbackLayout.setFeedbackLayoutListener(this);
     }
 
     private void setupLayoutElementsValues(Bundle savedInstanceState) {
@@ -141,12 +154,38 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onNpsLayoutSubmit(int score) {
-
+        mNpsLayout.hide();
+        mFeedbackLayout.show(score);
     }
 
     @Override
     public void onNpsLayoutDismiss() {
-        Wootric.notifySurveyFinished();
+        mSurveyFinished = true;
         dismiss();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if(mSurveyFinished)
+            Wootric.notifySurveyFinished();
+    }
+
+    @Override
+    public void onFeedbackDismiss() {
+        mSurveyFinished = true;
+        dismiss();
+    }
+
+    @Override
+    public void onFeedbackSubmit(String text) {
+
+    }
+
+    @Override
+    public void onFeedbackEditScoreClick() {
+        mNpsLayout.show();
+        mFeedbackLayout.hide();
     }
 }

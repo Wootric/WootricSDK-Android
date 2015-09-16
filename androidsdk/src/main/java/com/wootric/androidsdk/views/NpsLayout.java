@@ -57,6 +57,7 @@ public class NpsLayout extends LinearLayout
 
     private void init(Context context) {
         mContext = context;
+        initResources();
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.wootric_nps_layout, this);
@@ -69,7 +70,6 @@ public class NpsLayout extends LinearLayout
         mBtnSubmit = (TextView) findViewById(R.id.wootric_btn_submit);
         mBtnDismiss = (TextView) findViewById(R.id.wootric_btn_dismiss);
 
-        initResources();
         initScoreLayout();
 
         mRatingBar.setOnScoreChangedListener(this);
@@ -197,6 +197,14 @@ public class NpsLayout extends LinearLayout
 
     public void setSelectedScore(int selectedScore) {
         mRatingBar.setSelectedScore(selectedScore);
+    }
+
+    public void hide() {
+        setVisibility(INVISIBLE);
+    }
+
+    public void show() {
+        setVisibility(VISIBLE);
     }
 
     public interface NpsLayoutListener {

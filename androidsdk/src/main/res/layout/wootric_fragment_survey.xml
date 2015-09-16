@@ -6,5 +6,12 @@
     <com.wootric.androidsdk.views.NpsLayout
         android:id="@+id/wootric_nps_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        />
+
+    <com.wootric.androidsdk.views.FeedbackLayout
+        android:id="@+id/wootric_feedback_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 </FrameLayout>

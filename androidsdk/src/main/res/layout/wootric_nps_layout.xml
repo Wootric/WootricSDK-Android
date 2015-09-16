@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
@@ -17,9 +17,10 @@
     <RelativeLayout
         android:id="@+id/wootric_nps_layout_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:padding="@dimen/wootric_nps_layout_body_padding"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/wootric_score_layout"
@@ -64,10 +65,10 @@
             android:id="@+id/wootric_btn_submit"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/wootric_button_height"
-            android:layout_below="@+id/wootric_anchor_likely"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textColor="@android:color/black"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
             android:alpha="0.26"
             android:enabled="false"
@@ -77,11 +78,11 @@
             android:id="@+id/wootric_btn_dismiss"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/wootric_button_height"
-            android:layout_below="@+id/wootric_anchor_likely"
             android:layout_toLeftOf="@+id/wootric_btn_submit"
             android:layout_toStartOf="@+id/wootric_btn_submit"
             android:gravity="center"
             android:textColor="@color/wootric_dialog_header_background"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/wootric_button_margin"
             android:layout_marginEnd="@dimen/wootric_button_margin"
             android:text="@string/wootric_example_btn_dismiss"/>
