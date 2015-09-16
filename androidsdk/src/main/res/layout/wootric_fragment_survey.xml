@@ -12,6 +12,5 @@
     <com.wootric.androidsdk.views.FeedbackLayout
         android:id="@+id/wootric_feedback_layout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_height="match_parent"/>
 </FrameLayout>

@@ -49,9 +49,8 @@ public class FeedbackLayout extends LinearLayout {
         init(context);
     }
 
-    public void show(int score) {
+    public void setScore(int score) {
         mTvFeedbackHeader.setText("You chose " + String.valueOf(score) + "/10");
-        setVisibility(VISIBLE);
     }
 
     private void init(Context context) {

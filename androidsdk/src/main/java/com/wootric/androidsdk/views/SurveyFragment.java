@@ -30,6 +30,7 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
     private static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
+    private static final String ARG_CURRENT_STATE = "com.wootric.androidsdk.arg.current_state";
 
     private NpsLayout mNpsLayout;
     private FeedbackLayout mFeedbackLayout;
@@ -41,6 +42,10 @@ public class SurveyFragment extends DialogFragment
     private CustomMessage mCustomMessage;
 
     private boolean mSurveyFinished;
+
+    private static final int STATE_NPS_LAYOUT = 0;
+    private static final int STATE_FEEDBACK_LAYOUT = 1;
+    private int mCurrentState = STATE_NPS_LAYOUT;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl,
                                              LocalizedTexts localizedTexts, CustomMessage customMessage) {
@@ -77,6 +82,19 @@ public class SurveyFragment extends DialogFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupLayoutElementsValues(savedInstanceState);
+        updateState(mCurrentState);
+    }
+
+    private void updateState(int state) {
+        mCurrentState = state;
+
+        if(STATE_NPS_LAYOUT == mCurrentState) {
+            mNpsLayout.setVisibility(View.VISIBLE);
+            mFeedbackLayout.setVisibility(View.GONE);
+        } else if(STATE_FEEDBACK_LAYOUT == mCurrentState) {
+            mNpsLayout.setVisibility(View.GONE);
+            mFeedbackLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -117,6 +135,7 @@ public class SurveyFragment extends DialogFragment
             mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
             mLocalizedTexts = savedInstanceState.getParcelable(ARG_LOCALIZED_TEXTS);
             mCustomMessage = savedInstanceState.getParcelable(ARG_CUSTOM_MESSAGE);
+            mCurrentState = savedInstanceState.getInt(ARG_CURRENT_STATE);
         }
     }
 
@@ -136,7 +155,9 @@ public class SurveyFragment extends DialogFragment
         mNpsLayout.setBtnCancel(mLocalizedTexts.getDismiss());
 
         if(savedInstanceState != null) {
-            mNpsLayout.setSelectedScore(savedInstanceState.getInt(ARG_SELECTED_SCORE));
+            int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
+            mNpsLayout.setSelectedScore(selectedScore);
+            mFeedbackLayout.setScore(selectedScore);
         }
     }
 
@@ -148,14 +169,15 @@ public class SurveyFragment extends DialogFragment
         outState.putParcelable(ARG_LOCALIZED_TEXTS, mLocalizedTexts);
         outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
         outState.putInt(ARG_SELECTED_SCORE, mNpsLayout.getSelectedScore());
+        outState.putInt(ARG_CURRENT_STATE, mCurrentState);
 
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onNpsLayoutSubmit(int score) {
-        mNpsLayout.hide();
-        mFeedbackLayout.show(score);
+        mFeedbackLayout.setScore(score);
+        updateState(STATE_FEEDBACK_LAYOUT);
     }
 
     @Override
@@ -185,7 +207,6 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onFeedbackEditScoreClick() {
-        mNpsLayout.show();
-        mFeedbackLayout.hide();
+        updateState(STATE_NPS_LAYOUT);
     }
 }
