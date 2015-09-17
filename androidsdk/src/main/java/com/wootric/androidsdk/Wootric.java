@@ -11,6 +11,8 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import java.util.HashMap;
+
 /**
  * Created by maciejwitowski on 4/10/15.
  */
@@ -48,6 +50,10 @@ public class Wootric {
     
     public void setEndUserEmail(String email) {
         endUser.setEmail(email);
+    }
+
+    public void setProperties(HashMap<String, String> properties) {
+        endUser.setProperties(properties);
     }
 
     public void setOriginUrl(String originUrl) {

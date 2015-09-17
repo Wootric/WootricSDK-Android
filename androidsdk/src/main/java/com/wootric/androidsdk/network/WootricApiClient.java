@@ -6,7 +6,9 @@ import com.wootric.androidsdk.network.responses.AuthenticationResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -68,7 +70,7 @@ public class WootricApiClient {
 
     public void createEndUser(EndUser endUser, String accessToken, final WootricApiCallback wootricApiCallback) {
         wootricApiInterface.createEndUser(bearerFrom(accessToken), endUser.getEmail(),
-                endUser.getCreatedAtOrNull(), new Callback<EndUser>() {
+                endUser.getCreatedAtOrNull(), buildEndUserPropertiesParams(endUser), new Callback<EndUser>() {
                     @Override
                     public void success(EndUser endUser, Response response) {
                         wootricApiCallback.onCreateEndUserSuccess(endUser);
@@ -82,7 +84,30 @@ public class WootricApiClient {
     }
 
     public void updateEndUser(EndUser endUser, String accessToken) {
-        // TODO
+        wootricApiInterface.updateEndUser(bearerFrom(accessToken), endUser.getId(), buildEndUserPropertiesParams(endUser), new Callback<Object>() {
+            @Override
+            public void success(Object o, Response response) {
+                Log.d(LOG_TAG, "updateEndUser success");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(LOG_TAG, "updateEndUser failure: " + error.getResponse().getStatus());
+
+            }
+        });
+    }
+
+    private Map<String, String> buildEndUserPropertiesParams(EndUser endUser) {
+        if(!endUser.hasProperties())
+            return null;
+
+        Map<String, String> properties = new HashMap<String, String>();
+        for (Map.Entry<String, String> property : endUser.getProperties().entrySet()) {
+            properties.put("properties[" + property.getKey() + "]", property.getValue());
+        }
+
+        return properties;
     }
 
     public void createDecline(EndUser endUser, String accessToken, String originUrl) {

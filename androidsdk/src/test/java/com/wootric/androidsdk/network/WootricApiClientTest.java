@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -68,13 +69,23 @@ public class WootricApiClientTest {
 
         final String email = "nps@example.com";
         EndUser endUser = new EndUser(email);
+        HashMap<String, String> properties = new HashMap<String, String>();
+        properties.put("company", "Wootric");
+        properties.put("type", "free");
+        endUser.setProperties(properties);
+
+        HashMap<String, String> propertiesParams = new HashMap<String, String>();
+        propertiesParams.put("properties[company]", "Wootric");
+        propertiesParams.put("properties[type]", "free");
+
+
         long endUserCreatedAt = new Date().getTime();
         endUser.setCreatedAt(endUserCreatedAt);
         final String accessToken = "123test";
         wootricClientTest.createEndUser(endUser, accessToken, new MockWootricApiCallback());
 
         verify(wootricApiInterface, times(1)).createEndUser(eq("Bearer " + accessToken), eq(email),
-                eq(endUserCreatedAt), any(Callback.class));
+                eq(endUserCreatedAt), eq(propertiesParams), any(Callback.class));
     }
 
     /**
@@ -83,7 +94,25 @@ public class WootricApiClientTest {
 
     @Test
     public void sendsCorrectUpdateEndUserRequest() throws Exception {
-        // TODO
+        WootricApiClient wootricClientTest = new WootricApiClient(wootricApiInterface);
+
+        EndUser endUser = new EndUser();
+        long endUserId = 1;
+        endUser.setId(endUserId);
+        HashMap<String, String> properties = new HashMap<String, String>();
+        properties.put("company", "Wootric");
+        properties.put("type", "free");
+        endUser.setProperties(properties);
+
+        HashMap<String, String> propertiesParams = new HashMap<String, String>();
+        propertiesParams.put("properties[company]", "Wootric");
+        propertiesParams.put("properties[type]", "free");
+
+        final String accessToken = "123test";
+        wootricClientTest.updateEndUser(endUser, accessToken);
+
+        verify(wootricApiInterface, times(1)).updateEndUser(eq("Bearer " + accessToken), eq(endUserId),
+                eq(propertiesParams), any(Callback.class));
     }
 
     /**

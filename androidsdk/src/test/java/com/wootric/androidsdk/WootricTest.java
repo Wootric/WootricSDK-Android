@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.HashMap;
+
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -109,6 +111,20 @@ public class WootricTest {
         wootric.setEndUserEmail("nps@example.com");
 
         assertThat(wootric.endUser.getEmail()).isEqualTo("nps@example.com");
+    }
+
+    /**
+     * setProperties(HashMap<String, String> properties)
+     */
+    @Test
+    public void setsEndUserProperties() {
+        Wootric wootric = Wootric.singleton;
+        HashMap<String, String> properties = new HashMap<String, String>();
+        properties.put("company", "Wootric");
+        properties.put("type", "free");
+        wootric.setProperties(properties);
+
+        assertThat(wootric.endUser.getProperties()).isEqualTo(properties);
     }
 
     @Test public void setOriginUrl() throws Exception {
@@ -206,7 +222,6 @@ public class WootricTest {
         wootric.setRecommendTarget("My Friend");
         assertThat(wootric.settings.getRecommendTarget()).isEqualTo("My Friend");
     }
-
 
     /**
      * survey()

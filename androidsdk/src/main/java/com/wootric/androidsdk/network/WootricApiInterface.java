@@ -4,13 +4,16 @@ import com.wootric.androidsdk.network.responses.AuthenticationResponse;
 import com.wootric.androidsdk.objects.EndUser;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Field;
+import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -39,7 +42,15 @@ interface WootricApiInterface {
     void createEndUser(@Header("Authorization") String accessToken,
                        @Field("email") String email,
                        @Field("external_created_at") Long externalCreatedAt,
+                       @FieldMap Map properties,
                        Callback<EndUser> objectCallback);
+
+    @FormUrlEncoded
+    @PUT(END_USERS_URL + "/{id}")
+    void updateEndUser(@Header("Authorization") String accessToken,
+                       @Path("id") long id,
+                       @FieldMap Map<String, String> properties,
+                       Callback<Object> objectCallback);
 
     @FormUrlEncoded
     @POST(END_USERS_URL + "/{id}/declines")

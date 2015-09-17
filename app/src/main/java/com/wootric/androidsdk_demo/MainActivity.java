@@ -2,15 +2,17 @@ package com.wootric.androidsdk_demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
+import com.wootric.androidsdk.objects.CustomMessage;
+
+import java.util.HashMap;
 
 public class MainActivity extends Activity {
 
-    private static final String CLIENT_ID = "8ce33d3c0e6fa71752e411a9a7209f4e0fdb44a472923a71a8d94ca45c050906";
-    private static final String CLIENT_SECRET = "8969ac12e7e8dccfaad2bbc1d45f583e3d6811dd18a5d91a07c5f30d6e62c3dd";
-    private static final String ACCOUNT_TOKEN = "NPS-5a38583e";
+    private static final String CLIENT_ID = "CLIENT ID";
+    private static final String CLIENT_SECRET = "CLIENT SECRET";
+    private static final String ACCOUNT_TOKEN = "ACCOUNT TOKEN";
 
 
     @Override
@@ -20,13 +22,30 @@ public class MainActivity extends Activity {
 
         Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
+        wootric.setOriginUrl("http://www.wootric.com");
         wootric.setSurveyImmediately(true);
-        wootric.survey();
-    }
 
-    public void showSurvey(View view) {
-        Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        wootric.setSurveyImmediately(true);
+        HashMap<String, String> properties = new HashMap<String, String>();
+        properties.put("company", "Wootric");
+        properties.put("type", "free");
+        wootric.setProperties(properties);
+
+        wootric.setDailyResponseCap(10);
+        wootric.setProductName("Wootric");
+        wootric.setRecommendTarget("Best Friend");
+        wootric.setLanguageCode("PL");
+
+        CustomMessage customMessage = new CustomMessage();
+        customMessage.setFollowupQuestion("custom followup");
+        customMessage.setDetractorFollowupQuestion("custom detractor");
+        customMessage.setPassiveFollowupQuestion("custom passive");
+        customMessage.setPromoterFollowupQuestion("custom promoter");
+        customMessage.setPlaceholderText("custom placeholder");
+        customMessage.setDetractorPlaceholderText("custom detractor placeholder");
+        customMessage.setPassivePlaceholderText("custom passive placeholder");
+        customMessage.setPromoterPlaceholderText("custom promoter placeholder");
+
+        wootric.setCustomMessage(customMessage);
         wootric.survey();
     }
 }
