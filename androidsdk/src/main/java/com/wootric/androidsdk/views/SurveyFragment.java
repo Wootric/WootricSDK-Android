@@ -13,9 +13,8 @@ import android.view.ViewGroup;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.network.WootricApiClient;
-import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
-import com.wootric.androidsdk.objects.LocalizedTexts;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ScreenUtils;
 
@@ -28,8 +27,7 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
-    private static final String ARG_LOCALIZED_TEXTS = "com.wootric.androidsdk.arg.localized_texts";
-    private static final String ARG_CUSTOM_MESSAGE = "com.wootric.androidsdk.arg.custom_message";
+    private static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
     private static final String ARG_CURRENT_STATE = "com.wootric.androidsdk.arg.current_state";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
@@ -42,8 +40,7 @@ public class SurveyFragment extends DialogFragment
     private User mUser;
     private String mOriginUrl;
     private String mAccessToken;
-    private LocalizedTexts mLocalizedTexts;
-    private CustomMessage mCustomMessage;
+    private Settings mSettings;
 
     private boolean mSurveyFinished;
 
@@ -56,7 +53,7 @@ public class SurveyFragment extends DialogFragment
     private final WootricApiClient mWootricApiClient = new WootricApiClient();
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
-                                             LocalizedTexts localizedTexts, CustomMessage customMessage) {
+                                             Settings settings) {
         SurveyFragment fragment = new SurveyFragment();
 
         Bundle args = new Bundle();
@@ -64,8 +61,7 @@ public class SurveyFragment extends DialogFragment
         args.putParcelable(ARG_END_USER, endUser);
         args.putString(ARG_ORIGIN_URL, originUrl);
         args.putString(ARG_ACCESS_TOKEN, accessToken);
-        args.putParcelable(ARG_LOCALIZED_TEXTS, localizedTexts);
-        args.putParcelable(ARG_CUSTOM_MESSAGE, customMessage);
+        args.putParcelable(ARG_SETTINGS, settings);
 
         fragment.setArguments(args);
         return fragment;
@@ -137,15 +133,13 @@ public class SurveyFragment extends DialogFragment
             mEndUser = args.getParcelable(ARG_END_USER);
             mOriginUrl = args.getString(ARG_ORIGIN_URL);
             mAccessToken = args.getString(ARG_ACCESS_TOKEN);
-            mLocalizedTexts = args.getParcelable(ARG_LOCALIZED_TEXTS);
-            mCustomMessage = args.getParcelable(ARG_CUSTOM_MESSAGE);
+            mSettings = args.getParcelable(ARG_SETTINGS);
         } else {
             mUser = savedInstanceState.getParcelable(ARG_USER);
             mEndUser = savedInstanceState.getParcelable(ARG_END_USER);
             mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
             mAccessToken = savedInstanceState.getString(ARG_ACCESS_TOKEN);
-            mLocalizedTexts = savedInstanceState.getParcelable(ARG_LOCALIZED_TEXTS);
-            mCustomMessage = savedInstanceState.getParcelable(ARG_CUSTOM_MESSAGE);
+            mSettings = savedInstanceState.getParcelable(ARG_SETTINGS);
             mCurrentState = savedInstanceState.getInt(ARG_CURRENT_STATE);
             mResponseSent = savedInstanceState.getBoolean(ARG_RESPONSE_SENT);
         }
@@ -160,16 +154,12 @@ public class SurveyFragment extends DialogFragment
     }
 
     private void setupLayoutElementsValues(Bundle savedInstanceState) {
-        mNpsLayout.setAnchorNotLikely(mLocalizedTexts.getAnchorNotLikely());
-        mNpsLayout.setAnchorLikely(mLocalizedTexts.getAnchorLikely());
-        mNpsLayout.setNpsQuestion(mLocalizedTexts.getNpsQuestion());
-        mNpsLayout.setSubmitBtn(mLocalizedTexts.getSend());
-        mNpsLayout.setBtnCancel(mLocalizedTexts.getDismiss());
+        mNpsLayout.setTexts(mSettings);
 
         if(savedInstanceState != null) {
             int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
             mNpsLayout.setSelectedScore(selectedScore);
-            mFeedbackLayout.setScore(selectedScore);
+            mFeedbackLayout.setTextsForScore(mSettings, selectedScore);
         }
     }
 
@@ -179,8 +169,7 @@ public class SurveyFragment extends DialogFragment
         outState.putString(ARG_ORIGIN_URL, mOriginUrl);
         outState.putParcelable(ARG_USER, mUser);
         outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
-        outState.putParcelable(ARG_LOCALIZED_TEXTS, mLocalizedTexts);
-        outState.putParcelable(ARG_CUSTOM_MESSAGE, mCustomMessage);
+        outState.putParcelable(ARG_SETTINGS, mSettings);
         outState.putInt(ARG_SELECTED_SCORE, mNpsLayout.getSelectedScore());
         outState.putInt(ARG_CURRENT_STATE, mCurrentState);
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
@@ -190,7 +179,7 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onNpsLayoutSubmit() {
-        mFeedbackLayout.setScore(mNpsLayout.getSelectedScore());
+        mFeedbackLayout.setTextsForScore(mSettings, mNpsLayout.getSelectedScore());
         updateState(STATE_FEEDBACK_LAYOUT);
         createResponse();
     }

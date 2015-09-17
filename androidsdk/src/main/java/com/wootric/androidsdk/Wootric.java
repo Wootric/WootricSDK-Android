@@ -5,6 +5,7 @@ import android.content.Context;
 import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
+import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -55,6 +56,10 @@ public class Wootric {
 
     public void setSurveyImmediately(boolean surveyImmediately) {
         this.settings.setSurveyImmediately(surveyImmediately);
+    }
+
+    public void setCustomMessage(CustomMessage customMessage) {
+        settings.setLocalCustomMessage(customMessage);
     }
 
     public void survey() {

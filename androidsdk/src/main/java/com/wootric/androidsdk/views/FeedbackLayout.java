@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.utils.TextUtils;
 
 /**
  * Created by maciejwitowski on 9/15/15.
@@ -51,10 +53,6 @@ public class FeedbackLayout extends LinearLayout {
 
     public String getFeedback() {
         return mEtFeedback.getText().toString();
-    }
-
-    public void setScore(int score) {
-        mTvFeedbackHeader.setText("You chose " + String.valueOf(score) + "/10");
     }
 
     private void init(Context context) {
@@ -161,6 +159,14 @@ public class FeedbackLayout extends LinearLayout {
 
     public void setFeedbackLayoutListener(FeedbackLayoutListener feedbackLayoutListener) {
         mFeedbackLayoutListener = feedbackLayoutListener;
+    }
+
+    public void setTextsForScore(Settings settings, int score) {
+        mEtFeedback.setHint(TextUtils.decode(settings.getFollowupPlaceholder(score)));
+
+        TextUtils.setUtf8Text(mTvFeedbackHeader, settings.getFollowupQuestion(score));
+        TextUtils.setUtf8Text(mBtnSubmit, settings.getBtnSubmit());
+        TextUtils.setUtf8Text(mBtnDismiss, settings.getBtnDismiss());
     }
 
     public interface FeedbackLayoutListener {

@@ -1,5 +1,8 @@
 package com.wootric.androidsdk.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.wootric.androidsdk.Constants;
 
@@ -8,18 +11,23 @@ import java.util.Date;
 /**
  * Created by maciejwitowski on 5/5/15.
  */
-public class Settings {
+public class Settings implements Parcelable {
 
     @SerializedName("first_survey")
     private long firstSurvey = 31L;
 
     @SerializedName("time_delay")
-    private int timeDelay = 0;
+    private int adminPanelTimeDelay = Constants.NOT_SET;
 
     @SerializedName("localized_texts")
     private LocalizedTexts localizedTexts;
 
-    private CustomMessage customMessage;
+    @SerializedName("messages")
+    private CustomMessage adminPanelCustomMessage;
+
+    private CustomMessage localCustomMessage;
+
+    private int timeDelay = Constants.NOT_SET;
 
     private boolean surveyImmediately;
 
@@ -29,11 +37,8 @@ public class Settings {
             return;
         }
 
-        if(this.customMessage == null) {
-            this.customMessage = settings.customMessage;
-        }
-
-        this.timeDelay = settings.timeDelay;
+        this.adminPanelCustomMessage = settings.adminPanelCustomMessage;
+        this.adminPanelTimeDelay = settings.adminPanelTimeDelay;
         this.localizedTexts = settings.localizedTexts;
     }
 
@@ -51,15 +56,81 @@ public class Settings {
     }
 
     public int getTimeDelayInMillis() {
-        return timeDelay * 1000;
-    }
+        int time;
 
-    public CustomMessage getCustomMessage() {
-        return customMessage;
+        if(timeDelay != Constants.NOT_SET) {
+            time = timeDelay;
+        } else if(adminPanelTimeDelay != Constants.NOT_SET) {
+            time = adminPanelTimeDelay;
+        } else {
+            time = 0;
+        }
+
+        return time*1000;
     }
 
     public LocalizedTexts getLocalizedTexts() {
         return localizedTexts;
+    }
+
+    public String getNpsQuestion() {
+        return localizedTexts.getNpsQuestion();
+    }
+
+    public String getAnchorLikely() {
+        return localizedTexts.getAnchorLikely();
+    }
+
+    public String getAnchorNotLikely() {
+        return localizedTexts.getAnchorNotLikely();
+    }
+
+    public String getBtnSubmit() {
+        return localizedTexts.getSubmit().toUpperCase();
+    }
+
+    public String getBtnDismiss() {
+        return localizedTexts.getDismiss().toUpperCase();
+    }
+
+    public String getFollowupQuestion(int score) {
+        String followupQuestion = null;
+
+        if(localCustomMessage != null) {
+            followupQuestion = localCustomMessage.getFollowupQuestionForScore(score);
+        }
+
+        if(followupQuestion == null && adminPanelCustomMessage != null) {
+            followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score);
+        }
+
+        if(followupQuestion == null) {
+            followupQuestion = localizedTexts.getFollowupQuestion();
+        }
+
+        return followupQuestion;
+    }
+
+    public String getFollowupPlaceholder(int score) {
+        String followupPlaceholder = null;
+
+        if(localCustomMessage != null) {
+            followupPlaceholder = localCustomMessage.getPlaceholderForScore(score);
+        }
+
+        if(followupPlaceholder == null && adminPanelCustomMessage != null) {
+            followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score);
+        }
+
+        if(followupPlaceholder == null) {
+            followupPlaceholder = localizedTexts.getFollowupPlaceholder();
+        }
+
+        return followupPlaceholder;
+    }
+
+    public void setTimeDelay(int timeDelay) {
+        this.timeDelay = timeDelay;
     }
 
     public void setFirstSurveyDelay(long firstSurvey) {
@@ -70,11 +141,68 @@ public class Settings {
         return firstSurvey;
     }
 
-    public void setCustomMessage(CustomMessage customMessage) {
-        this.customMessage = customMessage;
+    public void setLocalCustomMessage(CustomMessage customMessage) {
+        this.localCustomMessage = customMessage;
+    }
+
+    public CustomMessage getLocalCustomMessage() {
+        return localCustomMessage;
     }
 
     public void setLocalizedTexts(LocalizedTexts localizedTexts) {
         this.localizedTexts = localizedTexts;
     }
+
+    public void setAdminPanelCustomMessage(CustomMessage adminPanelCustomMessage) {
+        this.adminPanelCustomMessage = adminPanelCustomMessage;
+    }
+
+    public CustomMessage getAdminPanelCustomMessage() {
+        return adminPanelCustomMessage;
+    }
+
+    public void setAdminPanelTimeDelay(int adminPanelTimeDelay) {
+        this.adminPanelTimeDelay = adminPanelTimeDelay;
+    }
+
+    public int getAdminPanelTimeDelay() {
+        return adminPanelTimeDelay;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.firstSurvey);
+        dest.writeInt(this.adminPanelTimeDelay);
+        dest.writeParcelable(this.localizedTexts, 0);
+        dest.writeParcelable(this.adminPanelCustomMessage, 0);
+        dest.writeParcelable(this.localCustomMessage, 0);
+        dest.writeByte(surveyImmediately ? (byte) 1 : (byte) 0);
+    }
+
+    public Settings() {
+    }
+
+    private Settings(Parcel in) {
+        this.firstSurvey = in.readLong();
+        this.adminPanelTimeDelay = in.readInt();
+        this.localizedTexts = in.readParcelable(LocalizedTexts.class.getClassLoader());
+        this.adminPanelCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
+        this.localCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
+        this.surveyImmediately = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Settings> CREATOR = new Parcelable.Creator<Settings>() {
+        public Settings createFromParcel(Parcel source) {
+            return new Settings(source);
+        }
+
+        public Settings[] newArray(int size) {
+            return new Settings[size];
+        }
+    };
 }

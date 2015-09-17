@@ -152,7 +152,7 @@ public class SurveyManager implements
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
 
         SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, originUrl,
-                accessToken, settings.getLocalizedTexts(), settings.getCustomMessage());
+                accessToken, settings);
 
         surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
     }

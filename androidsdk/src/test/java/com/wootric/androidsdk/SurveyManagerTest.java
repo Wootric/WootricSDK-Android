@@ -5,7 +5,6 @@ import android.app.Activity;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
 import com.wootric.androidsdk.network.responses.AuthenticationResponse;
-import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -101,20 +100,20 @@ public class SurveyManagerTest {
     /**
      * onSurveyValidated(Settings surveyServerSettings)
      */
-    @Test
-    public void mergesSettings() throws Exception {
-        Settings settings = new Settings();
-        SurveyManager surveyManager = new SurveyManager(new Activity(), wootricApiClient,
-                trackingPixelClient, testUser(), testEndUser(), settings, ORIGIN_URL, preferencesUtils,
-                surveyValidator);
-
-        Settings surveyServerSettings = new Settings();
-        surveyServerSettings.setCustomMessage(new CustomMessage());
-
-        surveyManager.onSurveyValidated(surveyServerSettings);
-
-        assertThat(settings.getCustomMessage()).isEqualTo(surveyServerSettings.getCustomMessage());
-    }
+//    @Test
+//    public void mergesSettings() throws Exception {
+//        Settings settings = new Settings();
+//        SurveyManager surveyManager = new SurveyManager(new Activity(), wootricApiClient,
+//                trackingPixelClient, testUser(), testEndUser(), settings, ORIGIN_URL, preferencesUtils,
+//                surveyValidator);
+//
+//        Settings surveyServerSettings = new Settings();
+//        surveyServerSettings.setCustomMessage(new CustomMessage());
+//
+//        surveyManager.onSurveyValidated(surveyServerSettings);
+//
+//        assertThat(settings.getCustomMessage()).isEqualTo(surveyServerSettings.getCustomMessage());
+//    }
 
     @Test
     public void sendsGetAccessTokenRequest() throws Exception {
@@ -199,7 +198,6 @@ public class SurveyManagerTest {
     @Test
     public void whenEndUserNotReceived_sendsRequestToCreateEndUser() throws Exception {
         List<EndUser> endUsers = new ArrayList<>();
-
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = new SurveyManager(new Activity(), wootricApiClient,
                 trackingPixelClient, testUser(), endUser, new Settings(), ORIGIN_URL, preferencesUtils,

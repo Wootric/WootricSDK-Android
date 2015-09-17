@@ -11,7 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.TextUtils;
 
 /**
  * Created by maciejwitowski on 9/7/15.
@@ -171,26 +173,6 @@ public class NpsLayout extends LinearLayout
         mNpsLayoutListener = npsLayoutListener;
     }
 
-    public void setNpsQuestion(String value) {
-        mNpsQuestion.setText(value);
-    }
-
-    public void setAnchorNotLikely(String value) {
-        mAnchorNotLikely.setText(value);
-    }
-
-    public void setAnchorLikely(String value) {
-        mAnchorLikely.setText(value);
-    }
-
-    public void setSubmitBtn(String value) {
-        mBtnSubmit.setText(value.toUpperCase());
-    }
-
-    public void setBtnCancel(String value) {
-        mBtnDismiss.setText(value.toUpperCase());
-    }
-
     public int getSelectedScore() {
         return mRatingBar.getSelectedScore();
     }
@@ -199,12 +181,12 @@ public class NpsLayout extends LinearLayout
         mRatingBar.setSelectedScore(selectedScore);
     }
 
-    public void hide() {
-        setVisibility(INVISIBLE);
-    }
-
-    public void show() {
-        setVisibility(VISIBLE);
+    public void setTexts(Settings settings) {
+        TextUtils.setUtf8Text(mNpsQuestion, settings.getNpsQuestion());
+        TextUtils.setUtf8Text(mAnchorLikely, settings.getAnchorLikely());
+        TextUtils.setUtf8Text(mAnchorNotLikely, settings.getAnchorNotLikely());
+        TextUtils.setUtf8Text(mBtnSubmit, settings.getBtnSubmit());
+        TextUtils.setUtf8Text(mBtnDismiss, settings.getBtnDismiss());
     }
 
     public interface NpsLayoutListener {

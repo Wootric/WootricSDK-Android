@@ -28,6 +28,7 @@
             android:textColorHint="@drawable/feedback_hint"
             android:textCursorDrawable="@drawable/feedback_cursor"
             android:layout_alignParentTop="true"
+            android:maxLines="10"
             android:textSize="@dimen/wootric_et_feedback_text_size"
             android:paddingBottom="@dimen/wootric_et_feedback_padding"
             android:paddingTop="@dimen/wootric_et_feedback_padding"

@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.wootric.androidsdk.utils.TextUtils;
 
 import java.util.HashMap;
 
@@ -16,6 +15,7 @@ public class LocalizedTexts implements Parcelable {
     @SerializedName("nps_question")
     private String npsQuestion;
 
+    @SerializedName("anchors")
     private HashMap<String, String> anchors;
 
     @SerializedName("followup_question")
@@ -39,43 +39,43 @@ public class LocalizedTexts implements Parcelable {
     public LocalizedTexts() {}
 
     public String getNpsQuestion() {
-        return TextUtils.decode(npsQuestion);
+        return npsQuestion;
     }
 
     public String getAnchorLikely() {
-        return TextUtils.decode(anchors.get("likely"));
+        return anchors.get("likely");
     }
 
     public String getAnchorNotLikely() {
-        return TextUtils.decode(anchors.get("not_likely"));
+        return anchors.get("not_likely");
     }
 
     public String getFollowupQuestion() {
-        return TextUtils.decode(followupQuestion);
+        return followupQuestion;
     }
 
     public String getFollowupPlaceholder() {
-        return TextUtils.decode(followupPlaceholder);
+        return followupPlaceholder;
     }
 
     public String getFinalThankYou() {
-        return TextUtils.decode(finalThankYou);
+        return finalThankYou;
     }
 
-    public String getSend() {
-        return TextUtils.decode(send);
+    public String getSubmit() {
+        return send;
     }
 
     public String getDismiss() {
-        return TextUtils.decode(dismiss);
+        return dismiss;
     }
 
     public String getSocialShareQuestion() {
-        return TextUtils.decode(socialShare.get("question"));
+        return socialShare.get("question");
     }
 
     public String getSocialShareDecline() {
-        return TextUtils.decode(socialShare.get("decline"));
+        return socialShare.get("decline");
     }
 
     @Override

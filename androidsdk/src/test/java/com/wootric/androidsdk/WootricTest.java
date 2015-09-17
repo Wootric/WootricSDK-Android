@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
+import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -123,6 +124,22 @@ public class WootricTest {
 
         assertThat(wootric.settings.isSurveyImmediately()).isTrue();
     }
+
+    /**
+     * setCustomMessage(CustomMessage customMessage)
+     */
+    @Test
+    public void setsLocalCustomMessageInSettings() {
+        CustomMessage customMessage = new CustomMessage();
+        Wootric wootric = Wootric.singleton;
+
+        wootric.setCustomMessage(customMessage);
+        assertThat(wootric.settings.getLocalCustomMessage()).isEqualTo(customMessage);
+    }
+
+    /**
+     * survey()
+     */
 
     @Test public void survey_startsSurvey() throws Exception {
         Wootric.singleton = null;
