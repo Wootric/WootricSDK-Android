@@ -35,8 +35,21 @@ public class SurveyClient {
     }
 
     public void checkEligibility(User user, EndUser endUser, Settings settings, final SurveyCallback surveyCallback) {
-        surveyInterface.eligible(user.getAccountToken(), endUser.getEmail(),
-            settings.isSurveyImmediately(), endUser.getCreatedAtOrNull(), settings.getFirstSurveyDelay(), new Callback<EligibilityResponse>() {
+        surveyInterface.eligible(
+                user.getAccountToken(),
+                endUser.getEmail(),
+                endUser.getCreatedAtOrNull(),
+                settings.isSurveyImmediately(),
+                settings.getFirstSurveyDelay(),
+                settings.getDailyResponseCap(),
+                settings.getRegisteredPercent(),
+                settings.getVisitorPercent(),
+                settings.getResurveyThrottle(),
+                settings.getLanguageCode(),
+                settings.getProductName(),
+                settings.getRecommendTarget(),
+                new Callback<EligibilityResponse>() {
+
                 @Override
                 public void success(EligibilityResponse eligibilityResponse, Response response) {
                     surveyCallback.onEligibilityChecked(eligibilityResponse);

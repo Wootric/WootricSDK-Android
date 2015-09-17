@@ -14,7 +14,7 @@ import java.util.Date;
 public class Settings implements Parcelable {
 
     @SerializedName("first_survey")
-    private long firstSurvey = 31L;
+    private Long firstSurvey = 31L;
 
     @SerializedName("time_delay")
     private int adminPanelTimeDelay = Constants.NOT_SET;
@@ -30,6 +30,15 @@ public class Settings implements Parcelable {
     private int timeDelay = Constants.NOT_SET;
 
     private boolean surveyImmediately;
+
+    private Integer dailyResponseCap;
+    private Integer registeredPercent;
+    private Integer visitorPercent;
+    private Integer resurveyThrottle;
+
+    private String languageCode;
+    private String productName;
+    private String recommendTarget;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -137,7 +146,7 @@ public class Settings implements Parcelable {
         this.firstSurvey = firstSurvey;
     }
 
-    public long getFirstSurveyDelay() {
+    public Long getFirstSurveyDelay() {
         return firstSurvey;
     }
 
@@ -167,6 +176,62 @@ public class Settings implements Parcelable {
 
     public int getAdminPanelTimeDelay() {
         return adminPanelTimeDelay;
+    }
+
+    public void setDailyResponseCap(int dailyResponseCap) {
+        this.dailyResponseCap = dailyResponseCap;
+    }
+
+    public void setRegisteredPercent(Integer registeredPercent) {
+        this.registeredPercent = registeredPercent;
+    }
+
+    public void setVisitorPercent(Integer visitorPercent) {
+        this.visitorPercent = visitorPercent;
+    }
+
+    public void setResurveyThrottle(Integer resurveyThrottle) {
+        this.resurveyThrottle = resurveyThrottle;
+    }
+
+    public Integer getDailyResponseCap() {
+        return dailyResponseCap;
+    }
+
+    public Integer getRegisteredPercent() {
+        return registeredPercent;
+    }
+
+    public Integer getVisitorPercent() {
+        return visitorPercent;
+    }
+
+    public Integer getResurveyThrottle() {
+        return resurveyThrottle;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getRecommendTarget() {
+        return recommendTarget;
+    }
+
+    public void setRecommendTarget(String recommendTarget) {
+        this.recommendTarget = recommendTarget;
     }
 
     @Override

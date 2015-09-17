@@ -138,6 +138,77 @@ public class WootricTest {
     }
 
     /**
+     * setDailyResponseCap(int value)
+     */
+    @Test
+    public void setsDailyResponseCapInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setDailyResponseCap(20);
+        assertThat(wootric.settings.getDailyResponseCap()).isEqualTo(20);
+    }
+
+    /**
+     * setRegisteredPercent(int value)
+     */
+    @Test
+    public void setsRegisteredPercentInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setRegisteredPercent(20);
+        assertThat(wootric.settings.getRegisteredPercent()).isEqualTo(20);
+    }
+
+    /**
+     * setVisitorPercent(int value)
+     */
+    @Test
+    public void setsVisitorPercentInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setVisitorPercent(20);
+        assertThat(wootric.settings.getVisitorPercent()).isEqualTo(20);
+    }
+
+    /**
+     * setResurveyThrottle(int value)
+     */
+    @Test
+    public void setsResurveyThrottleInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setResurveyThrottle(20);
+        assertThat(wootric.settings.getResurveyThrottle()).isEqualTo(20);
+    }
+
+    /**
+     * setLanguageCode(String languageCode)
+     */
+    @Test
+    public void setsLanguageCodeInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setLanguageCode("PL");
+        assertThat(wootric.settings.getLanguageCode()).isEqualTo("PL");
+    }
+
+    /**
+     * setProductName(String productName)
+     */
+    @Test
+    public void setsProductNameInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setProductName("Wootric");
+        assertThat(wootric.settings.getProductName()).isEqualTo("Wootric");
+    }
+
+    /**
+     * setRecommendTarget(String recommendTarget)
+     */
+    @Test
+    public void setsRecommendTargetInSettings() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setRecommendTarget("My Friend");
+        assertThat(wootric.settings.getRecommendTarget()).isEqualTo("My Friend");
+    }
+
+
+    /**
      * survey()
      */
 

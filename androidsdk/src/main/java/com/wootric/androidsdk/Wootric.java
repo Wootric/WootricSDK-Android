@@ -62,6 +62,34 @@ public class Wootric {
         settings.setLocalCustomMessage(customMessage);
     }
 
+    public void setDailyResponseCap(int value) {
+        settings.setDailyResponseCap(value);
+    }
+
+    public void setRegisteredPercent(int value) {
+        settings.setRegisteredPercent(value);
+    }
+
+    public void setVisitorPercent(int value) {
+        settings.setVisitorPercent(value);
+    }
+
+    public void setResurveyThrottle(int value) {
+        settings.setResurveyThrottle(value);
+    }
+
+    public void setLanguageCode(String languageCode) {
+        settings.setLanguageCode(languageCode);
+    }
+
+    public void setProductName(String productName) {
+        settings.setProductName(productName);
+    }
+
+    public void setRecommendTarget(String recommendTarget) {
+        settings.setRecommendTarget(recommendTarget);
+    }
+
     public void survey() {
         if(surveyInProgress)
             return;

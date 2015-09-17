@@ -45,12 +45,19 @@ public class SurveyClientTest {
         Settings settings = new Settings();
         settings.setSurveyImmediately(true);
         settings.setFirstSurveyDelay(100L);
+        settings.setDailyResponseCap(10);
+        settings.setRegisteredPercent(20);
+        settings.setVisitorPercent(30);
+        settings.setResurveyThrottle(40);
+        settings.setLanguageCode("PL");
+        settings.setProductName("Wootric");
+        settings.setRecommendTarget("Best friend");
 
         surveyClient.checkEligibility(user, endUser, settings, new MockSurveyCallback());
 
         verify(surveyInterface, times(1))
-                .eligible(eq(user.getAccountToken()), eq(email), eq(true), eq(endUserCreatedAt),
-                        eq(100L), any(Callback.class));
+                .eligible(eq(user.getAccountToken()), eq(email), eq(endUser.getCreatedAtOrNull()), eq(true), eq(100L),
+                        eq(10), eq(20), eq(30), eq(40), eq("PL"), eq("Wootric"), eq("Best friend"), any(Callback.class));
     }
 
     private class MockSurveyCallback implements SurveyClient.SurveyCallback {
