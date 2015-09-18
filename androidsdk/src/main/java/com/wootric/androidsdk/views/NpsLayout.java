@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
-import com.wootric.androidsdk.utils.TextUtils;
 
 /**
  * Created by maciejwitowski on 9/7/15.
@@ -182,11 +181,11 @@ public class NpsLayout extends LinearLayout
     }
 
     public void setTexts(Settings settings) {
-        TextUtils.setUtf8Text(mNpsQuestion, settings.getNpsQuestion());
-        TextUtils.setUtf8Text(mAnchorLikely, settings.getAnchorLikely());
-        TextUtils.setUtf8Text(mAnchorNotLikely, settings.getAnchorNotLikely());
-        TextUtils.setUtf8Text(mBtnSubmit, settings.getBtnSubmit());
-        TextUtils.setUtf8Text(mBtnDismiss, settings.getBtnDismiss());
+        mNpsQuestion.setText(settings.getNpsQuestion());
+        mAnchorLikely.setText(settings.getAnchorLikely());
+        mAnchorNotLikely.setText(settings.getAnchorNotLikely());
+        mBtnSubmit.setText(settings.getBtnSubmit());
+        mBtnDismiss.setText(settings.getBtnDismiss());
     }
 
     public interface NpsLayoutListener {
