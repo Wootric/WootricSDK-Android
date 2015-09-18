@@ -145,6 +145,7 @@ public class SettingsTest {
         assertThat(settings.getAnchorNotLikely()).isEqualTo("not likely");
         assertThat(settings.getBtnSubmit()).isEqualTo("SUBMIT");
         assertThat(settings.getBtnDismiss()).isEqualTo("DISMISS");
+        assertThat(settings.getFinalThankYou()).isEqualTo("Thank you!");
     }
 
     /**
@@ -237,6 +238,7 @@ public class SettingsTest {
         doReturn("not likely").when(mockLocalizedTexts).getAnchorNotLikely();
         doReturn("dismiss").when(mockLocalizedTexts).getDismiss();
         doReturn("submit").when(mockLocalizedTexts).getSubmit();
+        doReturn("Thank you!").when(mockLocalizedTexts).getFinalThankYou();
         doReturn("followup question").when(mockLocalizedTexts).getFollowupQuestion();
         doReturn("followup placeholder").when(mockLocalizedTexts).getFollowupPlaceholder();
         doReturn("social question").when(mockLocalizedTexts).getSocialShareQuestion();

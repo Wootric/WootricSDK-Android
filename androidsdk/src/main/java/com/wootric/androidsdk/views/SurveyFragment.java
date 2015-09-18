@@ -1,14 +1,17 @@
 package com.wootric.androidsdk.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
@@ -44,9 +47,11 @@ public class SurveyFragment extends DialogFragment
 
     private boolean mSurveyFinished;
 
-    private static final int STATE_NPS_LAYOUT = 0;
-    private static final int STATE_FEEDBACK_LAYOUT = 1;
-    private int mCurrentState = STATE_NPS_LAYOUT;
+    private static final int STATE_NPS = 0;
+    private static final int STATE_FEEDBACK = 1;
+    private static final int STATE_THANK_YOU = 3;
+
+    private int mCurrentState = STATE_NPS;
 
     private boolean mResponseSent;
 
@@ -93,12 +98,16 @@ public class SurveyFragment extends DialogFragment
     private void updateState(int state) {
         mCurrentState = state;
 
-        if(STATE_NPS_LAYOUT == mCurrentState) {
+        if(STATE_NPS == mCurrentState) {
             mNpsLayout.setVisibility(View.VISIBLE);
             mFeedbackLayout.setVisibility(View.GONE);
-        } else if(STATE_FEEDBACK_LAYOUT == mCurrentState) {
+        } else if(STATE_FEEDBACK == mCurrentState) {
             mNpsLayout.setVisibility(View.GONE);
             mFeedbackLayout.setVisibility(View.VISIBLE);
+        } else if(STATE_THANK_YOU == mCurrentState) {
+            mNpsLayout.setVisibility(View.GONE);
+            mFeedbackLayout.setVisibility(View.GONE);
+            showThankYouLayout();
         }
     }
 
@@ -180,7 +189,7 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onNpsLayoutSubmit() {
         mFeedbackLayout.setTextsForScore(mSettings, mNpsLayout.getSelectedScore());
-        updateState(STATE_FEEDBACK_LAYOUT);
+        updateState(STATE_FEEDBACK);
         createResponse();
     }
 
@@ -206,14 +215,14 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onFeedbackDismiss() {
         mSurveyFinished = true;
-        dismiss();
+        updateState(STATE_THANK_YOU);
     }
 
     @Override
     public void onFeedbackSubmit() {
         createResponse();
+        updateState(STATE_THANK_YOU);
     }
-
 
     private void createResponse() {
         mWootricApiClient.createResponse(mEndUser, mAccessToken, mOriginUrl,
@@ -228,6 +237,23 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onFeedbackEditScoreClick() {
-        updateState(STATE_NPS_LAYOUT);
+        updateState(STATE_NPS);
+    }
+
+    private void showThankYouLayout() {
+        dismiss();
+
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setMessage(mSettings.getFinalThankYou())
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create();
+
+        alertDialog.show();
+
+        Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        btnPositive.setTextColor(getResources().getColor(R.color.wootric_dialog_header_background));
     }
 }

@@ -138,6 +138,10 @@ public class Settings implements Parcelable {
         return followupPlaceholder;
     }
 
+    public String getFinalThankYou() {
+        return localizedTexts.getFinalThankYou();
+    }
+
     public void setTimeDelay(int timeDelay) {
         this.timeDelay = timeDelay;
     }
