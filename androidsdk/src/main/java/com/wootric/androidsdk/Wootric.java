@@ -9,6 +9,7 @@ import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.PermissionsValidator;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class Wootric {
 
     boolean surveyInProgress;
     PreferencesUtils preferencesUtils;
+    PermissionsValidator permissionsValidator;
 
     static Wootric singleton;
 
@@ -97,7 +99,7 @@ public class Wootric {
     }
 
     public void survey() {
-        if(surveyInProgress)
+        if(!permissionsValidator.check() || surveyInProgress)
             return;
 
         WootricApiClient wootricApiClient = new WootricApiClient();
@@ -109,10 +111,8 @@ public class Wootric {
         SurveyManager surveyManager = buildSurveyManager(context, wootricApiClient, trackingPixelClient,
                 user, endUser, settings, originUrl, preferencesUtils, surveyValidator);
 
-        boolean started = surveyManager.start();
-
-        if(started)
-            surveyInProgress = true;
+        surveyManager.start();
+        surveyInProgress = true;
     }
 
     private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
@@ -129,6 +129,7 @@ public class Wootric {
         user = new User(clientId, clientSecret, accountToken);
         settings = new Settings();
         preferencesUtils = new PreferencesUtils(context);
+        permissionsValidator = new PermissionsValidator(context.getApplicationContext());
     }
 
     SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,

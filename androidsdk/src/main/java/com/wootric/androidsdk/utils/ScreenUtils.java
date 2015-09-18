@@ -38,10 +38,6 @@ public class ScreenUtils {
         return screenWidth;
     }
 
-//    public static int dpToPx(int dp) {
-//        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-//    }
-
     public static float pxToDp(float px) {
         return px / Resources.getSystem().getDisplayMetrics().density;
     }

@@ -7,6 +7,7 @@ import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
 import com.wootric.androidsdk.objects.CustomMessage;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.PermissionsValidator;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
 import org.junit.Before;
@@ -36,6 +37,7 @@ public class WootricTest {
     @Mock SurveyManager mockSurveyManager;
     @Mock SurveyValidator mockSurveyValidator;
     @Mock PreferencesUtils mockPreferencesUtils;
+    @Mock PermissionsValidator mockPermissionsValidator;
 
     private static final String CLIENT_ID = "client_id";
     private static final String CLIENT_SECRET = "client_secret";
@@ -240,11 +242,58 @@ public class WootricTest {
                 eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
-        doReturn(true).when(mockSurveyManager).start();
+        wootric.permissionsValidator = mockPermissionsValidator;
+        doReturn(true).when(wootric.permissionsValidator).check();
 
-        assertThat(wootric.surveyInProgress).isFalse();
         wootric.survey();
+        verify(mockSurveyManager, times(1)).start();
         assertThat(wootric.surveyInProgress).isTrue();
+    }
+
+    @Test
+    public void doesNotStartSurvey_whenSurveyInProgress() {
+        Wootric.singleton = null;
+        Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        wootric.originUrl = "test.com";
+
+        doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings), any(SurveyClient.class), any(PreferencesUtils.class));
+
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+                any(WootricApiClient.class), any(TrackingPixelClient.class), eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
+                any(PreferencesUtils.class), eq(mockSurveyValidator));
+
+        wootric.permissionsValidator = mockPermissionsValidator;
+        doReturn(true).when(wootric.permissionsValidator).check();
+        wootric.surveyInProgress = true;
+
+        wootric.survey();
+
+        verify(mockSurveyManager, times(0)).start();
+    }
+
+    @Test
+    public void doesNotStartSurvey_whenPermissionsValidatorChecksReturnsFalse() {
+        Wootric.singleton = null;
+        Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        wootric.originUrl = "test.com";
+
+        doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings), any(SurveyClient.class), any(PreferencesUtils.class));
+
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+                any(WootricApiClient.class), any(TrackingPixelClient.class), eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
+                any(PreferencesUtils.class), eq(mockSurveyValidator));
+
+        wootric.permissionsValidator = mockPermissionsValidator;
+        doReturn(false).when(wootric.permissionsValidator).check();
+        wootric.surveyInProgress = false;
+
+        wootric.survey();
+
+        verify(mockSurveyManager, times(0)).start();
     }
 
     /**

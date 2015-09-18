@@ -58,14 +58,11 @@ public class SurveyManager implements
         this.preferencesUtils = preferencesUtils;
     }
 
-    boolean start() {
+    void start() {
         sendGetTrackingPixelRequest();
         preferencesUtils.touchLastSeen();
 
         validateSurvey();
-
-        // TODO Don't return true and test it in some other way
-        return true;
     }
 
     @Override
