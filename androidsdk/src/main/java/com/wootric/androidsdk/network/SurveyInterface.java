@@ -4,13 +4,15 @@ import com.wootric.androidsdk.network.responses.EligibilityResponse;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.Query;
 
 /**
  * Created by maciejwitowski on 9/15/15.
  */
 interface SurveyInterface {
-    @GET("//eligible.json")
+    @Headers("User-Agent: Wootric-Mobile-SDK")
+    @GET("/eligible.json")
     void eligible(@Query("account_token") String accountToken,
                   @Query("email") String email,
                   @Query("end_user_created_at") Long createdAtOrNull,

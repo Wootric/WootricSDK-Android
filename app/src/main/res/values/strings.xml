@@ -1,5 +1,5 @@
 <resources>
     <string name="title_activity_main">MainActivity</string>
-    <string name="wootric">wootric</string>
+    <string name="wootric_app_name">wootric</string>
     <string name="start_survey_hint">Manually Start Survey</string>
 </resources>

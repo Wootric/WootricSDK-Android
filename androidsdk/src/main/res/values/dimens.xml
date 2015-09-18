@@ -1,24 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="wootric_activity_horizontal_margin">16dp</dimen>
-    <dimen name="wootric_activity_vertical_margin">16dp</dimen>
-
-    <dimen name="wootric_survey_question_text">14sp</dimen>
-    <dimen name="wootric_survey_buttons">16sp</dimen>
-
-    <dimen name="wootric_survey_labels_size">10sp</dimen>
-    <dimen name="wootric_survey_modal_button_margin">24dp</dimen>
-    <dimen name="wootric_nps_question_margin">16dp</dimen>
-    <dimen name="wootric_survey_modal_submit_size">16sp</dimen>
-
-    <dimen name="wootric_final_thank_you_height">48dp</dimen>
-
-    <dimen name="wootric_labels_margin_horizontal">8dp</dimen>
-
-    <dimen name="wootric_tv_feedback_margins">12dp</dimen>
-
-
-    <!-- NEW -->
     <dimen name="wootric_dialog_header_padding">32dp</dimen>
     <dimen name="wootric_dialog_header_text_size">24sp</dimen>
 

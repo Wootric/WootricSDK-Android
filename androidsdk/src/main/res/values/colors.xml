@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="wootric_white">#ffffff</color>-->
-
-    <color name="wootric_gray">#efefef</color>
     <color name="wootric_dark_gray">#9b9b9b</color>
-    <color name="wootric_submit">#91c91d</color>
-    <color name="wootric_dark">#000000</color>
-    <color name="wootric_white">#ffffff</color>
-    <color name="wootric_pink">#E91E63</color>
-
-    <!-- NEW-->
     <color name="wootric_dialog_header_background">#2196F3</color>
     <color name="wootric_brand_color">#E91E63</color>
     <color name="wootric_rating_bar">#B9B9B9</color>

@@ -1,21 +1,4 @@
 <resources>
-    <string name="wootric_app_name">AndroidSdk</string>
-    <string name="wootric_title_activity_survey">SurveyActivity</string>
-
-    <string name="wootric_default_survey_question_prefix">How likely are you to recommend</string>
-    <string name="wootric_default_survey_question_recommend_target">a friend or coworker</string>
-    <string name="wootric_submit">SUBMIT</string>
-    <string name="wootric_send_feedback">SEND FEEDBACK</string>
-    <string name="wootric_not_at_all_likely">Not at all likely</string>
-    <string name="wootric_extremely_likely">Extremely likely</string>
-    <string name="wootric_default_followup_question">Thank you! Care to tell us why?</string>
-    <string name="wootric_thank_you_score">You gave us</string>
-    <string name="wootric_default_placeholder">Help us by explaining your score.</string>
-    <string name="wootric_dismiss">DISMISS</string>
-    <string name="wootric_final_thank_you">Thank you for your response and your feedback.</string>
-    <string name="wootric_drag_to_change_score">Drag to change score</string>
-
-    <!-- NEW -->
     <string name="wootric_example_nps_question">How likely are you to recommend Wootric to a friend or coworker</string>
     <string name="wootric_example_anchor_not_likely">Not at all likely</string>
     <string name="wootric_example_anchor_likely">Extremely likely</string>
@@ -25,5 +8,4 @@
     <string name="wootric_example_btn_submit">SUBMIT</string>
     <string name="wootric_example_followup_placeholder">Anything else we should know?</string>
     <string name="wootric_example_btn_edit_score">EDIT SCORE</string>
-
 </resources>
