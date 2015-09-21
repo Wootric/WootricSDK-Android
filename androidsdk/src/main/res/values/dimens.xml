@@ -25,4 +25,8 @@
     <!-- Feedback Layout -->
     <dimen name="wootric_et_feedback_text_size">16sp</dimen>
     <dimen name="wootric_et_feedback_padding">16dp</dimen>
+
+    <!-- ThankYouLayout-->
+    <dimen name="wootric_thank_you_layout_padding">24dp</dimen>
+    <dimen name="wootric_tv_thank_you_size">24sp</dimen>
 </resources>

@@ -8,4 +8,7 @@
     <string name="wootric_example_btn_submit">SUBMIT</string>
     <string name="wootric_example_followup_placeholder">Anything else we should know?</string>
     <string name="wootric_example_btn_edit_score">EDIT SCORE</string>
+    <string name="wootric_thank_you">Thanks for your feedback!</string>
+    <string name="wootric_feedback_question">Care to tell us why?</string>
+    <string name="wootric_btn_thank_you_action">Get 20% off your next order</string>
 </resources>

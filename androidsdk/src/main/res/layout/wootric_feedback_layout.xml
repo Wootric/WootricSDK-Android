@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
         android:id="@+id/wootric_tv_feedback_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/wootric_dialog_header_background"
         android:textColor="@android:color/white"
+        android:text="@string/wootric_feedback_question"
         android:textSize="@dimen/wootric_dialog_header_text_size"
         android:padding="@dimen/wootric_dialog_header_padding"/>
 
     <RelativeLayout
         android:id="@+id/wootric_feedback_layout_body"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:padding="@dimen/wootric_nps_layout_body_padding"
         android:background="@android:color/white">
 
@@ -69,8 +65,4 @@
             android:text="@string/wootric_example_btn_submit"/>
 
     </RelativeLayout>
-
-    <include layout="@layout/wootric_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+</merge>

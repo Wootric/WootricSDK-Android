@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/wootric_iv_thank_you"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/wootric_nps_layout_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/wootric_thank_you_layout_padding"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/wootric_tv_thank_you"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/wootric_tv_thank_you_size"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/wootric_thank_you"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/wootric_btn_thank_you_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:background="@color/wootric_brand_color"
+            android:textColor="@android:color/white"
+            android:layout_centerInParent="true"
+            android:elevation="8dp"
+            android:text="@string/wootric_btn_thank_you_action"/>
+
+        <TextView
+            android:id="@+id/wootric_btn_thank_you_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/wootric_dialog_header_background"
+            android:text="@string/wootric_example_btn_dismiss"/>
+    </RelativeLayout>
+</merge>

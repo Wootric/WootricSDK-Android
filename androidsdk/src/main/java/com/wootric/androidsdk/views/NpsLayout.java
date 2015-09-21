@@ -58,7 +58,9 @@ public class NpsLayout extends LinearLayout
 
     private void init(Context context) {
         mContext = context;
+
         initResources();
+        inflate(mContext, R.layout.wootric_nps_layout, this);
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.wootric_nps_layout, this);

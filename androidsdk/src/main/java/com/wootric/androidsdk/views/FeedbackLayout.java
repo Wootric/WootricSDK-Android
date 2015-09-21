@@ -56,10 +56,9 @@ public class FeedbackLayout extends LinearLayout {
 
     private void init(Context context) {
         mContext = context;
-        initResources();
 
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.wootric_feedback_layout, this);
+        initResources();
+        inflate(mContext, R.layout.wootric_feedback_layout, this);
 
         mTvFeedbackHeader = (TextView) findViewById(R.id.wootric_tv_feedback_question);
         mEtFeedback = (EditText) findViewById(R.id.wootric_et_feedback);
