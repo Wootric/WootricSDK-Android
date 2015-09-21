@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <com.wootric.androidsdk.views.NpsLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/wootric_nps_layout"/>
-
-    <com.wootric.androidsdk.views.FeedbackLayout
-        android:id="@+id/wootric_feedback_layout"
+    <com.wootric.androidsdk.views.SurveyLayout
+        android:id="@+id/wootric_survey_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <com.wootric.androidsdk.views.ThankYouLayout
-        android:id="@+id/wootric_thank_you_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <include layout="@layout/wootric_footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

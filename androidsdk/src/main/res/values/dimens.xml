@@ -1,6 +1,6 @@
 <resources>
-    <dimen name="wootric_dialog_header_padding">32dp</dimen>
-    <dimen name="wootric_dialog_header_text_size">24sp</dimen>
+    <dimen name="wootric_survey_layout_header_padding">32dp</dimen>
+    <dimen name="wootric_survey_layout_header_text_size">24sp</dimen>
 
     <!-- RatingBar-->
     <dimen name="wootric_rating_bar_padding_vertical">24dp</dimen>
@@ -14,7 +14,7 @@
     <dimen name="wootric_score_layout_padding_horizontal">4dp</dimen>
     <dimen name="wootric_anchors_margin_bottom">24dp</dimen>
     <dimen name="wootric_anchors_text_size">12sp</dimen>
-    <dimen name="wootric_nps_layout_body_padding">24dp</dimen>
+    <dimen name="wootric_survey_layout_body_padding">24dp</dimen>
 
     <!--  Buttons -->
     <dimen name="wootric_button_height">36dp</dimen>

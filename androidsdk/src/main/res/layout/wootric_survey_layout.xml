@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/wootric_tv_nps_question"
+        android:id="@+id/wootric_survey_layout_tv_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/wootric_dialog_header_background"
+        android:background="@color/wootric_survey_layout_header_background"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/wootric_dialog_header_text_size"
-        android:padding="@dimen/wootric_dialog_header_padding"
+        android:textSize="@dimen/wootric_survey_layout_header_text_size"
+        android:padding="@dimen/wootric_survey_layout_header_padding"
         android:text="@string/wootric_example_nps_question"/>
 
     <RelativeLayout
-        android:id="@+id/wootric_nps_layout_body"
+        android:id="@+id/wootric_survey_layout_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/wootric_nps_layout_body_padding"
+        android:padding="@dimen/wootric_survey_layout_body_padding"
         android:background="@android:color/white">
 
         <LinearLayout
@@ -60,6 +59,29 @@
             android:textSize="@dimen/wootric_anchors_text_size"
             android:text="@string/wootric_example_anchor_likely"/>
 
+        <EditText
+            android:id="@+id/wootric_et_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@drawable/wootric_feedback_hint"
+            android:textCursorDrawable="@drawable/wootric_feedback_cursor"
+            android:layout_alignParentTop="true"
+            android:maxLines="10"
+            android:textSize="@dimen/wootric_et_feedback_text_size"
+            android:paddingBottom="@dimen/wootric_et_feedback_padding"
+            android:paddingTop="@dimen/wootric_et_feedback_padding"
+            android:hint="@string/wootric_example_followup_placeholder"/>
+
+        <TextView
+            android:id="@+id/wootric_btn_edit_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/wootric_survey_layout_header_background"
+            android:layout_alignParentBottom="true"
+            android:text="@string/wootric_example_btn_edit_score" />
+
         <TextView
             android:id="@+id/wootric_btn_submit"
             android:layout_width="wrap_content"
@@ -78,11 +100,10 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/wootric_btn_submit"
             android:layout_toStartOf="@+id/wootric_btn_submit"
-            android:textColor="@color/wootric_dialog_header_background"
+            android:textColor="@color/wootric_survey_layout_header_background"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/wootric_button_margin"
             android:layout_marginEnd="@dimen/wootric_button_margin"
             android:text="@string/wootric_example_btn_dismiss"/>
-
     </RelativeLayout>
-</LinearLayout>
+</merge>

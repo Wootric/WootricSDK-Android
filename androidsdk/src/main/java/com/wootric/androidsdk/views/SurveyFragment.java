@@ -1,19 +1,14 @@
 package com.wootric.androidsdk.views;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
@@ -27,34 +22,24 @@ import com.wootric.androidsdk.utils.ScreenUtils;
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment
-    implements NpsLayout.NpsLayoutListener, FeedbackLayout.FeedbackLayoutListener, ThankYouLayout.ThankYouLayoutListener {
+    implements SurveyLayout.SurveyLayoutListener, ThankYouLayout.ThankYouLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
     private static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
-    private static final String ARG_CURRENT_STATE = "com.wootric.androidsdk.arg.current_state";
+    private static final String ARG_CURRENT_SURVEY_STATE = "com.wootric.androidsdk.arg.current_state";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
     private static final String ARG_ACCESS_TOKEN =  "com.wootric.androidsdk.arg.access_token";
 
-    private NpsLayout mNpsLayout;
-    private FeedbackLayout mFeedbackLayout;
-    private ThankYouLayout mThankYouLayout;
+    private SurveyLayout mSurveyLayout;
 
     private EndUser mEndUser;
     private User mUser;
     private String mOriginUrl;
     private String mAccessToken;
     private Settings mSettings;
-
-    private boolean mSurveyFinished;
-
-    private static final int STATE_NPS = 0;
-    private static final int STATE_FEEDBACK = 1;
-    private static final int STATE_THANK_YOU = 3;
-
-    private int mCurrentState = STATE_NPS;
 
     private boolean mResponseSent;
 
@@ -79,7 +64,6 @@ public class SurveyFragment extends DialogFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(android.app.DialogFragment.STYLE_NO_TITLE, 0);
-
         setupState(savedInstanceState);
     }
 
@@ -87,7 +71,11 @@ public class SurveyFragment extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
-        setupLayoutElements(view);
+
+        mSurveyLayout = (SurveyLayout) view.findViewById(R.id.wootric_survey_layout);
+        mSurveyLayout.setSurveyLayoutListener(this);
+        mSurveyLayout.initWithSettings(mSettings);
+
         return view;
     }
 
@@ -97,33 +85,8 @@ public class SurveyFragment extends DialogFragment
 
         if(savedInstanceState != null) {
             int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
-            mNpsLayout.setSelectedScore(selectedScore);
-        }
-
-        updateState(mCurrentState);
-    }
-
-    private void updateState(int state) {
-        mCurrentState = state;
-
-        if(STATE_NPS == mCurrentState) {
-            mFeedbackLayout.setVisibility(View.GONE);
-            mThankYouLayout.setVisibility(View.GONE);
-            mNpsLayout.setVisibility(View.VISIBLE);
-            mNpsLayout.setTexts(mSettings);
-        } else if(STATE_FEEDBACK == mCurrentState) {
-            mNpsLayout.setVisibility(View.GONE);
-            mThankYouLayout.setVisibility(View.GONE);
-            mFeedbackLayout.setVisibility(View.VISIBLE);
-            mFeedbackLayout.setTextsForScore(mSettings, mNpsLayout.getSelectedScore());
-        } else if(STATE_THANK_YOU == mCurrentState) {
-            mThankYouLayout.setVisibility(View.VISIBLE);
-            mNpsLayout.setVisibility(View.GONE);
-            mFeedbackLayout.setVisibility(View.GONE);
-            mThankYouLayout.setTextsForScore(mSettings, mNpsLayout.getSelectedScore());
-
-            // TODO commented for now
-//            showThankYouLayout();
+            int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
+            mSurveyLayout.setupState(surveyState, selectedScore);
         }
     }
 
@@ -165,20 +128,8 @@ public class SurveyFragment extends DialogFragment
             mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
             mAccessToken = savedInstanceState.getString(ARG_ACCESS_TOKEN);
             mSettings = savedInstanceState.getParcelable(ARG_SETTINGS);
-            mCurrentState = savedInstanceState.getInt(ARG_CURRENT_STATE);
             mResponseSent = savedInstanceState.getBoolean(ARG_RESPONSE_SENT);
         }
-    }
-
-    private void setupLayoutElements(View view) {
-        mNpsLayout = (NpsLayout) view.findViewById(R.id.wootric_nps_layout);
-        mNpsLayout.setNpsLayoutListener(this);
-
-        mFeedbackLayout = (FeedbackLayout) view.findViewById(R.id.wootric_feedback_layout);
-        mFeedbackLayout.setFeedbackLayoutListener(this);
-
-        mThankYouLayout = (ThankYouLayout) view.findViewById(R.id.wootric_thank_you_layout);
-        mThankYouLayout.setThankYouLayoutListener(this);
     }
 
     @Override
@@ -188,87 +139,40 @@ public class SurveyFragment extends DialogFragment
         outState.putParcelable(ARG_USER, mUser);
         outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
         outState.putParcelable(ARG_SETTINGS, mSettings);
-        outState.putInt(ARG_SELECTED_SCORE, mNpsLayout.getSelectedScore());
-        outState.putInt(ARG_CURRENT_STATE, mCurrentState);
+        outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
+        outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onNpsLayoutSubmit() {
-        updateState(STATE_FEEDBACK);
-        createResponse();
-    }
-
-    @Override
-    public void onNpsLayoutDismiss() {
-        mSurveyFinished = true;
-        dismiss();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if(mSurveyFinished) {
-            if(!mResponseSent) {
-                createDecline();
-            } else {
-                showThankYouLayout();
-            }
-
-            Wootric.notifySurveyFinished();
-        }
-    }
-
-    @Override
-    public void onFeedbackDismiss() {
-        mSurveyFinished = true;
-        dismiss();
-    }
-
-    @Override
-    public void onFeedbackSubmit() {
-        createResponse();
-        updateState(STATE_THANK_YOU);
-    }
-
-    private void createResponse() {
-        mWootricApiClient.createResponse(mEndUser, mAccessToken, mOriginUrl,
-                mNpsLayout.getSelectedScore(), mFeedbackLayout.getFeedback());
-
-        mResponseSent = true;
     }
 
     private void createDecline() {
         mWootricApiClient.createDecline(mEndUser, mAccessToken, mOriginUrl);
     }
 
-    @Override
-    public void onFeedbackEditScoreClick() {
-        updateState(STATE_NPS);
-    }
-
     private void showThankYouLayout() {
         dismiss();
-
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                .setMessage(mSettings.getFinalThankYou())
-                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).create();
-
-        alertDialog.show();
-
-        Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        btnPositive.setTextColor(getResources().getColor(R.color.wootric_dialog_header_background));
     }
 
     @Override
     public void onThankYouDoneClick() {
         dismiss();
+    }
+
+    @Override
+    public void onSurveySubmit(int score, String text) {
+        mWootricApiClient.createResponse(mEndUser, mAccessToken, mOriginUrl, score, text);
+        mResponseSent = true;
+    }
+
+    @Override
+    public void onSurveyFinished() {
+        if(!mResponseSent) {
+            createDecline();
+        } else {
+            showThankYouLayout();
+        }
+
+        Wootric.notifySurveyFinished();
     }
 }

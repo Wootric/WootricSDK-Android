@@ -204,6 +204,10 @@ public class RatingBar extends View implements View.OnTouchListener {
         return mSelectedScore;
     }
 
+    public boolean isScoreSelected() {
+        return getSelectedScore() != SCORE_NOT_SET;
+    }
+
     public void setSelectedScore(int selectedScore) {
         boolean scoreChanged = (selectedScore != SCORE_NOT_SET && selectedScore != mSelectedScore);
 

@@ -41,7 +41,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/wootric_dialog_header_background"
+            android:textColor="@color/wootric_survey_layout_header_background"
             android:text="@string/wootric_example_btn_dismiss"/>
     </RelativeLayout>
 </merge>
