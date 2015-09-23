@@ -226,6 +226,26 @@ public class WootricTest {
     }
 
     /**
+     * setFacebookPageId(String facebookPage)
+     */
+    @Test
+    public void setsFacebookPage() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setFacebookPage("https://www.facebook.com/test");
+        assertThat(wootric.settings.getFacebookPageId()).isEqualTo("https://www.facebook.com/test");
+    }
+
+    /**
+     * setTwitterPage(String tweeterPage)
+     */
+    @Test
+    public void setsTweeterPage() {
+        Wootric wootric = Wootric.singleton;
+        wootric.setTwitterPage("https://www.tweeter.com/test");
+        assertThat(wootric.settings.getTwitterPage()).isEqualTo("https://www.tweeter.com/test");
+    }
+
+    /**
      * survey()
      */
 

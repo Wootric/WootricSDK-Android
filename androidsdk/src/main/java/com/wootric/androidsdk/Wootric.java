@@ -6,6 +6,7 @@ import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
 import com.wootric.androidsdk.objects.CustomMessage;
+import com.wootric.androidsdk.objects.CustomThankYouMessage;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -98,6 +99,18 @@ public class Wootric {
         settings.setRecommendTarget(recommendTarget);
     }
 
+    public void setFacebookPage(String facebookPage) {
+        settings.setFacebookPageId(facebookPage);
+    }
+
+    public void setTwitterPage(String tweeterPage) {
+        settings.setTwitterPage(tweeterPage);
+    }
+
+    public void setCustomThankYouMessage(CustomThankYouMessage customThankYouMessage) {
+        settings.setCustomThankYouMessage(customThankYouMessage);
+    }
+
     public void survey() {
         if(!permissionsValidator.check() || surveyInProgress)
             return;
@@ -129,7 +142,7 @@ public class Wootric {
         user = new User(clientId, clientSecret, accountToken);
         settings = new Settings();
         preferencesUtils = new PreferencesUtils(context);
-        permissionsValidator = new PermissionsValidator(context.getApplicationContext());
+        permissionsValidator = new PermissionsValidator(context);
     }
 
     SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,

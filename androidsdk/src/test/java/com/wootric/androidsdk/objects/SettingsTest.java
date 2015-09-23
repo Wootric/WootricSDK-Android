@@ -220,6 +220,28 @@ public class SettingsTest {
         assertThat(settings.getFollowupPlaceholder(10)).isEqualTo("followup placeholder");
     }
 
+    /**
+     * getThankYouMessage(int score)
+     */
+    @Test
+    public void whenCustomThankYouIsSet_returnsCustomThankYou() {
+        Settings settings = new Settings();
+        CustomThankYouMessage customThankYouMessage = new CustomThankYouMessage();
+        customThankYouMessage.setThankYou("thank you");
+        settings.setCustomThankYouMessage(customThankYouMessage);
+
+        assertThat(settings.getThankYouMessage(10)).isEqualTo("thank you");
+    }
+
+    @Test
+    public void whenCustomThankYouIsNotSet_returnsLocalizedThankYou() {
+        Settings settings = new Settings();
+        mockLocalizedTexts();
+        settings.setLocalizedTexts(mockLocalizedTexts);
+
+        assertThat(settings.getThankYouMessage(10)).isEqualTo("Thank you!");
+    }
+
 
     private static final String SETTINGS_JSON = "{" +
             "\"first_survey\":30," +

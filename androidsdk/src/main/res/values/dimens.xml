@@ -29,4 +29,7 @@
     <!-- ThankYouLayout-->
     <dimen name="wootric_thank_you_layout_padding">24dp</dimen>
     <dimen name="wootric_tv_thank_you_size">24sp</dimen>
+    <dimen name="wootric_social_height">48dp</dimen>
+    <dimen name="wootric_social_tv_padding_vertical">16dp</dimen>
+    <dimen name="wootric_tv_thank_you_margin">16dp</dimen>
 </resources>

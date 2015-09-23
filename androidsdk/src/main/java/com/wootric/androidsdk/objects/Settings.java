@@ -39,6 +39,10 @@ public class Settings implements Parcelable {
     private String languageCode;
     private String productName;
     private String recommendTarget;
+    private String facebookPageId;
+    private String twitterPage;
+
+    private CustomThankYouMessage customThankYouMessage;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -136,6 +140,20 @@ public class Settings implements Parcelable {
         }
 
         return followupPlaceholder;
+    }
+
+    public String getThankYouMessage(int score) {
+        String thankYouMessage = null;
+
+        if(customThankYouMessage != null) {
+            thankYouMessage = customThankYouMessage.getThankYouForScore(score);
+        }
+
+        if(customThankYouMessage == null) {
+            thankYouMessage = localizedTexts.getFinalThankYou();
+        }
+
+        return thankYouMessage;
     }
 
     public String getFinalThankYou() {
@@ -238,6 +256,33 @@ public class Settings implements Parcelable {
         this.recommendTarget = recommendTarget;
     }
 
+    public String getFacebookPageId() {
+        return facebookPageId;
+    }
+
+    public void setFacebookPageId(String facebookPageId) {
+        this.facebookPageId = facebookPageId;
+    }
+
+    public String getTwitterPage() {
+        return twitterPage;
+    }
+
+    public void setTwitterPage(String twitterPage) {
+        this.twitterPage = twitterPage;
+    }
+
+    public CustomThankYouMessage getCustomThankYouMessage() {
+        return customThankYouMessage;
+    }
+
+    public void setCustomThankYouMessage(CustomThankYouMessage customThankYouMessage) {
+        this.customThankYouMessage = customThankYouMessage;
+    }
+
+    public Settings() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -245,27 +290,46 @@ public class Settings implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.firstSurvey);
+        dest.writeValue(this.firstSurvey);
         dest.writeInt(this.adminPanelTimeDelay);
         dest.writeParcelable(this.localizedTexts, 0);
         dest.writeParcelable(this.adminPanelCustomMessage, 0);
         dest.writeParcelable(this.localCustomMessage, 0);
+        dest.writeInt(this.timeDelay);
         dest.writeByte(surveyImmediately ? (byte) 1 : (byte) 0);
-    }
-
-    public Settings() {
+        dest.writeValue(this.dailyResponseCap);
+        dest.writeValue(this.registeredPercent);
+        dest.writeValue(this.visitorPercent);
+        dest.writeValue(this.resurveyThrottle);
+        dest.writeString(this.languageCode);
+        dest.writeString(this.productName);
+        dest.writeString(this.recommendTarget);
+        dest.writeString(this.facebookPageId);
+        dest.writeString(this.twitterPage);
+        dest.writeParcelable(this.customThankYouMessage, 0);
     }
 
     private Settings(Parcel in) {
-        this.firstSurvey = in.readLong();
+        this.firstSurvey = (Long) in.readValue(Long.class.getClassLoader());
         this.adminPanelTimeDelay = in.readInt();
         this.localizedTexts = in.readParcelable(LocalizedTexts.class.getClassLoader());
         this.adminPanelCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
         this.localCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
+        this.timeDelay = in.readInt();
         this.surveyImmediately = in.readByte() != 0;
+        this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.resurveyThrottle = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.languageCode = in.readString();
+        this.productName = in.readString();
+        this.recommendTarget = in.readString();
+        this.facebookPageId = in.readString();
+        this.twitterPage = in.readString();
+        this.customThankYouMessage = in.readParcelable(CustomThankYouMessage.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Settings> CREATOR = new Parcelable.Creator<Settings>() {
+    public static final Creator<Settings> CREATOR = new Creator<Settings>() {
         public Settings createFromParcel(Parcel source) {
             return new Settings(source);
         }

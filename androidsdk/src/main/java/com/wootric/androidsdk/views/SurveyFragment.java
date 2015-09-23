@@ -22,7 +22,7 @@ import com.wootric.androidsdk.utils.ScreenUtils;
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment
-    implements SurveyLayout.SurveyLayoutListener, ThankYouLayout.ThankYouLayoutListener {
+    implements SurveyLayout.SurveyLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -152,11 +152,13 @@ public class SurveyFragment extends DialogFragment
 
     private void showThankYouLayout() {
         dismiss();
-    }
 
-    @Override
-    public void onThankYouDoneClick() {
-        dismiss();
+        ThankYouFragment.show(
+                getActivity(),
+                mSettings,
+                mSurveyLayout.getSelectedScore(),
+                mSurveyLayout.getFeedback()
+        );
     }
 
     @Override

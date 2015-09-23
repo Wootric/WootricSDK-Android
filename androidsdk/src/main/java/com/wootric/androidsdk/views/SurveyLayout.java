@@ -339,6 +339,10 @@ public class SurveyLayout extends LinearLayout
         return mCurrentState;
     }
 
+    public String getFeedback() {
+        return mEtFeedback.getText().toString();
+    }
+
     public interface SurveyLayoutListener {
         void onSurveySubmit(int score, String text);
         void onSurveyFinished();
