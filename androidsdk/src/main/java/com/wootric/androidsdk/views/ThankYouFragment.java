@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.SocialHandler;
 
 /**
  * Created by maciejwitowski on 9/21/15.
@@ -32,6 +35,8 @@ public class ThankYouFragment extends DialogFragment
     private Settings mSettings;
     private int mScore;
     private String mFeedback;
+
+    private SocialHandler mSocialHandler;
 
     public static void show(Context context, Settings settings, int score, String feedback) {
         if(context == null)
@@ -54,6 +59,8 @@ public class ThankYouFragment extends DialogFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(android.app.DialogFragment.STYLE_NO_TITLE, 0);
+
+        mSocialHandler = new SocialHandler(getActivity());
 
         if(savedInstanceState == null) {
             Bundle args = getArguments();
@@ -100,6 +107,33 @@ public class ThankYouFragment extends DialogFragment
                 int screenHeight = ScreenUtils.getScreenHeight(activity) *3/5;
                 dialog.getWindow().setLayout(screenWidth, screenHeight);
             }
+        }
+    }
+
+    @Override
+    public void onFacebookBtnClick() {
+        if(mSocialHandler == null) return;
+
+        String facebookId = mSettings.getFacebookPageId();
+        mSocialHandler.goToFacebook(facebookId);
+    }
+
+    @Override
+    public void onTwitterBtnClick() {
+        if(mSocialHandler == null) return;
+
+        String twitterPage = mSettings.getTwitterPage();
+        mSocialHandler.goToTwitter(twitterPage, mFeedback);
+    }
+
+    @Override
+    public void onThankYouActionClick() {
+        final Uri uri = mSettings.getThankYouLinkUri(mScore, mFeedback);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        final Activity activity = getActivity();
+
+        if(activity != null) {
+            activity.startActivity(intent);
         }
     }
 

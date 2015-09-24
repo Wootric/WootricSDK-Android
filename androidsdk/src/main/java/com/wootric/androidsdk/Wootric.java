@@ -99,7 +99,7 @@ public class Wootric {
         settings.setRecommendTarget(recommendTarget);
     }
 
-    public void setFacebookPage(String facebookPage) {
+    public void setFacebookPageId(String facebookPage) {
         settings.setFacebookPageId(facebookPage);
     }
 

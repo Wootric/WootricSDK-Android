@@ -1,5 +1,6 @@
 package com.wootric.androidsdk.objects;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,16 +15,17 @@ public class CustomThankYou implements Parcelable {
     private String promoterText;
 
     private String linkText;
-    private String linkUrl;
     private String detractorLinkText;
-    private String detractorLinkUrl;
     private String passiveLinkText;
-    private String passiveLinkUrl;
     private String promoterLinkText;
-    private String promoterLinkUrl;
+
+    private Uri linkUri;
+    private Uri detractorLinkUri;
+    private Uri passiveLinkUri;
+    private Uri promoterLinkUri;
 
     private boolean scoreInUrl;
-    private boolean textInUrl;
+    private boolean commentInUrl;
 
     public String getTextForScore(int score) {
         if(score <= 6 && detractorText != null) {
@@ -49,15 +51,35 @@ public class CustomThankYou implements Parcelable {
         }
     }
 
-    public String getLinkUrlForScore(int score) {
-        if(score <= 6 && detractorLinkUrl != null) {
-            return detractorLinkUrl;
-        } else if(score >= 7 && score <= 8 && passiveLinkUrl != null) {
-            return passiveLinkUrl;
-        } else if(score >= 9 && score <= 10 && promoterLinkUrl != null) {
-            return promoterLinkUrl;
+    public Uri getLinkUri(int score, String comment) {
+        Uri uri = getLinkUriForScore(score);
+
+        if(uri != null) {
+            if(scoreInUrl) {
+                uri = uri.buildUpon()
+                        .appendQueryParameter("wootric_score", String.valueOf(score))
+                        .build();
+            }
+
+            if(commentInUrl) {
+                uri = uri.buildUpon()
+                        .appendQueryParameter("wootric_comment", comment)
+                        .build();
+            }
+        }
+
+        return uri;
+    }
+
+    private Uri getLinkUriForScore(int score) {
+        if(score <= 6 && detractorLinkUri != null) {
+            return detractorLinkUri;
+        } else if(score >= 7 && score <= 8 && passiveLinkUri != null) {
+            return passiveLinkUri;
+        } else if(score >= 9 && score <= 10 && promoterLinkUri != null) {
+            return promoterLinkUri;
         } else {
-            return linkUrl;
+            return linkUri;
         }
     }
 
@@ -81,40 +103,40 @@ public class CustomThankYou implements Parcelable {
         this.linkText = linkText;
     }
 
-    public void setLinkUrl(String linkUrl) {
-        this.linkUrl = linkUrl;
+    public void setLinkUri(Uri linkUri) {
+        this.linkUri = linkUri;
     }
 
     public void setDetractorLinkText(String detractorLinkText) {
         this.detractorLinkText = detractorLinkText;
     }
 
-    public void setDetractorLinkUrl(String detractorLinkUrl) {
-        this.detractorLinkUrl = detractorLinkUrl;
+    public void setDetractorLinkUri(Uri detractorLinkUri) {
+        this.detractorLinkUri = detractorLinkUri;
     }
 
     public void setPassiveLinkText(String passiveLinkText) {
         this.passiveLinkText = passiveLinkText;
     }
 
-    public void setPassiveLinkUrl(String passiveLinkUrl) {
-        this.passiveLinkUrl = passiveLinkUrl;
+    public void setPassiveLinkUri(Uri passiveLinkUrl) {
+        this.passiveLinkUri = passiveLinkUrl;
     }
 
     public void setPromoterLinkText(String promoterLinkText) {
         this.promoterLinkText = promoterLinkText;
     }
 
-    public void setPromoterLinkUrl(String promoterLinkUrl) {
-        this.promoterLinkUrl = promoterLinkUrl;
+    public void setPromoterLinkUri(Uri promoterLinkUrl) {
+        this.promoterLinkUri = promoterLinkUrl;
     }
 
     public void setScoreInUrl(boolean scoreInUrl) {
         this.scoreInUrl = scoreInUrl;
     }
 
-    public void setTextInUrl(boolean textInUrl) {
-        this.textInUrl = textInUrl;
+    public void setCommentInUrl(boolean commentInUrl) {
+        this.commentInUrl = commentInUrl;
     }
 
 
@@ -130,15 +152,15 @@ public class CustomThankYou implements Parcelable {
         dest.writeString(this.passiveText);
         dest.writeString(this.promoterText);
         dest.writeString(this.linkText);
-        dest.writeString(this.linkUrl);
         dest.writeString(this.detractorLinkText);
-        dest.writeString(this.detractorLinkUrl);
         dest.writeString(this.passiveLinkText);
-        dest.writeString(this.passiveLinkUrl);
         dest.writeString(this.promoterLinkText);
-        dest.writeString(this.promoterLinkUrl);
+        dest.writeParcelable(this.linkUri, 0);
+        dest.writeParcelable(this.detractorLinkUri, 0);
+        dest.writeParcelable(this.passiveLinkUri, 0);
+        dest.writeParcelable(this.promoterLinkUri, 0);
         dest.writeByte(scoreInUrl ? (byte) 1 : (byte) 0);
-        dest.writeByte(textInUrl ? (byte) 1 : (byte) 0);
+        dest.writeByte(commentInUrl ? (byte) 1 : (byte) 0);
     }
 
     public CustomThankYou() {
@@ -150,15 +172,15 @@ public class CustomThankYou implements Parcelable {
         this.passiveText = in.readString();
         this.promoterText = in.readString();
         this.linkText = in.readString();
-        this.linkUrl = in.readString();
         this.detractorLinkText = in.readString();
-        this.detractorLinkUrl = in.readString();
         this.passiveLinkText = in.readString();
-        this.passiveLinkUrl = in.readString();
         this.promoterLinkText = in.readString();
-        this.promoterLinkUrl = in.readString();
+        this.linkUri = in.readParcelable(Uri.class.getClassLoader());
+        this.detractorLinkUri = in.readParcelable(Uri.class.getClassLoader());
+        this.passiveLinkUri = in.readParcelable(Uri.class.getClassLoader());
+        this.promoterLinkUri = in.readParcelable(Uri.class.getClassLoader());
         this.scoreInUrl = in.readByte() != 0;
-        this.textInUrl = in.readByte() != 0;
+        this.commentInUrl = in.readByte() != 0;
     }
 
     public static final Creator<CustomThankYou> CREATOR = new Creator<CustomThankYou>() {

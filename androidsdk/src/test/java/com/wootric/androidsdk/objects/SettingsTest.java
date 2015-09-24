@@ -262,24 +262,13 @@ public class SettingsTest {
     }
 
     /**
-     * getThankYouLinkUrl(int score)
+     * getThankYouLinkUri(int score)
      */
     @Test
-    public void whenCustomThankYouLinkUrlIsNotSet_returnsNull() {
+    public void whenCustomThankYouLinkUriIsNotSet_returnsNull() {
         Settings settings = new Settings();
-        assertThat(settings.getThankYouLinkUrl(10)).isNull();
+        assertThat(settings.getThankYouLinkUri(10, "feedback")).isNull();
     }
-
-    @Test
-    public void whenCustomThankYouLinkUrlIsSet_returnsIt() {
-        Settings settings = new Settings();
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setLinkUrl("Link url");
-        settings.setCustomThankYou(customThankYou);
-
-        assertThat(settings.getThankYouLinkUrl(10)).isEqualTo("Link text");
-    }
-
 
     private static final String SETTINGS_JSON = "{" +
             "\"first_survey\":30," +

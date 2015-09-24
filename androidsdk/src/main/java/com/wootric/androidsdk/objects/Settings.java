@@ -1,5 +1,6 @@
 package com.wootric.androidsdk.objects;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -161,9 +162,15 @@ public class Settings implements Parcelable {
                 null : customThankYou.getLinkTextForScore(score);
     }
 
-    public String getThankYouLinkUrl(int score) {
+    public Uri getThankYouLinkUri(int score, String comment) {
         return (customThankYou == null) ?
-                null : customThankYou.getLinkUrlForScore(score);
+                null :  customThankYou.getLinkUri(score, comment);
+    }
+
+    public boolean isThankYouActionConfigured(int score, String comment) {
+        return customThankYou != null &&
+                customThankYou.getLinkTextForScore(score) != null &&
+                customThankYou.getLinkUri(score, comment) != null;
     }
 
     public String getFinalThankYou() {

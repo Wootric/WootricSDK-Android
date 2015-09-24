@@ -1,10 +1,13 @@
 package com.wootric.androidsdk_demo;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.objects.CustomMessage;
+import com.wootric.androidsdk.objects.CustomThankYou;
 
 import java.util.HashMap;
 
@@ -34,6 +37,8 @@ public class MainActivity extends Activity {
         wootric.setProductName("Wootric");
         wootric.setRecommendTarget("Best Friend");
         wootric.setLanguageCode("PL");
+        wootric.setFacebookPageId("123456");
+        wootric.setTwitterPage("wootric");
 
         CustomMessage customMessage = new CustomMessage();
         customMessage.setFollowupQuestion("custom followup");
@@ -46,6 +51,33 @@ public class MainActivity extends Activity {
         customMessage.setPromoterPlaceholderText("custom promoter placeholder");
 
         wootric.setCustomMessage(customMessage);
+
+        CustomThankYou customThankYou = new CustomThankYou();
+        customThankYou.setText("THANK YOU!");
+        customThankYou.setDetractorText("Detractor thank you");
+        customThankYou.setPassiveText("Passive thank you");
+        customThankYou.setPromoterText("Promoter thank you");
+        customThankYou.setLinkText("CLICK");
+        customThankYou.setDetractorLinkText("Detractor click");
+        customThankYou.setPassiveLinkText("Passive click");
+        customThankYou.setPromoterLinkText("Promoter click");
+        customThankYou.setLinkUri(Uri.parse("http://wootric.com/thank_you"));
+
+        customThankYou.setDetractorLinkUri(Uri.parse("http://wootric.com/detractor_thank_you"));
+        customThankYou.setPassiveLinkUri(Uri.parse("http://wootric.com/passive_thank_you"));
+        customThankYou.setPromoterLinkUri(Uri.parse("http://wootric.com/promoter_thank_you"));
+        customThankYou.setScoreInUrl(true);
+        customThankYou.setCommentInUrl(true);
+        wootric.setCustomThankYou(customThankYou);
+
+        wootric.survey();
+    }
+
+    public void showSurvey(View view) {
+        Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        wootric.setEndUserEmail("nps@example.com");
+        wootric.setOriginUrl("http://www.wootric.com");
+        wootric.setSurveyImmediately(true);
         wootric.survey();
     }
 }

@@ -231,7 +231,7 @@ public class WootricTest {
     @Test
     public void setsFacebookPage() {
         Wootric wootric = Wootric.singleton;
-        wootric.setFacebookPage("https://www.facebook.com/test");
+        wootric.setFacebookPageId("https://www.facebook.com/test");
         assertThat(wootric.settings.getFacebookPageId()).isEqualTo("https://www.facebook.com/test");
     }
 

@@ -23,8 +23,7 @@
             android:text="@string/tv_facebook"
             android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
             android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
-            android:gravity="center"
-            android:visibility="gone"/>
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/wootric_tv_twitter"
@@ -34,22 +33,19 @@
             android:text="@string/tv_twitter"
             android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
             android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
-            android:gravity="center"
-            android:visibility="gone"/>
+            android:gravity="center"/>
 
-
-
-        <!--<Button-->
-            <!--android:id="@+id/wootric_btn_thank_you_action"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="12dp"-->
-            <!--android:textSize="16sp"-->
-            <!--android:background="@color/wootric_brand_color"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:elevation="8dp"-->
-            <!--android:text="@string/wootric_btn_thank_you_action"/>-->
+        <Button
+            android:id="@+id/wootric_btn_thank_you_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:background="@color/wootric_brand_color"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/wootric_tv_twitter"
+            android:elevation="8dp"
+            android:text="@string/wootric_btn_thank_you_action"/>
 
         <TextView
             android:id="@+id/wootric_btn_thank_you_done"

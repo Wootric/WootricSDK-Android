@@ -86,43 +86,4 @@ public class CustomThankYouTest {
         assertThat(customThankYou.getLinkTextForScore(0)).isEqualTo("thank you");
         assertThat(customThankYou.getLinkTextForScore(9)).isEqualTo("thank you");
     }
-
-    /**
-     * getLinkUrlForScore(int score)
-     */
-    @Test
-    public void returnsDetractorLinkUrl_forDetractorScore() throws Exception {
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setDetractorLinkUrl("detractor");
-
-        assertThat(customThankYou.getLinkUrlForScore(0)).isEqualTo("detractor");
-        assertThat(customThankYou.getLinkUrlForScore(6)).isEqualTo("detractor");
-    }
-
-    @Test
-    public void returnsPassiveLinkUrl_forPassiveScore() throws Exception {
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setPassiveLinkUrl("passive");
-
-        assertThat(customThankYou.getLinkUrlForScore(7)).isEqualTo("passive");
-        assertThat(customThankYou.getLinkUrlForScore(8)).isEqualTo("passive");
-    }
-
-    @Test
-    public void returnsPromoterLinkUrl_forPromoterScore() throws Exception {
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setPromoterLinkUrl("promoter");
-
-        assertThat(customThankYou.getLinkUrlForScore(9)).isEqualTo("promoter");
-        assertThat(customThankYou.getLinkUrlForScore(10)).isEqualTo("promoter");
-    }
-
-    @Test
-    public void returnsDefaultLinkUrl() throws Exception {
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setLinkUrl("thank you");
-
-        assertThat(customThankYou.getLinkUrlForScore(0)).isEqualTo("thank you");
-        assertThat(customThankYou.getLinkUrlForScore(9)).isEqualTo("thank you");
-    }
 }
