@@ -226,9 +226,9 @@ public class SettingsTest {
     @Test
     public void whenCustomThankYouIsSet_returnsCustomThankYou() {
         Settings settings = new Settings();
-        CustomThankYouMessage customThankYouMessage = new CustomThankYouMessage();
-        customThankYouMessage.setThankYou("thank you");
-        settings.setCustomThankYouMessage(customThankYouMessage);
+        CustomThankYou customThankYou = new CustomThankYou();
+        customThankYou.setText("thank you");
+        settings.setCustomThankYou(customThankYou);
 
         assertThat(settings.getThankYouMessage(10)).isEqualTo("thank you");
     }
@@ -240,6 +240,44 @@ public class SettingsTest {
         settings.setLocalizedTexts(mockLocalizedTexts);
 
         assertThat(settings.getThankYouMessage(10)).isEqualTo("Thank you!");
+    }
+
+    /**
+     * getThankYouLinkText(int score)
+     */
+    @Test
+    public void whenCustomThankYouLinkIsNotSet_returnsNull() {
+        Settings settings = new Settings();
+        assertThat(settings.getThankYouLinkText(10)).isNull();
+    }
+
+    @Test
+    public void whenCustomThankYouLinkIsSet_returnsIt() {
+        Settings settings = new Settings();
+        CustomThankYou customThankYou = new CustomThankYou();
+        customThankYou.setLinkText("Link text");
+        settings.setCustomThankYou(customThankYou);
+
+        assertThat(settings.getThankYouLinkText(10)).isEqualTo("Link text");
+    }
+
+    /**
+     * getThankYouLinkUrl(int score)
+     */
+    @Test
+    public void whenCustomThankYouLinkUrlIsNotSet_returnsNull() {
+        Settings settings = new Settings();
+        assertThat(settings.getThankYouLinkUrl(10)).isNull();
+    }
+
+    @Test
+    public void whenCustomThankYouLinkUrlIsSet_returnsIt() {
+        Settings settings = new Settings();
+        CustomThankYou customThankYou = new CustomThankYou();
+        customThankYou.setLinkUrl("Link url");
+        settings.setCustomThankYou(customThankYou);
+
+        assertThat(settings.getThankYouLinkUrl(10)).isEqualTo("Link text");
     }
 
 

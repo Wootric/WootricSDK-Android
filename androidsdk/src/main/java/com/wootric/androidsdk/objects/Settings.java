@@ -42,7 +42,7 @@ public class Settings implements Parcelable {
     private String facebookPageId;
     private String twitterPage;
 
-    private CustomThankYouMessage customThankYouMessage;
+    private CustomThankYou customThankYou;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -145,15 +145,25 @@ public class Settings implements Parcelable {
     public String getThankYouMessage(int score) {
         String thankYouMessage = null;
 
-        if(customThankYouMessage != null) {
-            thankYouMessage = customThankYouMessage.getThankYouForScore(score);
+        if(customThankYou != null) {
+            thankYouMessage = customThankYou.getTextForScore(score);
         }
 
-        if(customThankYouMessage == null) {
+        if(customThankYou == null) {
             thankYouMessage = localizedTexts.getFinalThankYou();
         }
 
         return thankYouMessage;
+    }
+
+    public String getThankYouLinkText(int score) {
+        return (customThankYou == null) ?
+                null : customThankYou.getLinkTextForScore(score);
+    }
+
+    public String getThankYouLinkUrl(int score) {
+        return (customThankYou == null) ?
+                null : customThankYou.getLinkUrlForScore(score);
     }
 
     public String getFinalThankYou() {
@@ -272,12 +282,12 @@ public class Settings implements Parcelable {
         this.twitterPage = twitterPage;
     }
 
-    public CustomThankYouMessage getCustomThankYouMessage() {
-        return customThankYouMessage;
+    public CustomThankYou getCustomThankYou() {
+        return customThankYou;
     }
 
-    public void setCustomThankYouMessage(CustomThankYouMessage customThankYouMessage) {
-        this.customThankYouMessage = customThankYouMessage;
+    public void setCustomThankYou(CustomThankYou customThankYou) {
+        this.customThankYou = customThankYou;
     }
 
     public Settings() {
@@ -306,7 +316,7 @@ public class Settings implements Parcelable {
         dest.writeString(this.recommendTarget);
         dest.writeString(this.facebookPageId);
         dest.writeString(this.twitterPage);
-        dest.writeParcelable(this.customThankYouMessage, 0);
+        dest.writeParcelable(this.customThankYou, 0);
     }
 
     private Settings(Parcel in) {
@@ -326,7 +336,7 @@ public class Settings implements Parcelable {
         this.recommendTarget = in.readString();
         this.facebookPageId = in.readString();
         this.twitterPage = in.readString();
-        this.customThankYouMessage = in.readParcelable(CustomThankYouMessage.class.getClassLoader());
+        this.customThankYou = in.readParcelable(CustomThankYou.class.getClassLoader());
     }
 
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {

@@ -6,7 +6,7 @@ import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
 import com.wootric.androidsdk.objects.CustomMessage;
-import com.wootric.androidsdk.objects.CustomThankYouMessage;
+import com.wootric.androidsdk.objects.CustomThankYou;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -107,8 +107,8 @@ public class Wootric {
         settings.setTwitterPage(tweeterPage);
     }
 
-    public void setCustomThankYouMessage(CustomThankYouMessage customThankYouMessage) {
-        settings.setCustomThankYouMessage(customThankYouMessage);
+    public void setCustomThankYou(CustomThankYou customThankYou) {
+        settings.setCustomThankYou(customThankYou);
     }
 
     public void survey() {
