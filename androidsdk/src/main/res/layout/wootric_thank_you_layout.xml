@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-    <RelativeLayout
-        android:id="@+id/wootric_thank_you_layout_body"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wootric_thank_you_layout_body"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/wootric_thank_you_layout_padding"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/wootric_tv_thank_you"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/wootric_tv_thank_you_size"
+        android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
+        android:text="@string/wootric_thank_you" />
+
+    <TextView
+        android:id="@+id/wootric_tv_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/wootric_social_height"
+        android:layout_below="@+id/wootric_tv_thank_you"
+        android:drawableLeft="@drawable/ic_facebook"
+        android:drawableStart="@drawable/ic_facebook"
+        android:text="@string/tv_facebook"
+        android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
+        android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/wootric_tv_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/wootric_social_height"
+        android:layout_below="@+id/wootric_tv_facebook"
+        android:drawableLeft="@drawable/ic_twitter"
+        android:drawableStart="@drawable/ic_twitter"
+        android:text="@string/tv_twitter"
+        android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
+        android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/wootric_btn_thank_you_action"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/wootric_thank_you_layout_padding"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@color/wootric_brand_color"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/wootric_tv_twitter"
+        android:elevation="8dp"
+        android:text="@string/wootric_btn_thank_you_action"/>
 
-        <TextView
-            android:id="@+id/wootric_tv_thank_you"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/wootric_tv_thank_you_size"
-            android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
-            android:text="@string/wootric_thank_you" />
-
-        <TextView
-            android:id="@+id/wootric_tv_facebook"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/wootric_social_height"
-            android:layout_below="@+id/wootric_tv_thank_you"
-            android:text="@string/tv_facebook"
-            android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
-            android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/wootric_tv_twitter"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/wootric_social_height"
-            android:layout_below="@+id/wootric_tv_facebook"
-            android:text="@string/tv_twitter"
-            android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
-            android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
-            android:gravity="center"/>
-
-        <Button
-            android:id="@+id/wootric_btn_thank_you_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:textSize="16sp"
-            android:background="@color/wootric_brand_color"
-            android:textColor="@android:color/white"
-            android:layout_below="@+id/wootric_tv_twitter"
-            android:elevation="8dp"
-            android:text="@string/wootric_btn_thank_you_action"/>
-
-        <TextView
-            android:id="@+id/wootric_btn_thank_you_done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/wootric_survey_layout_header_background"
-            android:text="@string/wootric_example_btn_dismiss"/>
-    </RelativeLayout>
-</merge>
+    <TextView
+        android:id="@+id/wootric_btn_thank_you_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/wootric_survey_layout_header_background"
+        android:padding="@dimen/wootric_btn_padding"
+        android:text="@string/wootric_example_btn_dismiss"/>
+</RelativeLayout>

@@ -80,6 +80,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="@color/wootric_survey_layout_header_background"
+            android:padding="@dimen/wootric_btn_padding"
             android:layout_alignParentBottom="true"
             android:text="@string/wootric_example_btn_edit_score" />
 
@@ -91,6 +92,7 @@
             android:layout_alignParentEnd="true"
             android:textColor="@android:color/black"
             android:layout_alignParentBottom="true"
+            android:padding="@dimen/wootric_btn_padding"
             android:alpha="0.26"
             android:enabled="false"
             android:text="@string/wootric_example_btn_submit"/>
@@ -103,8 +105,14 @@
             android:layout_toStartOf="@+id/wootric_btn_submit"
             android:textColor="@color/wootric_survey_layout_header_background"
             android:layout_alignParentBottom="true"
+            android:padding="@dimen/wootric_btn_padding"
             android:layout_marginRight="@dimen/wootric_button_margin"
             android:layout_marginEnd="@dimen/wootric_button_margin"
             android:text="@string/wootric_example_btn_dismiss"/>
     </RelativeLayout>
+
+    <com.wootric.androidsdk.views.ThankYouLayout
+        android:id="@+id/wootric_thank_you_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </merge>

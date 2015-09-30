@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.wootric.androidsdk.views.SurveyLayout
+    <com.wootric.androidsdk.views.SurveyLayoutPortrait
         android:id="@+id/wootric_survey_layout"
         android:layout_width="wrap_content"
         android:orientation="vertical"

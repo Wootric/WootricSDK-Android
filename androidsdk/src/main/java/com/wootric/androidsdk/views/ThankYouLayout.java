@@ -2,6 +2,7 @@ package com.wootric.androidsdk.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -44,7 +45,7 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void init(Context context) {
-        inflate(context, R.layout.wootric_thank_you_layout, this);
+        LayoutInflater.from(context).inflate(R.layout.wootric_thank_you_layout, this);
 
         mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
         mTvThankYou = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you);
@@ -145,12 +146,5 @@ public class ThankYouLayout extends RelativeLayout {
                         !mFeedback.isEmpty();
 
         mTvTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
-    }
-
-    public interface ThankYouLayoutListener {
-        void onFacebookBtnClick();
-        void onTwitterBtnClick();
-        void onThankYouActionClick();
-        void onThankYouFinished();
     }
 }

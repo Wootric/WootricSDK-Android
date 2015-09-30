@@ -3,7 +3,9 @@ package com.wootric.androidsdk.views;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,12 +22,13 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.SocialHandler;
 
 /**
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment
-    implements SurveyLayout.SurveyLayoutListener {
+    implements SurveyLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -47,7 +50,8 @@ public class SurveyFragment extends DialogFragment
 
     private boolean mResponseSent;
 
-    private final WootricApiClient mWootricApiClient = new WootricApiClient();
+    private WootricApiClient mWootricApiClient;
+    private SocialHandler mSocialHandler;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
                                              Settings settings) {
@@ -69,6 +73,9 @@ public class SurveyFragment extends DialogFragment
         super.onCreate(savedInstanceState);
         setStyle(android.app.DialogFragment.STYLE_NO_TITLE, 0);
         setupState(savedInstanceState);
+
+        mSocialHandler = new SocialHandler(getActivity());
+        mWootricApiClient = new WootricApiClient();
     }
 
     @Nullable
@@ -78,8 +85,6 @@ public class SurveyFragment extends DialogFragment
 
         mSurveyLayout = (SurveyLayout) view.findViewById(R.id.wootric_survey_layout);
         mSurveyLayout.setSurveyLayoutListener(this);
-        mSurveyLayout.initWithSettings(mSettings);
-
         mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
 
         return view;
@@ -94,6 +99,8 @@ public class SurveyFragment extends DialogFragment
             int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
             mSurveyLayout.setupState(surveyState, selectedScore);
         }
+
+        mSurveyLayout.initWithSettings(mSettings);
     }
 
     @Override
@@ -161,17 +168,6 @@ public class SurveyFragment extends DialogFragment
         mWootricApiClient.createDecline(mEndUser, mAccessToken, mOriginUrl);
     }
 
-    private void showThankYouLayout() {
-        dismiss();
-
-        ThankYouFragment.show(
-                getActivity(),
-                mSettings,
-                mSurveyLayout.getSelectedScore(),
-                mSurveyLayout.getFeedback()
-        );
-    }
-
     @Override
     public void onSurveySubmit(int score, String text) {
         mWootricApiClient.createResponse(mEndUser, mAccessToken, mOriginUrl, score, text);
@@ -182,10 +178,52 @@ public class SurveyFragment extends DialogFragment
     public void onSurveyFinished() {
         if(!mResponseSent) {
             createDecline();
+            finish();
         } else {
-            showThankYouLayout();
+            mSurveyLayout.showThankYouLayout();
+        }
+    }
+
+    @Override
+    public void onFacebookBtnClick() {
+        if(mSocialHandler == null) return;
+
+        String facebookId = mSettings.getFacebookPageId();
+        mSocialHandler.goToFacebook(facebookId);
+
+        finish();
+    }
+
+    @Override
+    public void onTwitterBtnClick() {
+        if(mSocialHandler == null) return;
+
+        String twitterPage = mSettings.getTwitterPage();
+        mSocialHandler.goToTwitter(twitterPage, mSurveyLayout.getFeedback());
+
+        finish();
+    }
+
+    @Override
+    public void onThankYouActionClick() {
+        final Uri uri = mSettings.getThankYouLinkUri(mSurveyLayout.getSelectedScore(), mSurveyLayout.getFeedback());
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        final Activity activity = getActivity();
+
+        if(activity != null) {
+            activity.startActivity(intent);
         }
 
+        finish();
+    }
+
+    @Override
+    public void onThankYouFinished() {
+        finish();
+    }
+
+    public void finish() {
         Wootric.notifySurveyFinished();
+        dismiss();
     }
 }
