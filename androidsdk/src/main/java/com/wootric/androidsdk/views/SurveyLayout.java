@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -308,9 +310,11 @@ public class SurveyLayout extends LinearLayout
         updateSubmitBtn();
         updateHeaderText();
 
-        if(!isNpsState()) {
+        boolean isFeedbackState = !isNpsState();
+
+        if(isFeedbackState)
             mEtFeedback.requestFocus();
-        }
+        setKeyboardVisibility(isFeedbackState);
     }
 
     private void updateHeaderText() {
@@ -341,6 +345,20 @@ public class SurveyLayout extends LinearLayout
 
     public String getFeedback() {
         return mEtFeedback.getText().toString();
+    }
+
+    private void setKeyboardVisibility(boolean showKeyboard) {
+        final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(showKeyboard) {
+            mEtFeedback.requestFocus();
+            mEtFeedback.setHorizontallyScrolling(false);
+            mEtFeedback.setMaxLines(10);
+            imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            mEtFeedback.clearFocus();
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     public interface SurveyLayoutListener {
