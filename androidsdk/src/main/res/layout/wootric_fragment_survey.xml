@@ -11,7 +11,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <include layout="@layout/wootric_footer"
+    <include
+        android:id="@+id/wootric_footer"
+        layout="@layout/wootric_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

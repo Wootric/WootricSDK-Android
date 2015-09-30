@@ -9,6 +9,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
@@ -34,6 +37,7 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_ACCESS_TOKEN =  "com.wootric.androidsdk.arg.access_token";
 
     private SurveyLayout mSurveyLayout;
+    private LinearLayout mFooter;
 
     private EndUser mEndUser;
     private User mUser;
@@ -76,6 +80,8 @@ public class SurveyFragment extends DialogFragment
         mSurveyLayout.setSurveyLayoutListener(this);
         mSurveyLayout.initWithSettings(mSettings);
 
+        mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
+
         return view;
     }
 
@@ -96,22 +102,27 @@ public class SurveyFragment extends DialogFragment
 
         final Activity activity = getActivity();
 
-        int orientation = activity.getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Dialog dialog = getDialog();
-            if (dialog != null) {
-                int screenWidth = ScreenUtils.getScreenWidth(activity);
-                int screenHeight = ScreenUtils.getScreenHeight(activity);
-                dialog.getWindow().setLayout(screenWidth, screenHeight);
-            }
+        Dialog dialog = getDialog();
+        if(dialog == null) return;
+
+        final Window window = dialog.getWindow();
+        if(window == null) return;
+
+        final WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(window.getAttributes());
+
+        final boolean isPortraitMode = (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+        if(isPortraitMode) {
+            lp.width = ScreenUtils.getScreenWidth(activity);
+            lp.height = ScreenUtils.getScreenHeight(activity)*4/5;
         } else {
-            Dialog dialog = getDialog();
-            if (dialog != null) {
-                int screenWidth = ScreenUtils.getScreenWidth(activity);
-                int screenHeight = ScreenUtils.getScreenHeight(activity) *4/5;
-                dialog.getWindow().setLayout(screenWidth, screenHeight);
-            }
+            lp.width = ScreenUtils.getScreenHeight(activity)*4/5;
+            lp.height = ScreenUtils.getScreenWidth(activity);
         }
+
+        mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
+
+        window.setAttributes(lp);
     }
 
     private void setupState(Bundle savedInstanceState) {
