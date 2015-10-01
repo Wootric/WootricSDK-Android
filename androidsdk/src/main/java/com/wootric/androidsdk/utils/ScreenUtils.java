@@ -41,4 +41,8 @@ public class ScreenUtils {
     public static float pxToDp(float px) {
         return px / Resources.getSystem().getDisplayMetrics().density;
     }
+
+    public static float dpToPx(int dp) {
+        return dp * Resources.getSystem().getDisplayMetrics().density;
+    }
 }

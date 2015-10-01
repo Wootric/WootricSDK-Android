@@ -31,10 +31,6 @@ public class PreferencesUtils {
         return context.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public void clear() {
-        prefs().edit().clear().apply();
-    }
-
     public void touchLastSurveyed() {
         prefs().edit().putLong(KEY_LAST_SURVEYED, new Date().getTime()).apply();
     }

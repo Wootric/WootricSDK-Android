@@ -1,6 +1,7 @@
 package com.wootric.androidsdk.views;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.utils.ScreenUtils;
 
 /**
  * Created by maciejwitowski on 9/18/15.
@@ -59,9 +61,11 @@ public class ThankYouLayout extends RelativeLayout {
         mTvFacebook.setOnClickListener(notifyFacebookClick());
         mTvTwitter.setOnClickListener(notifyTwitterClick());
         mBtnThankYouAction.setOnClickListener(notifyThankYouActionClick());
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBtnThankYouAction.setElevation(ScreenUtils.dpToPx(8));
+        }
     }
-
-
 
     private OnClickListener notifyFacebookClick() {
         return new OnClickListener() {

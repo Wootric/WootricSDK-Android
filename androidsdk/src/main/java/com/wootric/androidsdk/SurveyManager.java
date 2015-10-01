@@ -103,7 +103,7 @@ public class SurveyManager implements
 
     @Override
     public void onApiError(RetrofitError error) {
-        // TODO Handle API Request Error
+        Log.d(LOG_TAG, error.getLocalizedMessage());
     }
 
 

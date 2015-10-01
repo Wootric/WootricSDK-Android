@@ -56,10 +56,8 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     }
 
     private boolean lastSeenDelayPassed(){
-        if (preferencesUtils.isLastSeenSet()) {
-            return settings.firstSurveyDelayPassed(preferencesUtils.getLastSeen());
-        }
-        return false;
+        return preferencesUtils.isLastSeenSet() &&
+                settings.firstSurveyDelayPassed(preferencesUtils.getLastSeen());
     }
 
     private void checkEligibility() {

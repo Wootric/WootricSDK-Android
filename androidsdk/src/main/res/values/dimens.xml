@@ -33,4 +33,7 @@
     <dimen name="wootric_social_tv_padding_vertical">16dp</dimen>
     <dimen name="wootric_tv_thank_you_margin">16dp</dimen>
     <dimen name="wootric_btn_padding">4dp</dimen>
+    <dimen name="wootric_social_text_size">18sp</dimen>
+    <dimen name="wootric_social_drawable_padding">8dp</dimen>
+    <dimen name="wootric_thank_you_action_button_margin">16dp</dimen>
 </resources>

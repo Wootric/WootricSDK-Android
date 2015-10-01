@@ -289,10 +289,6 @@ public class Settings implements Parcelable {
         this.twitterPage = twitterPage;
     }
 
-    public CustomThankYou getCustomThankYou() {
-        return customThankYou;
-    }
-
     public void setCustomThankYou(CustomThankYou customThankYou) {
         this.customThankYou = customThankYou;
     }

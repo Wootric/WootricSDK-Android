@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,8 +70,9 @@ public class RatingBar extends View implements View.OnTouchListener {
 
     private void initResources() {
         Resources res = mContext.getResources();
-        mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
-        mColorSelected = res.getColor(R.color.wootric_brand_color);
+
+        mColorNotSelected = ContextCompat.getColor(mContext, R.color.wootric_dark_gray);
+        mColorSelected = ContextCompat.getColor(mContext, R.color.wootric_brand_color);
         mNotchMarginHorizontal = res.getDimension(R.dimen.wootric_rating_notch_margin_horizontal);
         mNotchRadius = res.getDimension(R.dimen.wootric_rating_notch_radius);
         mTrackWidth = res.getDimension(R.dimen.wootric_rating_track_width);

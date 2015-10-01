@@ -12,27 +12,32 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/wootric_tv_thank_you_size"
         android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
-        android:text="@string/wootric_thank_you" />
+        android:text="@string/wootric_thank_you"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/wootric_tv_facebook"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/wootric_social_height"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/wootric_tv_thank_you"
         android:drawableLeft="@drawable/ic_facebook"
         android:drawableStart="@drawable/ic_facebook"
+        android:textSize="@dimen/wootric_social_text_size"
+        android:drawablePadding="@dimen/wootric_social_drawable_padding"
         android:text="@string/tv_facebook"
         android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
         android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
-        android:gravity="center"/>
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/wootric_tv_twitter"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/wootric_social_height"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/wootric_tv_facebook"
         android:drawableLeft="@drawable/ic_twitter"
         android:drawableStart="@drawable/ic_twitter"
+        android:textSize="@dimen/wootric_social_text_size"
+        android:drawablePadding="@dimen/wootric_social_drawable_padding"
         android:text="@string/tv_twitter"
         android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
         android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
@@ -47,7 +52,7 @@
         android:background="@color/wootric_brand_color"
         android:textColor="@android:color/white"
         android:layout_below="@+id/wootric_tv_twitter"
-        android:elevation="8dp"
+        android:layout_marginTop="@dimen/wootric_thank_you_action_button_margin"
         android:text="@string/wootric_btn_thank_you_action"/>
 
     <TextView
