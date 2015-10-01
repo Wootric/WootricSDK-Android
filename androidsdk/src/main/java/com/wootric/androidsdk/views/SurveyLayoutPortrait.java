@@ -404,7 +404,7 @@ public class SurveyLayoutPortrait extends LinearLayout
         if(showKeyboard) {
             mEtFeedback.requestFocus();
             mEtFeedback.setHorizontallyScrolling(false);
-            mEtFeedback.setMaxLines(10);
+            mEtFeedback.setMaxLines(4);
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
         } else {
             mEtFeedback.clearFocus();
