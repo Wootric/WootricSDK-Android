@@ -43,6 +43,7 @@ public class Wootric {
     public static void notifySurveyFinished() {
         if(singleton != null) {
             singleton.setSurveyFinished();
+            singleton = null;
         }
     }
 
