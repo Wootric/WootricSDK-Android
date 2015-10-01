@@ -3,6 +3,7 @@ package com.wootric.androidsdk.views;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -37,7 +38,8 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
     private static final String ARG_CURRENT_SURVEY_STATE = "com.wootric.androidsdk.arg.current_state";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
-    private static final String ARG_ACCESS_TOKEN =  "com.wootric.androidsdk.arg.access_token";
+    private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
+    private static final String ARG_FEEDBACK = "com.wootric.androidsdk.arg.feedback";
 
     private SurveyLayout mSurveyLayout;
     private LinearLayout mFooter;
@@ -52,6 +54,8 @@ public class SurveyFragment extends DialogFragment
 
     private WootricApiClient mWootricApiClient;
     private SocialHandler mSocialHandler;
+
+    private boolean isResumedOnConfigurationChange;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
                                              Settings settings) {
@@ -85,19 +89,21 @@ public class SurveyFragment extends DialogFragment
 
         mSurveyLayout = (SurveyLayout) view.findViewById(R.id.wootric_survey_layout);
         mSurveyLayout.setSurveyLayoutListener(this);
+
         mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        if(savedInstanceState != null) {
-            int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
-            int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
-            mSurveyLayout.setupState(surveyState, selectedScore);
+        if (savedInstanceState != null) {
+            final int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
+            final int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
+            final String feedback = savedInstanceState.getString(ARG_FEEDBACK);
+            mSurveyLayout.setupState(surveyState, selectedScore, feedback);
         }
 
         mSurveyLayout.initWithSettings(mSettings);
@@ -107,33 +113,51 @@ public class SurveyFragment extends DialogFragment
     public void onStart() {
         super.onStart();
 
+        measurePhoneDialog();
+    }
+
+    private void measurePhoneDialog() {
         final Activity activity = getActivity();
 
         Dialog dialog = getDialog();
-        if(dialog == null) return;
+        if (dialog == null) return;
 
         final Window window = dialog.getWindow();
-        if(window == null) return;
+        if (window == null) return;
 
         final WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(window.getAttributes());
 
+        final int screenHeight = ScreenUtils.getScreenHeight(activity);
+        final int screenWidth = ScreenUtils.getScreenWidth(activity);
+
+        final boolean launchedInPortrait = (screenHeight > screenWidth);
         final boolean isPortraitMode = (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-        if(isPortraitMode) {
-            lp.width = ScreenUtils.getScreenWidth(activity);
-            lp.height = ScreenUtils.getScreenHeight(activity)*4/5;
+
+        if(launchedInPortrait) {
+            if(isPortraitMode) {
+                lp.height = screenHeight*4/5;
+                lp.width = screenWidth;
+            } else {
+                lp.height = screenWidth;
+                lp.width = screenHeight*4/5;
+            }
         } else {
-            lp.width = ScreenUtils.getScreenHeight(activity)*4/5;
-            lp.height = ScreenUtils.getScreenWidth(activity);
+            if(isPortraitMode) {
+                lp.height = screenWidth*4/5;
+                lp.width = screenHeight;
+            } else {
+                lp.height = screenHeight;
+                lp.width = screenWidth*4/5;
+            }
         }
 
-        mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
-
         window.setAttributes(lp);
+        mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
     }
 
     private void setupState(Bundle savedInstanceState) {
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Bundle args = getArguments();
             mUser = args.getParcelable(ARG_USER);
             mEndUser = args.getParcelable(ARG_END_USER);
@@ -160,6 +184,7 @@ public class SurveyFragment extends DialogFragment
         outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
         outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
+        outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
 
         super.onSaveInstanceState(outState);
     }
@@ -176,9 +201,9 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onSurveyFinished() {
-        if(!mResponseSent) {
+        if (!mResponseSent) {
             createDecline();
-            finish();
+            dismiss();
         } else {
             mSurveyLayout.showThankYouLayout();
         }
@@ -186,22 +211,22 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onFacebookBtnClick() {
-        if(mSocialHandler == null) return;
+        if (mSocialHandler == null) return;
 
         String facebookId = mSettings.getFacebookPageId();
         mSocialHandler.goToFacebook(facebookId);
 
-        finish();
+        dismiss();
     }
 
     @Override
     public void onTwitterBtnClick() {
-        if(mSocialHandler == null) return;
+        if (mSocialHandler == null) return;
 
         String twitterPage = mSettings.getTwitterPage();
         mSocialHandler.goToTwitter(twitterPage, mSurveyLayout.getFeedback());
 
-        finish();
+        dismiss();
     }
 
     @Override
@@ -210,20 +235,31 @@ public class SurveyFragment extends DialogFragment
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         final Activity activity = getActivity();
 
-        if(activity != null) {
+        if (activity != null) {
             activity.startActivity(intent);
         }
 
-        finish();
+        dismiss();
     }
 
     @Override
     public void onThankYouFinished() {
-        finish();
+        dismiss();
     }
 
-    public void finish() {
-        Wootric.notifySurveyFinished();
-        dismiss();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        isResumedOnConfigurationChange = true;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if(!isResumedOnConfigurationChange) {
+            Wootric.notifySurveyFinished();
+        }
     }
 }

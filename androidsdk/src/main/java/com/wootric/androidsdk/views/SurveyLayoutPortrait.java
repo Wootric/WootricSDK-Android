@@ -207,7 +207,7 @@ public class SurveyLayoutPortrait extends LinearLayout
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(mCurrentState == STATE_FEEDBACK) {
+                if(isFeedbackState()) {
                     final boolean hasFeedback = !mEtFeedback.getText().toString().isEmpty();
                     updateSubmitBtn(hasFeedback);
                 }
@@ -247,8 +247,11 @@ public class SurveyLayoutPortrait extends LinearLayout
     private void submitSurvey() {
         notifyListener();
 
-        if(isNpsState())
+        if(isNpsState()) {
             updateState(STATE_FEEDBACK);
+        } else if(isFeedbackState()) {
+            updateState(STATE_THANK_YOU);
+        }
     }
 
     private void notifyListener() {
@@ -257,9 +260,6 @@ public class SurveyLayoutPortrait extends LinearLayout
 
         String text = mEtFeedback.getText().toString();
         mSurveyLayoutListener.onSurveySubmit(mRatingBar.getSelectedScore(), text);
-
-        if(!isNpsState() )
-            mSurveyLayoutListener.onSurveyFinished();
     }
 
     private void dismissSurvey() {
@@ -291,9 +291,10 @@ public class SurveyLayoutPortrait extends LinearLayout
         updateState(mCurrentState);
     }
 
-    public void setupState(int surveyState, int selectedScore) {
+    public void setupState(int surveyState, int selectedScore, String feedback) {
         mRatingBar.setSelectedScore(selectedScore);
         mCurrentState = surveyState;
+        mEtFeedback.setText(feedback);
     }
 
     public void setTexts() {
@@ -317,8 +318,6 @@ public class SurveyLayoutPortrait extends LinearLayout
     }
 
     private void setupNpsState() {
-        mThankYouLayout.setVisibility(GONE);
-
         for(int i = 0; i < mCommonSurveyViews.length; i++) {
             mCommonSurveyViews[i].setVisibility(VISIBLE);
         }
@@ -332,6 +331,7 @@ public class SurveyLayoutPortrait extends LinearLayout
             mNpsViews[i].setVisibility(VISIBLE);
         }
 
+        mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 
         final boolean isScoreSelected = mRatingBar.isScoreSelected();
@@ -339,8 +339,6 @@ public class SurveyLayoutPortrait extends LinearLayout
     }
 
     private void setupFeedbackState() {
-        mThankYouLayout.setVisibility(GONE);
-
         for(int i = 0; i < mCommonSurveyViews.length; i++) {
             mCommonSurveyViews[i].setVisibility(VISIBLE);
         }
@@ -355,7 +353,6 @@ public class SurveyLayoutPortrait extends LinearLayout
         }
 
         mThankYouLayout.setVisibility(GONE);
-
         setKeyboardVisibility(true);
 
         final boolean hasFeedback = !mEtFeedback.getText().toString().isEmpty();
@@ -387,6 +384,10 @@ public class SurveyLayoutPortrait extends LinearLayout
 
     private boolean isNpsState() {
         return mCurrentState == STATE_NPS;
+    }
+
+    private boolean isFeedbackState() {
+        return mCurrentState == STATE_FEEDBACK;
     }
 
     public int getSelectedState() {

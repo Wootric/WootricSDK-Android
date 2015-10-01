@@ -10,7 +10,7 @@ public interface SurveyLayout {
     void setSurveyLayoutListener(SurveyLayoutListener surveyLayoutListener);
 
     void initWithSettings(Settings settings);
-    void setupState(int surveyState, int selectedScore);
+    void setupState(int surveyState, int selectedScore, String feedback);
 
     int getSelectedScore();
     int getSelectedState();
