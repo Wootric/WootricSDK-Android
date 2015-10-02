@@ -10,16 +10,33 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 	
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:1.1.0’
+compile 'com.wootric:wootric-sdk-android:2.0.0’
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
+
+ProGuard
+========
+Add the following to your ProGuard rules
+
+````ProGuard
+-keepattributes *Annotation*, Signature
+
+##== Wootric ==
+-keep class com.wootric.** { *; }
+
+##== Retrofit ==
+-keep class retrofit.** { *; }
+-keepclassmembernames interface * {
+    @retrofit.http.* <methods>;
+}
+````
 
 Usage
 =====
@@ -29,73 +46,78 @@ Usage
 All you need to do is to add this code to you Activity's `onCreate` method:
 
 ```java
-Wootric.with(this)
-  .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-  .endUser(END_USER_EMAIL, ORIGIN_URL)
-  .survey();
-```
-
-You should also stop Wootric in your Activity's `onStop` method:
-
-```java
-Wootric.stop();
+Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+wootric.setEndUserEmail(END_USER_EMAIL);
+wootric.setOriginUrl(ORIGIN_URL);
+wootric.survey();
 ```
 
 Additional parameters
 ====
 
 ### End user properties ###
-End user properties can be provided to `endUser()` method as a `HashMap<String, String>` object.
+End user properties can be provided as a `HashMap<String, String>` object.
 
 ```java
-HashMap endUserProperties = new HashMap<String, String>();
-properties.put("Company", "Wootric");
-properties.put("Platform", "Android");
-
-Wootric.with(this)
-    .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-    .endUser(END_USER_EMAIL, ORIGIN_URL, endUserProperties)
-    .survey();      
+HashMap<String, String> properties = new HashMap<String, String>();
+properties.put("company", "Wootric");
+properties.put("type", "awesome");
+wootric.setProperties(properties);
 ```
 
 ### Custom messages ###
 Wootric provides designated class for providing custom messages -`WootricCustomMessages`
 
 ```java
-WootricCustomMessage myCustomMessage = WootricCustomMessage.create()
-                .recommendTo("Recommend to")
-                .placeholder("Default placeholder")
-                .detractorPlaceholder("Detractors placeholder")
-                .passivePlaceholder("Passives placeholder")
-                .promoterPlaceholder("Promoters placeholder")
-                .followupQuestion("Followup question")
-                .detractorFollowupQuestion("Detractors question")
-                .passiveFollowupQuestion("Passives question")
-                .promoterFollowupQuestion("Promoters question");
+WootricCustomMessage customMessage = new WootricCustomMessage();
+customMessage.setFollowupQuestion("custom followup");
+customMessage.setDetractorFollowupQuestion("custom detractor");
+customMessage.setPassiveFollowupQuestion("custom passive");
+customMessage.setPromoterFollowupQuestion("custom promoter");
+customMessage.setPlaceholderText("custom placeholder");
+customMessage.setDetractorPlaceholderText("custom detractor placeholder");
+customMessage.setPassivePlaceholderText("custom passive placeholder");
+customMessage.setPromoterPlaceholderText("custom promoter placeholder");
+
+wootric.setCustomMessage(customMessage);
 ```
 
-Then simply:
+### Custom thank you ###
+Wootric provides designated class for providing custom thank you -`WootricCustomThankYou`
+
 ```java
-Wootric.with(this)
-    .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-    .endUser(END_USER_EMAIL, ORIGIN_URL, endUserProperties)
-    .customMessage(myCustomMessage)
-    .survey();               
+WootricCustomThankYou customThankYou = new WootricCustomThankYou();
+customThankYou.setText("Thank you!!");
+customThankYou.setDetractorText("Detractor thank you");
+customThankYou.setPassiveText("Passive thank you");
+customThankYou.setPromoterText("Promoter thank you");
+customThankYou.setLinkText("Thank you link text");
+customThankYou.setDetractorLinkText("Detractor link text");
+customThankYou.setPassiveLinkText("Passive link text");
+customThankYou.setPromoterLinkText("Promoter link text");
+customThankYou.setLinkUri(Uri.parse("http://wootric.com/thank_you"));
+customThankYou.setDetractorLinkUri(Uri.parse("http://wootric.com/detractor_thank_you"));
+customThankYou.setPassiveLinkUri(Uri.parse("http://wootric.com/passive_thank_you"));
+customThankYou.setPromoterLinkUri(Uri.parse("http://wootric.com/promoter_thank_you"));
+customThankYou.setScoreInUrl(true);
+customThankYou.setCommentInUrl(true);
+wootric.setCustomThankYou(customThankYou);
 ```
 
 ### Other parameters ###
 There are many other parameters which can be set in Wootric:
 
 ```java
-Wootric.with(this)
-  .user(CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN)
-  .endUser(END_USER_EMAIL, ORIGIN_URL)
-  .productName(<PRODUCT NAME>)
-  .createdAt(<END USER CREATED AT>)
-  .dailyResponseCap(<DAILY RESPONSE CAP>)
-  .registeredPercent(<REGISTERED PERCENT>)
-  .resurveyThrottle(<RESURVEY THROTTLE>)
-  .visitorPercent(<VISITOR PERCENT>)
-  .surveyImmediately()
-  .survey();
+wootric.setLanguageCode("EN");
+wootric.setSurveyImmediately(true);
+
+wootric.setDailyResponseCap(10);
+wootric.setRegisteredPercent(10);
+wootric.setVisitorPercent(10);
+wootric.setResurveyThrottle(10);
+
+wootric.setProductName("Wootric");
+wootric.setRecommendTarget("Best Friend");
+wootric.setFacebookPageId("123456");
+wootric.setTwitterPage("wootric");
 ```

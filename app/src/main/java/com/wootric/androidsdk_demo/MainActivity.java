@@ -22,58 +22,14 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        wootric.setEndUserEmail("nps@example.com");
-        wootric.setOriginUrl("http://www.wootric.com");
-        wootric.setSurveyImmediately(true);
-
-        HashMap<String, String> properties = new HashMap<String, String>();
-        properties.put("company", "Wootric");
-        properties.put("type", "free");
-        wootric.setProperties(properties);
-
-        wootric.setDailyResponseCap(10);
-        wootric.setProductName("Wootric");
-        wootric.setRecommendTarget("Best Friend");
-        wootric.setLanguageCode("PL");
-        wootric.setFacebookPageId("123456");
-        wootric.setTwitterPage("wootric");
-
-        WootricCustomMessage customMessage = new WootricCustomMessage();
-        customMessage.setFollowupQuestion("custom followup");
-        customMessage.setDetractorFollowupQuestion("custom detractor");
-        customMessage.setPassiveFollowupQuestion("custom passive");
-        customMessage.setPromoterFollowupQuestion("custom promoter");
-        customMessage.setPlaceholderText("custom placeholder");
-        customMessage.setDetractorPlaceholderText("custom detractor placeholder");
-        customMessage.setPassivePlaceholderText("custom passive placeholder");
-        customMessage.setPromoterPlaceholderText("custom promoter placeholder");
-
-        wootric.setCustomMessage(customMessage);
-
-        WootricCustomThankYou customThankYou = new WootricCustomThankYou();
-        customThankYou.setText("Thank you!!");
-        customThankYou.setDetractorText("Detractor thank you");
-        customThankYou.setPassiveText("Passive thank you");
-        customThankYou.setPromoterText("Promoter thank you");
-        customThankYou.setLinkText("CLICK");
-        customThankYou.setDetractorLinkText("Detractor click");
-        customThankYou.setPassiveLinkText("Passive click");
-        customThankYou.setPromoterLinkText("Promoter click");
-        customThankYou.setLinkUri(Uri.parse("http://wootric.com/thank_you"));
-
-        customThankYou.setDetractorLinkUri(Uri.parse("http://wootric.com/detractor_thank_you"));
-        customThankYou.setPassiveLinkUri(Uri.parse("http://wootric.com/passive_thank_you"));
-        customThankYou.setPromoterLinkUri(Uri.parse("http://wootric.com/promoter_thank_you"));
-        customThankYou.setScoreInUrl(true);
-        customThankYou.setCommentInUrl(true);
-        wootric.setCustomThankYou(customThankYou);
-
-        wootric.survey();
+        startSurvey();
     }
 
     public void showSurvey(View view) {
+        startSurvey();
+    }
+
+    private void startSurvey() {
         Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
         wootric.setOriginUrl("http://www.wootric.com");

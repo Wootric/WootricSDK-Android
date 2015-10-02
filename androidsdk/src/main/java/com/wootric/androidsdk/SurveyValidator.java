@@ -33,14 +33,19 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     }
 
     public void validate() {
-        if(needsSurvey())
+        if(needsSurvey()) {
             checkEligibility();
+        } else {
+            notifyShouldNotShowSurvey();
+        }
     }
 
     @Override
     public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
         if(eligibilityResponse.isEligible()) {
             notifyShouldShowSurvey(eligibilityResponse.getSettings());
+        } else {
+            notifyShouldNotShowSurvey();
         }
     }
 
@@ -70,7 +75,14 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
         }
     }
 
+    private void notifyShouldNotShowSurvey() {
+        if(onSurveyValidatedListener != null) {
+            onSurveyValidatedListener.onSurveyNotNeeded();
+        }
+    }
+
     interface OnSurveyValidatedListener {
         void onSurveyValidated(Settings settings);
+        void onSurveyNotNeeded();
     }
 }

@@ -73,6 +73,11 @@ public class SurveyManager implements
     }
 
     @Override
+    public void onSurveyNotNeeded() {
+        Wootric.notifySurveyFinished();
+    }
+
+    @Override
     public void onAuthenticateSuccess(AuthenticationResponse authenticationResponse) {
         setAccessToken(authenticationResponse.accessToken);
         sendGetEndUserRequest();
@@ -104,6 +109,7 @@ public class SurveyManager implements
     @Override
     public void onApiError(RetrofitError error) {
         Log.d(LOG_TAG, error.getLocalizedMessage());
+        Wootric.notifySurveyFinished();
     }
 
 
