@@ -21,9 +21,19 @@ compile 'com.wootric:wootric-sdk-android:2.0.0’
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
+Permissions
+===========
+
+Add the following permissions to the AndroidManifest.xml file:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+```
+
 ProGuard
 ========
-Add the following to your ProGuard rules
+Add the following to your ProGuard rules:
 
 ````ProGuard
 -keepattributes *Annotation*, Signature
