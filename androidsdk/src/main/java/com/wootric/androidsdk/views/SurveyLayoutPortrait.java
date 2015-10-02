@@ -436,4 +436,9 @@ public class SurveyLayoutPortrait extends LinearLayout
     public void onThankYouFinished() {
         mSurveyLayoutListener.onThankYouFinished();
     }
+
+    @Override
+    public void onShouldShowSimpleDialog() {
+        mSurveyLayoutListener.onShouldShowSimpleDialog();
+    }
 }

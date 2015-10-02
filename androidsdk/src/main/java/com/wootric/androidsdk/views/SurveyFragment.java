@@ -248,6 +248,14 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
+    public void onShouldShowSimpleDialog() {
+        final Activity activity = getActivity();
+
+        ThankYouDialogFactory.create(activity, mSettings).show();
+        dismiss();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 

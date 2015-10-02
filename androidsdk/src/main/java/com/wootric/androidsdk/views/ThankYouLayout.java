@@ -1,6 +1,5 @@
 package com.wootric.androidsdk.views;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -137,6 +136,8 @@ public class ThankYouLayout extends RelativeLayout {
 
         initSocialLinks();
         initThankYouActionBtn();
+
+        showSimpleDialogIfNeeded();
     }
 
     private void initThankYouActionBtn() {
@@ -159,5 +160,15 @@ public class ThankYouLayout extends RelativeLayout {
                         !mFeedback.isEmpty();
 
         mLayoutTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
+    }
+
+    private void showSimpleDialogIfNeeded() {
+        final boolean shouldShowSimpleDialog = mBtnThankYouAction.getVisibility() == GONE &&
+                                                mLayoutFacebook.getVisibility() == GONE &&
+                                                mLayoutTwitter.getVisibility() == GONE;
+
+        if(shouldShowSimpleDialog && mThankYouLayoutListener != null) {
+            mThankYouLayoutListener.onShouldShowSimpleDialog();
+        }
     }
 }

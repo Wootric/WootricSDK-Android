@@ -1,15 +1,10 @@
 package com.wootric.androidsdk_demo;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
-import com.wootric.androidsdk.objects.WootricCustomThankYou;
-
-import java.util.HashMap;
 
 public class MainActivity extends Activity {
 

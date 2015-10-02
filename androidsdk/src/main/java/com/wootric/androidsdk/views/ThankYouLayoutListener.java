@@ -12,4 +12,6 @@ interface ThankYouLayoutListener {
     void onThankYouActionClick();
 
     void onThankYouFinished();
+
+    void onShouldShowSimpleDialog();
 }
