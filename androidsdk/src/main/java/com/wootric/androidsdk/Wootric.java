@@ -5,8 +5,8 @@ import android.content.Context;
 import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
-import com.wootric.androidsdk.objects.CustomMessage;
-import com.wootric.androidsdk.objects.CustomThankYou;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
+import com.wootric.androidsdk.objects.WootricCustomThankYou;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -68,7 +68,7 @@ public class Wootric {
         this.settings.setSurveyImmediately(surveyImmediately);
     }
 
-    public void setCustomMessage(CustomMessage customMessage) {
+    public void setCustomMessage(WootricCustomMessage customMessage) {
         settings.setLocalCustomMessage(customMessage);
     }
 
@@ -108,7 +108,7 @@ public class Wootric {
         settings.setTwitterPage(tweeterPage);
     }
 
-    public void setCustomThankYou(CustomThankYou customThankYou) {
+    public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         settings.setCustomThankYou(customThankYou);
     }
 

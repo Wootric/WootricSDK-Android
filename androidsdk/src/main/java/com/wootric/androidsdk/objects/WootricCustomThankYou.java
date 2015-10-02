@@ -7,7 +7,7 @@ import android.os.Parcelable;
 /**
  * Created by maciejwitowski on 9/23/15.
  */
-public class CustomThankYou implements Parcelable {
+public class WootricCustomThankYou implements Parcelable {
 
     private String text;
     private String detractorText;
@@ -163,10 +163,10 @@ public class CustomThankYou implements Parcelable {
         dest.writeByte(commentInUrl ? (byte) 1 : (byte) 0);
     }
 
-    public CustomThankYou() {
+    public WootricCustomThankYou() {
     }
 
-    private CustomThankYou(Parcel in) {
+    private WootricCustomThankYou(Parcel in) {
         this.text = in.readString();
         this.detractorText = in.readString();
         this.passiveText = in.readString();
@@ -183,13 +183,13 @@ public class CustomThankYou implements Parcelable {
         this.commentInUrl = in.readByte() != 0;
     }
 
-    public static final Creator<CustomThankYou> CREATOR = new Creator<CustomThankYou>() {
-        public CustomThankYou createFromParcel(Parcel source) {
-            return new CustomThankYou(source);
+    public static final Creator<WootricCustomThankYou> CREATOR = new Creator<WootricCustomThankYou>() {
+        public WootricCustomThankYou createFromParcel(Parcel source) {
+            return new WootricCustomThankYou(source);
         }
 
-        public CustomThankYou[] newArray(int size) {
-            return new CustomThankYou[size];
+        public WootricCustomThankYou[] newArray(int size) {
+            return new WootricCustomThankYou[size];
         }
     };
 }

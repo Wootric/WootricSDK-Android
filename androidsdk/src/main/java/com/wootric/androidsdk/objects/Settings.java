@@ -24,9 +24,9 @@ public class Settings implements Parcelable {
     private LocalizedTexts localizedTexts;
 
     @SerializedName("messages")
-    private CustomMessage adminPanelCustomMessage;
+    private WootricCustomMessage adminPanelCustomMessage;
 
-    private CustomMessage localCustomMessage;
+    private WootricCustomMessage localCustomMessage;
 
     private int timeDelay = Constants.NOT_SET;
 
@@ -43,7 +43,7 @@ public class Settings implements Parcelable {
     private String facebookPageId;
     private String twitterPage;
 
-    private CustomThankYou customThankYou;
+    private WootricCustomThankYou customThankYou;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -189,11 +189,11 @@ public class Settings implements Parcelable {
         return firstSurvey;
     }
 
-    public void setLocalCustomMessage(CustomMessage customMessage) {
+    public void setLocalCustomMessage(WootricCustomMessage customMessage) {
         this.localCustomMessage = customMessage;
     }
 
-    public CustomMessage getLocalCustomMessage() {
+    public WootricCustomMessage getLocalCustomMessage() {
         return localCustomMessage;
     }
 
@@ -201,11 +201,11 @@ public class Settings implements Parcelable {
         this.localizedTexts = localizedTexts;
     }
 
-    public void setAdminPanelCustomMessage(CustomMessage adminPanelCustomMessage) {
+    public void setAdminPanelCustomMessage(WootricCustomMessage adminPanelCustomMessage) {
         this.adminPanelCustomMessage = adminPanelCustomMessage;
     }
 
-    public CustomMessage getAdminPanelCustomMessage() {
+    public WootricCustomMessage getAdminPanelCustomMessage() {
         return adminPanelCustomMessage;
     }
 
@@ -289,7 +289,7 @@ public class Settings implements Parcelable {
         this.twitterPage = twitterPage;
     }
 
-    public void setCustomThankYou(CustomThankYou customThankYou) {
+    public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         this.customThankYou = customThankYou;
     }
 
@@ -326,8 +326,8 @@ public class Settings implements Parcelable {
         this.firstSurvey = (Long) in.readValue(Long.class.getClassLoader());
         this.adminPanelTimeDelay = in.readInt();
         this.localizedTexts = in.readParcelable(LocalizedTexts.class.getClassLoader());
-        this.adminPanelCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
-        this.localCustomMessage = in.readParcelable(CustomMessage.class.getClassLoader());
+        this.adminPanelCustomMessage = in.readParcelable(WootricCustomMessage.class.getClassLoader());
+        this.localCustomMessage = in.readParcelable(WootricCustomMessage.class.getClassLoader());
         this.timeDelay = in.readInt();
         this.surveyImmediately = in.readByte() != 0;
         this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -339,7 +339,7 @@ public class Settings implements Parcelable {
         this.recommendTarget = in.readString();
         this.facebookPageId = in.readString();
         this.twitterPage = in.readString();
-        this.customThankYou = in.readParcelable(CustomThankYou.class.getClassLoader());
+        this.customThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
     }
 
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {

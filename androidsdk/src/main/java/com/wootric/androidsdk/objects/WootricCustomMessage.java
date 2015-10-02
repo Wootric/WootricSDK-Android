@@ -10,7 +10,7 @@ import java.util.HashMap;
 /**
  * Created by maciejwitowski on 4/17/15.
  */
-public class CustomMessage implements Parcelable {
+public class WootricCustomMessage implements Parcelable {
 
     private static final String DETRACTOR_QUESTION_KEY = "detractor_question";
     private static final String PASSIVE_QUESTION_KEY = "passive_question";
@@ -32,7 +32,7 @@ public class CustomMessage implements Parcelable {
     @SerializedName("placeholder_texts_list")
     private HashMap<String, String> placeholderTextsList;
 
-    public CustomMessage() {
+    public WootricCustomMessage() {
         this.followupQuestionsList = new HashMap<>();
         this.placeholderTextsList = new HashMap<>();
     }
@@ -146,20 +146,20 @@ public class CustomMessage implements Parcelable {
         dest.writeSerializable(this.placeholderTextsList);
     }
 
-    private CustomMessage(Parcel in) {
+    private WootricCustomMessage(Parcel in) {
         this.followupQuestion = in.readString();
         this.followupQuestionsList = (HashMap<String, String>) in.readSerializable();
         this.placeholderText = in.readString();
         this.placeholderTextsList = (HashMap<String, String>) in.readSerializable();
     }
 
-    public static final Creator<CustomMessage> CREATOR = new Creator<CustomMessage>() {
-        public CustomMessage createFromParcel(Parcel source) {
-            return new CustomMessage(source);
+    public static final Creator<WootricCustomMessage> CREATOR = new Creator<WootricCustomMessage>() {
+        public WootricCustomMessage createFromParcel(Parcel source) {
+            return new WootricCustomMessage(source);
         }
 
-        public CustomMessage[] newArray(int size) {
-            return new CustomMessage[size];
+        public WootricCustomMessage[] newArray(int size) {
+            return new WootricCustomMessage[size];
         }
     };
 }

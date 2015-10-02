@@ -12,17 +12,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by maciejwitowski on 9/17/15.
  */
-public class CustomMessageTest {
+public class WootricCustomMessageTest {
 
-    CustomMessage customMessage;
+    WootricCustomMessage customMessage;
     @Before
     public void setUp() {
-        customMessage = new Gson().fromJson(CUSTOM_MESSAGE_JSON, CustomMessage.class);
+        customMessage = new Gson().fromJson(CUSTOM_MESSAGE_JSON, WootricCustomMessage.class);
     }
 
     @Test
     public void customMessageIsCorrectlyBuild() throws Exception {
-        CustomMessage customMessage = new CustomMessage();
+        WootricCustomMessage customMessage = new WootricCustomMessage();
         customMessage.setFollowupQuestion("followup_text");
         customMessage.setDetractorFollowupQuestion("detractor_followup_text");
         customMessage.setPassiveFollowupQuestion("passive_followup_text");

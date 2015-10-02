@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.wootric.androidsdk.network.SurveyClient;
 import com.wootric.androidsdk.network.TrackingPixelClient;
 import com.wootric.androidsdk.network.WootricApiClient;
-import com.wootric.androidsdk.objects.CustomMessage;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PermissionsValidator;
 import com.wootric.androidsdk.utils.PreferencesUtils;
@@ -148,7 +148,7 @@ public class WootricTest {
      */
     @Test
     public void setsLocalCustomMessageInSettings() {
-        CustomMessage customMessage = new CustomMessage();
+        WootricCustomMessage customMessage = new WootricCustomMessage();
         Wootric wootric = Wootric.singleton;
 
         wootric.setCustomMessage(customMessage);

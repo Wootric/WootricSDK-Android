@@ -24,7 +24,7 @@ public class SettingsTest {
     LocalizedTexts mockLocalizedTexts;
 
     @Mock
-    CustomMessage mockCustomMessage;
+    WootricCustomMessage mockCustomMessage;
 
     @Test
     public void settingsAreCorrectlyPassedFromJson() {
@@ -72,7 +72,7 @@ public class SettingsTest {
         Settings settings = new Settings();
 
         Settings settingsWithCustomMessages = new Settings();
-        CustomMessage customMessage = new CustomMessage();
+        WootricCustomMessage customMessage = new WootricCustomMessage();
         settingsWithCustomMessages.setAdminPanelCustomMessage(customMessage);
 
         settings.mergeWithSurveyServerSettings(settingsWithCustomMessages);
@@ -226,7 +226,7 @@ public class SettingsTest {
     @Test
     public void whenCustomThankYouIsSet_returnsCustomThankYou() {
         Settings settings = new Settings();
-        CustomThankYou customThankYou = new CustomThankYou();
+        WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setText("thank you");
         settings.setCustomThankYou(customThankYou);
 
@@ -254,7 +254,7 @@ public class SettingsTest {
     @Test
     public void whenCustomThankYouLinkIsSet_returnsIt() {
         Settings settings = new Settings();
-        CustomThankYou customThankYou = new CustomThankYou();
+        WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setLinkText("Link text");
         settings.setCustomThankYou(customThankYou);
 
