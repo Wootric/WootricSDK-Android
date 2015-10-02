@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,10 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 public class ThankYouLayout extends RelativeLayout {
 
     private RelativeLayout mLayoutBody;
+
+    private LinearLayout mLayoutFacebook;
+    private LinearLayout mLayoutTwitter;
+
     private TextView mTvThankYou;
     private TextView mTvFacebook;
     private TextView mTvTwitter;
@@ -54,6 +59,9 @@ public class ThankYouLayout extends RelativeLayout {
         mTvThankYou = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you);
         mTvFacebook = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_facebook);
         mTvTwitter = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_twitter);
+        mLayoutFacebook = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_layout_facebook);
+        mLayoutTwitter = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_layout_twitter);
+
         mBtnThankYouAction = (Button) mLayoutBody.findViewById(R.id.wootric_btn_thank_you_action);
 
         mBtnDone = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_thank_you_done);
@@ -142,7 +150,7 @@ public class ThankYouLayout extends RelativeLayout {
     private void initSocialLinks() {
         boolean shouldShowFacebookBtn = (mScore >= 9 && mSettings.getFacebookPageId() != null);
 
-        mTvFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
+        mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
 
         boolean shouldShowTwitterBtn =
                         mScore >= 9 &&
@@ -150,6 +158,6 @@ public class ThankYouLayout extends RelativeLayout {
                         mFeedback != null &&
                         !mFeedback.isEmpty();
 
-        mTvTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
+        mLayoutTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
     }
 }

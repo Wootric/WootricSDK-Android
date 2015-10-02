@@ -142,7 +142,12 @@ public class SurveyManager implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showSurveyFragment();
+                try {
+                    showSurveyFragment();
+                } catch(IllegalStateException e) {
+                    Log.d(LOG_TAG, e.getLocalizedMessage());
+                    Wootric.notifySurveyFinished();
+                }
             }
         }, settings.getTimeDelayInMillis());
     }

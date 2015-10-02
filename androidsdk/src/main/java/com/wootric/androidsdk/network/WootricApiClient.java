@@ -92,8 +92,7 @@ public class WootricApiClient {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, "updateEndUser failure: " + error.getResponse().getStatus());
-
+                Log.d(LOG_TAG, "updateEndUser failure: " + error.getLocalizedMessage());
             }
         });
     }
@@ -119,7 +118,7 @@ public class WootricApiClient {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, "createDecline failure: " + error.getResponse().getStatus());
+                Log.d(LOG_TAG, "createDecline failure: " + error.getLocalizedMessage());
             }
         });
     }
@@ -133,7 +132,7 @@ public class WootricApiClient {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(LOG_TAG, "createResponse failure: " + error.getResponse().getStatus());
+                Log.d(LOG_TAG, "createResponse failure: " + error.getLocalizedMessage());
             }
         });
     }
