@@ -14,7 +14,7 @@ public class ThankYouDialogFactory {
 
     public static Dialog create(Context context, Settings settings) {
         AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
-        thankYouDialog.setTitle(settings.getFinalThankYou());
+        thankYouDialog.setMessage(settings.getFinalThankYou());
         thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "DONE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
