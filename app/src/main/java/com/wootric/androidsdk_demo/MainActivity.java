@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
-import com.wootric.androidsdk.objects.CustomMessage;
-import com.wootric.androidsdk.objects.CustomThankYou;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
+import com.wootric.androidsdk.objects.WootricCustomThankYou;
 
 import java.util.HashMap;
 
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         wootric.setFacebookPageId("123456");
         wootric.setTwitterPage("wootric");
 
-        CustomMessage customMessage = new CustomMessage();
+        WootricCustomMessage customMessage = new WootricCustomMessage();
         customMessage.setFollowupQuestion("custom followup");
         customMessage.setDetractorFollowupQuestion("custom detractor");
         customMessage.setPassiveFollowupQuestion("custom passive");
@@ -52,8 +52,8 @@ public class MainActivity extends Activity {
 
         wootric.setCustomMessage(customMessage);
 
-        CustomThankYou customThankYou = new CustomThankYou();
-        customThankYou.setText("THANK YOU!");
+        WootricCustomThankYou customThankYou = new WootricCustomThankYou();
+        customThankYou.setText("Thank you!!");
         customThankYou.setDetractorText("Detractor thank you");
         customThankYou.setPassiveText("Passive thank you");
         customThankYou.setPromoterText("Promoter thank you");
