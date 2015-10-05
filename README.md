@@ -1,4 +1,7 @@
 # Wootric SDK for Android
+Demo
+=========================
+View the Android demo [here.](http://cl.ly/392z1r2v181J)
 
 Installation
 =========================
