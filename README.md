@@ -13,14 +13,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 	
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:2.0.1’
+compile 'com.wootric:wootric-sdk-android:2.0.2'
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
@@ -60,13 +60,19 @@ All you need to do is to add this code to you Activity's `onCreate` method:
 
 ```java
 Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-wootric.setEndUserEmail(END_USER_EMAIL);
 wootric.setOriginUrl(ORIGIN_URL);
 wootric.survey();
 ```
 
 Additional parameters
 ====
+### End user email ###
+
+End user email is optional. If not provided, the end user will be considered as "Unknown".
+
+```java
+wootric.setEndUserEmail(END_USER_EMAIL);
+```
 
 ### End user properties ###
 End user properties can be provided as a `HashMap<String, String>` object.

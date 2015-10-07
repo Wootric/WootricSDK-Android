@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class EndUser implements Parcelable {
 
+    private static final String UNKNOWN_EMAIL = "Unknown";
+
     private long id = -1;
     private String email;
     private long createdAt = -1;
@@ -31,7 +33,7 @@ public class EndUser implements Parcelable {
     }
 
     public String getEmail() {
-        return email;
+        return (email != null && !email.isEmpty()) ? email : UNKNOWN_EMAIL;
     }
 
     public long getCreatedAt() {
