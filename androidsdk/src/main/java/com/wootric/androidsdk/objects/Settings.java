@@ -4,8 +4,10 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
 import com.wootric.androidsdk.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -14,18 +16,11 @@ import java.util.Date;
  */
 public class Settings implements Parcelable {
 
-    @SerializedName("first_survey")
     private Long firstSurvey = 31L;
-
-    @SerializedName("time_delay")
     private int adminPanelTimeDelay = Constants.NOT_SET;
-
-    @SerializedName("localized_texts")
     private LocalizedTexts localizedTexts;
 
-    @SerializedName("messages")
     private WootricCustomMessage adminPanelCustomMessage;
-
     private WootricCustomMessage localCustomMessage;
 
     private int timeDelay = Constants.NOT_SET;
@@ -351,4 +346,18 @@ public class Settings implements Parcelable {
             return new Settings[size];
         }
     };
+
+    public static Settings fromJson(JSONObject settingsObject) throws JSONException {
+        Settings settings = new Settings();
+        settings.firstSurvey = settingsObject.getLong("first_survey");
+        settings.timeDelay = settingsObject.getInt("time_delay");
+
+        JSONObject localizedTextsJson = settingsObject.getJSONObject("localized_texts");
+        settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson);
+
+        JSONObject customMessagesJson = settingsObject.getJSONObject("messages");
+        settings.adminPanelCustomMessage = WootricCustomMessage.fromJson(customMessagesJson);
+
+        return settings;
+    }
 }

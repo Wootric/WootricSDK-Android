@@ -3,7 +3,8 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -12,28 +13,18 @@ import java.util.HashMap;
  */
 public class LocalizedTexts implements Parcelable {
 
-    @SerializedName("nps_question")
+    private static final String ANCHOR_LIKELY_KEY = "likely";
+    private static final String ANCHOR_NOT_LIKELY_KEY = "not_likely";
+    private static final String SOCIAL_SHARE_QUESTION_KEY = "question";
+    private static final String SOCIAL_SHARE_DECLINE_KEY = "decline";
+
     private String npsQuestion;
-
-    @SerializedName("anchors")
     private HashMap<String, String> anchors;
-
-    @SerializedName("followup_question")
     private String followupQuestion;
-
-    @SerializedName("followup_placeholder")
     private String followupPlaceholder;
-
-    @SerializedName("final_thank_you")
     private String finalThankYou;
-
-    @SerializedName("send")
     private String send;
-
-    @SerializedName("dismiss")
     private String dismiss;
-
-    @SerializedName("social_share")
     private HashMap<String, String> socialShare;
 
     public LocalizedTexts() {}
@@ -43,11 +34,11 @@ public class LocalizedTexts implements Parcelable {
     }
 
     public String getAnchorLikely() {
-        return anchors.get("likely");
+        return anchors.get(ANCHOR_LIKELY_KEY);
     }
 
     public String getAnchorNotLikely() {
-        return anchors.get("not_likely");
+        return anchors.get(ANCHOR_NOT_LIKELY_KEY);
     }
 
     public String getFollowupQuestion() {
@@ -71,11 +62,11 @@ public class LocalizedTexts implements Parcelable {
     }
 
     public String getSocialShareQuestion() {
-        return socialShare.get("question");
+        return socialShare.get(SOCIAL_SHARE_QUESTION_KEY);
     }
 
     public String getSocialShareDecline() {
-        return socialShare.get("decline");
+        return socialShare.get(SOCIAL_SHARE_DECLINE_KEY);
     }
 
     @Override
@@ -115,4 +106,27 @@ public class LocalizedTexts implements Parcelable {
             return new LocalizedTexts[size];
         }
     };
+
+    public static LocalizedTexts fromJson(JSONObject localizedTextsJson) throws JSONException {
+        LocalizedTexts localizedTexts = new LocalizedTexts();
+        localizedTexts.npsQuestion = localizedTextsJson.getString("nps_question");
+
+        JSONObject anchorsJson = localizedTextsJson.getJSONObject("anchors");
+        localizedTexts.anchors = new HashMap<>();
+        localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.getString(ANCHOR_LIKELY_KEY));
+        localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.getString(ANCHOR_NOT_LIKELY_KEY));
+
+        localizedTexts.followupQuestion = localizedTextsJson.getString("followup_question");
+        localizedTexts.followupPlaceholder = localizedTextsJson.getString("followup_placeholder");
+        localizedTexts.finalThankYou = localizedTextsJson.getString("final_thank_you");
+        localizedTexts.send = localizedTextsJson.getString("send");
+        localizedTexts.dismiss = localizedTextsJson.getString("dismiss");
+
+        JSONObject socialShareJson = localizedTextsJson.getJSONObject("social_share");
+        localizedTexts.socialShare = new HashMap<>();
+        localizedTexts.socialShare.put(SOCIAL_SHARE_QUESTION_KEY, socialShareJson.getString(SOCIAL_SHARE_QUESTION_KEY));
+        localizedTexts.socialShare.put(SOCIAL_SHARE_DECLINE_KEY, socialShareJson.getString(SOCIAL_SHARE_DECLINE_KEY));
+
+        return localizedTexts;
+    }
 }

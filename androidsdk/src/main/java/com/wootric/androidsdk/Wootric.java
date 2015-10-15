@@ -2,14 +2,12 @@ package com.wootric.androidsdk;
 
 import android.content.Context;
 
-import com.wootric.androidsdk.network.SurveyClient;
-import com.wootric.androidsdk.network.TrackingPixelClient;
-import com.wootric.androidsdk.network.WootricApiClient;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
-import com.wootric.androidsdk.objects.WootricCustomThankYou;
+import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
+import com.wootric.androidsdk.objects.WootricCustomThankYou;
 import com.wootric.androidsdk.utils.PermissionsValidator;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
@@ -116,13 +114,11 @@ public class Wootric {
         if(!permissionsValidator.check() || surveyInProgress)
             return;
 
-        WootricApiClient wootricApiClient = new WootricApiClient();
-        TrackingPixelClient trackingPixelClient = new TrackingPixelClient();
-        SurveyClient surveyClient = new SurveyClient();
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient();
 
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
-        SurveyManager surveyManager = buildSurveyManager(context, wootricApiClient, trackingPixelClient,
+                wootricRemoteClient, preferencesUtils);
+        SurveyManager surveyManager = buildSurveyManager(context, wootricRemoteClient,
                 user, endUser, settings, originUrl, preferencesUtils, surveyValidator);
 
         surveyManager.start();
@@ -147,14 +143,14 @@ public class Wootric {
     }
 
     SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,
-                                         SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
-        return new SurveyValidator(user, endUser, settings, surveyClient, preferencesUtils);
+                                         WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
+        return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
     }
 
-    SurveyManager buildSurveyManager(Context context, WootricApiClient wootricApiClient, TrackingPixelClient trackingPixelClient, User user,
+    SurveyManager buildSurveyManager(Context context, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, String originUrl,
                                      PreferencesUtils preferencesUtils, SurveyValidator surveyValidator) {
-        return new SurveyManager(context, wootricApiClient, trackingPixelClient, user, endUser,
+        return new SurveyManager(context, wootricApiClient, user, endUser,
                 settings, originUrl, preferencesUtils, surveyValidator);
     }
 }

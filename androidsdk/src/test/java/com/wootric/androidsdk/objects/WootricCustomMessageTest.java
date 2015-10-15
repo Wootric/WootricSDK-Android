@@ -1,7 +1,5 @@
 package com.wootric.androidsdk.objects;
 
-import com.google.gson.Gson;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,14 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WootricCustomMessageTest {
 
     WootricCustomMessage customMessage;
+
     @Before
     public void setUp() {
-        customMessage = new Gson().fromJson(CUSTOM_MESSAGE_JSON, WootricCustomMessage.class);
-    }
-
-    @Test
-    public void customMessageIsCorrectlyBuild() throws Exception {
-        WootricCustomMessage customMessage = new WootricCustomMessage();
+        customMessage = new WootricCustomMessage();
         customMessage.setFollowupQuestion("followup_text");
         customMessage.setDetractorFollowupQuestion("detractor_followup_text");
         customMessage.setPassiveFollowupQuestion("passive_followup_text");
@@ -31,19 +25,10 @@ public class WootricCustomMessageTest {
         customMessage.setDetractorPlaceholderText("detractor_prompt_text");
         customMessage.setPassivePlaceholderText("passive_prompt_text");
         customMessage.setPromoterPlaceholderText("promoter_prompt_text");
-
-        assertThat(customMessage.getFollowupQuestion()).isEqualTo("followup_text");
-        assertThat(customMessage.getDetractorQuestion()).isEqualTo("detractor_followup_text");
-        assertThat(customMessage.getPassiveQuestion()).isEqualTo("passive_followup_text");
-        assertThat(customMessage.getPromoterQuestion()).isEqualTo("promoter_followup_text");
-        assertThat(customMessage.getPlaceholderText()).isEqualTo("prompt_text");
-        assertThat(customMessage.getDetractorPlaceholder()).isEqualTo("detractor_prompt_text");
-        assertThat(customMessage.getPassivePlaceholder()).isEqualTo("passive_prompt_text");
-        assertThat(customMessage.getPromoterPlaceholder()).isEqualTo("promoter_prompt_text");
     }
 
     @Test
-    public void customMessageIsCorrectlyParsedFromJson() throws Exception {
+    public void customMessageIsCorrectlyBuild() throws Exception {
         assertThat(customMessage.getFollowupQuestion()).isEqualTo("followup_text");
         assertThat(customMessage.getDetractorQuestion()).isEqualTo("detractor_followup_text");
         assertThat(customMessage.getPassiveQuestion()).isEqualTo("passive_followup_text");
@@ -107,18 +92,4 @@ public class WootricCustomMessageTest {
         customMessage.setPlaceholderTextsList(new HashMap<String, String>());
         assertThat(customMessage.getPlaceholderForScore(9)).isEqualTo("prompt_text");
     }
-
-    private static final String CUSTOM_MESSAGE_JSON = "{" +
-            "\"followup_question\":\"followup_text\"," +
-            "\"followup_questions_list\":{" +
-                "\"detractor_question\":\"detractor_followup_text\"," +
-                "\"passive_question\":\"passive_followup_text\"," +
-                "\"promoter_question\":\"promoter_followup_text\"" +
-            "}," +
-            "\"placeholder_text\":\"prompt_text\"," +
-            "\"placeholder_texts_list\":{" +
-                "\"detractor_text\":\"detractor_prompt_text\"," +
-                "\"passive_text\":\"passive_prompt_text\"," +
-                "\"promoter_text\":\"promoter_prompt_text\"}" +
-            "}";
 }

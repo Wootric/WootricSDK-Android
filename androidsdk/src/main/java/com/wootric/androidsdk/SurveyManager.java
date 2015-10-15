@@ -6,31 +6,25 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.wootric.androidsdk.network.TrackingPixelClient;
-import com.wootric.androidsdk.network.WootricApiClient;
-import com.wootric.androidsdk.network.responses.AuthenticationResponse;
+import com.wootric.androidsdk.network.WootricApiCallback;
+import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.views.SurveyFragment;
 
-import java.util.List;
-
-import retrofit.RetrofitError;
-
 /**
  * Created by maciejwitowski on 9/3/15.
  */
 public class SurveyManager implements
         SurveyValidator.OnSurveyValidatedListener,
-        WootricApiClient.WootricApiCallback {
+        WootricApiCallback {
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
     private final Context context;
-    private final WootricApiClient wootricApiClient;
-    private final TrackingPixelClient trackingPixelClient;
+    private final WootricRemoteClient wootricApiClient;
     private final User user;
     private final EndUser endUser;
     private final SurveyValidator surveyValidator;
@@ -43,13 +37,12 @@ public class SurveyManager implements
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
 
-    SurveyManager(Context context, WootricApiClient wootricApiClient, TrackingPixelClient trackingPixelClient, User user, EndUser endUser,
+    SurveyManager(Context context, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, String originUrl, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
 
         this.context = context;
         this.wootricApiClient = wootricApiClient;
-        this.trackingPixelClient = trackingPixelClient;
         this.user = user;
         this.endUser = endUser;
         this.surveyValidator = surveyValidator;
@@ -78,40 +71,41 @@ public class SurveyManager implements
     }
 
     @Override
-    public void onAuthenticateSuccess(AuthenticationResponse authenticationResponse) {
-        setAccessToken(authenticationResponse.accessToken);
+    public void onAuthenticateSuccess(String accessToken) {
+        if(accessToken == null) return;
+
+        setAccessToken(accessToken);
         sendGetEndUserRequest();
     }
 
     @Override
-    public void onGetEndUserSuccess(List<EndUser> endUsers) {
-        if(endUsers.size() > 0) {
-            long endUserId = endUsers.get(0).getId();
-            endUser.setId(endUserId);
+    public void onGetEndUserIdSuccess(long endUserId) {
+        endUser.setId(endUserId);
 
-            if(this.endUser.hasProperties()) {
-                sendUpdateEndUserRequest();
-            }
-
-            showSurvey();
-        } else {
-            sendCreateEndUserRequest();
+        if(this.endUser.hasProperties()) {
+            sendUpdateEndUserRequest();
         }
-    }
-
-    @Override
-    public void onCreateEndUserSuccess(EndUser endUser) {
-        this.endUser.setId(endUser.getId());
 
         showSurvey();
     }
 
     @Override
-    public void onApiError(RetrofitError error) {
+    public void onEndUserNotFound() {
+        sendCreateEndUserRequest();
+    }
+
+    @Override
+    public void onCreateEndUserSuccess(long endUserId) {
+        this.endUser.setId(endUserId);
+
+        showSurvey();
+    }
+
+    @Override
+    public void onApiError(Exception error) {
         Log.d(LOG_TAG, error.getLocalizedMessage());
         Wootric.notifySurveyFinished();
     }
-
 
     private void validateSurvey() {
         surveyValidator.setOnSurveyValidatedListener(this);
@@ -119,7 +113,7 @@ public class SurveyManager implements
     }
 
     private void sendGetTrackingPixelRequest() {
-        trackingPixelClient.getTrackingPixel(user, endUser, originUrl);
+        wootricApiClient.getTrackingPixel(user, endUser, originUrl);
     }
 
     private void sendGetAccessTokenRequest() {
@@ -135,7 +129,7 @@ public class SurveyManager implements
     }
 
     private void sendUpdateEndUserRequest() {
-        wootricApiClient.updateEndUser(endUser, accessToken);
+        wootricApiClient.updateEndUser(endUser, accessToken, this);
     }
 
     void showSurvey() {

@@ -3,7 +3,8 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -20,16 +21,9 @@ public class WootricCustomMessage implements Parcelable {
     private static final String PROMOTER_TEXT_KEY = "promoter_text";
 
 
-    @SerializedName("followup_question")
     private String followupQuestion;
-
-    @SerializedName("followup_questions_list")
     private HashMap<String, String> followupQuestionsList;
-
-    @SerializedName("placeholder_text")
     private String placeholderText;
-
-    @SerializedName("placeholder_texts_list")
     private HashMap<String, String> placeholderTextsList;
 
     public WootricCustomMessage() {
@@ -162,4 +156,25 @@ public class WootricCustomMessage implements Parcelable {
             return new WootricCustomMessage[size];
         }
     };
+
+    public static WootricCustomMessage fromJson(JSONObject customMessagesJson) throws JSONException {
+        WootricCustomMessage wootricCustomMessage = new WootricCustomMessage();
+        wootricCustomMessage.followupQuestion = customMessagesJson.getString("followup_question");
+        wootricCustomMessage.placeholderText = customMessagesJson.getString("placeholder_text");
+
+        JSONObject followupQuestionListJson = customMessagesJson.getJSONObject("followup_questions_list");
+        wootricCustomMessage.followupQuestionsList = new HashMap<>();
+        wootricCustomMessage.followupQuestionsList.put(DETRACTOR_QUESTION_KEY, followupQuestionListJson.getString(DETRACTOR_QUESTION_KEY));
+        wootricCustomMessage.followupQuestionsList.put(DETRACTOR_QUESTION_KEY, followupQuestionListJson.getString(DETRACTOR_QUESTION_KEY));
+        wootricCustomMessage.followupQuestionsList.put(PASSIVE_QUESTION_KEY, followupQuestionListJson.getString(PASSIVE_QUESTION_KEY));
+        wootricCustomMessage.followupQuestionsList.put(PROMOTER_QUESTION_KEY, followupQuestionListJson.getString(PROMOTER_QUESTION_KEY));
+
+        JSONObject placeholderTextsListJson = customMessagesJson.getJSONObject("placeholder_texts_list");
+        wootricCustomMessage.placeholderTextsList = new HashMap<>();
+        wootricCustomMessage.placeholderTextsList.put(DETRACTOR_TEXT_KEY, placeholderTextsListJson.getString(DETRACTOR_TEXT_KEY));
+        wootricCustomMessage.placeholderTextsList.put(PASSIVE_TEXT_KEY, placeholderTextsListJson.getString(PASSIVE_TEXT_KEY));
+        wootricCustomMessage.placeholderTextsList.put(PROMOTER_TEXT_KEY, placeholderTextsListJson.getString(PROMOTER_TEXT_KEY));
+
+        return wootricCustomMessage;
+    }
 }

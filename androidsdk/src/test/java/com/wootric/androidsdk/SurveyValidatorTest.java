@@ -1,6 +1,6 @@
 package com.wootric.androidsdk;
 
-import com.wootric.androidsdk.network.SurveyClient;
+import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -31,7 +31,7 @@ public class SurveyValidatorTest {
     PreferencesUtils preferencesUtils;
 
     @Mock
-    SurveyClient surveyClient;
+    WootricRemoteClient wootricRemoteClient;
 
     @Mock
     EndUser endUser;
@@ -52,11 +52,11 @@ public class SurveyValidatorTest {
         doReturn(false).when(preferencesUtils).wasRecentlySurveyed();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     @Test
@@ -68,11 +68,11 @@ public class SurveyValidatorTest {
         doReturn(true).when(preferencesUtils).wasRecentlySurveyed();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(0)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(0)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     @Test
@@ -89,11 +89,11 @@ public class SurveyValidatorTest {
         doReturn(false).when(preferencesUtils).wasRecentlySurveyed();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     @Test
@@ -105,11 +105,11 @@ public class SurveyValidatorTest {
         doReturn(false).when(preferencesUtils).wasRecentlySurveyed();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     @Test
@@ -124,11 +124,11 @@ public class SurveyValidatorTest {
         doReturn(false).when(preferencesUtils).wasRecentlySurveyed();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     @Test
@@ -147,11 +147,11 @@ public class SurveyValidatorTest {
         doReturn(timeBeforeFirstSurveyDelay).when(preferencesUtils).getLastSeen();
 
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
 
         surveyValidator.validate();
 
-        verify(surveyClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
     }
 
     /**
@@ -161,7 +161,7 @@ public class SurveyValidatorTest {
     public void notifiesListener_whenEligibleEqualsTrue() throws Exception {
         Settings settings = new Settings();
         SurveyValidator surveyValidator = new SurveyValidator(testUser(), testEndUser(), settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
         EligibilityResponse eligibilityResponse = new EligibilityResponse(true, settings);
 
         surveyValidator.setOnSurveyValidatedListener(onSurveyValidatedListener);
@@ -174,7 +174,7 @@ public class SurveyValidatorTest {
     public void doesNotNotifyListener_whenEligibleEqualsFalse() throws Exception {
         Settings settings = new Settings();
         SurveyValidator surveyValidator = new SurveyValidator(testUser(), testEndUser(), settings,
-                surveyClient, preferencesUtils);
+                wootricRemoteClient, preferencesUtils);
         EligibilityResponse eligibilityResponse = new EligibilityResponse(false, settings);
 
         surveyValidator.setOnSurveyValidatedListener(onSurveyValidatedListener);
