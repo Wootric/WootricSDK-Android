@@ -24,7 +24,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     static final String REQUEST_TYPE_GET = "GET";
 
     protected static final String API_ENDPOINT = "https://api.wootric.com";
-    protected static final String SURVEY_ENDPOINT = "http://wootric-eligibility.herokuapp.com";
+    protected static final String SURVEY_ENDPOINT = "http://survey.wootric.com/";
 
     protected static final String TRACKING_PIXEL_URL = "https://d8myem934l1zi.cloudfront.net/pixel.gif";
     protected static final String END_USERS_URL = API_ENDPOINT + "/v1/end_users";
