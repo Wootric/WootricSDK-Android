@@ -1,6 +1,5 @@
 package com.wootric.androidsdk.objects;
 
-import com.google.gson.Gson;
 import com.wootric.androidsdk.Constants;
 
 import org.junit.Test;
@@ -25,18 +24,6 @@ public class SettingsTest {
 
     @Mock
     WootricCustomMessage mockCustomMessage;
-
-    @Test
-    public void settingsAreCorrectlyPassedFromJson() {
-        Settings settings = new Gson().fromJson(SETTINGS_JSON, Settings.class);
-
-        assertThat(settings.getFirstSurveyDelay()).isEqualTo(30);
-        assertThat(settings.getLocalizedTexts()).isNotNull();
-        assertThat(settings.getNpsQuestion()).isEqualTo("How likely are you to recommend this product or service to a friend or co-worker?");
-        assertThat(settings.getAdminPanelCustomMessage()).isNotNull();
-        assertThat(settings.getAdminPanelCustomMessage().getFollowupQuestion()).isEqualTo("Followup text");
-        assertThat(settings.getTimeDelayInMillis()).isEqualTo(5 * 1000);
-    }
 
     /**
      * firstSurveyDelayPassed(long timeFrom)
@@ -269,17 +256,6 @@ public class SettingsTest {
         Settings settings = new Settings();
         assertThat(settings.getThankYouLinkUri(10, "feedback")).isNull();
     }
-
-    private static final String SETTINGS_JSON = "{" +
-            "\"first_survey\":30," +
-            "\"localized_texts\":{" +
-                "\"nps_question\":\"How likely are you to recommend this product or service to a friend or co-worker?\"" +
-            "}," +
-            "\"messages\":{" +
-                "\"followup_question\":\"Followup text\"" +
-            "}," +
-            "\"time_delay\":5" +
-            "}";
 
     private void mockLocalizedTexts() {
         doReturn("How likely").when(mockLocalizedTexts).getNpsQuestion();

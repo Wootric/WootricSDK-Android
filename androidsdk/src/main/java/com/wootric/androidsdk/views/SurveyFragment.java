@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
-import com.wootric.androidsdk.network.WootricApiClient;
+import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -52,7 +52,7 @@ public class SurveyFragment extends DialogFragment
 
     private boolean mResponseSent;
 
-    private WootricApiClient mWootricApiClient;
+    private WootricRemoteClient mWootricApiClient;
     private SocialHandler mSocialHandler;
 
     private boolean isResumedOnConfigurationChange;
@@ -79,7 +79,7 @@ public class SurveyFragment extends DialogFragment
         setupState(savedInstanceState);
 
         mSocialHandler = new SocialHandler(getActivity());
-        mWootricApiClient = new WootricApiClient();
+        mWootricApiClient = new WootricRemoteClient();
     }
 
     @Nullable
