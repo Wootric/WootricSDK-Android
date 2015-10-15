@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -120,10 +119,10 @@ public class SurveyLayoutPortrait extends LinearLayout
 
     private void initResources() {
         Resources res = mContext.getResources();
-        mColorNotSelected = ContextCompat.getColor(mContext, R.color.wootric_dark_gray);
-        mColorSelected = ContextCompat.getColor(mContext, R.color.wootric_brand_color);
-        mColorBlack = ContextCompat.getColor(mContext, android.R.color.black);
-        mColorEnabled = ContextCompat.getColor(mContext, R.color.wootric_survey_layout_header_background);
+        mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
+        mColorSelected = res.getColor(R.color.wootric_brand_color);
+        mColorBlack = res.getColor(android.R.color.black);
+        mColorEnabled = res.getColor(R.color.wootric_survey_layout_header_background);
 
         mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
         mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
