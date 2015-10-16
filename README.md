@@ -27,11 +27,10 @@ Note: this library is tested to  support Android SDK version 16 onwards. Please 
 Permissions
 ===========
 
-Add the following permissions to the AndroidManifest.xml file:
+Add the internet permissions to the AndroidManifest.xml file:
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 ```
 
 ProGuard
