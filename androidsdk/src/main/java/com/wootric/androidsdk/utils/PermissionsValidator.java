@@ -17,9 +17,6 @@ public class PermissionsValidator {
 
     public boolean check() {
         int internetPermission = context.checkCallingOrSelfPermission(Manifest.permission.INTERNET);
-        int writeExternalStorage = context.checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        return internetPermission == PackageManager.PERMISSION_GRANTED &&
-                writeExternalStorage == PackageManager.PERMISSION_GRANTED;
+        return internetPermission == PackageManager.PERMISSION_GRANTED;
     }
 }
