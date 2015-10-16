@@ -1,7 +1,8 @@
 package com.wootric.androidsdk;
 
-import com.wootric.androidsdk.network.SurveyClient;
+import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
+import com.wootric.androidsdk.network.tasks.CheckEligibilityTask;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
@@ -10,21 +11,21 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class SurveyValidator implements SurveyClient.SurveyCallback {
+public class SurveyValidator implements CheckEligibilityTask.Callback {
 
     private OnSurveyValidatedListener onSurveyValidatedListener;
     private final User user;
     private final EndUser endUser;
     private final Settings settings;
-    private final SurveyClient surveyClient;
+    private final WootricRemoteClient wootricRemoteClient;
     private final PreferencesUtils preferencesUtils;
 
     SurveyValidator(User user, EndUser endUser, Settings settings,
-                        SurveyClient surveyClient, PreferencesUtils preferencesUtils) {
+                    WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
         this.user = user;
         this.endUser = endUser;
         this.settings = settings;
-        this.surveyClient = surveyClient;
+        this.wootricRemoteClient = wootricRemoteClient;
         this.preferencesUtils = preferencesUtils;
     }
 
@@ -66,7 +67,7 @@ public class SurveyValidator implements SurveyClient.SurveyCallback {
     }
 
     private void checkEligibility() {
-        surveyClient.checkEligibility(user, endUser, settings, this);
+        wootricRemoteClient.checkEligibility(user, endUser, settings, this);
     }
 
     private void notifyShouldShowSurvey(Settings settings) {

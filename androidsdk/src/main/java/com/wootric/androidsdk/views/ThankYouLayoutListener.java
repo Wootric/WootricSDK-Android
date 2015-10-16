@@ -3,7 +3,7 @@ package com.wootric.androidsdk.views;
 /**
  * Created by maciejwitowski on 9/30/15.
  */
-interface ThankYouLayoutListener {
+public interface ThankYouLayoutListener {
 
     void onFacebookBtnClick();
 

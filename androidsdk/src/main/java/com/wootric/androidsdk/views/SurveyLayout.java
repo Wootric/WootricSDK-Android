@@ -5,7 +5,7 @@ import com.wootric.androidsdk.objects.Settings;
 /**
  * Created by maciejwitowski on 9/30/15.
  */
-interface SurveyLayout {
+public interface SurveyLayout {
 
     void setSurveyLayoutListener(SurveyLayoutListener surveyLayoutListener);
 
