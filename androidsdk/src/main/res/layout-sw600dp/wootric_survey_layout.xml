@@ -18,7 +18,59 @@
         android:text="@string/wootric_example_nps_question"/>
 
     <LinearLayout
-        android:id="@+id/rv_rating_with_anchors"
+        android:id="@+id/wootric_layout_followup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/wootric_tv_followup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wootric_green"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:text="@string/wootric_feedback_question"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:orientation="horizontal"
+            android:background="@drawable/tablet_feedback_background">
+
+            <EditText
+                android:id="@+id/wootric_et_feedback"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textCursorDrawable="@drawable/wootric_tablet_feedback_cursor"
+                android:textColor="#78000000"
+                android:background="@null"
+                android:padding="16dp"
+                android:textSize="14dp"
+                android:maxLines="2"
+                android:layout_weight="1"
+                android:hint="@string/wootric_example_followup_placeholder" />
+
+            <Button
+                android:id="@+id/wootric_btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:layout_gravity="right"
+                android:background="@drawable/tablet_submit_background"
+                android:textColor="@android:color/white"
+                android:text="@string/wootric_example_btn_submit"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wootric_layout_rating_with_anchors"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

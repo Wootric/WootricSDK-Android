@@ -23,6 +23,7 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
+import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -157,14 +158,6 @@ public class SurveyFragment extends DialogFragment
 
         window.setAttributes(lp);
         mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
-    }
-
-    private void measureTabletDialog() {
-        final Activity activity = getActivity();
-
-        if(activity == null) return;
-
-        Dialog dialog = getDialog();
     }
 
     private void setupState(Bundle savedInstanceState) {

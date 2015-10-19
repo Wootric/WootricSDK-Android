@@ -2,7 +2,7 @@ package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -86,6 +86,7 @@ public class ScoreView extends TextView implements View.OnClickListener{
         super.setSelected(selected);
 
         setTextColor(isSelected() ? mTextColorSelected : mTextColorNotSelected);
+        setTypeface(null, isSelected() ? Typeface.BOLD : Typeface.NORMAL);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener onScoreClickListener) {

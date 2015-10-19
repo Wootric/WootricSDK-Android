@@ -24,6 +24,8 @@ import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
 
+import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
+
 /**
  * Created by maciejwitowski on 9/21/15.
  */
@@ -96,23 +98,22 @@ public class SurveyLayoutPortrait extends LinearLayout
         initNpsViewElements();
         initFeedbackViewElements();
 
-        mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
         mBtnSubmit = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_submit);
         mBtnDismiss = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_dismiss);
-
         mBtnSubmit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitSurvey();
             }
         });
-
         mBtnDismiss.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissSurvey();
             }
         });
+
+        mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
 
         mCommonSurveyViews = new View[]{ mLayoutBody, mTvSurveyHeader };
 
@@ -323,18 +324,9 @@ public class SurveyLayoutPortrait extends LinearLayout
     }
 
     private void setupNpsState() {
-        for(int i = 0; i < mCommonSurveyViews.length; i++) {
-            mCommonSurveyViews[i].setVisibility(VISIBLE);
-        }
-
-        for(int i = 0; i < mFeedbackViews.length; i++) {
-            mFeedbackViews[i].setVisibility(GONE);
-        }
-
-        mTvSurveyHeader.setText(mSettings.getNpsQuestion());
-        for(int i = 0; i < mNpsViews.length; i++) {
-            mNpsViews[i].setVisibility(VISIBLE);
-        }
+        setViewsVisibility(mCommonSurveyViews, true);
+        setViewsVisibility(mFeedbackViews, false);
+        setViewsVisibility(mNpsViews, true);
 
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
@@ -344,18 +336,11 @@ public class SurveyLayoutPortrait extends LinearLayout
     }
 
     private void setupFeedbackState() {
-        for(int i = 0; i < mCommonSurveyViews.length; i++) {
-            mCommonSurveyViews[i].setVisibility(VISIBLE);
-        }
-
-        for(int i = 0; i < mFeedbackViews.length; i++) {
-            mFeedbackViews[i].setVisibility(VISIBLE);
-        }
+        setViewsVisibility(mCommonSurveyViews, true);
+        setViewsVisibility(mFeedbackViews, true);
+        setViewsVisibility(mNpsViews, false);
 
         mTvSurveyHeader.setText(mSettings.getFollowupQuestion(mRatingBar.getSelectedScore()));
-        for(int i = 0; i < mNpsViews.length; i++) {
-            mNpsViews[i].setVisibility(GONE);
-        }
 
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(true);
@@ -365,20 +350,12 @@ public class SurveyLayoutPortrait extends LinearLayout
     }
 
     private void setupThankYouState() {
+        setViewsVisibility(mCommonSurveyViews, false);
+        setViewsVisibility(mFeedbackViews, false);
+        setViewsVisibility(mNpsViews, false);
+
         mThankYouLayout.setVisibility(VISIBLE);
         mThankYouLayout.initValues(mSettings, getSelectedScore(), getFeedback());
-
-        for(int i = 0; i < mCommonSurveyViews.length; i++) {
-            mCommonSurveyViews[i].setVisibility(GONE);
-        }
-
-        for(int i = 0; i < mNpsViews.length; i++) {
-            mNpsViews[i].setVisibility(GONE);
-        }
-
-        for(int i = 0; i < mFeedbackViews.length; i++) {
-            mFeedbackViews[i].setVisibility(GONE);
-        }
     }
 
     private void updateSubmitBtn(boolean enable) {
