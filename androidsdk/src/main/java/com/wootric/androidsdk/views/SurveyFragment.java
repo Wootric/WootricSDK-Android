@@ -54,6 +54,8 @@ public class SurveyFragment extends DialogFragment
     private WootricRemoteClient mWootricApiClient;
     private SocialHandler mSocialHandler;
 
+    private boolean mIsTablet;
+
     private boolean isResumedOnConfigurationChange;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
@@ -79,6 +81,8 @@ public class SurveyFragment extends DialogFragment
 
         mSocialHandler = new SocialHandler(getActivity());
         mWootricApiClient = new WootricRemoteClient();
+
+        mIsTablet = getResources().getBoolean(R.bool.isTablet);
     }
 
     @Override
@@ -111,7 +115,8 @@ public class SurveyFragment extends DialogFragment
     public void onStart() {
         super.onStart();
 
-        measurePhoneDialog();
+        if(!mIsTablet)
+            measurePhoneDialog();
     }
 
     private void measurePhoneDialog() {
@@ -152,6 +157,14 @@ public class SurveyFragment extends DialogFragment
 
         window.setAttributes(lp);
         mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
+    }
+
+    private void measureTabletDialog() {
+        final Activity activity = getActivity();
+
+        if(activity == null) return;
+
+        Dialog dialog = getDialog();
     }
 
     private void setupState(Bundle savedInstanceState) {

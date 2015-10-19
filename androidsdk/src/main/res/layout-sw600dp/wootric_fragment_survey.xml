@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.wootric.androidsdk.views.tablet.SurveyLayoutTablet
+    android:id="@+id/wootric_survey_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_gravity="bottom"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

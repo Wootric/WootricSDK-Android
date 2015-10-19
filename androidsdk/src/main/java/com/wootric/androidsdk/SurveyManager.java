@@ -152,7 +152,14 @@ public class SurveyManager implements
         SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, originUrl,
                 accessToken, settings);
 
-        surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+        final boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
+
+        if(isTablet) {
+            fragmentManager.beginTransaction()
+                    .add(android.R.id.content, surveyFragment).addToBackStack(null).commit();
+        } else {
+            surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+        }
     }
 
     void setAccessToken(String accessToken) {
