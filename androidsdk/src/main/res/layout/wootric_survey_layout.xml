@@ -26,7 +26,7 @@
             android:layout_height="@dimen/wootric_score_layout_height"
             android:orientation="horizontal"/>
 
-        <com.wootric.androidsdk.views.RatingBar
+        <com.wootric.androidsdk.views.phone.RatingBar
             android:id="@+id/wootric_rating_bar"
             android:layout_below="@+id/wootric_score_layout"
             android:layout_width="match_parent"
@@ -111,7 +111,7 @@
             android:text="@string/wootric_example_btn_dismiss"/>
     </RelativeLayout>
 
-    <com.wootric.androidsdk.views.ThankYouLayout
+    <com.wootric.androidsdk.views.phone.ThankYouLayout
         android:id="@+id/wootric_thank_you_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

@@ -111,7 +111,7 @@ public class Wootric {
     }
 
     public void survey() {
-        if(!permissionsValidator.check() || surveyInProgress)
+        if (!permissionsValidator.check() || surveyInProgress)
             return;
 
         WootricRemoteClient wootricRemoteClient = new WootricRemoteClient();
@@ -124,6 +124,7 @@ public class Wootric {
         surveyManager.start();
         surveyInProgress = true;
     }
+
 
     private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
         if(context == null) {

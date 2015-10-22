@@ -185,10 +185,13 @@ public class SurveyFragment extends DialogFragment
         outState.putParcelable(ARG_USER, mUser);
         outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
         outState.putParcelable(ARG_SETTINGS, mSettings);
-        outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
-        outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
-        outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
+
+        if(mSurveyLayout != null) {
+            outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
+            outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
+            outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -244,6 +247,15 @@ public class SurveyFragment extends DialogFragment
         }
 
         dismiss();
+    }
+
+    @Override
+    public void dismiss() {
+        if(mIsTablet) {
+            Wootric.notifySurveyFinished();
+        }
+
+        super.dismiss();
     }
 
     @Override

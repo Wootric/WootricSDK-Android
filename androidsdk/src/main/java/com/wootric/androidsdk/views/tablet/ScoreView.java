@@ -59,12 +59,12 @@ public class ScoreView extends TextView implements View.OnClickListener{
 
         setBackground(drawable);
 
-        setHeight((int) ScreenUtils.dpToPx(48));
-        setWidth((int) ScreenUtils.dpToPx(48));
+        setHeight((int) ScreenUtils.dpToPx(42));
+        setWidth((int) ScreenUtils.dpToPx(42));
 
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int margin = (int) ScreenUtils.dpToPx(8);
+        int margin = (int) ScreenUtils.dpToPx(6);
         llp.setMargins(margin, 0, 0, 0);
         setLayoutParams(llp);
 

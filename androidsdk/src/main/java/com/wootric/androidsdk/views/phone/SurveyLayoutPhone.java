@@ -29,7 +29,7 @@ import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
 /**
  * Created by maciejwitowski on 9/21/15.
  */
-public class SurveyLayoutPortrait extends LinearLayout
+public class SurveyLayoutPhone extends LinearLayout
         implements SurveyLayout, OnScoreChangedListener, ThankYouLayoutListener {
 
     private Context mContext;
@@ -74,17 +74,17 @@ public class SurveyLayoutPortrait extends LinearLayout
 
     private Settings mSettings;
 
-    public SurveyLayoutPortrait(Context context) {
+    public SurveyLayoutPhone(Context context) {
         super(context);
         init(context);
     }
 
-    public SurveyLayoutPortrait(Context context, AttributeSet attrs) {
+    public SurveyLayoutPhone(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SurveyLayoutPortrait(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SurveyLayoutPhone(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -386,7 +386,6 @@ public class SurveyLayoutPortrait extends LinearLayout
         if(showKeyboard) {
             mEtFeedback.requestFocus();
             mEtFeedback.setHorizontallyScrolling(false);
-            mEtFeedback.setMaxLines(4);
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
         } else {
             mEtFeedback.clearFocus();
