@@ -328,6 +328,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mFeedbackViews, false);
         setViewsVisibility(mNpsViews, true);
 
+        mTvSurveyHeader.setText(mSettings.getFollowupQuestion(mRatingBar.getSelectedScore()));
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 
@@ -340,7 +341,9 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mFeedbackViews, true);
         setViewsVisibility(mNpsViews, false);
 
-        mTvSurveyHeader.setText(mSettings.getFollowupQuestion(mRatingBar.getSelectedScore()));
+        int currentScore = mRatingBar.getSelectedScore();
+        mTvSurveyHeader.setText(mSettings.getFollowupQuestion(currentScore));
+        mEtFeedback.setHint(mSettings.getFollowupPlaceholder(currentScore));
 
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(true);
@@ -355,7 +358,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mNpsViews, false);
 
         mThankYouLayout.setVisibility(VISIBLE);
-        mThankYouLayout.initValues(mSettings, getSelectedScore(), getFeedback());
+        mThankYouLayout.initValues(mSettings, mRatingBar.getSelectedScore(), getFeedback());
     }
 
     private void updateSubmitBtn(boolean enable) {
