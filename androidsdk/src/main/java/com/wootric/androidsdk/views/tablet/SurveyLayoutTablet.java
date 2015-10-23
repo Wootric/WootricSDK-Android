@@ -191,10 +191,11 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void setTexts() {
-        mTvNpsQuestion.setText(mSettings.getNpsQuestion());
-        mTvAnchorLikely.setText(mSettings.getAnchorLikely());
-        mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
-        mEtFeedback.setHint(mSettings.getFollowupPlaceholder(mCurrentScore));
+        if(mSettings != null) {
+            mTvNpsQuestion.setText(mSettings.getNpsQuestion());
+            mTvAnchorLikely.setText(mSettings.getAnchorLikely());
+            mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
+        }
     }
 
     private void updateState(int state) {
@@ -214,13 +215,18 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void setupFeedbackState() {
-        mTvNpsQuestion.setVisibility(GONE);
-        mTvFollowupQuestion.setText(mSettings.getFollowupQuestion(mCurrentScore));
+        setFeedbackTexts();
 
+        mTvNpsQuestion.setVisibility(GONE);
         mLayoutFollowup.setAlpha(0);
         mLayoutFollowup.setVisibility(VISIBLE);
         fadeInView(mLayoutFollowup);
         setKeyboardVisibility(true);
+    }
+
+    private void setFeedbackTexts() {
+        mEtFeedback.setText(mSettings.getFollowupPlaceholder(mCurrentScore));
+        mTvFollowupQuestion.setText(mSettings.getFollowupQuestion(mCurrentScore));
     }
 
     private void setupThankYouState() {
@@ -271,8 +277,6 @@ public class SurveyLayoutTablet extends LinearLayout
             mScoreViews[mCurrentScore].setSelected(true);
 
         }
-
-        updateState(mCurrentState);
     }
 
     @Override
@@ -306,16 +310,12 @@ public class SurveyLayoutTablet extends LinearLayout
         if(mCurrentState != STATE_FEEDBACK) {
             updateState(STATE_FEEDBACK);
         } else {
-            updateFollowupQuestion();
+            setFeedbackTexts();
+            mTvFollowupQuestion.setAlpha(0);
+            fadeInView(mTvFollowupQuestion);
         }
 
         notifyListener();
-    }
-
-    private void updateFollowupQuestion() {
-        mTvFollowupQuestion.setAlpha(0);
-        mTvFollowupQuestion.setText(mSettings.getFollowupQuestion(mCurrentScore));
-        fadeInView(mTvFollowupQuestion);
     }
 
     private void notifyListener() {
