@@ -1,4 +1,4 @@
-package com.wootric.androidsdk.views;
+package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -220,9 +220,5 @@ public class RatingBar extends View implements View.OnTouchListener {
             mSelectedScore = selectedScore;
             invalidate();
         }
-    }
-
-    public interface OnScoreChangedListener {
-        void onScoreChanged(int oldScore, int newScore);
     }
 }

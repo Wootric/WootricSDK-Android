@@ -23,6 +23,7 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
+import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -54,6 +55,8 @@ public class SurveyFragment extends DialogFragment
     private WootricRemoteClient mWootricApiClient;
     private SocialHandler mSocialHandler;
 
+    private boolean mIsTablet;
+
     private boolean isResumedOnConfigurationChange;
 
     public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
@@ -79,6 +82,8 @@ public class SurveyFragment extends DialogFragment
 
         mSocialHandler = new SocialHandler(getActivity());
         mWootricApiClient = new WootricRemoteClient();
+
+        mIsTablet = getResources().getBoolean(R.bool.isTablet);
     }
 
     @Override
@@ -111,7 +116,8 @@ public class SurveyFragment extends DialogFragment
     public void onStart() {
         super.onStart();
 
-        measurePhoneDialog();
+        if(!mIsTablet)
+            measurePhoneDialog();
     }
 
     private void measurePhoneDialog() {
@@ -179,10 +185,13 @@ public class SurveyFragment extends DialogFragment
         outState.putParcelable(ARG_USER, mUser);
         outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
         outState.putParcelable(ARG_SETTINGS, mSettings);
-        outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
-        outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
-        outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
+
+        if(mSurveyLayout != null) {
+            outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
+            outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
+            outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -238,6 +247,15 @@ public class SurveyFragment extends DialogFragment
         }
 
         dismiss();
+    }
+
+    @Override
+    public void dismiss() {
+        if(mIsTablet) {
+            Wootric.notifySurveyFinished();
+        }
+
+        super.dismiss();
     }
 
     @Override

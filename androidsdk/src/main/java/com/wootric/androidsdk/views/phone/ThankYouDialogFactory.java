@@ -1,4 +1,4 @@
-package com.wootric.androidsdk.views;
+package com.wootric.androidsdk.views.phone;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

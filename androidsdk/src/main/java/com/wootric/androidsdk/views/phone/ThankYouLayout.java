@@ -1,4 +1,4 @@
-package com.wootric.androidsdk.views;
+package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.views.ThankYouLayoutListener;
 
 /**
  * Created by maciejwitowski on 9/18/15.
