@@ -22,7 +22,6 @@ public class Wootric {
     final EndUser endUser;
     final User user;
     final Settings settings;
-    String originUrl;
 
     boolean surveyInProgress;
     PreferencesUtils preferencesUtils;
@@ -56,10 +55,6 @@ public class Wootric {
 
     public void setProperties(HashMap<String, String> properties) {
         endUser.setProperties(properties);
-    }
-
-    public void setOriginUrl(String originUrl) {
-        this.originUrl = originUrl;
     }
 
     public void setSurveyImmediately(boolean surveyImmediately) {
@@ -119,7 +114,7 @@ public class Wootric {
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
                 wootricRemoteClient, preferencesUtils);
         SurveyManager surveyManager = buildSurveyManager(context, wootricRemoteClient,
-                user, endUser, settings, originUrl, preferencesUtils, surveyValidator);
+                user, endUser, settings, preferencesUtils, surveyValidator);
 
         surveyManager.start();
         surveyInProgress = true;
@@ -149,9 +144,9 @@ public class Wootric {
     }
 
     SurveyManager buildSurveyManager(Context context, WootricRemoteClient wootricApiClient, User user,
-                                     EndUser endUser, Settings settings, String originUrl,
-                                     PreferencesUtils preferencesUtils, SurveyValidator surveyValidator) {
+                                     EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
+                                     SurveyValidator surveyValidator) {
         return new SurveyManager(context, wootricApiClient, user, endUser,
-                settings, originUrl, preferencesUtils, surveyValidator);
+                settings, preferencesUtils, surveyValidator);
     }
 }

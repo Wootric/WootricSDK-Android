@@ -27,7 +27,6 @@ public class MainActivity extends Activity {
     private void startSurvey() {
         Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
-        wootric.setOriginUrl("http://www.wootric.com");
         wootric.setSurveyImmediately(true);
         wootric.survey();
     }
