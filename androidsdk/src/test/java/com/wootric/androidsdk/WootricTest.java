@@ -127,13 +127,6 @@ public class WootricTest {
         assertThat(wootric.endUser.getProperties()).isEqualTo(properties);
     }
 
-    @Test public void setOriginUrl() throws Exception {
-        Wootric wootric = Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        wootric.setOriginUrl("test.com");
-
-        assertThat(wootric.originUrl).isEqualTo("test.com");
-    }
-
     @Test public void setSurveyImmediately() throws Exception {
         Wootric wootric = Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setSurveyImmediately(true);
@@ -250,14 +243,13 @@ public class WootricTest {
     @Test public void survey_startsSurvey() throws Exception {
         Wootric.singleton = null;
         Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        wootric.originUrl = "test.com";
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
                 any(WootricRemoteClient.class), eq(wootric.user),
-                eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
+                eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
         wootric.permissionsValidator = mockPermissionsValidator;
@@ -272,14 +264,13 @@ public class WootricTest {
     public void doesNotStartSurvey_whenSurveyInProgress() {
         Wootric.singleton = null;
         Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        wootric.originUrl = "test.com";
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
                 any(WootricRemoteClient.class), eq(wootric.user),
-                eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
+                eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
         wootric.permissionsValidator = mockPermissionsValidator;
@@ -295,14 +286,13 @@ public class WootricTest {
     public void doesNotStartSurvey_whenPermissionsValidatorChecksReturnsFalse() {
         Wootric.singleton = null;
         Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        wootric.originUrl = "test.com";
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
                 any(WootricRemoteClient.class), eq(wootric.user),
-                eq(wootric.endUser), eq(wootric.settings), eq(wootric.originUrl),
+                eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
         wootric.permissionsValidator = mockPermissionsValidator;

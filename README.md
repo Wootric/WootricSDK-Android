@@ -59,7 +59,6 @@ All you need to do is to add this code to you Activity's `onCreate` method:
 
 ```java
 Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-wootric.setOriginUrl(ORIGIN_URL);
 wootric.survey();
 ```
 

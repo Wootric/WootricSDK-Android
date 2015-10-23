@@ -3,6 +3,8 @@ package com.wootric.androidsdk;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.util.Log;
 
@@ -32,13 +34,13 @@ public class SurveyManager implements
     private final PreferencesUtils preferencesUtils;
 
     private String accessToken;
-    private final String originUrl;
+    private String originUrl;
 
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
 
     SurveyManager(Context context, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
-                  Settings settings, String originUrl, PreferencesUtils preferencesUtils,
+                  Settings settings, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
 
         this.context = context;
@@ -47,7 +49,6 @@ public class SurveyManager implements
         this.endUser = endUser;
         this.surveyValidator = surveyValidator;
         this.settings = settings;
-        this.originUrl = originUrl;
         this.preferencesUtils = preferencesUtils;
     }
 
@@ -113,7 +114,7 @@ public class SurveyManager implements
     }
 
     private void sendGetTrackingPixelRequest() {
-        wootricApiClient.getTrackingPixel(user, endUser, originUrl);
+        wootricApiClient.getTrackingPixel(user, endUser, getOriginUrl());
     }
 
     private void sendGetAccessTokenRequest() {
@@ -138,7 +139,7 @@ public class SurveyManager implements
             public void run() {
                 try {
                     showSurveyFragment();
-                } catch(IllegalStateException e) {
+                } catch (IllegalStateException e) {
                     Log.d(LOG_TAG, e.getLocalizedMessage());
                     Wootric.notifySurveyFinished();
                 }
@@ -149,7 +150,7 @@ public class SurveyManager implements
     private void showSurveyFragment() {
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
 
-        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, originUrl,
+        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, getOriginUrl(),
                 accessToken, settings);
 
         surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
@@ -157,5 +158,21 @@ public class SurveyManager implements
 
     void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    private String getOriginUrl() {
+        if(originUrl == null) {
+            PackageManager pm = context.getPackageManager();
+            ApplicationInfo appInfo;
+            try {
+                appInfo = pm.getApplicationInfo(context.getApplicationInfo().packageName, 0);
+                originUrl = pm.getApplicationLabel(appInfo).toString();
+            } catch (Exception e) {
+            }
+        }
+
+        if(originUrl == null) originUrl = "";
+
+        return originUrl;
     }
 }
