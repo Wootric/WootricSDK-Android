@@ -30,7 +30,7 @@ public class Wootric {
 
     static Wootric singleton;
 
-    public static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
+    public synchronized static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
         if(singleton == null) {
             singleton = new Wootric(context, clientId, clientSecret, accountToken);
         }
