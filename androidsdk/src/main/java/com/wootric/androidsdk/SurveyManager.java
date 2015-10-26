@@ -16,6 +16,8 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.views.SurveyFragment;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by maciejwitowski on 9/3/15.
  */
@@ -25,7 +27,7 @@ public class SurveyManager implements
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
-    private final Context context;
+    private final WeakReference<Context> weakContext;
     private final WootricRemoteClient wootricApiClient;
     private final User user;
     private final EndUser endUser;
@@ -39,11 +41,11 @@ public class SurveyManager implements
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
 
-    SurveyManager(Context context, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+    SurveyManager(WeakReference<Context> weakContext, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
 
-        this.context = context;
+        this.weakContext = weakContext;
         this.wootricApiClient = wootricApiClient;
         this.user = user;
         this.endUser = endUser;
@@ -148,6 +150,10 @@ public class SurveyManager implements
     }
 
     private void showSurveyFragment() {
+        final Context context = weakContext.get();
+
+        if(context == null) return;
+
         final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
 
         SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, getOriginUrl(),
@@ -171,12 +177,16 @@ public class SurveyManager implements
 
     private String getOriginUrl() {
         if(originUrl == null) {
-            PackageManager pm = context.getPackageManager();
-            ApplicationInfo appInfo;
-            try {
-                appInfo = pm.getApplicationInfo(context.getApplicationInfo().packageName, 0);
-                originUrl = pm.getApplicationLabel(appInfo).toString();
-            } catch (Exception e) {
+            final Context context = weakContext.get();
+
+            if(context != null) {
+                PackageManager pm = context.getPackageManager();
+                ApplicationInfo appInfo;
+                try {
+                    appInfo = pm.getApplicationInfo(context.getApplicationInfo().packageName, 0);
+                    originUrl = pm.getApplicationLabel(appInfo).toString();
+                } catch (Exception e) {
+                }
             }
         }
 

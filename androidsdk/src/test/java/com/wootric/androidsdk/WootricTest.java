@@ -247,7 +247,7 @@ public class WootricTest {
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -268,7 +268,7 @@ public class WootricTest {
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -290,7 +290,7 @@ public class WootricTest {
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.context),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));

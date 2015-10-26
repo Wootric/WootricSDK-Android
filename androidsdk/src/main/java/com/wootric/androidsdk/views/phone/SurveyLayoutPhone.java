@@ -328,7 +328,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mFeedbackViews, false);
         setViewsVisibility(mNpsViews, true);
 
-        mTvSurveyHeader.setText(mSettings.getFollowupQuestion(mRatingBar.getSelectedScore()));
+        mTvSurveyHeader.setText(mSettings.getNpsQuestion());
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 

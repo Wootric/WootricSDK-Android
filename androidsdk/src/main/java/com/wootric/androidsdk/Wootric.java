@@ -11,6 +11,7 @@ import com.wootric.androidsdk.objects.WootricCustomThankYou;
 import com.wootric.androidsdk.utils.PermissionsValidator;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
@@ -18,7 +19,7 @@ import java.util.HashMap;
  */
 public class Wootric {
 
-    final Context context;
+    final WeakReference<Context> weakContext;
     final EndUser endUser;
     final User user;
     final Settings settings;
@@ -113,7 +114,7 @@ public class Wootric {
 
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
                 wootricRemoteClient, preferencesUtils);
-        SurveyManager surveyManager = buildSurveyManager(context, wootricRemoteClient,
+        SurveyManager surveyManager = buildSurveyManager(weakContext, wootricRemoteClient,
                 user, endUser, settings, preferencesUtils, surveyValidator);
 
         surveyManager.start();
@@ -130,12 +131,12 @@ public class Wootric {
             throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
         }
 
-        this.context = context;
+        weakContext = new WeakReference<>(context);
         endUser = new EndUser();
         user = new User(clientId, clientSecret, accountToken);
         settings = new Settings();
-        preferencesUtils = new PreferencesUtils(context);
-        permissionsValidator = new PermissionsValidator(context);
+        preferencesUtils = new PreferencesUtils(weakContext);
+        permissionsValidator = new PermissionsValidator(weakContext);
     }
 
     SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,
@@ -143,10 +144,10 @@ public class Wootric {
         return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
     }
 
-    SurveyManager buildSurveyManager(Context context, WootricRemoteClient wootricApiClient, User user,
+    SurveyManager buildSurveyManager(WeakReference<Context> weakContext, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
                                      SurveyValidator surveyValidator) {
-        return new SurveyManager(context, wootricApiClient, user, endUser,
+        return new SurveyManager(weakContext, wootricApiClient, user, endUser,
                 settings, preferencesUtils, surveyValidator);
     }
 }

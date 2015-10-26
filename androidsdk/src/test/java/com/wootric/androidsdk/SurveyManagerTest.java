@@ -1,6 +1,7 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.test.mock.MockContext;
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +55,8 @@ public class SurveyManagerTest {
     public void sendsGetTrackingPixelRequest() throws Exception {
         User user = testUser();
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                user, endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, user, endUser, new Settings(), preferencesUtils,
                 surveyValidator);
 
         surveyManager.start();
@@ -64,8 +66,8 @@ public class SurveyManagerTest {
 
     @Test
     public void updatesLastSeen() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), testEndUser(), new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
         surveyManager.start();
@@ -75,8 +77,8 @@ public class SurveyManagerTest {
 
     @Test
     public void validatesSurvey() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), testEndUser(), new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
         surveyManager.start();
@@ -86,8 +88,8 @@ public class SurveyManagerTest {
 
     @Test
     public void setsOnSurveyValidatedListener() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), testEndUser(), new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
         surveyManager.start();
@@ -99,8 +101,8 @@ public class SurveyManagerTest {
     public void sendsGetAccessTokenRequest() throws Exception {
         User user = testUser();
         Settings settings = new Settings();
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                user, testEndUser(), settings, preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, user, testEndUser(), settings, preferencesUtils,
                 surveyValidator);
 
         surveyManager.onSurveyValidated(new Settings());
@@ -114,8 +116,8 @@ public class SurveyManagerTest {
     @Test
     public void sendsGetEndUserRequest() throws Exception {
         EndUser endUser = new EndUser("nps@example.com");
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator);
 
         final String accessToken = "test123test";
@@ -132,8 +134,8 @@ public class SurveyManagerTest {
         long receivedId = 1;
 
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = spy(new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = spy(new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
         doNothing().when(surveyManager).showSurvey();
@@ -153,8 +155,8 @@ public class SurveyManagerTest {
         endUserProperties.put("company", "wootric");
         endUser.setProperties(endUserProperties);
 
-        SurveyManager surveyManager = spy(new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = spy(new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
         final String accessToken = "test123test";
@@ -170,8 +172,8 @@ public class SurveyManagerTest {
     @Test
     public void whenEndUserNotFound_sendsRequestToCreateEndUser() throws Exception {
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator);
         final String accessToken = "test123test";
         surveyManager.setAccessToken(accessToken);
@@ -187,8 +189,8 @@ public class SurveyManagerTest {
     @Test
     public void showSurvey() throws Exception {
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = spy(new SurveyManager(new TestContext(), wootricApiClient,
-                testUser(), endUser, new Settings(), preferencesUtils,
+        SurveyManager surveyManager = spy(new SurveyManager(new WeakReference<Context>(new TestContext()),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
         doNothing().when(surveyManager).showSurvey();
