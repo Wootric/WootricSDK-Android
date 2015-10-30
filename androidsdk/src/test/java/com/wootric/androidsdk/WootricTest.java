@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
 
+import static com.wootric.androidsdk.TestHelper.TEST_ACTIVITY;
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -44,7 +45,7 @@ public class WootricTest {
     @Before
     public void setUp() {
         Wootric.singleton = null;
-        Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
     }
 
     @Test public void fails_whenContextIsNull() throws Exception {
@@ -85,8 +86,8 @@ public class WootricTest {
 
     @Test public void inits_singleton() throws Exception {
         Wootric.singleton = null;
-        Wootric wootric = Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric wootric_2 = Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric_2 = Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
 
         assertThat(wootric).isEqualTo(wootric_2);
     }
@@ -242,12 +243,12 @@ public class WootricTest {
 
     @Test public void survey_startsSurvey() throws Exception {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -263,12 +264,12 @@ public class WootricTest {
     @Test
     public void doesNotStartSurvey_whenSurveyInProgress() {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -285,12 +286,12 @@ public class WootricTest {
     @Test
     public void doesNotStartSurvey_whenPermissionsValidatorChecksReturnsFalse() {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakContext),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));

@@ -2,7 +2,6 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -16,8 +15,6 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.views.SurveyFragment;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by maciejwitowski on 9/3/15.
  */
@@ -27,7 +24,7 @@ public class SurveyManager implements
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
-    private final WeakReference<Context> weakContext;
+    private final Activity activity;
     private final WootricRemoteClient wootricApiClient;
     private final User user;
     private final EndUser endUser;
@@ -41,11 +38,11 @@ public class SurveyManager implements
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
 
-    SurveyManager(WeakReference<Context> weakContext, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+    SurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
 
-        this.weakContext = weakContext;
+        this.activity = activity;
         this.wootricApiClient = wootricApiClient;
         this.user = user;
         this.endUser = endUser;
@@ -150,16 +147,12 @@ public class SurveyManager implements
     }
 
     private void showSurveyFragment() {
-        final Context context = weakContext.get();
-
-        if(context == null) return;
-
-        final FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
+        final FragmentManager fragmentManager = activity.getFragmentManager();
 
         SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, getOriginUrl(),
                 accessToken, settings);
 
-        final boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
+        final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
 
         if(isTablet) {
             fragmentManager.beginTransaction()
@@ -177,16 +170,12 @@ public class SurveyManager implements
 
     private String getOriginUrl() {
         if(originUrl == null) {
-            final Context context = weakContext.get();
-
-            if(context != null) {
-                PackageManager pm = context.getPackageManager();
-                ApplicationInfo appInfo;
-                try {
-                    appInfo = pm.getApplicationInfo(context.getApplicationInfo().packageName, 0);
-                    originUrl = pm.getApplicationLabel(appInfo).toString();
-                } catch (Exception e) {
-                }
+            PackageManager pm = activity.getPackageManager();
+            ApplicationInfo appInfo;
+            try {
+                appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
+                originUrl = pm.getApplicationLabel(appInfo).toString();
+            } catch (Exception e) {
             }
         }
 

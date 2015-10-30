@@ -1,5 +1,11 @@
 package com.wootric.androidsdk;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.test.mock.MockPackageManager;
+
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 
@@ -20,4 +26,28 @@ public class TestHelper {
     public static EndUser testEndUser() {
         return new EndUser();
     }
+
+    public static Activity TEST_ACTIVITY = new Activity() {
+        @Override
+        public PackageManager getPackageManager() {
+            return TEST_PACKAGE_MANAGER;
+        }
+
+        @Override
+        public ApplicationInfo getApplicationInfo() {
+            return null;
+        }
+
+        @Override
+        public Context getApplicationContext() {
+            return null;
+        }
+    };
+
+    private static MockPackageManager TEST_PACKAGE_MANAGER = new MockPackageManager() {
+        @Override
+        public ApplicationInfo getApplicationInfo(String packageName, int flags) throws NameNotFoundException {
+            return null;
+        }
+    };
 }

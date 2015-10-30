@@ -18,9 +18,9 @@ public class PermissionsValidator {
     }
 
     public boolean check() {
-        final Context context = weakContext.get();
         boolean hasInternetPermission = false;
 
+        final Context context = weakContext.get();
         if(context != null) {
             int internetPermission = context.checkCallingOrSelfPermission(Manifest.permission.INTERNET);
             hasInternetPermission = (internetPermission == PackageManager.PERMISSION_GRANTED);

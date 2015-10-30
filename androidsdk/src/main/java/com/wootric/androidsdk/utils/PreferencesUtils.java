@@ -21,10 +21,6 @@ public class PreferencesUtils {
     private final WeakReference<Context> weakContext;
 
     public PreferencesUtils(WeakReference<Context> weakContext) {
-        if(weakContext == null) {
-            throw new IllegalArgumentException("Context must not be null.");
-        }
-
         this.weakContext = weakContext;
     }
 

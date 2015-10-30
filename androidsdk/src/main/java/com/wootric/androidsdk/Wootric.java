@@ -1,5 +1,6 @@
 package com.wootric.androidsdk;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -19,7 +20,9 @@ import java.util.HashMap;
  */
 public class Wootric {
 
+    final WeakReference<Activity> weakActivity;
     final WeakReference<Context> weakContext;
+
     final EndUser endUser;
     final User user;
     final Settings settings;
@@ -30,11 +33,23 @@ public class Wootric {
 
     static Wootric singleton;
 
-    public synchronized static Wootric init(Context context, String clientId, String clientSecret, String accountToken) {
+    public static synchronized Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
         if(singleton == null) {
-            singleton = new Wootric(context, clientId, clientSecret, accountToken);
+            if(activity == null) {
+                throw new IllegalArgumentException("Activity must not be null.");
+            }
+
+            if(clientId == null || clientSecret == null || accountToken == null) {
+                throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
+            }
+
+            singleton = new Wootric(activity, clientId, clientSecret, accountToken);
         }
 
+        return singleton;
+    }
+
+    public static Wootric get() {
         return singleton;
     }
 
@@ -114,7 +129,7 @@ public class Wootric {
 
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
                 wootricRemoteClient, preferencesUtils);
-        SurveyManager surveyManager = buildSurveyManager(weakContext, wootricRemoteClient,
+        SurveyManager surveyManager = buildSurveyManager(weakActivity.get(), wootricRemoteClient,
                 user, endUser, settings, preferencesUtils, surveyValidator);
 
         surveyManager.start();
@@ -122,19 +137,14 @@ public class Wootric {
     }
 
 
-    private Wootric(Context context, String clientId, String clientSecret, String accountToken) {
-        if(context == null) {
-            throw new IllegalArgumentException("Context must not be null.");
-        }
+    private Wootric(Activity activity, String clientId, String clientSecret, String accountToken) {
+        weakActivity = new WeakReference<>(activity);
+        weakContext = new WeakReference<>(activity.getApplicationContext());
 
-        if(clientId == null || clientSecret == null || accountToken == null) {
-            throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
-        }
-
-        weakContext = new WeakReference<>(context);
         endUser = new EndUser();
         user = new User(clientId, clientSecret, accountToken);
         settings = new Settings();
+
         preferencesUtils = new PreferencesUtils(weakContext);
         permissionsValidator = new PermissionsValidator(weakContext);
     }
@@ -144,10 +154,10 @@ public class Wootric {
         return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
     }
 
-    SurveyManager buildSurveyManager(WeakReference<Context> weakContext, WootricRemoteClient wootricApiClient, User user,
+    SurveyManager buildSurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
                                      SurveyValidator surveyValidator) {
-        return new SurveyManager(weakContext, wootricApiClient, user, endUser,
+        return new SurveyManager(activity, wootricApiClient, user, endUser,
                 settings, preferencesUtils, surveyValidator);
     }
 }
