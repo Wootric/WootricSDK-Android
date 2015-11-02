@@ -1,5 +1,7 @@
 package com.wootric.androidsdk.network.tasks;
 
+import com.wootric.androidsdk.OfflineDataHandler;
+
 /**
  * Created by maciejwitowski on 10/13/15.
  */
@@ -10,13 +12,17 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
     private final int score;
     private final String text;
 
-    public CreateResponseTask(long endUserId, String originUrl, int score, String text, String accessToken) {
+    private final OfflineDataHandler offlineDataHandler;
+
+    public CreateResponseTask(long endUserId, String originUrl, int score, String text,
+                              String accessToken, OfflineDataHandler offlineDataHandler) {
         super(REQUEST_TYPE_POST, accessToken, null);
 
         this.endUserId = endUserId;
         this.originUrl = originUrl;
         this.score = score;
         this.text = text;
+        this.offlineDataHandler = offlineDataHandler;
     }
 
     @Override
@@ -29,5 +35,11 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
         paramsMap.put("origin_url", originUrl);
         paramsMap.put("score", String.valueOf(score));
         addOptionalParam("text", text);
+    }
+
+    @Override
+    protected void onError(Exception e) {
+        super.onError(e);
+        offlineDataHandler.saveOfflineResponse(endUserId, originUrl, score, text);
     }
 }

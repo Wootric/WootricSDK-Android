@@ -1,5 +1,6 @@
 package com.wootric.androidsdk.network;
 
+import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.network.tasks.CheckEligibilityTask;
 import com.wootric.androidsdk.network.tasks.CreateDeclineTask;
 import com.wootric.androidsdk.network.tasks.CreateEndUserTask;
@@ -16,6 +17,12 @@ import com.wootric.androidsdk.objects.User;
  * Created by maciejwitowski on 9/11/15.
  */
 public class WootricRemoteClient {
+
+    private final OfflineDataHandler offlineDataHandler;
+
+    public WootricRemoteClient(OfflineDataHandler offlineDataHandler) {
+        this.offlineDataHandler = offlineDataHandler;
+    }
 
     public void getTrackingPixel(User user, EndUser endUser, String originUrl) {
         new GetTrackingPixelTask(
@@ -66,21 +73,27 @@ public class WootricRemoteClient {
         ).execute();
     }
 
-    public void createDecline(EndUser endUser, String accessToken, String originUrl) {
+    public void createDecline(long endUserId, String accessToken, String originUrl) {
         new CreateDeclineTask(
-                endUser.getId(),
+                endUserId,
                 originUrl,
-                accessToken
+                accessToken,
+                offlineDataHandler
         ).execute();
     }
 
-    public void createResponse(EndUser endUser, String accessToken, String originUrl, int score, String text) {
+    public void createResponse(long endUserId, String accessToken, String originUrl, int score, String text) {
         new CreateResponseTask(
-                endUser.getId(),
+                endUserId,
                 originUrl,
                 score,
                 text,
-                accessToken
+                accessToken,
+                offlineDataHandler
         ).execute();
+    }
+
+    public void processOfflineData(String accessToken) {
+        offlineDataHandler.processOfflineData(this, accessToken);
     }
 }

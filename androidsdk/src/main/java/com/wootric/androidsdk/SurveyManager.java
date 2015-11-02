@@ -37,7 +37,6 @@ public class SurveyManager implements
 
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
-
     SurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
@@ -72,10 +71,18 @@ public class SurveyManager implements
 
     @Override
     public void onAuthenticateSuccess(String accessToken) {
-        if(accessToken == null) return;
+        if(accessToken == null) {
+            Wootric.notifySurveyFinished();
+            return;
+        };
 
         setAccessToken(accessToken);
+        sendOfflineData();
         sendGetEndUserRequest();
+    }
+
+    private void sendOfflineData() {
+        wootricApiClient.processOfflineData(accessToken);
     }
 
     @Override

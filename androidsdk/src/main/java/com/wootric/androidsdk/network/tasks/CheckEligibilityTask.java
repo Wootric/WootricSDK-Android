@@ -53,21 +53,25 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
     @Override
     protected void onSuccess(String response) {
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            boolean eligible = jsonObject.getBoolean("eligible");
+        boolean eligible = false;
+        Settings settings = null;
 
-            Settings settings = null;
-            if(eligible) {
-                JSONObject settingsObject = jsonObject.getJSONObject("settings");
-                settings = Settings.fromJson(settingsObject);
+        if(response != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+
+                eligible = jsonObject.getBoolean("eligible");
+                if (eligible) {
+                    JSONObject settingsObject = jsonObject.getJSONObject("settings");
+                    settings = Settings.fromJson(settingsObject);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            EligibilityResponse eligibilityResponse = new EligibilityResponse(eligible, settings);
-            surveyCallback.onEligibilityChecked(eligibilityResponse);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
+        EligibilityResponse eligibilityResponse = new EligibilityResponse(eligible, settings);
+        surveyCallback.onEligibilityChecked(eligibilityResponse);
     }
 
     public interface Callback {

@@ -34,12 +34,12 @@ public class Wootric {
     static Wootric singleton;
 
     public static synchronized Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
-        if(singleton == null) {
-            if(activity == null) {
+        if (singleton == null) {
+            if (activity == null) {
                 throw new IllegalArgumentException("Activity must not be null.");
             }
 
-            if(clientId == null || clientSecret == null || accountToken == null) {
+            if (clientId == null || clientSecret == null || accountToken == null) {
                 throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
             }
 
@@ -54,9 +54,8 @@ public class Wootric {
     }
 
     public static void notifySurveyFinished() {
-        if(singleton != null) {
+        if (singleton != null) {
             singleton.setSurveyFinished();
-            singleton = null;
         }
     }
 
@@ -64,7 +63,7 @@ public class Wootric {
         surveyInProgress = false;
         preferencesUtils.touchLastSurveyed();
     }
-    
+
     public void setEndUserEmail(String email) {
         endUser.setEmail(email);
     }
@@ -125,15 +124,20 @@ public class Wootric {
         if (!permissionsValidator.check() || surveyInProgress)
             return;
 
-        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient();
+        getSurveyManager().start();
+
+        surveyInProgress = true;
+    }
+
+    private SurveyManager getSurveyManager() {
+        OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
 
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
                 wootricRemoteClient, preferencesUtils);
-        SurveyManager surveyManager = buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                user, endUser, settings, preferencesUtils, surveyValidator);
 
-        surveyManager.start();
-        surveyInProgress = true;
+        return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
+                user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
 

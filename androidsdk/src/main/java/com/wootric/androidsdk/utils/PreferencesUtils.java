@@ -14,6 +14,8 @@ public class PreferencesUtils {
     private static final String KEY_PREFERENCES = "com.wootric.androidsdk.prefs";
     private static final String KEY_LAST_SEEN = "last_seen";
     private static final String KEY_LAST_SURVEYED = "surveyed";
+    private static final String KEY_RESPONSE = "response";
+    private static final String KEY_DECLINE = "decline";
 
     private static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
     private static final long NOT_SET = -1;
@@ -90,5 +92,39 @@ public class PreferencesUtils {
         }
 
         return recentTime;
+    }
+
+    public void putResponse(String response) {
+        putString(KEY_RESPONSE, response);
+    }
+
+    public String getResponse() {
+        return getString(KEY_RESPONSE);
+    }
+
+    public void putDecline(String decline) {
+        putString(KEY_DECLINE, decline);
+    }
+
+    public String getDecline() {
+        return getString(KEY_DECLINE);
+    }
+
+    private void putString(String key, String value) {
+        final SharedPreferences prefs = prefs();
+        if(prefs != null) {
+            prefs.edit().putString(key, value).apply();
+        }
+    }
+
+    private String getString(String key) {
+        String value = null;
+
+        final SharedPreferences prefs = prefs();
+        if(prefs != null) {
+            value = prefs.getString(key, null);
+        }
+
+        return value;
     }
 }

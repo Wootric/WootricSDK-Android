@@ -3,6 +3,7 @@ package com.wootric.androidsdk.views;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,15 +16,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
 import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -81,7 +86,9 @@ public class SurveyFragment extends DialogFragment
         setupState(savedInstanceState);
 
         mSocialHandler = new SocialHandler(getActivity());
-        mWootricApiClient = new WootricRemoteClient();
+        PreferencesUtils prefUtils = new PreferencesUtils(new WeakReference<Context>(this.getActivity()));
+        OfflineDataHandler offlineDataHandler = new OfflineDataHandler(prefUtils);
+        mWootricApiClient = new WootricRemoteClient(offlineDataHandler);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
     }
@@ -197,12 +204,12 @@ public class SurveyFragment extends DialogFragment
     }
 
     private void createDecline() {
-        mWootricApiClient.createDecline(mEndUser, mAccessToken, mOriginUrl);
+        mWootricApiClient.createDecline(mEndUser.getId(), mAccessToken, mOriginUrl);
     }
 
     @Override
     public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser, mAccessToken, mOriginUrl, score, text);
+        mWootricApiClient.createResponse(mEndUser.getId(), mAccessToken, mOriginUrl, score, text);
         mResponseSent = true;
     }
 
