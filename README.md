@@ -55,7 +55,13 @@ Usage
 
 *For a working implementation of this project see the `app/` folder.*
 
-All you need to do is to add this code to you Activity's `onCreate` method:
+First import the SDK into your Activity of choosing:
+
+```java
+import com.wootric.androidsdk.Wootric;
+```
+
+All you need to do is to add this code to your Activity's `onCreate` method:
 
 ```java
 Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
