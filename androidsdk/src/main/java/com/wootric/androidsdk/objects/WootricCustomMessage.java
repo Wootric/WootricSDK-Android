@@ -158,6 +158,8 @@ public class WootricCustomMessage implements Parcelable {
     };
 
     public static WootricCustomMessage fromJson(JSONObject customMessagesJson) throws JSONException {
+        if(customMessagesJson == null) return null;
+
         WootricCustomMessage wootricCustomMessage = new WootricCustomMessage();
         wootricCustomMessage.followupQuestion = customMessagesJson.getString("followup_question");
         wootricCustomMessage.placeholderText = customMessagesJson.getString("placeholder_text");

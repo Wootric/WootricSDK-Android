@@ -355,7 +355,7 @@ public class Settings implements Parcelable {
         JSONObject localizedTextsJson = settingsObject.getJSONObject("localized_texts");
         settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson);
 
-        JSONObject customMessagesJson = settingsObject.getJSONObject("messages");
+        JSONObject customMessagesJson = settingsObject.optJSONObject("messages");
         settings.adminPanelCustomMessage = WootricCustomMessage.fromJson(customMessagesJson);
 
         return settings;
