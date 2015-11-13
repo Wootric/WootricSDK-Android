@@ -68,6 +68,10 @@ public class Wootric {
         endUser.setEmail(email);
     }
 
+    public void setEndUserCreatedAt(long createdAt) {
+        endUser.setCreatedAt(createdAt);
+    }
+
     public void setProperties(HashMap<String, String> properties) {
         endUser.setProperties(properties);
     }
