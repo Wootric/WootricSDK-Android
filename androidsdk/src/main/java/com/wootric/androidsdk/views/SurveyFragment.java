@@ -214,16 +214,6 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
-    public void onSurveyFinished() {
-        if (!mResponseSent) {
-            createDecline();
-            dismiss();
-        } else {
-            mSurveyLayout.showThankYouLayout();
-        }
-    }
-
-    @Override
     public void onFacebookBtnClick() {
         if (mSocialHandler == null) return;
 
@@ -266,7 +256,11 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
-    public void onThankYouFinished() {
+    public void onDismissClick() {
+        if (!mResponseSent) {
+            createDecline();
+        }
+
         dismiss();
     }
 

@@ -118,7 +118,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mBtnThankYouDismiss.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onThankYouFinished();
+                dismissSurvey();
             }
         });
 
@@ -144,7 +144,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mBtnThankYouDone.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onThankYouFinished();
+                dismissSurvey();
             }
         });
 
@@ -333,7 +333,7 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private void dismissSurvey() {
         if(mSurveyLayoutListener != null) {
-            mSurveyLayoutListener.onSurveyFinished();
+            mSurveyLayoutListener.onDismissClick();
         }
     }
 
@@ -359,14 +359,12 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     @Override
-    public void onThankYouFinished() {
-        if(mSurveyLayoutListener != null) {
-            mSurveyLayoutListener.onThankYouFinished();
-        }
+    public void onShouldShowSimpleDialog() {
+        // Empty
     }
 
     @Override
-    public void onShouldShowSimpleDialog() {
-
+    public void onDismissClick() {
+        dismissSurvey();
     }
 }

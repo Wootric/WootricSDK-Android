@@ -60,8 +60,9 @@ public class Wootric {
     }
 
     private void setSurveyFinished() {
-        surveyInProgress = false;
         preferencesUtils.touchLastSurveyed();
+        surveyInProgress = false;
+        singleton = null;
     }
 
     public void setEndUserEmail(String email) {

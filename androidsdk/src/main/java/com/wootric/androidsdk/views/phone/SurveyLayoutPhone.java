@@ -268,7 +268,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private void dismissSurvey() {
         if(mSurveyLayoutListener != null) {
-            mSurveyLayoutListener.onSurveyFinished();
+            mSurveyLayoutListener.onDismissClick();
         }
     }
 
@@ -416,12 +416,13 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     @Override
-    public void onThankYouFinished() {
-        mSurveyLayoutListener.onThankYouFinished();
+    public void onShouldShowSimpleDialog() {
+        mSurveyLayoutListener.onShouldShowSimpleDialog();
     }
 
     @Override
-    public void onShouldShowSimpleDialog() {
-        mSurveyLayoutListener.onShouldShowSimpleDialog();
+    public void onDismissClick() {
+        mSurveyLayoutListener.onDismissClick();
+
     }
 }

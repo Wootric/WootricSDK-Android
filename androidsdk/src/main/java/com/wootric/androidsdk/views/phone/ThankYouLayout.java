@@ -114,7 +114,7 @@ public class ThankYouLayout extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 if(mThankYouLayoutListener != null) {
-                    mThankYouLayoutListener.onThankYouFinished();
+                    mThankYouLayoutListener.onDismissClick();
                 }
             }
         };

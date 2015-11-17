@@ -7,5 +7,5 @@ public interface SurveyLayoutListener extends ThankYouLayoutListener {
 
     void onSurveySubmit(int score, String text);
 
-    void onSurveyFinished();
+    void onDismissClick();
 }
