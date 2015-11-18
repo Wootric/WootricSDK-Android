@@ -249,7 +249,7 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void dismiss() {
         if(mIsTablet) {
-            Wootric.notifySurveyFinished();
+            Wootric.notifySurveyFinished(true);
         }
 
         super.dismiss();
@@ -284,7 +284,7 @@ public class SurveyFragment extends DialogFragment
         super.onDismiss(dialog);
 
         if(!isResumedOnConfigurationChange) {
-            Wootric.notifySurveyFinished();
+            Wootric.notifySurveyFinished(true);
         }
     }
 }

@@ -66,13 +66,13 @@ public class SurveyManager implements
 
     @Override
     public void onSurveyNotNeeded() {
-        Wootric.notifySurveyFinished();
+        Wootric.notifySurveyFinished(false);
     }
 
     @Override
     public void onAuthenticateSuccess(String accessToken) {
         if(accessToken == null) {
-            Wootric.notifySurveyFinished();
+            Wootric.notifySurveyFinished(false);
             return;
         };
 
@@ -111,7 +111,7 @@ public class SurveyManager implements
     @Override
     public void onApiError(Exception error) {
         Log.d(LOG_TAG, error.getLocalizedMessage());
-        Wootric.notifySurveyFinished();
+        Wootric.notifySurveyFinished(false);
     }
 
     private void validateSurvey() {
@@ -147,7 +147,7 @@ public class SurveyManager implements
                     showSurveyFragment();
                 } catch (IllegalStateException e) {
                     Log.d(LOG_TAG, e.getLocalizedMessage());
-                    Wootric.notifySurveyFinished();
+                    Wootric.notifySurveyFinished(false);
                 }
             }
         }, settings.getTimeDelayInMillis());

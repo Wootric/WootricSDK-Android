@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -309,14 +310,22 @@ public class WootricTest {
      * notifySurveyFinished()
      */
     @Test
-    public void setsSingletonSurveyInProgressToFalseAndUpdatesLastSurveyed() {
+    public void whenEndUserWasSurveyed_updatesLastSurveyedAndResetsTheSingleton() {
         Wootric wootric = Wootric.singleton;
         wootric.preferencesUtils = mockPreferencesUtils;
-        wootric.surveyInProgress = true;
 
-        Wootric.notifySurveyFinished();
-
-        assertThat(wootric.surveyInProgress).isFalse();
+        Wootric.notifySurveyFinished(true);
+        assertThat(Wootric.singleton).isNull();
         verify(wootric.preferencesUtils, times(1)).touchLastSurveyed();
+    }
+
+    @Test
+    public void whenEndUserWasNotSurveyed_doesNotpdateLastSurveyed() {
+        Wootric wootric = Wootric.singleton;
+        wootric.preferencesUtils = mockPreferencesUtils;
+
+        Wootric.notifySurveyFinished(false);
+        assertThat(Wootric.singleton).isNull();
+        verify(wootric.preferencesUtils, never()).touchLastSurveyed();
     }
 }

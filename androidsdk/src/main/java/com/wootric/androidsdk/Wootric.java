@@ -49,19 +49,13 @@ public class Wootric {
         return singleton;
     }
 
-    public static Wootric get() {
-        return singleton;
-    }
+    public static void notifySurveyFinished(boolean surveyShown) {
+        if(singleton == null) return;
 
-    public static void notifySurveyFinished() {
-        if (singleton != null) {
-            singleton.setSurveyFinished();
+        if(surveyShown) {
+            singleton.preferencesUtils.touchLastSurveyed();
         }
-    }
 
-    private void setSurveyFinished() {
-        preferencesUtils.touchLastSurveyed();
-        surveyInProgress = false;
         singleton = null;
     }
 
