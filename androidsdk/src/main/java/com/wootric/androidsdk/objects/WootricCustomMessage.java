@@ -95,24 +95,28 @@ public class WootricCustomMessage implements Parcelable {
         this.placeholderTextsList.put(PROMOTER_TEXT_KEY, promoterPlaceholderText);
     }
 
-    public String getFollowupQuestionForScore(int score) {
-        if(score <= 6 && getDetractorQuestion() != null) {
+    public String getFollowupQuestionForScore(int scoreValue) {
+        final Score score = new Score(scoreValue);
+
+        if(score.isDetractor() && getDetractorQuestion() != null) {
             return getDetractorQuestion();
-        } else if(score >= 7 && score <= 8 && getPassiveQuestion()  != null) {
+        } else if(score.isPassive() && getPassiveQuestion()  != null) {
             return getPassiveQuestion() ;
-        } else if(score >= 9 && score <= 10 && getPromoterQuestion() != null) {
+        } else if(score.isPromoter() && getPromoterQuestion() != null) {
             return getPromoterQuestion();
         } else {
             return followupQuestion;
         }
     }
 
-    public String getPlaceholderForScore(int score) {
-        if(score <= 6 && getDetractorPlaceholder() != null) {
+    public String getPlaceholderForScore(int scoreValue) {
+        final Score score = new Score(scoreValue);
+
+        if(score.isDetractor() && getDetractorPlaceholder() != null) {
             return getDetractorPlaceholder();
-        } else if(score >= 7 && score <= 8 && getPassivePlaceholder() != null) {
+        } else if(score.isPassive() && getPassivePlaceholder() != null) {
             return getPassivePlaceholder();
-        } else if(score >= 9 && score <= 10 && getPromoterPlaceholder() != null) {
+        } else if(score.isPromoter() && getPromoterPlaceholder() != null) {
             return getPromoterPlaceholder();
         } else {
             return placeholderText;

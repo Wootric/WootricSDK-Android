@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
@@ -251,10 +252,15 @@ public class SurveyLayoutPhone extends LinearLayout
     private void submitSurvey() {
         notifyListener();
 
-        if(isNpsState()) {
-            updateState(STATE_FEEDBACK);
-        } else if(isFeedbackState()) {
+        Score score = new Score(mRatingBar.getSelectedScore());
+        boolean shouldSkipFeedbackScreen = score.isPromoter() &&
+                mSettings.shouldSkipFollowupScreenForPromoters();
+
+
+        if(isFeedbackState() || shouldSkipFeedbackScreen) {
             updateState(STATE_THANK_YOU);
+        } else if(isNpsState()) {
+            updateState(STATE_FEEDBACK);
         }
     }
 

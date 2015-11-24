@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
@@ -300,15 +301,23 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     @Override
-    public void onScoreClick(int score) {
+    public void onScoreClick(int scoreValue) {
          if(mCurrentScore != -1) {
             mScoreViews[mCurrentScore].setSelected(false);
         }
 
-        mCurrentScore = score;
+        mCurrentScore = scoreValue;
 
-        if(mCurrentState != STATE_FEEDBACK) {
-            updateState(STATE_FEEDBACK);
+        Score score = new Score(mCurrentScore);
+        boolean shouldSkipFeedbackScreen = score.isPromoter() &&
+                mSettings.shouldSkipFollowupScreenForPromoters();
+
+        if(mCurrentScore != STATE_FEEDBACK) {
+            if(shouldSkipFeedbackScreen) {
+                updateState(STATE_THANK_YOU);
+            } else {
+                updateState(STATE_FEEDBACK);
+            }
         } else {
             setFeedbackTexts();
             mTvFollowupQuestion.setAlpha(0);

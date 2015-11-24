@@ -15,6 +15,8 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+import static com.wootric.androidsdk.utils.Utils.checkNotNull;
+
 /**
  * Created by maciejwitowski on 4/10/15.
  */
@@ -31,22 +33,24 @@ public class Wootric {
     PreferencesUtils preferencesUtils;
     PermissionsValidator permissionsValidator;
 
-    static Wootric singleton;
+    static volatile Wootric singleton;
 
-    public static synchronized Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
-        if (singleton == null) {
-            if (activity == null) {
-                throw new IllegalArgumentException("Activity must not be null.");
+    public static  Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
+        Wootric local = singleton;
+        if(local == null) {
+            synchronized (Wootric.class) {
+                local = singleton;
+                if(local == null) {
+                    checkNotNull(activity, "Activity");
+                    checkNotNull(clientId, "Client Id");
+                    checkNotNull(clientSecret, "Client Secret");
+                    checkNotNull(accountToken, "Account Token");
+                    singleton = local = new Wootric(activity, clientId, clientSecret, accountToken);
+                }
             }
-
-            if (clientId == null || clientSecret == null || accountToken == null) {
-                throw new IllegalArgumentException("Client Id, Client Secret and Account token must not be null");
-            }
-
-            singleton = new Wootric(activity, clientId, clientSecret, accountToken);
         }
 
-        return singleton;
+        return local;
     }
 
     public static void notifySurveyFinished(boolean surveyShown) {
@@ -117,6 +121,10 @@ public class Wootric {
 
     public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         settings.setCustomThankYou(customThankYou);
+    }
+
+    public void shouldSkipFollowupScreenForPromoters(boolean shouldSkipFollowupScreenForPromoters) {
+        settings.setSkipFollowupScreenForPromoters(shouldSkipFollowupScreenForPromoters);
     }
 
     public void survey() {

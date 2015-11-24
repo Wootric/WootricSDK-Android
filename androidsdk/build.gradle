@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -43,3 +43,5 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile "org.mockito:mockito-core:1.9.5"
 }
+
+apply from: 'maven_push.gradle'

@@ -26,6 +26,7 @@ public class Settings implements Parcelable {
     private int timeDelay = Constants.NOT_SET;
 
     private boolean surveyImmediately;
+    private boolean skipFollowupScreenForPromoters;
 
     private Integer dailyResponseCap;
     private Integer registeredPercent;
@@ -62,6 +63,14 @@ public class Settings implements Parcelable {
 
     public boolean isSurveyImmediately() {
         return surveyImmediately;
+    }
+
+    public void setSkipFollowupScreenForPromoters(boolean skipFollowupScreenForPromoters) {
+        this.skipFollowupScreenForPromoters = skipFollowupScreenForPromoters;
+    }
+
+    public boolean shouldSkipFollowupScreenForPromoters() {
+        return skipFollowupScreenForPromoters;
     }
 
     public int getTimeDelayInMillis() {

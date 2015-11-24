@@ -127,6 +127,13 @@ customThankYou.setCommentInUrl(true);
 wootric.setCustomThankYou(customThankYou);
 ```
 
+### Skip followup screen for promoters
+The followup screen can be skipped for promoters, so they are taken straight to thank you screen.
+
+```java
+wootric.shouldSkipFollowupScreenForPromoters(true);
+```
+
 ### Other parameters ###
 There are many other parameters which can be set in Wootric:
 

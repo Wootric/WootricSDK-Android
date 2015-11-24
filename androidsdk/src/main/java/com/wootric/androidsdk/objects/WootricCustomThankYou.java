@@ -27,24 +27,28 @@ public class WootricCustomThankYou implements Parcelable {
     private boolean scoreInUrl;
     private boolean commentInUrl;
 
-    public String getTextForScore(int score) {
-        if(score <= 6 && detractorText != null) {
+    public String getTextForScore(int scoreValue) {
+        Score score = new Score(scoreValue);
+
+        if(score.isDetractor() && detractorText != null) {
             return detractorText;
-        } else if(score >= 7 && score <= 8 && passiveText != null) {
+        } else if(score.isPassive() && passiveText != null) {
             return passiveText;
-        } else if(score >= 9 && score <= 10 && promoterText != null) {
+        } else if(score.isPromoter() && promoterText != null) {
             return promoterText;
         } else {
             return text;
         }
     }
 
-    public String getLinkTextForScore(int score) {
-        if(score <= 6 && detractorLinkText != null) {
+    public String getLinkTextForScore(int scoreValue) {
+        Score score = new Score(scoreValue);
+
+        if(score.isDetractor() && detractorLinkText != null) {
             return detractorLinkText;
-        } else if(score >= 7 && score <= 8 && passiveLinkText != null) {
+        } else if(score.isPassive() && passiveLinkText != null) {
             return passiveLinkText;
-        } else if(score >= 9 && score <= 10 && promoterLinkText != null) {
+        } else if(score.isPromoter() && promoterLinkText != null) {
             return promoterLinkText;
         } else {
             return linkText;
@@ -71,12 +75,14 @@ public class WootricCustomThankYou implements Parcelable {
         return uri;
     }
 
-    private Uri getLinkUriForScore(int score) {
-        if(score <= 6 && detractorLinkUri != null) {
+    private Uri getLinkUriForScore(int scoreValue) {
+        Score score = new Score(scoreValue);
+
+        if(score.isPassive() && detractorLinkUri != null) {
             return detractorLinkUri;
-        } else if(score >= 7 && score <= 8 && passiveLinkUri != null) {
+        } else if(score.isPassive() && passiveLinkUri != null) {
             return passiveLinkUri;
-        } else if(score >= 9 && score <= 10 && promoterLinkUri != null) {
+        } else if(score.isPromoter() && promoterLinkUri != null) {
             return promoterLinkUri;
         } else {
             return linkUri;
