@@ -63,6 +63,11 @@ public class Wootric {
         singleton = null;
     }
 
+    // For tests and integrations
+    public Wootric get() {
+        return singleton;
+    }
+
     public void setEndUserEmail(String email) {
         endUser.setEmail(email);
     }
