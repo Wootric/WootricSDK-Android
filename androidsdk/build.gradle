@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 23
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
@@ -43,5 +43,3 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile "org.mockito:mockito-core:1.9.5"
 }
-
-apply from: 'maven_push.gradle'

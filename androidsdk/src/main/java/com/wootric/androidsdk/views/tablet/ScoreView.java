@@ -57,7 +57,9 @@ public class ScoreView extends TextView implements View.OnClickListener{
             drawable = resources.getDrawable(R.drawable.score);
         }
 
-        setBackground(drawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(drawable);
+        }
 
         setHeight((int) ScreenUtils.dpToPx(42));
         setWidth((int) ScreenUtils.dpToPx(42));

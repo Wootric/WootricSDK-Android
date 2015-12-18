@@ -46,7 +46,6 @@ public class SurveyLayoutPhone extends LinearLayout
     private TextView mBtnSubmit;
     private TextView mBtnDismiss;
 
-    private TextView mBtnEditScore;
     private EditText mEtFeedback;
 
     private ThankYouLayout mThankYouLayout;
@@ -157,10 +156,10 @@ public class SurveyLayoutPhone extends LinearLayout
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
         mEtFeedback.addTextChangedListener(etFeedbackTextWatcher());
 
-        mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
+        TextView mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
 
-        mFeedbackViews = new View[] { mBtnEditScore, mEtFeedback };
+        mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
     }
 
     private void initScoreLayout() {

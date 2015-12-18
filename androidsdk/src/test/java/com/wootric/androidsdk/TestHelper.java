@@ -27,7 +27,7 @@ public class TestHelper {
         return new EndUser();
     }
 
-    public static Activity TEST_ACTIVITY = new Activity() {
+    public static final Activity TEST_ACTIVITY = new Activity() {
         @Override
         public PackageManager getPackageManager() {
             return TEST_PACKAGE_MANAGER;
@@ -44,7 +44,7 @@ public class TestHelper {
         }
     };
 
-    private static MockPackageManager TEST_PACKAGE_MANAGER = new MockPackageManager() {
+    private static final MockPackageManager TEST_PACKAGE_MANAGER = new MockPackageManager() {
         @Override
         public ApplicationInfo getApplicationInfo(String packageName, int flags) throws NameNotFoundException {
             return null;

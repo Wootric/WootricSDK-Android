@@ -74,7 +74,7 @@ public class SurveyManager implements
         if(accessToken == null) {
             Wootric.notifySurveyFinished(false);
             return;
-        };
+        }
 
         setAccessToken(accessToken);
         sendOfflineData();
