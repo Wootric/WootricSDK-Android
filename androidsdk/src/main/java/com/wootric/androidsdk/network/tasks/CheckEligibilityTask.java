@@ -31,7 +31,12 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
     @Override
     protected void buildParams() {
         paramsMap.put("account_token", user.getAccountToken());
-        paramsMap.put("email", endUser.getEmail());
+
+        String email = endUser.getEmail();
+        // If email is not set, we send an empty string in order to be consistent with web beacon
+        if(email == null) email = "";
+
+        paramsMap.put("email", email);
 
         paramsMap.put("survey_immediately", String.valueOf(settings.isSurveyImmediately()));
 

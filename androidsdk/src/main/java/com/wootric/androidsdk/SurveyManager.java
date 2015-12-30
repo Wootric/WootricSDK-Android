@@ -128,7 +128,7 @@ public class SurveyManager implements
     }
 
     private void sendGetEndUserRequest() {
-        wootricApiClient.getEndUserByEmail(endUser.getEmail(), accessToken, this);
+        wootricApiClient.getEndUserByEmail(endUser.getEmailOrUnknown(), accessToken, this);
     }
 
     private void sendCreateEndUserRequest() {

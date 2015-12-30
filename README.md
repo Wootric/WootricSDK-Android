@@ -13,14 +13,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.1.9</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 	
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:2.1.9'
+compile 'com.wootric:wootric-sdk-android:2.2.0'
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 

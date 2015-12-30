@@ -20,7 +20,7 @@ public class EndUser implements Parcelable {
     public EndUser() {}
 
     public EndUser(String email) {
-        this.email      = email;
+        this.email = email;
     }
 
     public EndUser(String email, HashMap properties) {
@@ -33,6 +33,10 @@ public class EndUser implements Parcelable {
     }
 
     public String getEmail() {
+        return email;
+    }
+
+    public String getEmailOrUnknown() {
         return (email != null && !email.isEmpty()) ? email : UNKNOWN_EMAIL;
     }
 

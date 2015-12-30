@@ -112,7 +112,7 @@ public class WootricTest {
         Wootric wootric = Wootric.singleton;
         wootric.setEndUserEmail("nps@example.com");
 
-        assertThat(wootric.endUser.getEmail()).isEqualTo("nps@example.com");
+        assertThat(wootric.endUser.getEmailOrUnknown()).isEqualTo("nps@example.com");
     }
 
     /**

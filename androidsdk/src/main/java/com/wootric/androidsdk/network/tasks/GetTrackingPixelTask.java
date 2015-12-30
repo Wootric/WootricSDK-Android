@@ -23,7 +23,7 @@ public class GetTrackingPixelTask extends WootricRemoteRequestTask {
     @Override
     protected void buildParams() {
         paramsMap.put("account_token", user.getAccountToken());
-        paramsMap.put("email", endUser.getEmail());
+        paramsMap.put("email", endUser.getEmailOrUnknown());
         paramsMap.put("url", originUrl);
         paramsMap.put("random", String.valueOf(Math.random()));
     }

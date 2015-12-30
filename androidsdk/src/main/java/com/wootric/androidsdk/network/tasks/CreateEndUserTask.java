@@ -26,7 +26,7 @@ public class CreateEndUserTask extends WootricRemoteRequestTask {
 
     @Override
     protected void buildParams() {
-        paramsMap.put("email", endUser.getEmail());
+        paramsMap.put("email", endUser.getEmailOrUnknown());
 
         addOptionalParam("external_created_at", endUser.getCreatedAtOrNull());
 

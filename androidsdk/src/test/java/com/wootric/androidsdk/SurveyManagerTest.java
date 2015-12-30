@@ -116,7 +116,7 @@ public class SurveyManagerTest {
         final String accessToken = "test123test";
         surveyManager.onAuthenticateSuccess(accessToken);
 
-        verify(wootricApiClient, times(1)).getEndUserByEmail(endUser.getEmail(), accessToken, surveyManager);
+        verify(wootricApiClient, times(1)).getEndUserByEmail(endUser.getEmailOrUnknown(), accessToken, surveyManager);
     }
 
     /**
