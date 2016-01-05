@@ -22,7 +22,6 @@ import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
-import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
@@ -37,7 +36,6 @@ public class SurveyFragment extends DialogFragment
     implements SurveyLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
-    private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
     private static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
     private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
@@ -50,7 +48,6 @@ public class SurveyFragment extends DialogFragment
     private LinearLayout mFooter;
 
     private EndUser mEndUser;
-    private User mUser;
     private String mOriginUrl;
     private String mAccessToken;
     private Settings mSettings;
@@ -64,12 +61,11 @@ public class SurveyFragment extends DialogFragment
 
     private boolean isResumedOnConfigurationChange;
 
-    public static SurveyFragment newInstance(User user, EndUser endUser, String originUrl, String accessToken,
+    public static SurveyFragment newInstance(EndUser endUser, String originUrl, String accessToken,
                                              Settings settings) {
         SurveyFragment fragment = new SurveyFragment();
 
         Bundle args = new Bundle();
-        args.putParcelable(ARG_USER, user);
         args.putParcelable(ARG_END_USER, endUser);
         args.putString(ARG_ORIGIN_URL, originUrl);
         args.putString(ARG_ACCESS_TOKEN, accessToken);
@@ -168,30 +164,19 @@ public class SurveyFragment extends DialogFragment
     }
 
     private void setupState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            Bundle args = getArguments();
-            mUser = args.getParcelable(ARG_USER);
-            mEndUser = args.getParcelable(ARG_END_USER);
-            mOriginUrl = args.getString(ARG_ORIGIN_URL);
-            mAccessToken = args.getString(ARG_ACCESS_TOKEN);
-            mSettings = args.getParcelable(ARG_SETTINGS);
-        } else {
-            mUser = savedInstanceState.getParcelable(ARG_USER);
-            mEndUser = savedInstanceState.getParcelable(ARG_END_USER);
-            mOriginUrl = savedInstanceState.getString(ARG_ORIGIN_URL);
-            mAccessToken = savedInstanceState.getString(ARG_ACCESS_TOKEN);
-            mSettings = savedInstanceState.getParcelable(ARG_SETTINGS);
+        Bundle args = getArguments();
+        mEndUser = args.getParcelable(ARG_END_USER);
+        mOriginUrl = args.getString(ARG_ORIGIN_URL);
+        mAccessToken = args.getString(ARG_ACCESS_TOKEN);
+        mSettings = args.getParcelable(ARG_SETTINGS);
+
+        if(savedInstanceState != null) {
             mResponseSent = savedInstanceState.getBoolean(ARG_RESPONSE_SENT);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(ARG_END_USER, mEndUser);
-        outState.putString(ARG_ORIGIN_URL, mOriginUrl);
-        outState.putParcelable(ARG_USER, mUser);
-        outState.putString(ARG_ACCESS_TOKEN, mAccessToken);
-        outState.putParcelable(ARG_SETTINGS, mSettings);
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
 
         if(mSurveyLayout != null) {

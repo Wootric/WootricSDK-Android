@@ -156,7 +156,7 @@ public class SurveyManager implements
     private void showSurveyFragment() {
         final FragmentManager fragmentManager = activity.getFragmentManager();
 
-        SurveyFragment surveyFragment = SurveyFragment.newInstance(user, endUser, getOriginUrl(),
+        SurveyFragment surveyFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
                 accessToken, settings);
 
         final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
