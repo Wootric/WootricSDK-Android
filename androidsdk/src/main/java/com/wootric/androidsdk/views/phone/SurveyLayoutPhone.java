@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -301,12 +303,6 @@ public class SurveyLayoutPhone extends LinearLayout
         updateState(mCurrentState);
     }
 
-    @Override
-    public void setupState(int surveyState, int selectedScore) {
-        mRatingBar.setSelectedScore(selectedScore);
-        mCurrentState = surveyState;
-    }
-
     private void setTexts() {
         mAnchorLikely.setText(mSettings.getAnchorLikely());
         mAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
@@ -427,6 +423,60 @@ public class SurveyLayoutPhone extends LinearLayout
     @Override
     public void onDismissClick() {
         mSurveyLayoutListener.onDismissClick();
+    }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        SurveyLayoutSavedState savedState = new SurveyLayoutSavedState(superState);
+        savedState.setCurrentState(mCurrentState);
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SurveyLayoutSavedState savedState = (SurveyLayoutSavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        updateState(savedState.getCurrentState());
+    }
+
+    private static class SurveyLayoutSavedState extends View.BaseSavedState {
+        private int currentState;
+
+        public SurveyLayoutSavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public SurveyLayoutSavedState(Parcel source) {
+            super(source);
+            currentState = source.readInt();
+        }
+
+        public int getCurrentState() {
+            return currentState;
+        }
+
+        public void setCurrentState(int currentState) {
+            this.currentState = currentState;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(currentState);
+        }
+
+        public static final Parcelable.Creator<SurveyLayoutSavedState> CREATOR =
+                new Parcelable.Creator<SurveyLayoutSavedState>() {
+                    @Override
+                    public SurveyLayoutSavedState createFromParcel(Parcel source) {
+                        return new SurveyLayoutSavedState(source);
+                    }
+
+                    @Override
+                    public SurveyLayoutSavedState[] newArray(int size) {
+                        return new SurveyLayoutSavedState[size];
+                    }
+                };
     }
 }

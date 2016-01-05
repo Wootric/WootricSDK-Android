@@ -2,6 +2,8 @@ package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,6 +166,7 @@ public class SurveyLayoutTablet extends LinearLayout
         setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
         initScoreLayout();
+        updateState(mCurrentState);
     }
 
     private void initResources() {
@@ -193,7 +196,6 @@ public class SurveyLayoutTablet extends LinearLayout
     public void initWithSettings(Settings settings) {
         mSettings = settings;
         setTexts();
-        updateState(mCurrentState);
     }
 
     private void setTexts() {
@@ -274,11 +276,10 @@ public class SurveyLayoutTablet extends LinearLayout
         }
     }
 
-    @Override
-    public void setupState(int surveyState, int selectedScore) {
-        mCurrentState = surveyState;
-        mCurrentScore = selectedScore;
+    private void setupState(int surveyState, int selectedScore) {
+        updateState(surveyState);
 
+        mCurrentScore = selectedScore;
         if(mCurrentScore != Constants.NOT_SET) {
             mScoreViews[mCurrentScore].setSelected(true);
         }
@@ -287,11 +288,6 @@ public class SurveyLayoutTablet extends LinearLayout
     @Override
     public int getSelectedScore() {
         return mCurrentScore;
-    }
-
-    @Override
-    public int getSelectedState() {
-        return mCurrentState;
     }
 
     @Override
@@ -379,5 +375,72 @@ public class SurveyLayoutTablet extends LinearLayout
     @Override
     public void onDismissClick() {
         dismissSurvey();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        SurveyLayoutSavedState savedState = new SurveyLayoutSavedState(superState);
+        savedState.setCurrentState(mCurrentState);
+        savedState.setCurrentScore(mCurrentScore);
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SurveyLayoutSavedState savedState = (SurveyLayoutSavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        setupState(savedState.getCurrentState(), savedState.getCurrentScore());
+    }
+
+    private static class SurveyLayoutSavedState extends View.BaseSavedState {
+        private int currentState;
+        private int currentScore;
+
+        public SurveyLayoutSavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public SurveyLayoutSavedState(Parcel source) {
+            super(source);
+            currentState = source.readInt();
+            currentScore = source.readInt();
+        }
+
+        public int getCurrentState() {
+            return currentState;
+        }
+
+        public void setCurrentState(int currentState) {
+            this.currentState = currentState;
+        }
+
+        public int getCurrentScore() {
+            return currentScore;
+        }
+
+        public void setCurrentScore(int currentScore) {
+            this.currentScore = currentScore;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(currentState);
+            out.writeInt(currentScore);
+        }
+
+        public static final Parcelable.Creator<SurveyLayoutSavedState> CREATOR =
+                new Parcelable.Creator<SurveyLayoutSavedState>() {
+                    @Override
+                    public SurveyLayoutSavedState createFromParcel(Parcel source) {
+                        return new SurveyLayoutSavedState(source);
+                    }
+
+                    @Override
+                    public SurveyLayoutSavedState[] newArray(int size) {
+                        return new SurveyLayoutSavedState[size];
+                    }
+                };
     }
 }

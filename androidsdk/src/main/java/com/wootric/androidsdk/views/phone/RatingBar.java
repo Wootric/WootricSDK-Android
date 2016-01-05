@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -220,5 +222,52 @@ public class RatingBar extends View implements View.OnTouchListener {
             mSelectedScore = selectedScore;
             invalidate();
         }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        final Parcelable superState = super.onSaveInstanceState();
+        RatingBarSavedState savedState = new RatingBarSavedState(superState);
+        savedState.selectedScore = mSelectedScore;
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        RatingBarSavedState ratingBarSavedState = (RatingBarSavedState) state;
+        super.onRestoreInstanceState(ratingBarSavedState.getSuperState());
+        setSelectedScore(ratingBarSavedState.selectedScore);
+    }
+
+    private static class RatingBarSavedState extends BaseSavedState {
+        int selectedScore;
+
+        public RatingBarSavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public RatingBarSavedState(Parcel source) {
+            super(source);
+            selectedScore = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(selectedScore);
+        }
+
+        public static final Parcelable.Creator<RatingBarSavedState> CREATOR =
+                new Parcelable.Creator<RatingBarSavedState>() {
+                    @Override
+                    public RatingBarSavedState createFromParcel(Parcel source) {
+                        return new RatingBarSavedState(source);
+                    }
+
+                    @Override
+                    public RatingBarSavedState[] newArray(int size) {
+                        return new RatingBarSavedState[size];
+                    }
+                };
     }
 }

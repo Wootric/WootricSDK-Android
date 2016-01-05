@@ -38,8 +38,6 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
     private static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
-    private static final String ARG_SELECTED_SCORE = "com.wootric.androidsdk.arg.selected_score";
-    private static final String ARG_CURRENT_SURVEY_STATE = "com.wootric.androidsdk.arg.current_state";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
     private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
 
@@ -103,13 +101,6 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            final int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
-            final int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
-            mSurveyLayout.setupState(surveyState, selectedScore);
-        }
-
         mSurveyLayout.initWithSettings(mSettings);
     }
 
@@ -176,12 +167,6 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(ARG_RESPONSE_SENT, mResponseSent);
-
-        if(mSurveyLayout != null) {
-            outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
-            outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
-        }
-
         super.onSaveInstanceState(outState);
     }
 
