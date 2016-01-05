@@ -226,7 +226,7 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void setFeedbackTexts() {
-        mEtFeedback.setText(mSettings.getFollowupPlaceholder(mCurrentScore));
+        mEtFeedback.setHint(mSettings.getFollowupPlaceholder(mCurrentScore));
         mTvFollowupQuestion.setText(mSettings.getFollowupQuestion(mCurrentScore));
     }
 
@@ -270,13 +270,12 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     @Override
-    public void setupState(int surveyState, int selectedScore, String feedback) {
+    public void setupState(int surveyState, int selectedScore) {
         mCurrentState = surveyState;
         mCurrentScore = selectedScore;
 
         if(mCurrentScore != Constants.NOT_SET) {
             mScoreViews[mCurrentScore].setSelected(true);
-
         }
     }
 

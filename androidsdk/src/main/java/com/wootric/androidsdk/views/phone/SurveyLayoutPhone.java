@@ -302,10 +302,9 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     @Override
-    public void setupState(int surveyState, int selectedScore, String feedback) {
+    public void setupState(int surveyState, int selectedScore) {
         mRatingBar.setSelectedScore(selectedScore);
         mCurrentState = surveyState;
-        mEtFeedback.setText(feedback);
     }
 
     private void setTexts() {

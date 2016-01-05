@@ -42,7 +42,6 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_CURRENT_SURVEY_STATE = "com.wootric.androidsdk.arg.current_state";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
     private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
-    private static final String ARG_FEEDBACK = "com.wootric.androidsdk.arg.feedback";
 
     private SurveyLayout mSurveyLayout;
     private LinearLayout mFooter;
@@ -108,8 +107,7 @@ public class SurveyFragment extends DialogFragment
         if (savedInstanceState != null) {
             final int selectedScore = savedInstanceState.getInt(ARG_SELECTED_SCORE);
             final int surveyState = savedInstanceState.getInt(ARG_CURRENT_SURVEY_STATE);
-            final String feedback = savedInstanceState.getString(ARG_FEEDBACK);
-            mSurveyLayout.setupState(surveyState, selectedScore, feedback);
+            mSurveyLayout.setupState(surveyState, selectedScore);
         }
 
         mSurveyLayout.initWithSettings(mSettings);
@@ -182,7 +180,6 @@ public class SurveyFragment extends DialogFragment
         if(mSurveyLayout != null) {
             outState.putInt(ARG_SELECTED_SCORE, mSurveyLayout.getSelectedScore());
             outState.putInt(ARG_CURRENT_SURVEY_STATE, mSurveyLayout.getSelectedState());
-            outState.putString(ARG_FEEDBACK, mSurveyLayout.getFeedback());
         }
 
         super.onSaveInstanceState(outState);
