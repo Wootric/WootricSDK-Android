@@ -17,6 +17,7 @@ import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
@@ -66,6 +67,8 @@ public class SurveyLayoutTablet extends LinearLayout
     private int mCurrentScore = -1;
 
     private SurveyLayoutListener mSurveyLayoutListener;
+
+    private static final int CONTAINER_PADDING = (int) ScreenUtils.dpToPx(8);
 
     public SurveyLayoutTablet(Context context) {
         super(context);
@@ -157,6 +160,8 @@ public class SurveyLayoutTablet extends LinearLayout
         });
 
         mThankYouLayout = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
+
+        setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
         initScoreLayout();
     }
