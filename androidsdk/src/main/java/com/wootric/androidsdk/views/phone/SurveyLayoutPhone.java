@@ -8,7 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
+import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -373,10 +379,6 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private boolean isFeedbackState() {
         return mCurrentState == STATE_FEEDBACK;
-    }
-
-    public int getSelectedState() {
-        return mCurrentState;
     }
 
     public String getFeedback() {
