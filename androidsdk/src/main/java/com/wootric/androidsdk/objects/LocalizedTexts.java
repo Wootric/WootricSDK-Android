@@ -109,23 +109,29 @@ public class LocalizedTexts implements Parcelable {
 
     public static LocalizedTexts fromJson(JSONObject localizedTextsJson) throws JSONException {
         LocalizedTexts localizedTexts = new LocalizedTexts();
-        localizedTexts.npsQuestion = localizedTextsJson.getString("nps_question");
+        localizedTexts.npsQuestion = localizedTextsJson.optString("nps_question");
 
-        JSONObject anchorsJson = localizedTextsJson.getJSONObject("anchors");
+        JSONObject anchorsJson = localizedTextsJson.optJSONObject("anchors");
         localizedTexts.anchors = new HashMap<>();
-        localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.getString(ANCHOR_LIKELY_KEY));
-        localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.getString(ANCHOR_NOT_LIKELY_KEY));
 
-        localizedTexts.followupQuestion = localizedTextsJson.getString("followup_question");
-        localizedTexts.followupPlaceholder = localizedTextsJson.getString("followup_placeholder");
-        localizedTexts.finalThankYou = localizedTextsJson.getString("final_thank_you");
-        localizedTexts.send = localizedTextsJson.getString("send");
-        localizedTexts.dismiss = localizedTextsJson.getString("dismiss");
+        if(anchorsJson != null) {
+            localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.optString(ANCHOR_LIKELY_KEY));
+            localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.optString(ANCHOR_NOT_LIKELY_KEY));
+        }
+
+        localizedTexts.followupQuestion = localizedTextsJson.optString("followup_question");
+        localizedTexts.followupPlaceholder = localizedTextsJson.optString("followup_placeholder");
+        localizedTexts.finalThankYou = localizedTextsJson.optString("final_thank_you");
+        localizedTexts.send = localizedTextsJson.optString("send");
+        localizedTexts.dismiss = localizedTextsJson.optString("dismiss");
 
         JSONObject socialShareJson = localizedTextsJson.getJSONObject("social_share");
         localizedTexts.socialShare = new HashMap<>();
-        localizedTexts.socialShare.put(SOCIAL_SHARE_QUESTION_KEY, socialShareJson.getString(SOCIAL_SHARE_QUESTION_KEY));
-        localizedTexts.socialShare.put(SOCIAL_SHARE_DECLINE_KEY, socialShareJson.getString(SOCIAL_SHARE_DECLINE_KEY));
+
+        if(socialShareJson != null) {
+            localizedTexts.socialShare.put(SOCIAL_SHARE_QUESTION_KEY, socialShareJson.optString(SOCIAL_SHARE_QUESTION_KEY));
+            localizedTexts.socialShare.put(SOCIAL_SHARE_DECLINE_KEY, socialShareJson.optString(SOCIAL_SHARE_DECLINE_KEY));
+        }
 
         return localizedTexts;
     }

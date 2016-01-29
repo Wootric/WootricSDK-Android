@@ -358,10 +358,10 @@ public class Settings implements Parcelable {
 
     public static Settings fromJson(JSONObject settingsObject) throws JSONException {
         Settings settings = new Settings();
-        settings.firstSurvey = settingsObject.getLong("first_survey");
-        settings.timeDelay = settingsObject.getInt("time_delay");
+        settings.firstSurvey = settingsObject.optLong("first_survey");
+        settings.timeDelay = settingsObject.optInt("time_delay");
 
-        JSONObject localizedTextsJson = settingsObject.getJSONObject("localized_texts");
+        JSONObject localizedTextsJson = settingsObject.optJSONObject("localized_texts");
         settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson);
 
         JSONObject customMessagesJson = settingsObject.optJSONObject("messages");

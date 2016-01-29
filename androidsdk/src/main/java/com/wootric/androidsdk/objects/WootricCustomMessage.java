@@ -165,39 +165,24 @@ public class WootricCustomMessage implements Parcelable {
         if(customMessagesJson == null) return null;
 
         WootricCustomMessage wootricCustomMessage = new WootricCustomMessage();
-        wootricCustomMessage.followupQuestion = customMessagesJson.getString("followup_question");
-        wootricCustomMessage.placeholderText = customMessagesJson.getString("placeholder_text");
+
+        wootricCustomMessage.followupQuestion = customMessagesJson.optString("followup_question");
+        wootricCustomMessage.placeholderText = customMessagesJson.optString("placeholder_text");
 
         wootricCustomMessage.followupQuestionsList = new HashMap<>();
         JSONObject followupQuestionListJson = customMessagesJson.optJSONObject("followup_questions_list");
         if(followupQuestionListJson != null) {
-            if(followupQuestionListJson.has(DETRACTOR_QUESTION_KEY)) {
-                wootricCustomMessage.followupQuestionsList.put(DETRACTOR_QUESTION_KEY, followupQuestionListJson.getString(DETRACTOR_QUESTION_KEY));
-            }
-
-            if(followupQuestionListJson.has(PASSIVE_QUESTION_KEY)) {
-                wootricCustomMessage.followupQuestionsList.put(PASSIVE_QUESTION_KEY, followupQuestionListJson.getString(PASSIVE_QUESTION_KEY));
-            }
-
-            if(followupQuestionListJson.has(PROMOTER_QUESTION_KEY)) {
-                wootricCustomMessage.followupQuestionsList.put(PROMOTER_QUESTION_KEY, followupQuestionListJson.getString(PROMOTER_QUESTION_KEY));
-            }
+            wootricCustomMessage.followupQuestionsList.put(DETRACTOR_QUESTION_KEY, followupQuestionListJson.optString(DETRACTOR_QUESTION_KEY));
+            wootricCustomMessage.followupQuestionsList.put(PASSIVE_QUESTION_KEY, followupQuestionListJson.optString(PASSIVE_QUESTION_KEY));
+            wootricCustomMessage.followupQuestionsList.put(PROMOTER_QUESTION_KEY, followupQuestionListJson.optString(PROMOTER_QUESTION_KEY));
         }
 
         wootricCustomMessage.placeholderTextsList = new HashMap<>();
         JSONObject placeholderTextsListJson = customMessagesJson.optJSONObject("placeholder_texts_list");
         if(placeholderTextsListJson != null) {
-            if (placeholderTextsListJson.has(DETRACTOR_TEXT_KEY)) {
-                wootricCustomMessage.placeholderTextsList.put(DETRACTOR_TEXT_KEY, placeholderTextsListJson.getString(DETRACTOR_TEXT_KEY));
-            }
-
-            if (placeholderTextsListJson.has(PASSIVE_TEXT_KEY)) {
-                wootricCustomMessage.placeholderTextsList.put(PASSIVE_TEXT_KEY, placeholderTextsListJson.getString(PASSIVE_TEXT_KEY));
-            }
-
-            if (placeholderTextsListJson.has(PROMOTER_QUESTION_KEY)) {
-                wootricCustomMessage.placeholderTextsList.put(PROMOTER_TEXT_KEY, placeholderTextsListJson.getString(PROMOTER_TEXT_KEY));
-            }
+            wootricCustomMessage.placeholderTextsList.put(DETRACTOR_TEXT_KEY, placeholderTextsListJson.optString(DETRACTOR_TEXT_KEY));
+            wootricCustomMessage.placeholderTextsList.put(PASSIVE_TEXT_KEY, placeholderTextsListJson.optString(PASSIVE_TEXT_KEY));
+            wootricCustomMessage.placeholderTextsList.put(PROMOTER_TEXT_KEY, placeholderTextsListJson.optString(PROMOTER_TEXT_KEY));
         }
         return wootricCustomMessage;
     }
