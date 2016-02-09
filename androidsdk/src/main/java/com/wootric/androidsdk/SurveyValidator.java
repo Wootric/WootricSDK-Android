@@ -1,5 +1,7 @@
 package com.wootric.androidsdk;
 
+import android.util.Log;
+
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.network.tasks.CheckEligibilityTask;
@@ -44,6 +46,9 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     @Override
     public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
         if(eligibilityResponse.isEligible()) {
+            if (settings.shouldForceSurvey()) {
+                Log.w("WootricSDK", "WootricSDK: forced survey (remove for production!)");
+            }
             notifyShouldShowSurvey(eligibilityResponse.getSettings());
         } else {
             notifyShouldNotShowSurvey();
@@ -51,7 +56,8 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     private boolean needsSurvey() {
-        return !preferencesUtils.wasRecentlySurveyed() &&
+        return (settings.shouldForceSurvey()) ||
+                !preferencesUtils.wasRecentlySurveyed() &&
                 (settings.isSurveyImmediately() ||
                 !endUser.isCreatedAtSet() ||
                 firstSurveyDelayPassed() || lastSeenDelayPassed());

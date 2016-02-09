@@ -27,6 +27,7 @@ public class Settings implements Parcelable {
 
     private boolean surveyImmediately;
     private boolean skipFollowupScreenForPromoters;
+    private boolean forceSurvey;
 
     private Integer dailyResponseCap;
     private Integer registeredPercent;
@@ -65,6 +66,14 @@ public class Settings implements Parcelable {
         return surveyImmediately;
     }
 
+    public void setShouldForceSurvey(boolean forceSurvey) {
+        this.forceSurvey = forceSurvey;
+    }
+
+    public boolean shouldForceSurvey() {
+        return this.forceSurvey;
+    }
+
     public void setSkipFollowupScreenForPromoters(boolean skipFollowupScreenForPromoters) {
         this.skipFollowupScreenForPromoters = skipFollowupScreenForPromoters;
     }
@@ -92,23 +101,23 @@ public class Settings implements Parcelable {
     }
 
     public String getNpsQuestion() {
-        return localizedTexts.getNpsQuestion();
+        return (localizedTexts != null ? localizedTexts.getNpsQuestion() : "");
     }
 
     public String getAnchorLikely() {
-        return localizedTexts.getAnchorLikely();
+        return (localizedTexts != null ? localizedTexts.getAnchorLikely() : "");
     }
 
     public String getAnchorNotLikely() {
-        return localizedTexts.getAnchorNotLikely();
+        return (localizedTexts != null ? localizedTexts.getAnchorNotLikely() : "");
     }
 
     public String getBtnSubmit() {
-        return localizedTexts.getSubmit().toUpperCase();
+        return (localizedTexts != null ? localizedTexts.getSubmit().toUpperCase() : "");
     }
 
     public String getBtnDismiss() {
-        return localizedTexts.getDismiss().toUpperCase();
+        return (localizedTexts != null ? localizedTexts.getDismiss().toUpperCase() : "");
     }
 
     public String getFollowupQuestion(int score) {
@@ -122,7 +131,7 @@ public class Settings implements Parcelable {
             followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score);
         }
 
-        if(followupQuestion == null) {
+        if(followupQuestion == null && localizedTexts != null) {
             followupQuestion = localizedTexts.getFollowupQuestion();
         }
 
@@ -140,7 +149,7 @@ public class Settings implements Parcelable {
             followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score);
         }
 
-        if(followupPlaceholder == null) {
+        if(followupPlaceholder == null && localizedTexts != null) {
             followupPlaceholder = localizedTexts.getFollowupPlaceholder();
         }
 
@@ -154,7 +163,7 @@ public class Settings implements Parcelable {
             thankYouMessage = customThankYou.getTextForScore(score);
         }
 
-        if(customThankYou == null) {
+        if(customThankYou == null && localizedTexts != null) {
             thankYouMessage = localizedTexts.getFinalThankYou();
         }
 
@@ -178,7 +187,7 @@ public class Settings implements Parcelable {
     }
 
     public String getFinalThankYou() {
-        return localizedTexts.getFinalThankYou();
+        return (localizedTexts != null ? localizedTexts.getFinalThankYou() : "");
     }
 
     public void setTimeDelay(int timeDelay) {
@@ -314,6 +323,7 @@ public class Settings implements Parcelable {
         dest.writeParcelable(this.localCustomMessage, 0);
         dest.writeInt(this.timeDelay);
         dest.writeByte(surveyImmediately ? (byte) 1 : (byte) 0);
+        dest.writeByte(forceSurvey ? (byte) 1 : (byte) 0);
         dest.writeValue(this.dailyResponseCap);
         dest.writeValue(this.registeredPercent);
         dest.writeValue(this.visitorPercent);
@@ -334,6 +344,7 @@ public class Settings implements Parcelable {
         this.localCustomMessage = in.readParcelable(WootricCustomMessage.class.getClassLoader());
         this.timeDelay = in.readInt();
         this.surveyImmediately = in.readByte() != 0;
+        this.forceSurvey = in.readByte() != 0;
         this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
         this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());

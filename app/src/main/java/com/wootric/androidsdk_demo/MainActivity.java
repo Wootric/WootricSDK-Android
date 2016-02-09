@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
         Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
         wootric.setSurveyImmediately(true);
+        wootric.forceSurvey(true);
         wootric.survey();
     }
 }
