@@ -132,6 +132,10 @@ public class Wootric {
         settings.setSkipFollowupScreenForPromoters(shouldSkipFollowupScreenForPromoters);
     }
 
+    public void forceSurvey(boolean forceSurvey) {
+        settings.setShouldForceSurvey(forceSurvey);
+    }
+
     public void survey() {
         if (!permissionsValidator.check() || surveyInProgress)
             return;

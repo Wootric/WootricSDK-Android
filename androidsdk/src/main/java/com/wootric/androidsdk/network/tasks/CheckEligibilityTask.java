@@ -38,7 +38,11 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
         paramsMap.put("email", email);
 
-        paramsMap.put("survey_immediately", String.valueOf(settings.isSurveyImmediately()));
+        if (settings.isSurveyImmediately() || settings.shouldForceSurvey()) {
+            paramsMap.put("survey_immediately", String.valueOf(true));
+        } else {
+            paramsMap.put("survey_immediately", String.valueOf(false));
+        }
 
         addOptionalParam("external_created_at", endUser.getCreatedAtOrNull());
         addOptionalParam("first_survey_delay", settings.getFirstSurveyDelay());
@@ -59,13 +63,19 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
     @Override
     protected void onSuccess(String response) {
         boolean eligible = false;
+        boolean shouldForceSurvey = this.settings.shouldForceSurvey();
         Settings settings = null;
 
         if(response != null) {
             try {
                 JSONObject jsonObject = new JSONObject(response);
 
-                eligible = jsonObject.getBoolean("eligible");
+                if (shouldForceSurvey) {
+                    eligible = true;
+                } else {
+                    eligible = jsonObject.getBoolean("eligible");
+                }
+
                 if (eligible) {
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
                     settings = Settings.fromJson(settingsObject);
