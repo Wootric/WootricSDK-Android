@@ -186,7 +186,9 @@ public class SurveyManager implements
             }
         }
 
-        if(originUrl == null) originUrl = "";
+        if(originUrl == null) {
+            originUrl = "";
+        }
 
         return originUrl;
     }

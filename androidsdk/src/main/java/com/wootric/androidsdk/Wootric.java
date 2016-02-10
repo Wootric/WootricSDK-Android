@@ -133,8 +133,9 @@ public class Wootric {
     }
 
     public void survey() {
-        if (!permissionsValidator.check() || surveyInProgress)
+        if (!permissionsValidator.check() || surveyInProgress) {
             return;
+        }
 
         getSurveyManager().start();
 

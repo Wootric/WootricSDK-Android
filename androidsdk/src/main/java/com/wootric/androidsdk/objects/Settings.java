@@ -53,8 +53,7 @@ public class Settings implements Parcelable {
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
-        return timeFrom == Constants.NOT_SET ||
-                new Date().getTime() - firstSurvey * Constants.DAY_IN_MILLIS >= timeFrom;
+        return timeFrom == Constants.NOT_SET || new Date().getTime() - firstSurvey * Constants.DAY_IN_MILLIS >= timeFrom;
     }
 
     public void setSurveyImmediately(boolean surveyImmediately) {

@@ -1,5 +1,7 @@
 package com.wootric.androidsdk;
 
+import android.util.Log;
+
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.network.tasks.CheckEligibilityTask;
@@ -20,6 +22,8 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     private final WootricRemoteClient wootricRemoteClient;
     private final PreferencesUtils preferencesUtils;
 
+    private static final String TAG = "WOOTRIC_SDK";
+
     SurveyValidator(User user, EndUser endUser, Settings settings,
                     WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
         this.user = user;
@@ -34,9 +38,11 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     public void validate() {
+
         if(needsSurvey()) {
             checkEligibility();
-        } else {
+        }
+        else {
             notifyShouldNotShowSurvey();
         }
     }
@@ -51,10 +57,31 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     private boolean needsSurvey() {
-        return !preferencesUtils.wasRecentlySurveyed() &&
+
+        /*return !preferencesUtils.wasRecentlySurveyed() &&
                 (settings.isSurveyImmediately() ||
                 !endUser.isCreatedAtSet() ||
-                firstSurveyDelayPassed() || lastSeenDelayPassed());
+                firstSurveyDelayPassed() || lastSeenDelayPassed());*/
+
+        Boolean isi = settings.isSurveyImmediately();
+        Boolean wrs = preferencesUtils.wasRecentlySurveyed();
+        Boolean cas = endUser.isCreatedAtSet();
+        Boolean fsdp = firstSurveyDelayPassed();
+        Boolean lsdp = lastSeenDelayPassed();
+
+        Log.v(TAG, "IS SURVERY INMEDIATELY ENABLED: " + isi);
+        Log.v(TAG, "WAS RECENTLY SURVEYED: " + wrs);
+        Log.v(TAG, "HAS CREATED DATE: " + cas); //BOKU: Why is this value accounted on the previous version? It's not necessary.
+        Log.v(TAG, "FIRST SURVEY DELAY PASSED: " + fsdp);
+        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lsdp);
+
+        if (isi || !wrs || fsdp || lsdp) {
+            Log.v(TAG, "Needs survey. Will check with server.");
+            return true;
+        }
+
+        Log.v(TAG, "Doesn't need survey. Will not check with server.");
+        return false;
     }
 
     private boolean firstSurveyDelayPassed() {

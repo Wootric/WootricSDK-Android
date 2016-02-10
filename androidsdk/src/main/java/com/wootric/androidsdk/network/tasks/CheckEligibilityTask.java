@@ -1,5 +1,7 @@
 package com.wootric.androidsdk.network.tasks;
 
+import android.util.Log;
+
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -19,6 +21,8 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
     private final Callback surveyCallback;
 
+    private static final String TAG = "WOOTRIC_SDK";
+
     public CheckEligibilityTask(User user, EndUser endUser, Settings settings, Callback surveyCallback) {
         super(REQUEST_TYPE_GET, null, null);
 
@@ -34,7 +38,9 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
         String email = endUser.getEmail();
         // If email is not set, we send an empty string in order to be consistent with web beacon
-        if(email == null) email = "";
+        if(email == null) {
+            email = "";
+        }
 
         paramsMap.put("email", email);
 
@@ -67,9 +73,15 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
                 eligible = jsonObject.getBoolean("eligible");
                 if (eligible) {
+                    Log.v(TAG, "Server says the user is eligible for survey");
+
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
                     settings = Settings.fromJson(settingsObject);
                 }
+                else {
+                    Log.v(TAG, "Server says the user is NOT eligible for survey");
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

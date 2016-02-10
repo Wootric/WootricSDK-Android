@@ -86,7 +86,7 @@ public class PreferencesUtils {
         boolean recentTime = false;
 
         final SharedPreferences prefs = prefs();
-        if(prefs != null) {
+        if (prefs != null) {
             long eventTime = prefs.getLong(key, NOT_SET);
             recentTime = (eventTime != -1 && new Date().getTime() - eventTime < DAY_IN_MILLIS * 90L);
         }
