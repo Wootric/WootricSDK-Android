@@ -161,12 +161,15 @@ public class WootricCustomMessage implements Parcelable {
         }
     };
 
-    public static WootricCustomMessage fromJson(JSONObject customMessagesJson) throws JSONException {
+    public static WootricCustomMessage fromJson(JSONObject settingsJson) throws JSONException {
+        if (settingsJson == null) return null;
+
+        JSONObject customMessagesJson = settingsJson.optJSONObject("messages");
         if(customMessagesJson == null) return null;
 
         WootricCustomMessage wootricCustomMessage = new WootricCustomMessage();
 
-        wootricCustomMessage.followupQuestion = customMessagesJson.optString("followup_question");
+        wootricCustomMessage.followupQuestion = settingsJson.optString("followup_question");
         wootricCustomMessage.placeholderText = customMessagesJson.optString("placeholder_text");
 
         wootricCustomMessage.followupQuestionsList = new HashMap<>();
