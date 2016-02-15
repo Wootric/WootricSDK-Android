@@ -13,14 +13,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.3</version>
 </dependency>
 ```
 
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:2.3.2'
+compile 'com.wootric:wootric-sdk-android:2.3.3'
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
@@ -150,4 +150,11 @@ wootric.setProductName("Wootric");
 wootric.setRecommendTarget("Best Friend");
 wootric.setFacebookPageId("123456");
 wootric.setTwitterPage("wootric");
+
+```
+
+When creating a new end user for survey, it will set his/hers external creation date (so for example, date, when end user was created in your Android application).
+This value is also used in eligibility check, to determine if end user should be surveyed. This is an Unix timestamp set in seconds and must be 10 digits long.
+```java
+wootric.setEndUserCreatedAt("1234567890");
 ```

@@ -39,49 +39,35 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
 
     public void validate() {
 
-        if(needsSurvey()) {
+        Boolean immediate = settings.isSurveyImmediately();
+        Boolean recently = preferencesUtils.wasRecentlySurveyed();
+        Boolean firstDelay = firstSurveyDelayPassed();
+        Boolean lasSeen = lastSeenDelayPassed();
+
+        Log.v(TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
+        Log.v(TAG, "WAS RECENTLY SURVEYED: " + recently);
+        Log.v(TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
+        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lasSeen);
+
+        if (immediate || !recently || firstDelay || lasSeen) {
+            Log.v(TAG, "Needs survey. Will check with server.");
             checkEligibility();
         }
         else {
+            Log.v(TAG, "Doesn't need survey. Will not check with server.");
             notifyShouldNotShowSurvey();
         }
     }
 
     @Override
     public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
+
         if(eligibilityResponse.isEligible()) {
             notifyShouldShowSurvey(eligibilityResponse.getSettings());
-        } else {
+        }
+        else {
             notifyShouldNotShowSurvey();
         }
-    }
-
-    private boolean needsSurvey() {
-
-        /*return !preferencesUtils.wasRecentlySurveyed() &&
-                (settings.isSurveyImmediately() ||
-                !endUser.isCreatedAtSet() ||
-                firstSurveyDelayPassed() || lastSeenDelayPassed());*/
-
-        Boolean isi = settings.isSurveyImmediately();
-        Boolean wrs = preferencesUtils.wasRecentlySurveyed();
-        Boolean cas = endUser.isCreatedAtSet();
-        Boolean fsdp = firstSurveyDelayPassed();
-        Boolean lsdp = lastSeenDelayPassed();
-
-        Log.v(TAG, "IS SURVERY INMEDIATELY ENABLED: " + isi);
-        Log.v(TAG, "WAS RECENTLY SURVEYED: " + wrs);
-        Log.v(TAG, "HAS CREATED DATE: " + cas); //BOKU: Why is this value accounted on the previous version? It's not necessary.
-        Log.v(TAG, "FIRST SURVEY DELAY PASSED: " + fsdp);
-        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lsdp);
-
-        if (isi || !wrs || fsdp || lsdp) {
-            Log.v(TAG, "Needs survey. Will check with server.");
-            return true;
-        }
-
-        Log.v(TAG, "Doesn't need survey. Will not check with server.");
-        return false;
     }
 
     private boolean firstSurveyDelayPassed() {
@@ -89,8 +75,7 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     private boolean lastSeenDelayPassed(){
-        return preferencesUtils.isLastSeenSet() &&
-                settings.firstSurveyDelayPassed(preferencesUtils.getLastSeen());
+        return preferencesUtils.isLastSeenSet() && settings.firstSurveyDelayPassed(preferencesUtils.getLastSeen());
     }
 
     private void checkEligibility() {

@@ -39,6 +39,7 @@ public class CreateEndUserTask extends WootricRemoteRequestTask {
 
     @Override
     protected void onSuccess(String response) {
+
         if(response == null) {
             onInvalidResponse("End user params are missing");
             return;

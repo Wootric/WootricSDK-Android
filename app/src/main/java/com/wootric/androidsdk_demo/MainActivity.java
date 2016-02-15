@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
+import com.wootric.androidsdk.objects.WootricCustomMessage;
 
 import java.util.Calendar;
 import java.util.Date;

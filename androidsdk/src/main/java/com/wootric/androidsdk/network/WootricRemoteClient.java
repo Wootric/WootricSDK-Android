@@ -32,7 +32,9 @@ public class WootricRemoteClient {
         ).execute();
     }
 
-    public void checkEligibility(User user, EndUser endUser, Settings settings, final CheckEligibilityTask.Callback surveyCallback) {
+    public void
+    checkEligibility(User user, EndUser endUser, Settings settings, final CheckEligibilityTask.Callback surveyCallback) {
+
         new CheckEligibilityTask(
                 user,
                 endUser,

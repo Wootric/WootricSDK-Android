@@ -2,6 +2,7 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
@@ -34,6 +35,8 @@ public class Wootric {
     PermissionsValidator permissionsValidator;
 
     static volatile Wootric singleton;
+
+    private static final String TAG = "WOOTRIC_SDK";
 
     public static  Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
         Wootric local = singleton;
@@ -72,7 +75,18 @@ public class Wootric {
         endUser.setEmail(email);
     }
 
+    /**
+     * Set the end user created date. The createdAt  must be a seconds unix time value and
+     * it must be 10 digits only.
+     * Important: If you use System.currentTimeMillis() make sure you divide it by 1000.
+     * @param createdAt
+     */
     public void setEndUserCreatedAt(long createdAt) {
+
+        if (createdAt > 9999999999L){
+            Log.v(TAG, "WARNING: The created date exceeds the maximum 10 characters allowed. " +
+                    "If you are using System.currentTimeMillis() divide it by 1000.");
+        }
         endUser.setCreatedAt(createdAt);
     }
 

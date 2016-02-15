@@ -18,9 +18,7 @@ import com.wootric.androidsdk.views.SurveyFragment;
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class SurveyManager implements
-        SurveyValidator.OnSurveyValidatedListener,
-        WootricApiCallback {
+public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback {
 
     private static final String LOG_TAG = SurveyManager.class.getName();
 
@@ -179,10 +177,12 @@ public class SurveyManager implements
         if(originUrl == null) {
             PackageManager pm = activity.getPackageManager();
             ApplicationInfo appInfo;
+
             try {
                 appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
             }
         }
 

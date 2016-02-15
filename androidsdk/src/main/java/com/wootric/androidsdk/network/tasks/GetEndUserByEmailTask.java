@@ -1,5 +1,7 @@
 package com.wootric.androidsdk.network.tasks;
 
+import android.util.Log;
+
 import com.wootric.androidsdk.network.WootricApiCallback;
 
 import org.json.JSONArray;
@@ -12,6 +14,8 @@ import org.json.JSONObject;
 public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
 
     private final String email;
+
+    private static final String TAG = "WOOTRIC_SDK";
 
     public GetEndUserByEmailTask(String email, String accessToken, WootricApiCallback wootricApiCallback) {
         super(REQUEST_TYPE_GET, accessToken, wootricApiCallback);
@@ -42,7 +46,8 @@ public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 long endUserId = jsonObject.getLong("id");
                 wootricApiCallback.onGetEndUserIdSuccess(endUserId);
-            } else {
+            }
+            else {
                 wootricApiCallback.onEndUserNotFound();
             }
         } catch (JSONException e) {

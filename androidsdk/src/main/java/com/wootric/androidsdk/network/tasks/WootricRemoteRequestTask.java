@@ -46,7 +46,9 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
     @Override
     protected String doInBackground(Void... params) {
+
         String urlWithParams = requestUrl() + "?" + requestParams();
+
         try {
             URL url = new URL(urlWithParams);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
