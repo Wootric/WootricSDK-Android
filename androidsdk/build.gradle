@@ -21,6 +21,10 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 allprojects {

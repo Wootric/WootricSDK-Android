@@ -63,6 +63,8 @@ public class SurveyValidatorTest {
     public void doesNotCheckEligibility_whenRecentlySurveyed() throws Exception {
         User user = testUser();
         EndUser endUser = testEndUser();
+        long createdAtJustNow = new Date().getTime();
+        endUser.setCreatedAt(createdAtJustNow);
         Settings settings = new Settings();
 
         doReturn(true).when(preferencesUtils).wasRecentlySurveyed();
