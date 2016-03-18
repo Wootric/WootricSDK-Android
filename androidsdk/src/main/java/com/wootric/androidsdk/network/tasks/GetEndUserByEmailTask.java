@@ -34,24 +34,23 @@ public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
 
     @Override
     protected void onSuccess(String response) {
-        if(response == null) {
-            RuntimeException responseEmpty = new IllegalArgumentException("End user params are missing");
-            wootricApiCallback.onApiError(responseEmpty);
-        }
+        if(response != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(response);
 
-        try {
-            JSONArray jsonArray = new JSONArray(response);
-
-            if(jsonArray.length() > 0) {
-                JSONObject jsonObject = jsonArray.getJSONObject(0);
-                long endUserId = jsonObject.getLong("id");
-                wootricApiCallback.onGetEndUserIdSuccess(endUserId);
+                if(jsonArray.length() > 0) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                    long endUserId = jsonObject.getLong("id");
+                    wootricApiCallback.onGetEndUserIdSuccess(endUserId);
+                }
+                else {
+                    wootricApiCallback.onEndUserNotFound();
+                }
+            } catch (JSONException e) {
+                wootricApiCallback.onApiError(e);
             }
-            else {
-                wootricApiCallback.onEndUserNotFound();
-            }
-        } catch (JSONException e) {
-            wootricApiCallback.onApiError(e);
+        } else {
+            wootricApiCallback.onApiError(new IllegalArgumentException("End user params are missing"));
         }
     }
 }

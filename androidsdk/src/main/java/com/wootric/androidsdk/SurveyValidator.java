@@ -42,14 +42,14 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         Boolean immediate = settings.isSurveyImmediately();
         Boolean recently = preferencesUtils.wasRecentlySurveyed();
         Boolean firstDelay = firstSurveyDelayPassed();
-        Boolean lasSeen = lastSeenDelayPassed();
+        Boolean lastSeen = lastSeenDelayPassed();
 
         Log.v(TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
         Log.v(TAG, "WAS RECENTLY SURVEYED: " + recently);
         Log.v(TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
-        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lasSeen);
+        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
 
-        if (immediate || !recently || firstDelay || lasSeen) {
+        if (immediate || !recently || firstDelay || lastSeen) {
             Log.v(TAG, "Needs survey. Will check with server.");
             checkEligibility();
         }
