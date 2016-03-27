@@ -46,7 +46,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
         paramsMap.put("survey_immediately", String.valueOf(settings.isSurveyImmediately()));
 
-        addOptionalParam("external_created_at", endUser.getCreatedAtOrNull());
+        addOptionalParam("end_user_created_at", endUser.getCreatedAtOrNull());
         addOptionalParam("first_survey_delay", settings.getFirstSurveyDelay());
         addOptionalParam("daily_response_cap", settings.getDailyResponseCap());
         addOptionalParam("registered_percent", settings.getRegisteredPercent());
@@ -55,6 +55,8 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
         addOptionalParam("language[code]", settings.getLanguageCode());
         addOptionalParam("language[product_name]", settings.getProductName());
         addOptionalParam("language[audience_text]", settings.getRecommendTarget());
+
+        Log.v(TAG, "parameters: " + paramsMap);
     }
 
     @Override
