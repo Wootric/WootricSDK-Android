@@ -2,6 +2,7 @@ package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -19,6 +20,7 @@ import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
@@ -54,8 +56,9 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private RelativeLayout mThankYouLayout;
 
-    private ImageButton mBtnTwitter;
-    private ImageButton mBtnFacebook;
+    private Button mBtnFacebookLike;
+    private Button mBtnTwitter;
+    private Button mBtnFacebook;
     private Button mBtnThankYouDone;
     private Button mBtnThankYouAction;
     private TextView mBtnThankYouDismiss;
@@ -93,6 +96,8 @@ public class SurveyLayoutTablet extends LinearLayout
         initResources();
         LayoutInflater.from(mContext).inflate(R.layout.wootric_survey_layout, this);
 
+        Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
+
         mNpsLayout = (RelativeLayout) findViewById(R.id.wootric_nps_layout);
 
         mTvNpsQuestion = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
@@ -128,10 +133,22 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
-        mBtnTwitter = (ImageButton) findViewById(R.id.btn_twitter);
-        mBtnFacebook = (ImageButton) findViewById(R.id.btn_facebook);
+        mBtnFacebookLike = (Button) findViewById(R.id.btn_facebook_like);
+        mBtnTwitter = (Button) findViewById(R.id.btn_twitter);
+        mBtnFacebook = (Button) findViewById(R.id.btn_facebook);
         mBtnThankYouDone = (Button) findViewById(R.id.wootric_btn_thank_you_done);
         mBtnThankYouAction = (Button) findViewById(R.id.wootric_btn_thank_you_action);
+
+        mBtnFacebookLike.setTypeface(iconFont);
+        mBtnTwitter.setTypeface(iconFont);
+        mBtnFacebook.setTypeface(iconFont);
+
+        mBtnFacebookLike.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFacebookLikeBtnClick();
+            }
+        });
 
         mBtnTwitter.setOnClickListener(new OnClickListener() {
             @Override
@@ -250,6 +267,7 @@ public class SurveyLayoutTablet extends LinearLayout
         boolean shouldShowFacebookBtn = (mCurrentScore >= 9 && mSettings.getFacebookPageId() != null);
 
         mBtnFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
+        mBtnFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
 
         final String feedback = getFeedback();
 
@@ -343,6 +361,13 @@ public class SurveyLayoutTablet extends LinearLayout
     private void dismissSurvey() {
         if(mSurveyLayoutListener != null) {
             mSurveyLayoutListener.onDismissClick();
+        }
+    }
+
+    @Override
+    public void onFacebookLikeBtnClick() {
+        if(mSurveyLayoutListener != null) {
+            mSurveyLayoutListener.onFacebookLikeBtnClick();
         }
     }
 

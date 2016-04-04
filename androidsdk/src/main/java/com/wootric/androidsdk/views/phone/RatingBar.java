@@ -73,7 +73,7 @@ public class RatingBar extends View implements View.OnTouchListener {
         Resources res = mContext.getResources();
 
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
-        mColorSelected = res.getColor(R.color.wootric_brand_color);
+        mColorSelected = res.getColor(R.color.wootric_score_color);
         mNotchMarginHorizontal = res.getDimension(R.dimen.wootric_rating_notch_margin_horizontal);
         mNotchRadius = res.getDimension(R.dimen.wootric_rating_notch_radius);
         mTrackWidth = res.getDimension(R.dimen.wootric_rating_track_width);
@@ -222,6 +222,11 @@ public class RatingBar extends View implements View.OnTouchListener {
             mSelectedScore = selectedScore;
             invalidate();
         }
+    }
+
+    public void setSelectedColor(int selectedColor) {
+        mColorSelected = selectedColor;
+        initPaints();
     }
 
     @Override

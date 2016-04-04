@@ -1,6 +1,7 @@
 package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
 
@@ -22,12 +24,17 @@ public class ThankYouLayout extends RelativeLayout {
 
     private RelativeLayout mLayoutBody;
 
+    private LinearLayout mLayoutFacebookLike;
     private LinearLayout mLayoutFacebook;
     private LinearLayout mLayoutTwitter;
 
     private TextView mTvThankYou;
+    private TextView mTvFacebookLike;
     private TextView mTvFacebook;
     private TextView mTvTwitter;
+    private TextView mFaFacebookLike;
+    private TextView mFaFacebook;
+    private TextView mFaTwitter;
     private TextView mBtnDone;
     private Button mBtnThankYouAction;
 
@@ -55,18 +62,29 @@ public class ThankYouLayout extends RelativeLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.wootric_thank_you_layout, this);
 
+        Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
+
         mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
         mTvThankYou = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you);
+        mFaFacebookLike = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_facebook_like);
+        mFaFacebook = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_facebook);
+        mFaTwitter = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_twitter);
+        mTvFacebookLike = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_facebook_like);
         mTvFacebook = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_facebook);
         mTvTwitter = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_twitter);
+        mLayoutFacebookLike = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_layout_facebook_like);
         mLayoutFacebook = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_layout_facebook);
         mLayoutTwitter = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_layout_twitter);
-
         mBtnThankYouAction = (Button) mLayoutBody.findViewById(R.id.wootric_btn_thank_you_action);
 
         mBtnDone = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_thank_you_done);
         mBtnDone.setOnClickListener(onBtnDoneClick());
 
+        mFaFacebookLike.setTypeface(iconFont);
+        mFaFacebook.setTypeface(iconFont);
+        mFaTwitter.setTypeface(iconFont);
+
+        mTvFacebookLike.setOnClickListener(notifyFacebookLikeClick());
         mTvFacebook.setOnClickListener(notifyFacebookClick());
         mTvTwitter.setOnClickListener(notifyTwitterClick());
         mBtnThankYouAction.setOnClickListener(notifyThankYouActionClick());
@@ -74,6 +92,17 @@ public class ThankYouLayout extends RelativeLayout {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mBtnThankYouAction.setElevation(ScreenUtils.dpToPx(8));
         }
+    }
+
+    private OnClickListener notifyFacebookLikeClick() {
+        return new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mThankYouLayoutListener != null) {
+                    mThankYouLayoutListener.onFacebookLikeBtnClick();
+                }
+            }
+        };
     }
 
     private OnClickListener notifyFacebookClick() {
@@ -135,6 +164,8 @@ public class ThankYouLayout extends RelativeLayout {
     private void initValues() {
         mTvThankYou.setText(mSettings.getThankYouMessage(mScore));
 
+        mBtnDone.setTextColor(getResources().getColor(mSettings.getSurveyColor()));
+
         initSocialLinks();
         initThankYouActionBtn();
 
@@ -144,15 +175,21 @@ public class ThankYouLayout extends RelativeLayout {
     private void initThankYouActionBtn() {
         boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mScore, mFeedback);
         final String thankYouLinkText = mSettings.getThankYouLinkText(mScore);
+        final int thankYouBackgroundColor =  getResources().getColor(mSettings.getThankYouButtonBackgroundColor());
 
         mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
         mBtnThankYouAction.setText(thankYouLinkText);
+        mBtnThankYouAction.setBackgroundColor(thankYouBackgroundColor);
     }
 
     private void initSocialLinks() {
         boolean shouldShowFacebookBtn = (mScore >= 9 && mSettings.getFacebookPageId() != null);
 
         mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
+        mLayoutFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
+
+        mFaFacebook.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
+        mFaFacebookLike.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
 
         boolean shouldShowTwitterBtn =
                         mScore >= 9 &&
@@ -161,10 +198,13 @@ public class ThankYouLayout extends RelativeLayout {
                         !mFeedback.isEmpty();
 
         mLayoutTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
+
+        mFaTwitter.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
     }
 
     private void showSimpleDialogIfNeeded() {
         final boolean shouldShowSimpleDialog = mBtnThankYouAction.getVisibility() == GONE &&
+                                                mLayoutFacebookLike.getVisibility() == GONE &&
                                                 mLayoutFacebook.getVisibility() == GONE &&
                                                 mLayoutTwitter.getVisibility() == GONE;
 

@@ -16,17 +16,49 @@
         android:textColor="@android:color/black" />
 
     <LinearLayout
-        android:id="@+id/wootric_layout_facebook"
+        android:id="@+id/wootric_layout_facebook_like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wootric_tv_thank_you"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <ImageView
+        <TextView
+            android:id="@+id/wootric_fa_facebook_like"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_facebook"/>
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_thumbs_up" />
+
+        <TextView
+            android:id="@+id/wootric_tv_facebook_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/wootric_social_text_size"
+            android:text="@string/tv_facebook_like"
+            android:paddingTop="@dimen/wootric_social_tv_padding_vertical"
+            android:paddingBottom="@dimen/wootric_social_tv_padding_vertical"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wootric_layout_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wootric_layout_facebook_like"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/wootric_fa_facebook"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_facebook" />
 
         <TextView
             android:id="@+id/wootric_tv_facebook"
@@ -47,10 +79,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <ImageView
+        <TextView
+            android:id="@+id/wootric_fa_twitter"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_twitter"/>
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_twitter" />
 
         <TextView
             android:id="@+id/wootric_tv_twitter"
@@ -69,7 +105,7 @@
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:textSize="16sp"
-        android:background="@color/wootric_brand_color"
+        android:background="@color/wootric_score_color"
         android:textColor="@android:color/white"
         android:layout_below="@+id/wootric_layout_twitter"
         android:layout_marginTop="@dimen/wootric_thank_you_action_button_margin"

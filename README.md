@@ -13,14 +13,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.3.5</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
 For Gradle users:
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:2.3.5'
+compile 'com.wootric:wootric-sdk-android:2.4.0'
 ```
 Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
@@ -132,6 +132,23 @@ The followup screen can be skipped for promoters, so they are taken straight to 
 
 ```java
 wootric.shouldSkipFollowupScreenForPromoters(true);
+```
+
+### Color customization (smartphones only)
+Colors can be customized for the smartphone's version.
+
+```java
+// Changes background color and text buttons color for the survey
+wootric.setSurveyColor(R.color.survey_color);
+
+// Changes score selector color and comment highlight color
+wootric.setScoreColor(R.color.score_color);
+
+// Changes Thank You button color on the final view
+wootric.setThankYouButtonBackgroundColor(R.color.thank_you_color);
+
+// Changes Facebook and Twitter buttons colors
+wootric.setSocialSharingColor(R.color.social_color);
 ```
 
 ### Other parameters ###

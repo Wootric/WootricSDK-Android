@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fa_twitter">&#xf099;</string>
+    <string name="fa_facebook">&#xf09a;</string>
+    <string name="fa_twitter_square">&#xf081;</string>
+    <string name="fa_facebook_square">&#xf082;</string>
+    <string name="fa_facebook_official">&#xf230;</string>
+    <string name="fa_thumbs_up">&#xf164;</string>
+    <string name="fa_thumbs_o_up">&#xf087;</string>
+</resources>

@@ -19,18 +19,47 @@ public class SocialHandler {
         this.mContext = mContext;
     }
 
+    public void shareOnFacebook(String facebookId) {
+        String urlToShare = "https://www.facebook.com/" + facebookId;
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, urlToShare);
+
+        boolean facebookAppFound = false;
+        List<ResolveInfo> matches = mContext.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo info : matches) {
+            if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook.katana")) {
+                intent.setPackage(info.activityInfo.packageName);
+                facebookAppFound = true;
+                break;
+            }
+        }
+
+        if (!facebookAppFound) {
+            String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + urlToShare;
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
+        }
+
+        mContext.startActivity(intent);
+    }
+
     public void goToFacebook(String facebookId) {
-        final Uri facebookSchemeUri = Uri.parse("fb://page/" + facebookId);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, facebookSchemeUri);
+        final String url = "https://www.facebook.com/" + facebookId;
+        final Uri facebookSchemeUri = Uri.parse("fb://facewebmodal/f?href=" + url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, facebookSchemeUri);
 
-        final PackageManager packageManager = mContext.getPackageManager();
-        List<ResolveInfo> resolvedInfoList =
-                packageManager.queryIntentActivities(intent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
+        boolean facebookAppFound = false;
+        List<ResolveInfo> matches = mContext.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo info : matches) {
+            if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook.katana")) {
+                intent.setPackage(info.activityInfo.packageName);
+                facebookAppFound = true;
+                break;
+            }
+        }
 
-        if (resolvedInfoList.size() == 0) {
-            final Uri facebookUri = Uri.parse("https://www.facebook.com/" + facebookId);
-            intent.setData(facebookUri);
+        if (!facebookAppFound) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         }
 
         mContext.startActivity(intent);

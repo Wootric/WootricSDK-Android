@@ -12,8 +12,9 @@
     <string name="wootric_feedback_question">Care to tell us why?</string>
     <string name="wootric_btn_thank_you_action">Get 20% off your next order</string>
     <string name="wootric_custom_thank_you">Custom thank you</string>
-    <string name="tv_facebook">Like Us on facebook</string>
-    <string name="tv_twitter">Follow Us on Twitter</string>
+    <string name="tv_facebook_like">Like Us on Facebook</string>
+    <string name="tv_facebook">Share on Facebook</string>
+    <string name="tv_twitter">Share on Twitter</string>
     <string name="no_thanks">No thanks…</string>
     <string name="x">X</string>
 </resources>

@@ -44,20 +44,34 @@
         android:layout_below="@+id/wootric_tv_custom_thank_you"
         android:gravity="center">
 
-        <ImageButton
+        <Button
+            android:id="@+id/btn_facebook_like"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_thumbs_up"
+            android:layout_margin="8dp"/>
+
+        <Button
             android:id="@+id/btn_twitter"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_twitter"
             android:background="@null"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_twitter"
             android:layout_margin="8dp"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_facebook"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_facebook"
             android:background="@null"
+            android:textSize="30sp"
+            android:textColor="@color/wootric_social"
+            android:text="@string/fa_facebook"
             android:layout_margin="8dp"/>
 
         <Button

@@ -142,6 +142,22 @@ public class Wootric {
         settings.setCustomThankYou(customThankYou);
     }
 
+    public void setSurveyColor(int surveyColor) {
+        settings.setSurveyColor(surveyColor);
+    }
+
+    public void setScoreColor(int scoreColor) {
+        settings.setScoreColor(scoreColor);
+    }
+
+    public void setThankYouButtonBackgroundColor(int thankYouButtonBackgroundColor) {
+        settings.setThankYouButtonBackgroundColor(thankYouButtonBackgroundColor);
+    }
+
+    public void setSocialSharingColor(int socialSharingColor) {
+        settings.setSocialSharingColor(socialSharingColor);
+    }
+
     public void shouldSkipFollowupScreenForPromoters(boolean shouldSkipFollowupScreenForPromoters) {
         settings.setSkipFollowupScreenForPromoters(shouldSkipFollowupScreenForPromoters);
     }

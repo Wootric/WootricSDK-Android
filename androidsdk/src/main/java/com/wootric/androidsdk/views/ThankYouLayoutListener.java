@@ -5,6 +5,8 @@ package com.wootric.androidsdk.views;
  */
 public interface ThankYouLayoutListener {
 
+    void onFacebookLikeBtnClick();
+
     void onFacebookBtnClick();
 
     void onTwitterBtnClick();

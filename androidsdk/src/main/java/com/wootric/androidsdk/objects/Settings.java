@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.wootric.androidsdk.Constants;
+import com.wootric.androidsdk.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +41,11 @@ public class Settings implements Parcelable {
     private String twitterPage;
 
     private WootricCustomThankYou customThankYou;
+
+    private int surveyColor = Constants.NOT_SET;
+    private int scoreColor = Constants.NOT_SET;
+    private int thankYouButtonBackgroundColor = Constants.NOT_SET;
+    private int socialSharingColor = Constants.NOT_SET;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -301,6 +307,50 @@ public class Settings implements Parcelable {
 
     public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         this.customThankYou = customThankYou;
+    }
+
+    public int getSurveyColor() {
+        if (surveyColor != Constants.NOT_SET){
+            return surveyColor;
+        }
+        return R.color.wootric_survey_layout_header_background;
+    }
+
+    public void setSurveyColor(int surveyColor) {
+        this.surveyColor = surveyColor;
+    }
+
+    public int getScoreColor() {
+        if (scoreColor != Constants.NOT_SET){
+            return scoreColor;
+        }
+        return R.color.wootric_score_color;
+    }
+
+    public void setScoreColor(int scoreColor) {
+        this.scoreColor = scoreColor;
+    }
+
+    public int getThankYouButtonBackgroundColor () {
+        if (thankYouButtonBackgroundColor != Constants.NOT_SET) {
+            return thankYouButtonBackgroundColor;
+        }
+        return R.color.wootric_score_color;
+    }
+
+    public void setThankYouButtonBackgroundColor (int thankYouButtonBackgroundColor) {
+        this.thankYouButtonBackgroundColor = thankYouButtonBackgroundColor;
+    }
+
+    public int getSocialSharingColor () {
+        if (socialSharingColor != Constants.NOT_SET) {
+            return socialSharingColor;
+        }
+        return R.color.wootric_social;
+    }
+
+    public void setSocialSharingColor (int socialSharingColor) {
+        this.socialSharingColor = socialSharingColor;
     }
 
     public Settings() {

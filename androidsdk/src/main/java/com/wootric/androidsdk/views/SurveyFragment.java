@@ -181,11 +181,21 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
-    public void onFacebookBtnClick() {
+    public void onFacebookLikeBtnClick() {
         if (mSocialHandler == null) return;
 
         String facebookId = mSettings.getFacebookPageId();
         mSocialHandler.goToFacebook(facebookId);
+
+        dismiss();
+    }
+
+    @Override
+    public void onFacebookBtnClick() {
+        if (mSocialHandler == null) return;
+
+        String facebookId = mSettings.getFacebookPageId();
+        mSocialHandler.shareOnFacebook(facebookId);
 
         dismiss();
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -16,6 +17,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,8 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
+
+import java.lang.reflect.Field;
 
 import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
 
@@ -53,6 +57,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private TextView mAnchorLikely;
     private TextView mBtnSubmit;
     private TextView mBtnDismiss;
+    private TextView mBtnEditScore;
 
     private EditText mEtFeedback;
 
@@ -132,7 +137,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private void initResources() {
         Resources res = mContext.getResources();
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
-        mColorSelected = res.getColor(R.color.wootric_brand_color);
+        mColorSelected = res.getColor(R.color.wootric_score_color);
         mColorBlack = res.getColor(android.R.color.black);
         mColorEnabled = res.getColor(R.color.wootric_survey_layout_header_background);
 
@@ -164,7 +169,7 @@ public class SurveyLayoutPhone extends LinearLayout
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
         mEtFeedback.addTextChangedListener(etFeedbackTextWatcher());
 
-        TextView mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
+        mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
 
         mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
@@ -306,6 +311,7 @@ public class SurveyLayoutPhone extends LinearLayout
     public void initWithSettings(Settings settings) {
         mSettings = settings;
         setTexts();
+        setColors();
         updateState(mCurrentState);
     }
 
@@ -315,6 +321,44 @@ public class SurveyLayoutPhone extends LinearLayout
         mBtnSubmit.setText(mSettings.getBtnSubmit());
         mBtnDismiss.setText(mSettings.getBtnDismiss());
         mEtFeedback.setHint(mSettings.getFollowupPlaceholder(mRatingBar.getSelectedScore()));
+    }
+
+    private void setColors() {
+        Resources res = mContext.getResources();
+        mColorSelected = res.getColor(mSettings.getScoreColor());
+        mColorEnabled = res.getColor(mSettings.getSurveyColor());
+        mRatingBar.setSelectedColor(mColorSelected);
+
+        mBtnEditScore.setTextColor(mColorEnabled);
+        mBtnDismiss.setTextColor(mColorEnabled);
+
+        mTvSurveyHeader.setBackgroundColor(mColorEnabled);
+
+        setCursorDrawableColor(mEtFeedback, mColorSelected);
+    }
+
+    private static void setCursorDrawableColor(EditText editText, int color) {
+        try {
+            Field fCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            fCursorDrawableRes.setAccessible(true);
+            int mCursorDrawableRes = fCursorDrawableRes.getInt(editText);
+            Field fEditor = TextView.class.getDeclaredField("mEditor");
+            fEditor.setAccessible(true);
+            Object editor = fEditor.get(editText);
+            Class<?> clazz = editor.getClass();
+            Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
+            fCursorDrawable.setAccessible(true);
+
+            Drawable[] drawables = new Drawable[2];
+            Resources res = editText.getContext().getResources();
+            drawables[0] = res.getDrawable(mCursorDrawableRes);
+            drawables[1] = res.getDrawable(mCursorDrawableRes);
+            drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            fCursorDrawable.set(editor, drawables);
+        } catch (final Throwable t) {
+            Log.e("Wootric-SDK", t.toString());
+        }
     }
 
     private void updateState(int state) {
@@ -403,9 +447,10 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     @Override
-    public void onFacebookBtnClick() {
-        mSurveyLayoutListener.onFacebookBtnClick();
-    }
+    public void onFacebookLikeBtnClick() { mSurveyLayoutListener.onFacebookLikeBtnClick(); }
+
+    @Override
+    public void onFacebookBtnClick() { mSurveyLayoutListener.onFacebookBtnClick(); }
 
     @Override
     public void onTwitterBtnClick() {
