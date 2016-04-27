@@ -17,8 +17,12 @@ public class OfflineDataHandler {
 
     private static final String KEY_ORIGIN_URL = "origin_url";
     private static final String KEY_END_USER_ID = "end_user_id";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_ACCOUNT_ID = "account_id";
     private static final String KEY_SCORE = "score";
+    private static final String KEY_PRIORITY = "priority";
     private static final String KEY_TEXT = "text";
+    private static final String KEY_UNIQUE_LINK = "survey[unique_link]";
 
     private final PreferencesUtils preferencesUtils;
 
@@ -39,10 +43,14 @@ public class OfflineDataHandler {
             JSONObject jsonResponse = new JSONObject(preferencesUtils.getResponse());
             wootricRemoteClient.createResponse(
                     jsonResponse.getLong(KEY_END_USER_ID),
+                    jsonResponse.getLong(KEY_USER_ID),
+                    jsonResponse.getLong(KEY_ACCOUNT_ID),
                     accessToken,
                     jsonResponse.getString(KEY_ORIGIN_URL),
                     jsonResponse.getInt(KEY_SCORE),
-                    jsonResponse.getString(KEY_TEXT)
+                    jsonResponse.getInt(KEY_PRIORITY),
+                    jsonResponse.getString(KEY_TEXT),
+                    jsonResponse.getString(KEY_UNIQUE_LINK)
             );
 
             Log.d(LOG_TAG, "Processed offline Response with data: " + offlineResponse);
@@ -61,8 +69,12 @@ public class OfflineDataHandler {
             JSONObject jsonDecline = new JSONObject(preferencesUtils.getDecline());
             wootricRemoteClient.createDecline(
                     jsonDecline.getLong(KEY_END_USER_ID),
+                    jsonDecline.getLong(KEY_USER_ID),
+                    jsonDecline.getLong(KEY_ACCOUNT_ID),
+                    jsonDecline.getInt(KEY_PRIORITY),
                     accessToken,
-                    jsonDecline.getString(KEY_ORIGIN_URL)
+                    jsonDecline.getString(KEY_ORIGIN_URL),
+                    jsonDecline.getString(KEY_UNIQUE_LINK)
             );
 
             Log.d(LOG_TAG, "Processed offline Decline with data: " + offlineDecline);
@@ -73,13 +85,17 @@ public class OfflineDataHandler {
         preferencesUtils.putDecline(null);
     }
 
-    public void saveOfflineResponse(long endUserId, String originUrl, int score, String text) {
+    public void saveOfflineResponse(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String uniqueLink) {
         JSONObject jsonResponse = new JSONObject();
         try {
             jsonResponse.put(KEY_END_USER_ID, endUserId);
+            jsonResponse.put(KEY_USER_ID, userId);
+            jsonResponse.put(KEY_ACCOUNT_ID, accountId);
             jsonResponse.put(KEY_ORIGIN_URL, originUrl);
             jsonResponse.put(KEY_SCORE, score);
+            jsonResponse.put(KEY_PRIORITY, priority);
             jsonResponse.put(KEY_TEXT, text);
+            jsonResponse.put(KEY_UNIQUE_LINK, uniqueLink);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -90,11 +106,15 @@ public class OfflineDataHandler {
 
     }
 
-    public void saveOfflineDecline(long endUserId, String originUrl) {
+    public void saveOfflineDecline(long endUserId, long userId, long accountId, int priority, String originUrl, String uniqueLink) {
         JSONObject jsonDecline = new JSONObject();
         try {
             jsonDecline.put(KEY_END_USER_ID, endUserId);
+            jsonDecline.put(KEY_USER_ID, userId);
+            jsonDecline.put(KEY_ACCOUNT_ID, accountId);
+            jsonDecline.put(KEY_PRIORITY, priority);
             jsonDecline.put(KEY_ORIGIN_URL, originUrl);
+            jsonDecline.put(KEY_UNIQUE_LINK, uniqueLink);
         } catch (JSONException e) {
             e.printStackTrace();
         }

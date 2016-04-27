@@ -1,5 +1,7 @@
 package com.wootric.androidsdk.views;
 
+import com.wootric.androidsdk.objects.Settings;
+
 /**
  * Created by maciejwitowski on 9/30/15.
  */

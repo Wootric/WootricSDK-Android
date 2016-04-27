@@ -1,3 +1,10 @@
+## 2.4.2 (2016-05-23)
+
+### Add:
+
+- Concurrent Survey Processing support
+- Use https on survey.wootric.com
+
 ## 2.4.1 (2016-05-10)
 
 ### Fixed:

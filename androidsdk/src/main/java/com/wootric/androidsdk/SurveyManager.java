@@ -155,7 +155,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         final FragmentManager fragmentManager = activity.getFragmentManager();
 
         SurveyFragment surveyFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
-                accessToken, settings);
+                accessToken, settings, user);
 
         final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
 

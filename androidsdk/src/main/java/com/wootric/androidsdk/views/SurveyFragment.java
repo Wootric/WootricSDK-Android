@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,15 @@ import com.wootric.androidsdk.Wootric;
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+import com.wootric.androidsdk.utils.SHAUtil;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
 import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -38,6 +40,7 @@ public class SurveyFragment extends DialogFragment
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
+    private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
     private static final String ARG_SETTINGS = "com.wootric.androidsdk.arg.settings";
     private static final String ARG_RESPONSE_SENT = "com.wootric.androidsdk.arg.response_sent";
     private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
@@ -46,8 +49,10 @@ public class SurveyFragment extends DialogFragment
     private LinearLayout mFooter;
 
     private EndUser mEndUser;
+    private User mUser;
     private String mOriginUrl;
     private String mAccessToken;
+    private String mUniqueLink;
     private Settings mSettings;
 
     private boolean mResponseSent;
@@ -59,12 +64,15 @@ public class SurveyFragment extends DialogFragment
 
     private boolean isResumedOnConfigurationChange;
 
+    private int priority = 0;
+
     public static SurveyFragment newInstance(EndUser endUser, String originUrl, String accessToken,
-                                             Settings settings) {
+                                             Settings settings, User user) {
         SurveyFragment fragment = new SurveyFragment();
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_END_USER, endUser);
+        args.putParcelable(ARG_USER, user);
         args.putString(ARG_ORIGIN_URL, originUrl);
         args.putString(ARG_ACCESS_TOKEN, accessToken);
         args.putParcelable(ARG_SETTINGS, settings);
@@ -85,6 +93,9 @@ public class SurveyFragment extends DialogFragment
         mWootricApiClient = new WootricRemoteClient(offlineDataHandler);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
+
+        Date date = new Date();
+        mUniqueLink = SHAUtil.buildUniqueLink(mUser.getAccountToken(), mEndUser.getEmail(), (date.getTime() / 1000), SHAUtil.randomString());
     }
 
     @Override
@@ -160,6 +171,7 @@ public class SurveyFragment extends DialogFragment
     private void setupState(Bundle savedInstanceState) {
         Bundle args = getArguments();
         mEndUser = args.getParcelable(ARG_END_USER);
+        mUser = args.getParcelable(ARG_USER);
         mOriginUrl = args.getString(ARG_ORIGIN_URL);
         mAccessToken = args.getString(ARG_ACCESS_TOKEN);
         mSettings = args.getParcelable(ARG_SETTINGS);
@@ -176,13 +188,14 @@ public class SurveyFragment extends DialogFragment
     }
 
     private void createDecline() {
-        mWootricApiClient.createDecline(mEndUser.getId(), mAccessToken, mOriginUrl);
+        mWootricApiClient.createDecline(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), priority, mAccessToken, mOriginUrl, mUniqueLink);
     }
 
     @Override
     public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mAccessToken, mOriginUrl, score, text);
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink);
         mResponseSent = true;
+        priority++;
     }
 
     @Override

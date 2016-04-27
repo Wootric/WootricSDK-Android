@@ -3,6 +3,7 @@ package com.wootric.androidsdk.objects;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
@@ -20,6 +21,9 @@ public class Settings implements Parcelable {
     private Long firstSurvey = 31L;
     private int adminPanelTimeDelay = Constants.NOT_SET;
     private LocalizedTexts localizedTexts;
+
+    private Long userID;
+    private Long accountID;
 
     private WootricCustomMessage adminPanelCustomMessage;
     private WootricCustomMessage localCustomMessage;
@@ -56,6 +60,8 @@ public class Settings implements Parcelable {
         this.adminPanelCustomMessage = settings.adminPanelCustomMessage;
         this.adminPanelTimeDelay = settings.adminPanelTimeDelay;
         this.localizedTexts = settings.localizedTexts;
+        this.userID = settings.userID;
+        this.accountID = settings.accountID;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -218,6 +224,14 @@ public class Settings implements Parcelable {
         return firstSurvey;
     }
 
+    public void setUserID(long userID) { this.userID = userID; }
+
+    public Long getUserID() { return userID; }
+
+    public void setAccountID(long accountID) { this.accountID = accountID; }
+
+    public Long getAccountID() { return accountID; }
+
     public void setLocalCustomMessage(WootricCustomMessage customMessage) {
         this.localCustomMessage = customMessage;
     }
@@ -377,6 +391,8 @@ public class Settings implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(this.firstSurvey);
+        dest.writeValue(this.userID);
+        dest.writeValue(this.accountID);
         dest.writeInt(this.adminPanelTimeDelay);
         dest.writeParcelable(this.localizedTexts, 0);
         dest.writeParcelable(this.adminPanelCustomMessage, 0);
@@ -397,6 +413,8 @@ public class Settings implements Parcelable {
 
     private Settings(Parcel in) {
         this.firstSurvey = (Long) in.readValue(Long.class.getClassLoader());
+        this.userID = (Long) in.readValue(Long.class.getClassLoader());
+        this.accountID = (Long) in.readValue(Long.class.getClassLoader());
         this.adminPanelTimeDelay = in.readInt();
         this.localizedTexts = in.readParcelable(LocalizedTexts.class.getClassLoader());
         this.adminPanelCustomMessage = in.readParcelable(WootricCustomMessage.class.getClassLoader());
@@ -429,6 +447,16 @@ public class Settings implements Parcelable {
         Settings settings = new Settings();
         settings.firstSurvey = settingsObject.optLong("first_survey");
         settings.timeDelay = settingsObject.optInt("time_delay");
+        if (settingsObject.has("account_id")) {
+            settings.accountID = settingsObject.optLong("account_id");
+        } else {
+            settings.accountID = (long) Constants.NOT_SET;
+        }
+        if (settingsObject.has("user_id")) {
+            settings.userID = settingsObject.optLong("user_id");
+        } else {
+            settings.userID = (long) Constants.NOT_SET;
+        }
 
         JSONObject localizedTextsJson = settingsObject.optJSONObject("localized_texts");
         settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson);

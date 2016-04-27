@@ -75,23 +75,31 @@ public class WootricRemoteClient {
         ).execute();
     }
 
-    public void createDecline(long endUserId, String accessToken, String originUrl) {
+    public void createDecline(long endUserId, long userId, long accountId, int priority, String accessToken, String originUrl, String uniqueLink) {
         new CreateDeclineTask(
                 endUserId,
+                userId,
+                accountId,
+                priority,
                 originUrl,
                 accessToken,
-                offlineDataHandler
+                offlineDataHandler,
+                uniqueLink
         ).execute();
     }
 
-    public void createResponse(long endUserId, String accessToken, String originUrl, int score, String text) {
+    public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink) {
         new CreateResponseTask(
                 endUserId,
+                userId,
+                accountId,
                 originUrl,
                 score,
+                priority,
                 text,
                 accessToken,
-                offlineDataHandler
+                offlineDataHandler,
+                uniqueLink
         ).execute();
     }
 
