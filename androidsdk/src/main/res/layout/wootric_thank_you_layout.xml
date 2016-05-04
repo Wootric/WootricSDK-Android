@@ -120,6 +120,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:textSize="@dimen/wootric_button_text"
         android:textColor="@color/wootric_survey_layout_header_background"
         android:padding="@dimen/wootric_btn_padding"
         android:text="@string/wootric_example_btn_dismiss"/>

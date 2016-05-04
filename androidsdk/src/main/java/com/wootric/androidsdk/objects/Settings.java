@@ -123,6 +123,10 @@ public class Settings implements Parcelable {
         return localizedTexts.getDismiss().toUpperCase();
     }
 
+    public String getBtnEditScore() {
+        return localizedTexts.getEditScore().toUpperCase();
+    }
+
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
 
@@ -159,18 +163,18 @@ public class Settings implements Parcelable {
         return followupPlaceholder;
     }
 
-    public String getThankYouMessage(int score) {
+    public String getCustomThankYouMessage(int score) {
         String thankYouMessage = null;
 
         if(customThankYou != null) {
             thankYouMessage = customThankYou.getTextForScore(score);
         }
 
-        if(customThankYou == null) {
-            thankYouMessage = localizedTexts.getFinalThankYou();
-        }
-
         return thankYouMessage;
+    }
+
+    public String getThankYouMessage() {
+        return localizedTexts.getFinalThankYou();
     }
 
     public String getThankYouLinkText(int score) {
@@ -188,6 +192,15 @@ public class Settings implements Parcelable {
                 customThankYou.getLinkTextForScore(score) != null &&
                 customThankYou.getLinkUri(score, comment) != null;
     }
+
+    public String getSocialShareQuestion() {
+        return localizedTexts.getSocialShareQuestion();
+    }
+
+    public String getSocialShareDecline() {
+        return localizedTexts.getSocialShareDecline();
+    }
+
 
     public String getFinalThankYou() {
         return localizedTexts.getFinalThankYou();

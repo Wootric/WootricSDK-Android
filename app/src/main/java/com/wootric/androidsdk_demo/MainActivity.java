@@ -1,17 +1,12 @@
+
+
 package com.wootric.androidsdk_demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
-import com.wootric.androidsdk.objects.WootricCustomMessage;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 public class MainActivity extends Activity {
 

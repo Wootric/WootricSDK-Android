@@ -18,6 +18,7 @@
 
     <!--  Buttons -->
     <dimen name="wootric_button_height">36dp</dimen>
+    <dimen name="wootric_button_text">12sp</dimen>
     <dimen name="wootric_button_padding">8dp</dimen>
     <dimen name="wootric_button_margin">8dp</dimen>
     <dimen name="wootric_score_layout_height">24dp</dimen>

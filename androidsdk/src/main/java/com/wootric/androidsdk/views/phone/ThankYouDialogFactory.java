@@ -12,9 +12,17 @@ import com.wootric.androidsdk.objects.Settings;
  */
 public class ThankYouDialogFactory {
 
-    public static Dialog create(Context context, Settings settings) {
+    public static Dialog create(Context context, Settings settings, int score) {
         AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
-        thankYouDialog.setMessage(settings.getFinalThankYou());
+        final String customThankYouText = settings.getCustomThankYouMessage(score);
+        final String thankYouText = settings.getThankYouMessage();
+
+        if (customThankYouText != null) {
+            thankYouDialog.setMessage(customThankYouText);
+        } else {
+            thankYouDialog.setMessage(thankYouText);
+        }
+
         thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "DONE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

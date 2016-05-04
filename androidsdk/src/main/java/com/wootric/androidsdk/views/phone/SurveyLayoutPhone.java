@@ -1,11 +1,14 @@
 package com.wootric.androidsdk.views.phone;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -18,9 +21,15 @@ import android.text.method.MovementMethod;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -58,6 +67,9 @@ public class SurveyLayoutPhone extends LinearLayout
     private TextView mBtnSubmit;
     private TextView mBtnDismiss;
     private TextView mBtnEditScore;
+    private ViewGroup.LayoutParams mBtnSubmitLP;
+    private ViewGroup.LayoutParams mBtnDismissLP;
+    private ViewGroup.LayoutParams mBtnEditScoreLP;
 
     private EditText mEtFeedback;
 
@@ -125,6 +137,8 @@ public class SurveyLayoutPhone extends LinearLayout
                 dismissSurvey();
             }
         });
+        mBtnSubmitLP = mBtnSubmit.getLayoutParams();
+        mBtnDismissLP = mBtnDismiss.getLayoutParams();
 
         mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
 
@@ -171,6 +185,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
         mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
+        mBtnEditScoreLP = mBtnEditScore.getLayoutParams();
 
         mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
     }
@@ -320,6 +335,7 @@ public class SurveyLayoutPhone extends LinearLayout
         mAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
         mBtnSubmit.setText(mSettings.getBtnSubmit());
         mBtnDismiss.setText(mSettings.getBtnDismiss());
+        mBtnEditScore.setText(mSettings.getBtnEditScore());
         mEtFeedback.setHint(mSettings.getFollowupPlaceholder(mRatingBar.getSelectedScore()));
     }
 
@@ -382,6 +398,7 @@ public class SurveyLayoutPhone extends LinearLayout
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 
+
         final boolean isScoreSelected = mRatingBar.isScoreSelected();
         updateSubmitBtn(isScoreSelected);
     }
@@ -398,6 +415,7 @@ public class SurveyLayoutPhone extends LinearLayout
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(true);
 
+
         final boolean hasFeedback = !mEtFeedback.getText().toString().isEmpty();
         updateSubmitBtn(hasFeedback);
     }
@@ -406,6 +424,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mCommonSurveyViews, false);
         setViewsVisibility(mFeedbackViews, false);
         setViewsVisibility(mNpsViews, false);
+        setKeyboardVisibility(false);
 
         mThankYouLayout.setVisibility(VISIBLE);
         mThankYouLayout.initValues(mSettings, mRatingBar.getSelectedScore(), getFeedback());
@@ -429,16 +448,55 @@ public class SurveyLayoutPhone extends LinearLayout
         return mEtFeedback.getText().toString();
     }
 
+    private void setButtonsForKeyboardShown(int alignBottom){
+        int padding = (int) getResources().getDimension(R.dimen.wootric_survey_layout_header_padding);
+        int btnPaddingValue = (int) getResources().getDimension(R.dimen.wootric_btn_padding);
+
+        RelativeLayout.LayoutParams llp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        llp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
+        llp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        llp.addRule(RelativeLayout.BELOW, mEtFeedback.getId());
+        mBtnEditScore.setPadding(btnPaddingValue, padding, btnPaddingValue, btnPaddingValue);
+
+
+        RelativeLayout.LayoutParams llp2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        llp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
+        llp2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        llp2.addRule(RelativeLayout.ALIGN_BASELINE, mBtnEditScore.getId());
+
+        RelativeLayout.LayoutParams llp1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        llp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
+        llp1.addRule(RelativeLayout.LEFT_OF, mBtnSubmit.getId());
+        llp1.addRule(RelativeLayout.ALIGN_BASELINE, mBtnEditScore.getId());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            llp.addRule(RelativeLayout.ALIGN_PARENT_START);
+            llp2.addRule(RelativeLayout.ALIGN_PARENT_END);
+            llp1.addRule(RelativeLayout.START_OF, mBtnSubmit.getId());
+        }
+        mBtnEditScore.setLayoutParams(llp);
+        mBtnDismiss.setLayoutParams(llp1);
+        mBtnSubmit.setLayoutParams(llp2);
+    }
+
     private void setKeyboardVisibility(boolean showKeyboard) {
         final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if(showKeyboard) {
             mEtFeedback.requestFocus();
             mEtFeedback.setHorizontallyScrolling(false);
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                setButtonsForKeyboardShown(0);
+            }
+
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
+
         } else {
+            setButtonsForKeyboardShown(1);
+
             mEtFeedback.clearFocus();
-            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), 0);
         }
     }
 

@@ -33,7 +33,6 @@
         android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/wootric_tv_thank_you"
-        android:text="@string/wootric_custom_thank_you"
         android:textColor="@android:color/black"/>
 
     <LinearLayout

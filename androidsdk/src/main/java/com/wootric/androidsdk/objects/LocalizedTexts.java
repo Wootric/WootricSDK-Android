@@ -25,6 +25,7 @@ public class LocalizedTexts implements Parcelable {
     private String finalThankYou;
     private String send;
     private String dismiss;
+    private String editScore;
     private HashMap<String, String> socialShare;
 
     public LocalizedTexts() {}
@@ -61,6 +62,10 @@ public class LocalizedTexts implements Parcelable {
         return dismiss;
     }
 
+    public String getEditScore() {
+        return editScore;
+    }
+
     public String getSocialShareQuestion() {
         return socialShare.get(SOCIAL_SHARE_QUESTION_KEY);
     }
@@ -83,6 +88,7 @@ public class LocalizedTexts implements Parcelable {
         dest.writeString(this.finalThankYou);
         dest.writeString(this.send);
         dest.writeString(this.dismiss);
+        dest.writeString(this.editScore);
         dest.writeSerializable(this.socialShare);
     }
 
@@ -94,6 +100,7 @@ public class LocalizedTexts implements Parcelable {
         this.finalThankYou = in.readString();
         this.send = in.readString();
         this.dismiss = in.readString();
+        this.editScore = in.readString();
         this.socialShare = (HashMap<String, String>) in.readSerializable();
     }
 
@@ -124,6 +131,7 @@ public class LocalizedTexts implements Parcelable {
         localizedTexts.finalThankYou = localizedTextsJson.optString("final_thank_you");
         localizedTexts.send = localizedTextsJson.optString("send");
         localizedTexts.dismiss = localizedTextsJson.optString("dismiss");
+        localizedTexts.editScore = localizedTextsJson.optString("edit_score");
 
         JSONObject socialShareJson = localizedTextsJson.getJSONObject("social_share");
         localizedTexts.socialShare = new HashMap<>();

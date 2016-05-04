@@ -15,6 +15,8 @@
 
     <RelativeLayout
         android:id="@+id/wootric_survey_layout_body"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/wootric_survey_layout_body_padding"
@@ -63,7 +65,8 @@
             android:id="@+id/wootric_et_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@drawable/wootric_feedback_hint"
+            android:nextFocusUp="@id/wootric_et_feedback"
+            android:nextFocusLeft="@id/wootric_et_feedback"
             android:textCursorDrawable="@drawable/wootric_feedback_cursor"
             android:layout_alignParentTop="true"
             android:imeOptions="actionDone"
@@ -71,7 +74,7 @@
             android:textSize="@dimen/wootric_et_feedback_text_size"
             android:paddingBottom="@dimen/wootric_et_feedback_padding"
             android:paddingTop="@dimen/wootric_et_feedback_padding"
-            android:hint="@string/wootric_example_followup_placeholder"/>
+            android:hint="@string/wootric_example_followup_placeholder" />
 
         <TextView
             android:id="@+id/wootric_btn_edit_score"
@@ -79,6 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:textSize="@dimen/wootric_button_text"
             android:textColor="@color/wootric_survey_layout_header_background"
             android:padding="@dimen/wootric_btn_padding"
             android:layout_alignParentBottom="true"
@@ -90,6 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:textSize="@dimen/wootric_button_text"
             android:textColor="@android:color/black"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/wootric_btn_padding"
@@ -103,6 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/wootric_btn_submit"
             android:layout_toStartOf="@+id/wootric_btn_submit"
+            android:textSize="@dimen/wootric_button_text"
             android:textColor="@color/wootric_survey_layout_header_background"
             android:layout_alignParentBottom="true"
             android:padding="@dimen/wootric_btn_padding"

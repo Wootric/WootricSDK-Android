@@ -62,6 +62,8 @@ public class SurveyLayoutTablet extends LinearLayout
     private Button mBtnThankYouDone;
     private Button mBtnThankYouAction;
     private TextView mBtnThankYouDismiss;
+    private TextView mTvThankYou;
+    private TextView mTvCustomThankYou;
 
     private Settings mSettings;
 
@@ -138,6 +140,8 @@ public class SurveyLayoutTablet extends LinearLayout
         mBtnFacebook = (Button) findViewById(R.id.btn_facebook);
         mBtnThankYouDone = (Button) findViewById(R.id.wootric_btn_thank_you_done);
         mBtnThankYouAction = (Button) findViewById(R.id.wootric_btn_thank_you_action);
+        mTvThankYou = (TextView) findViewById(R.id.wootric_tv_thank_you);
+        mTvCustomThankYou = (TextView) findViewById(R.id.wootric_tv_custom_thank_you);
 
         mBtnFacebookLike.setTypeface(iconFont);
         mBtnTwitter.setTypeface(iconFont);
@@ -220,6 +224,7 @@ public class SurveyLayoutTablet extends LinearLayout
             mTvNpsQuestion.setText(mSettings.getNpsQuestion());
             mTvAnchorLikely.setText(mSettings.getAnchorLikely());
             mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
+            mBtnSubmit.setText(mSettings.getBtnSubmit());
         }
     }
 
@@ -254,9 +259,41 @@ public class SurveyLayoutTablet extends LinearLayout
         mTvFollowupQuestion.setText(mSettings.getFollowupQuestion(mCurrentScore));
     }
 
+    private void initThankYouActionBtn() {
+        final String feedback = getFeedback();
+        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentScore, feedback);
+        final String thankYouLinkText = mSettings.getThankYouLinkText(mCurrentScore);
+
+        mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
+        mBtnThankYouAction.setText(thankYouLinkText);
+    }
+
     private void setupThankYouState() {
         mNpsLayout.setVisibility(GONE);
+
+        initThankYouActionBtn();
         initSocialLinks();
+
+        final boolean shouldShowThankYouDone = mBtnThankYouAction.getVisibility() == GONE &&
+                mBtnFacebook.getVisibility() == GONE &&
+                mBtnFacebookLike.getVisibility() == GONE &&
+                mBtnTwitter.getVisibility() == GONE;
+
+        mBtnThankYouDone.setVisibility(shouldShowThankYouDone ? GONE : VISIBLE);
+        mBtnThankYouDone.setText(mSettings.getSocialShareDecline());
+
+        final String customThankYouText = mSettings.getCustomThankYouMessage(mCurrentScore);
+        final String thankYouText = mSettings.getThankYouMessage();
+
+        if (customThankYouText != null) {
+            mTvCustomThankYou.setText(customThankYouText);
+            mTvCustomThankYou.setVisibility(VISIBLE);
+            mTvThankYou.setVisibility(GONE);
+        } else {
+            mTvThankYou.setText(thankYouText);
+            mTvCustomThankYou.setVisibility(GONE);
+            mTvThankYou.setVisibility(VISIBLE);
+        }
 
         mThankYouLayout.setAlpha(0);
         mThankYouLayout.setVisibility(VISIBLE);

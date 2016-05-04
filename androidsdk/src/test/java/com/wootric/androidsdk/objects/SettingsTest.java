@@ -217,16 +217,16 @@ public class SettingsTest {
         customThankYou.setText("thank you");
         settings.setCustomThankYou(customThankYou);
 
-        assertThat(settings.getThankYouMessage(10)).isEqualTo("thank you");
+        assertThat(settings.getCustomThankYouMessage(10)).isEqualTo("thank you");
     }
 
     @Test
-    public void whenCustomThankYouIsNotSet_returnsLocalizedThankYou() {
+    public void whenCustomThankYouIsNotSet_returnsNull() {
         Settings settings = new Settings();
         mockLocalizedTexts();
         settings.setLocalizedTexts(mockLocalizedTexts);
 
-        assertThat(settings.getThankYouMessage(10)).isEqualTo("Thank you!");
+        assertThat(settings.getCustomThankYouMessage(10)).isEqualTo(null);
     }
 
     /**

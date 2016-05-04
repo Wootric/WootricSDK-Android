@@ -2,11 +2,13 @@ package com.wootric.androidsdk.network.tasks;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.wootric.androidsdk.network.WootricApiCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -48,6 +50,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     protected String doInBackground(Void... params) {
 
         String urlWithParams = requestUrl() + "?" + requestParams();
+        Log.d("WOOTRIC_SDK - request", urlWithParams);
 
         try {
             URL url = new URL(urlWithParams);
@@ -80,7 +83,15 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
     @Override
     protected void onPostExecute(String response) {
-        onSuccess(response);
+        Log.d("WOOTRIC_SDK - response", response);
+        String decodedString = "";
+        try {
+            decodedString = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+            onSuccess(decodedString);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            onSuccess(response);
+        }
     }
 
     private String requestParams() {

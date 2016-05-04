@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="wootric_survey_layout_header_text_size">24sp</dimen>
+    <dimen name="wootric_button_text">14sp</dimen>
+</resources>

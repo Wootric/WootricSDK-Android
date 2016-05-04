@@ -78,7 +78,7 @@ public class WootricCustomThankYou implements Parcelable {
     private Uri getLinkUriForScore(int scoreValue) {
         Score score = new Score(scoreValue);
 
-        if(score.isPassive() && detractorLinkUri != null) {
+        if(score.isDetractor() && detractorLinkUri != null) {
             return detractorLinkUri;
         } else if(score.isPassive() && passiveLinkUri != null) {
             return passiveLinkUri;

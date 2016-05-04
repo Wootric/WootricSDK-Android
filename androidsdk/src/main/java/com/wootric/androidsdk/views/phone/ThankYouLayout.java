@@ -162,9 +162,17 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void initValues() {
-        mTvThankYou.setText(mSettings.getThankYouMessage(mScore));
+        final String customThankYouText = mSettings.getCustomThankYouMessage(mScore);
+        final String thankYouText = mSettings.getThankYouMessage();
+
+        if (customThankYouText != null) {
+            mTvThankYou.setText(customThankYouText);
+        } else {
+            mTvThankYou.setText(thankYouText);
+        }
 
         mBtnDone.setTextColor(getResources().getColor(mSettings.getSurveyColor()));
+        mBtnDone.setText(mSettings.getBtnDismiss());
 
         initSocialLinks();
         initThankYouActionBtn();

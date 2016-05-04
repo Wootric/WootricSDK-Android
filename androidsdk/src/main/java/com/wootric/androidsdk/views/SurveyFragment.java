@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,10 @@ public class SurveyFragment extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
+        
+        if(!mIsTablet) {
+            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        }
 
         mSurveyLayout = (SurveyLayout) view.findViewById(R.id.wootric_survey_layout);
         mSurveyLayout.setSurveyLayoutListener(this);
@@ -245,7 +250,7 @@ public class SurveyFragment extends DialogFragment
     public void onShouldShowSimpleDialog() {
         final Activity activity = getActivity();
 
-        ThankYouDialogFactory.create(activity, mSettings).show();
+        ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore()).show();
         dismiss();
     }
 

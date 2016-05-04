@@ -26,6 +26,7 @@
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginTop="8dp"
         android:text="@string/wootric_example_nps_question"/>
 
@@ -42,6 +43,7 @@
             android:id="@+id/wootric_tv_followup"
             style="@style/TextViewGreen"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="@string/wootric_feedback_question"/>
 
         <LinearLayout
@@ -107,8 +109,8 @@
             android:id="@+id/wootric_anchor_likely"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
             android:textStyle="italic"
             android:text="@string/wootric_example_anchor_likely"/>
     </LinearLayout>

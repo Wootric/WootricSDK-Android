@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -61,8 +63,15 @@ public class ScoreView extends TextView implements View.OnClickListener{
             setBackground(drawable);
         }
 
-        setHeight((int) ScreenUtils.dpToPx(42));
-        setWidth((int) ScreenUtils.dpToPx(42));
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        if (width <= 1200){
+            setHeight((int) ScreenUtils.dpToPx(32));
+            setWidth((int) ScreenUtils.dpToPx(32));
+        } else {
+            setHeight((int) ScreenUtils.dpToPx(42));
+            setWidth((int) ScreenUtils.dpToPx(42));
+        }
 
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
