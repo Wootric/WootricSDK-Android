@@ -56,7 +56,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(0)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(0)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class SurveyValidatorTest {
 
         surveyValidator.validate();
 
-        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, surveyValidator);
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
     /**

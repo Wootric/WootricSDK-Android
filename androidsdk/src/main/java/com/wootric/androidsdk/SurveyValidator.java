@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2016 Wootric (https://wootric.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.wootric.androidsdk;
 
 import android.util.Log;
@@ -44,17 +66,17 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         Boolean firstDelay = firstSurveyDelayPassed();
         Boolean lastSeen = lastSeenDelayPassed();
 
-        Log.v(TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
-        Log.v(TAG, "WAS RECENTLY SURVEYED: " + recently);
-        Log.v(TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
-        Log.v(TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
+        Log.d(TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
+        Log.d(TAG, "WAS RECENTLY SURVEYED: " + recently);
+        Log.d(TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
+        Log.d(TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
 
         if (immediate || !recently || firstDelay || lastSeen) {
-            Log.v(TAG, "Needs survey. Will check with server.");
+            Log.d(TAG, "Needs survey. Will check with server.");
             checkEligibility();
         }
         else {
-            Log.v(TAG, "Doesn't need survey. Will not check with server.");
+            Log.d(TAG, "Doesn't need survey. Will not check with server.");
             notifyShouldNotShowSurvey();
         }
     }
@@ -79,7 +101,7 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     private void checkEligibility() {
-        wootricRemoteClient.checkEligibility(user, endUser, settings, this);
+        wootricRemoteClient.checkEligibility(user, endUser, settings, preferencesUtils, this);
     }
 
     private void notifyShouldShowSurvey(Settings settings) {

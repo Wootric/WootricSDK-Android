@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2016 Wootric (https://wootric.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.wootric.androidsdk.network;
 
 import com.wootric.androidsdk.OfflineDataHandler;
@@ -12,6 +34,7 @@ import com.wootric.androidsdk.network.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.PreferencesUtils;
 
 /**
  * Created by maciejwitowski on 9/11/15.
@@ -33,12 +56,13 @@ public class WootricRemoteClient {
     }
 
     public void
-    checkEligibility(User user, EndUser endUser, Settings settings, final CheckEligibilityTask.Callback surveyCallback) {
+    checkEligibility(User user, EndUser endUser, Settings settings, PreferencesUtils preferencesUtils, final CheckEligibilityTask.Callback surveyCallback) {
 
         new CheckEligibilityTask(
                 user,
                 endUser,
                 settings,
+                preferencesUtils,
                 surveyCallback
         ).execute();
     }
