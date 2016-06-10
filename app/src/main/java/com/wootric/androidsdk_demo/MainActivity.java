@@ -1,5 +1,3 @@
-
-
 package com.wootric.androidsdk_demo;
 
 import android.app.Activity;

@@ -1,35 +1,43 @@
+/*
+ * Copyright (c) 2016 Wootric (https://wootric.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.wootric.androidsdk.views.phone;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
-import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -67,9 +75,6 @@ public class SurveyLayoutPhone extends LinearLayout
     private TextView mBtnSubmit;
     private TextView mBtnDismiss;
     private TextView mBtnEditScore;
-    private ViewGroup.LayoutParams mBtnSubmitLP;
-    private ViewGroup.LayoutParams mBtnDismissLP;
-    private ViewGroup.LayoutParams mBtnEditScoreLP;
 
     private EditText mEtFeedback;
 
@@ -137,8 +142,6 @@ public class SurveyLayoutPhone extends LinearLayout
                 dismissSurvey();
             }
         });
-        mBtnSubmitLP = mBtnSubmit.getLayoutParams();
-        mBtnDismissLP = mBtnDismiss.getLayoutParams();
 
         mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
 
@@ -185,7 +188,6 @@ public class SurveyLayoutPhone extends LinearLayout
 
         mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
-        mBtnEditScoreLP = mBtnEditScore.getLayoutParams();
 
         mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
     }
