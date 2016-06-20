@@ -1,3 +1,14 @@
+## 2.4.3 (2016-06-10)
+
+### Fix:
+
+- Add end_user_last_seen on requests to eligibility
+- Fix first_survey_delay bug
+- Fix Log crash bug
+- Add resources for new Wootric logo
+- Add documentation & license on files
+- Code cleanup
+
 ## 2.4.2 (2016-05-23)
 
 ### Add:
