@@ -78,7 +78,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
             URL url = new URL(urlWithParams);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(requestType);
-            conn.setRequestProperty("HTTP_USER_AGENT", HTTP_AGENT);
+            conn.setRequestProperty("User-Agent", HTTP_AGENT);
 
             if(accessToken != null) {
                 conn.setRequestProperty("Authorization", "Bearer " + accessToken);
