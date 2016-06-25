@@ -107,12 +107,13 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     protected void onPostExecute(String response) {
         String decodedString = "";
         Log.d("WOOTRIC_SDK", "response: " + response);
-        try {
-            decodedString = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-            onSuccess(decodedString);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            onSuccess(response);
+        if (response != null) {
+            try {
+                decodedString = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+                onSuccess(decodedString);
+            } catch (UnsupportedEncodingException e) {
+                onSuccess(response);
+            }
         }
     }
 
