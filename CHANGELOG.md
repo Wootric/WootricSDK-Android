@@ -1,3 +1,9 @@
+## 2.4.5 (2016-06-22)
+
+### Fix:
+
+- Fix null pointer exception
+
 ## 2.4.4 (2016-06-22)
 
 ### Fix:
