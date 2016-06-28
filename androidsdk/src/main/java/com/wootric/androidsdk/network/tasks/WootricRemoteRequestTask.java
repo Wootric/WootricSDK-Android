@@ -24,8 +24,10 @@ package com.wootric.androidsdk.network.tasks;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
+import com.wootric.androidsdk.BuildConfig;
 import com.wootric.androidsdk.network.WootricApiCallback;
 
 import java.io.IOException;
@@ -124,6 +126,9 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
         for (Map.Entry<String, String> header : paramsMap.entrySet()) {
             builder.appendQueryParameter(header.getKey(), header.getValue());
         }
+        builder.appendQueryParameter("os_name", "Android");
+        builder.appendQueryParameter("os_version", Build.VERSION.RELEASE);
+        builder.appendQueryParameter("sdk_version", BuildConfig.VERSION_NAME);
 
         return builder.build().getEncodedQuery();
     }
