@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ import java.util.List;
  */
 public class SocialHandler {
 
+    private static final String LOG_TAG = "WOOTRIC_SDK";
+
     private final Context mContext;
 
     public SocialHandler(Context mContext) {
@@ -42,6 +45,8 @@ public class SocialHandler {
     }
 
     public void shareOnFacebook(String facebookId) {
+        if (mContext == null) return;
+
         String urlToShare = "https://www.facebook.com/" + facebookId;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -66,6 +71,8 @@ public class SocialHandler {
     }
 
     public void goToFacebook(String facebookId) {
+        if (mContext == null) return;
+
         final String url = "https://www.facebook.com/" + facebookId;
         final Uri facebookSchemeUri = Uri.parse("fb://facewebmodal/f?href=" + url);
         Intent intent = new Intent(Intent.ACTION_VIEW, facebookSchemeUri);
@@ -88,6 +95,8 @@ public class SocialHandler {
     }
 
     public void goToTwitter(String twitterPage, String text) {
+        if (mContext == null) return;
+
         final Intent twitterIntent = new Intent(Intent.ACTION_SEND);
         final String tweetContent = "@" + twitterPage + " " + text;
 
@@ -112,7 +121,7 @@ public class SocialHandler {
 
         if(resolved){
             mContext.startActivity(twitterIntent);
-        }else{
+        } else {
             final Intent browserTweeter = new Intent(Intent.ACTION_VIEW);
             final Uri tweetUri = Uri.parse("https://twitter.com/intent/tweet?text=" + tweetContent);
             browserTweeter.setData(tweetUri);

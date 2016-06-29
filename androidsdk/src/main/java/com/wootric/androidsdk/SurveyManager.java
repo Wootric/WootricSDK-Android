@@ -42,7 +42,7 @@ import com.wootric.androidsdk.views.SurveyFragment;
  */
 public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback {
 
-    private static final String LOG_TAG = SurveyManager.class.getName();
+    private static final String LOG_TAG = "WOOTRIC_SDK";
 
     private final Activity activity;
     private final WootricRemoteClient wootricApiClient;
@@ -197,14 +197,15 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     private String getOriginUrl() {
         if(originUrl == null) {
-            PackageManager pm = activity.getPackageManager();
+            PackageManager pm;
             ApplicationInfo appInfo;
 
             try {
+                pm = activity.getPackageManager();
                 appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.getLocalizedMessage());
             }
         }
 

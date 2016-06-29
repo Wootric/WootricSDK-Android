@@ -152,6 +152,7 @@ public class SurveyFragment extends DialogFragment
 
     private void measurePhoneDialog() {
         final Activity activity = getActivity();
+        if (activity == null) return;
 
         Dialog dialog = getDialog();
         if (dialog == null) return;
@@ -285,7 +286,10 @@ public class SurveyFragment extends DialogFragment
     public void onShouldShowSimpleDialog() {
         final Activity activity = getActivity();
 
-        ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore()).show();
+        if (activity != null) {
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore()).show();
+        }
+
         dismiss();
     }
 

@@ -39,7 +39,7 @@ public class ScreenUtils {
     private static int screenWidth = 0;
 
     public static int getScreenHeight(Context c) {
-        if (screenHeight == 0) {
+        if (c != null && screenHeight == 0) {
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             Point size = new Point();
@@ -51,7 +51,7 @@ public class ScreenUtils {
     }
 
     public static int getScreenWidth(Context c) {
-        if (screenWidth == 0) {
+        if (c != null && screenWidth == 0) {
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             Point size = new Point();
