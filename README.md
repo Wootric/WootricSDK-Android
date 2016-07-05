@@ -1,12 +1,27 @@
-# Wootric SDK for Android
-Demo
-=========================
-View the Android demo [here.](https://cl.ly/dVMH)
+<p align="center" >
+  <img src="https://cloud.githubusercontent.com/assets/1431421/16471739/4e28eec8-3e24-11e6-8ee1-39d36bbf679e.png" alt="Wootric" title="Wootric">
+</p>
 
-Installation
-=========================
+<p align="center" >
+  <img src="https://cloud.githubusercontent.com/assets/1431421/16593017/083d1298-42a9-11e6-8e58-25aaaadee5d3.gif" alt="Wootric survey" title="Wootric">
+</p>
+
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/Wootric/WootricSDK-Android/master/LICENSE.md) [![GitHub release](https://img.shields.io/github/release/Wootric/WootricSDK-Android.svg)](https://github.com/Wootric/WootricSDK-Android/releases) [![Maven Central](https://img.shields.io/maven-central/v/com.wootric/wootric-sdk-android.svg)](https://img.shields.io/maven-central/v/com.wootric/wootric-sdk-android.svg) [![Build Status](https://img.shields.io/circleci/project/Wootric/WootricSDK-Android.svg)](https://img.shields.io/circleci/project/Wootric/WootricSDK-Android.svg) [![Twitter](https://img.shields.io/badge/twitter-@WootricSDK-blue.svg?style=flat)](http://twitter.com/Wootric)
+
+## Requirements
+- Android 16+
+
+*This library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com*
+
+## Demo
+View the Android demo [here.](http://cl.ly/0h112M290m04)
+
+## Installation
+
 This library is distributed as Android library project so it can be included by referencing it as a library project.
 
+### Using Maven
 If you use Maven, you can include this library as a dependency:
 
 ```xml
@@ -17,161 +32,69 @@ If you use Maven, you can include this library as a dependency:
 </dependency>
 ```
 
-For Gradle users:
+### Using Gradle
 
 ```xml
 compile 'com.wootric:wootric-sdk-android:2.4.7'
 ```
-Note: this library is tested to  support Android SDK version 16 onwards. Please let us know if you need assistance for lower Android SDK version by emailing support@wootric.com
 
-Permissions
-===========
+## Initializing Wootric
+WootricSDK task is to present a fully functional survey view with just a few lines of code.
 
-Add the internet permissions to the AndroidManifest.xml file:
+1. Add permissions:
 
-```xml
-<uses-permission android:name="android.permission.INTERNET" />
-```
+    Add the internet permissions to the AndroidManifest.xml file:
+    
+    ```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    ```
 
-ProGuard
-========
-Add the following to your ProGuard rules:
+2. Add ProGuard rules:
 
-````ProGuard
--keepattributes *Annotation*, Signature
+    Add the following to your ProGuard rules:
+    
+    ```ProGuard
+    -keepattributes *Annotation*, Signature
+    
+    ##== Wootric ==
+    -keep class com.wootric.** { *; }
+    
+    ##== Retrofit ==
+    -keep class retrofit.** { *; }
+    -keepclassmembernames interface * {
+        @retrofit.http.* <methods>;
+    }
+    ```
 
-##== Wootric ==
--keep class com.wootric.** { *; }
+3. Import the SDK's header:
 
-##== Retrofit ==
--keep class retrofit.** { *; }
--keepclassmembernames interface * {
-    @retrofit.http.* <methods>;
-}
-````
+    First import the SDK into your Activity of choosing:
+    
+    ```java
+    import com.wootric.androidsdk.Wootric;
+    ```
 
-Usage
-=====
+4. Configure the SDK with your client ID, secret and account token:
+
+    All you need to do is to add this code to your Activity's `onCreate` method:
+    
+    ```java
+    Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+    ```
+
+5. To display the survey (if user is eligible - this check is built in the method) use:
+    ```java
+    wootric.survey();
+    ```
+
+And that's it! You're good to go and start receiving customer's feedback from your Android app.
 
 *For a working implementation of this project see the `app/` folder.*
 
-First import the SDK into your Activity of choosing:
+## License
 
-```java
-import com.wootric.androidsdk.Wootric;
-```
+The WootricSDK is released under the MIT license. See LICENSE for details.
 
-All you need to do is to add this code to your Activity's `onCreate` method:
+## Contribute
 
-```java
-Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-wootric.survey();
-```
-
-Additional parameters
-====
-### End user email ###
-
-End user email is optional. If not provided, the end user will be considered as "Unknown".
-
-```java
-wootric.setEndUserEmail(END_USER_EMAIL);
-```
-
-### End user properties ###
-End user properties can be provided as a `HashMap<String, String>` object.
-
-```java
-HashMap<String, String> properties = new HashMap<String, String>();
-properties.put("company", "Wootric");
-properties.put("type", "awesome");
-wootric.setProperties(properties);
-```
-
-### Custom messages ###
-Wootric provides designated class for providing custom messages -`WootricCustomMessages`
-
-```java
-WootricCustomMessage customMessage = new WootricCustomMessage();
-customMessage.setFollowupQuestion("custom followup");
-customMessage.setDetractorFollowupQuestion("custom detractor");
-customMessage.setPassiveFollowupQuestion("custom passive");
-customMessage.setPromoterFollowupQuestion("custom promoter");
-customMessage.setPlaceholderText("custom placeholder");
-customMessage.setDetractorPlaceholderText("custom detractor placeholder");
-customMessage.setPassivePlaceholderText("custom passive placeholder");
-customMessage.setPromoterPlaceholderText("custom promoter placeholder");
-
-wootric.setCustomMessage(customMessage);
-```
-
-### Custom thank you ###
-Wootric provides designated class for providing custom thank you -`WootricCustomThankYou`
-
-```java
-WootricCustomThankYou customThankYou = new WootricCustomThankYou();
-customThankYou.setText("Thank you!!");
-customThankYou.setDetractorText("Detractor thank you");
-customThankYou.setPassiveText("Passive thank you");
-customThankYou.setPromoterText("Promoter thank you");
-customThankYou.setLinkText("Thank you link text");
-customThankYou.setDetractorLinkText("Detractor link text");
-customThankYou.setPassiveLinkText("Passive link text");
-customThankYou.setPromoterLinkText("Promoter link text");
-customThankYou.setLinkUri(Uri.parse("http://wootric.com/thank_you"));
-customThankYou.setDetractorLinkUri(Uri.parse("http://wootric.com/detractor_thank_you"));
-customThankYou.setPassiveLinkUri(Uri.parse("http://wootric.com/passive_thank_you"));
-customThankYou.setPromoterLinkUri(Uri.parse("http://wootric.com/promoter_thank_you"));
-customThankYou.setScoreInUrl(true);
-customThankYou.setCommentInUrl(true);
-wootric.setCustomThankYou(customThankYou);
-```
-
-### Skip followup screen for promoters
-The followup screen can be skipped for promoters, so they are taken straight to thank you screen.
-
-```java
-wootric.shouldSkipFollowupScreenForPromoters(true);
-```
-
-### Color customization (smartphones only)
-Colors can be customized for the smartphone's version.
-
-```java
-// Changes background color and text buttons color for the survey
-wootric.setSurveyColor(R.color.survey_color);
-
-// Changes score selector color and comment highlight color
-wootric.setScoreColor(R.color.score_color);
-
-// Changes Thank You button color on the final view
-wootric.setThankYouButtonBackgroundColor(R.color.thank_you_color);
-
-// Changes Facebook and Twitter buttons colors
-wootric.setSocialSharingColor(R.color.social_color);
-```
-
-### Other parameters ###
-There are many other parameters which can be set in Wootric:
-
-```java
-wootric.setLanguageCode("EN");
-wootric.setSurveyImmediately(true);
-
-wootric.setDailyResponseCap(10);
-wootric.setRegisteredPercent(10);
-wootric.setVisitorPercent(10);
-wootric.setResurveyThrottle(10);
-
-wootric.setProductName("Wootric");
-wootric.setRecommendTarget("Best Friend");
-wootric.setFacebookPageId("123456");
-wootric.setTwitterPage("wootric");
-
-```
-
-When creating a new end user for survey, it will set his/hers external creation date (so for example, date, when end user was created in your Android application).
-This value is also used in eligibility check, to determine if end user should be surveyed. This is an Unix timestamp set in seconds and must be 10 digits long.
-```java
-wootric.setEndUserCreatedAt("1234567890");
-```
+If you want to contribute, report a bug or request a feature, please follow CONTRIBUTING for details.
