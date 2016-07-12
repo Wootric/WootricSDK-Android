@@ -91,6 +91,23 @@ And that's it! You're good to go and start receiving customer's feedback from yo
 
 *For a working implementation of this project see the `app/` folder.*
 
+## Example
+
+```java
+// Import Wootric
+import com.wootric.androidsdk.Wootric;
+
+// Inside your Activity's onCreate method
+
+Wootric wootric = Wootric.init(this, YOUR_CLIENT_ID, YOUR_CLIENT_SECRET, YOUR_ACCOUNT_TOKEN);
+wootric.setEndUserEmail("nps@example.com");
+// Use only for testing
+wootric.setSurveyImmediately(true);
+// show survey
+wootric.survey();
+
+```
+
 ## License
 
 The WootricSDK is released under the MIT license. See LICENSE for details.
