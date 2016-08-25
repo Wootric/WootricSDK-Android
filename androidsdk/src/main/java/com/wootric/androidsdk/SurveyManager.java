@@ -174,20 +174,25 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     }
 
     private void showSurveyFragment() {
-        final FragmentManager fragmentManager = activity.getFragmentManager();
+        try {
+            final FragmentManager fragmentManager = activity.getFragmentManager();
 
-        SurveyFragment surveyFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
-                accessToken, settings, user);
+            SurveyFragment surveyFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
+                    accessToken, settings, user);
 
-        final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
+            final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
 
-        if(isTablet) {
-            fragmentManager.beginTransaction()
-                    .add(android.R.id.content, surveyFragment)
-                    .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
-                    .addToBackStack(null).commit();
-        } else {
-            surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+            if(isTablet) {
+                fragmentManager.beginTransaction()
+                        .add(android.R.id.content, surveyFragment)
+                        .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
+                        .addToBackStack(null).commit();
+            } else {
+                surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+            }
+        } catch (NullPointerException e) {
+            Log.e(LOG_TAG, "showSurveyFragment: " + e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -205,7 +210,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
             } catch (Exception e) {
-                Log.e(LOG_TAG, e.getLocalizedMessage());
+                Log.e(LOG_TAG, e.toString());
+                e.printStackTrace();
             }
         }
 

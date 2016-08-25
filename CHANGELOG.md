@@ -1,3 +1,10 @@
+## 2.4.8 (2016-08-25)
+
+### Fix:
+
+- Catch NullPointerException
+- Update gradle
+
 ## 2.4.7 (2016-06-30)
 
 ### Fix:
