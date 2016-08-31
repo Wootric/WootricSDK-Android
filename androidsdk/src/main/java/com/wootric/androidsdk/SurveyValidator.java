@@ -44,8 +44,6 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     private final WootricRemoteClient wootricRemoteClient;
     private final PreferencesUtils preferencesUtils;
 
-    private static final String TAG = "WOOTRIC_SDK";
-
     SurveyValidator(User user, EndUser endUser, Settings settings,
                     WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
         this.user = user;
@@ -66,17 +64,16 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         Boolean firstDelay = firstSurveyDelayPassed();
         Boolean lastSeen = lastSeenDelayPassed();
 
-        Log.d(TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
-        Log.d(TAG, "WAS RECENTLY SURVEYED: " + recently);
-        Log.d(TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
-        Log.d(TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
+        Log.d(Constants.TAG, "IS SURVEY IMMEDIATELY ENABLED: " + immediate);
+        Log.d(Constants.TAG, "WAS RECENTLY SURVEYED: " + recently);
+        Log.d(Constants.TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
+        Log.d(Constants.TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
 
         if (immediate || !recently || firstDelay || lastSeen) {
-            Log.d(TAG, "Needs survey. Will check with server.");
+            Log.d(Constants.TAG, "Needs survey. Will check with server.");
             checkEligibility();
-        }
-        else {
-            Log.d(TAG, "Doesn't need survey. Will not check with server.");
+        } else {
+            Log.d(Constants.TAG, "Doesn't need survey. Will not check with server.");
             notifyShouldNotShowSurvey();
         }
     }
@@ -86,8 +83,7 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
 
         if(eligibilityResponse.isEligible()) {
             notifyShouldShowSurvey(eligibilityResponse.getSettings());
-        }
-        else {
+        } else {
             notifyShouldNotShowSurvey();
         }
     }

@@ -58,6 +58,7 @@ public class Settings implements Parcelable {
     private Integer registeredPercent;
     private Integer visitorPercent;
     private Integer resurveyThrottle;
+    private Integer declineResurveyThrottle;
 
     private String languageCode;
     private String productName;
@@ -83,6 +84,8 @@ public class Settings implements Parcelable {
         this.localizedTexts = settings.localizedTexts;
         this.userID = settings.userID;
         this.accountID = settings.accountID;
+        this.resurveyThrottle = settings.resurveyThrottle;
+        this.declineResurveyThrottle = settings.declineResurveyThrottle;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -302,6 +305,10 @@ public class Settings implements Parcelable {
         this.resurveyThrottle = resurveyThrottle;
     }
 
+    public void setDeclineResurveyThrottle(Integer declineResurveyThrottle) {
+        this.declineResurveyThrottle = declineResurveyThrottle;
+    }
+
     public Integer getDailyResponseCap() {
         return dailyResponseCap;
     }
@@ -316,6 +323,10 @@ public class Settings implements Parcelable {
 
     public Integer getResurveyThrottle() {
         return resurveyThrottle;
+    }
+
+    public Integer getDeclineResurveyThrottle() {
+        return declineResurveyThrottle;
     }
 
     public String getLanguageCode() {
@@ -429,6 +440,7 @@ public class Settings implements Parcelable {
         dest.writeValue(this.registeredPercent);
         dest.writeValue(this.visitorPercent);
         dest.writeValue(this.resurveyThrottle);
+        dest.writeValue(this.declineResurveyThrottle);
         dest.writeString(this.languageCode);
         dest.writeString(this.productName);
         dest.writeString(this.recommendTarget);
@@ -451,6 +463,7 @@ public class Settings implements Parcelable {
         this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.resurveyThrottle = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.declineResurveyThrottle = (Integer) in.readValue(Integer.class.getClassLoader());
         this.languageCode = in.readString();
         this.productName = in.readString();
         this.recommendTarget = in.readString();
@@ -482,6 +495,12 @@ public class Settings implements Parcelable {
             settings.userID = settingsObject.optLong("user_id");
         } else {
             settings.userID = (long) Constants.NOT_SET;
+        }
+        if (settingsObject.has("resurvey_throttle")) {
+            settings.setResurveyThrottle(settingsObject.optInt("resurvey_throttle"));
+        }
+        if (settingsObject.has("decline_resurvey_throttle")) {
+            settings.setDeclineResurveyThrottle(settingsObject.optInt("decline_resurvey_throttle"));
         }
 
         JSONObject localizedTextsJson = settingsObject.optJSONObject("localized_texts");

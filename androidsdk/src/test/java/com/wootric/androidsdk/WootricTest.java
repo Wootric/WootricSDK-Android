@@ -314,9 +314,9 @@ public class WootricTest {
         Wootric wootric = Wootric.singleton;
         wootric.preferencesUtils = mockPreferencesUtils;
 
-        Wootric.notifySurveyFinished(true);
+        Wootric.notifySurveyFinished(true, true, 0);
         assertThat(Wootric.singleton).isNull();
-        verify(wootric.preferencesUtils, times(1)).touchLastSurveyed();
+        verify(wootric.preferencesUtils, times(1)).touchLastSurveyed(true, 0);
     }
 
     @Test
@@ -324,8 +324,8 @@ public class WootricTest {
         Wootric wootric = Wootric.singleton;
         wootric.preferencesUtils = mockPreferencesUtils;
 
-        Wootric.notifySurveyFinished(false);
+        Wootric.notifySurveyFinished(false, false, 0);
         assertThat(Wootric.singleton).isNull();
-        verify(wootric.preferencesUtils, never()).touchLastSurveyed();
+        verify(wootric.preferencesUtils, never()).touchLastSurveyed(false, 0);
     }
 }

@@ -24,6 +24,9 @@ package com.wootric.androidsdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.wootric.androidsdk.Constants;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -38,9 +41,8 @@ public class PreferencesUtils {
     private static final String KEY_LAST_SURVEYED = "surveyed";
     private static final String KEY_RESPONSE = "response";
     private static final String KEY_DECLINE = "decline";
-
-    private static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
-    private static final long NOT_SET = -1;
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_RESURVEY_DAYS = "resurvey_days";
 
     private final WeakReference<Context> weakContext;
 
@@ -58,18 +60,43 @@ public class PreferencesUtils {
         return null;
     }
 
-    public void touchLastSurveyed() {
+    public void touchLastSurveyed(boolean responseSent, Integer resurvey_days) {
         final SharedPreferences prefs = prefs();
         if(prefs == null) return;
 
         SharedPreferences.Editor editor = prefs.edit();
         if(editor == null) return;
 
-        editor.putLong(KEY_LAST_SURVEYED, new Date().getTime()).apply();
+        editor.putLong(KEY_LAST_SURVEYED, new Date().getTime());
+        if (responseSent) {
+            editor.putString(KEY_TYPE, "response");
+        } else {
+            editor.putString(KEY_TYPE, "decline");
+        }
+        editor.putInt(KEY_RESURVEY_DAYS, resurvey_days);
+        editor.apply();
     }
 
     public boolean wasRecentlySurveyed() {
-        return isRecentTime(KEY_LAST_SURVEYED);
+        String type;
+        Integer days = 90;
+        final SharedPreferences prefs = prefs();
+        if(prefs != null) {
+            type = prefs.getString(KEY_TYPE, "");
+            Integer resurvey_days = prefs.getInt(KEY_RESURVEY_DAYS, -1);
+            if (resurvey_days >= 0){
+                days = resurvey_days;
+            } else {
+                if (type.equals("decline")){
+                    days = (int) Constants.DEFAULT_DECLINE_RESURVEY_DAYS;
+                } else {
+                    days = (int) Constants.DEFAULT_RESURVEY_DAYS;
+                }
+
+            }
+        }
+
+        return isRecentTime(KEY_LAST_SURVEYED, days);
     }
 
     public void touchLastSeen() {
@@ -86,31 +113,39 @@ public class PreferencesUtils {
     }
 
     public long getLastSeen() {
-        long lastSeen = NOT_SET;
+        long lastSeen = Constants.NOT_SET;
 
         final SharedPreferences prefs = prefs();
         if(prefs != null) {
-            lastSeen = prefs.getLong(KEY_LAST_SEEN, NOT_SET);
+            lastSeen = prefs.getLong(KEY_LAST_SEEN, Constants.NOT_SET);
         }
 
         return lastSeen;
     }
 
     public boolean isLastSeenSet() {
-        return getLastSeen() != NOT_SET;
+        return getLastSeen() != Constants.NOT_SET;
     }
 
     private boolean wasRecentlySeen() {
-        return isRecentTime(KEY_LAST_SEEN);
+        return isRecentTime(KEY_LAST_SEEN, 90L);
     }
 
-    private boolean isRecentTime(String key) {
+    private boolean isRecentTime(String key, long days) {
         boolean recentTime = false;
 
         final SharedPreferences prefs = prefs();
         if (prefs != null) {
-            long eventTime = prefs.getLong(key, NOT_SET);
-            recentTime = (eventTime != -1 && new Date().getTime() - eventTime < DAY_IN_MILLIS * 90L);
+            long eventTime = prefs.getLong(key, Constants.NOT_SET);
+            long delta = new Date().getTime() - eventTime;
+            recentTime = (eventTime != -1 && delta < Constants.DAY_IN_MILLIS * days);
+            if (recentTime){
+                int daysAgo = (int) delta / (1000*60*60*24);
+                Log.d(Constants.TAG, String.format("%s(expiration date %d days): %d days ago",
+                        key,
+                        days,
+                        daysAgo));
+            }
         }
 
         return recentTime;

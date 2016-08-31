@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.List;
 
@@ -35,8 +34,6 @@ import java.util.List;
  * Created by maciejwitowski on 9/22/15.
  */
 public class SocialHandler {
-
-    private static final String LOG_TAG = "WOOTRIC_SDK";
 
     private final Context mContext;
 

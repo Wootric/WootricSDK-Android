@@ -35,8 +35,6 @@ public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
 
     private final String email;
 
-    private static final String TAG = "WOOTRIC_SDK";
-
     public GetEndUserByEmailTask(String email, String accessToken, WootricApiCallback wootricApiCallback) {
         super(REQUEST_TYPE_GET, accessToken, wootricApiCallback);
         this.email = email;

@@ -24,6 +24,7 @@ package com.wootric.androidsdk.network.tasks;
 
 import android.util.Log;
 
+import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -44,8 +45,6 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
     private final PreferencesUtils preferencesUtils;
 
     private final Callback surveyCallback;
-
-    private static final String TAG = "WOOTRIC_SDK";
 
     public CheckEligibilityTask(User user, EndUser endUser, Settings settings, PreferencesUtils preferencesUtils, Callback surveyCallback) {
         super(REQUEST_TYPE_GET, null, null);
@@ -82,7 +81,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
         addOptionalParam("language[audience_text]", settings.getRecommendTarget());
         addOptionalParam("end_user_last_seen", preferencesUtils.getLastSeen() / 1000);
 
-        Log.d(TAG, "parameters: " + paramsMap);
+        Log.d(Constants.TAG, "parameters: " + paramsMap);
     }
 
     @Override
@@ -101,13 +100,13 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
                 eligible = jsonObject.getBoolean("eligible");
                 if (eligible) {
-                    Log.d(TAG, "Server says the user is eligible for survey");
+                    Log.d(Constants.TAG, "Server says the user is eligible for survey");
 
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
                     settings = Settings.fromJson(settingsObject);
                 }
                 else {
-                    Log.d(TAG, "Server says the user is NOT eligible for survey");
+                    Log.d(Constants.TAG, "Server says the user is NOT eligible for survey");
                 }
 
             } catch (JSONException e) {

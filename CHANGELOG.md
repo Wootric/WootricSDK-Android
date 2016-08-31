@@ -1,3 +1,11 @@
+## 2.4.9 (2016-08-31)
+
+- Accept resurvey_throttle and decline_resurvey_throttle
+- Update tests
+- Add tests for PreferencesUtils
+- Add log for last_seen and surveyed 'cookie' values
+- Clean code
+
 ## 2.4.8 (2016-08-25)
 
 ### Fix:

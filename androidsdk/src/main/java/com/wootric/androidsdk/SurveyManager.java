@@ -42,8 +42,6 @@ import com.wootric.androidsdk.views.SurveyFragment;
  */
 public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback {
 
-    private static final String LOG_TAG = "WOOTRIC_SDK";
-
     private final Activity activity;
     private final WootricRemoteClient wootricApiClient;
     private final User user;
@@ -86,13 +84,13 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onSurveyNotNeeded() {
-        Wootric.notifySurveyFinished(false);
+        Wootric.notifySurveyFinished(false, false, 0);
     }
 
     @Override
     public void onAuthenticateSuccess(String accessToken) {
         if(accessToken == null) {
-            Wootric.notifySurveyFinished(false);
+            Wootric.notifySurveyFinished(false, false, 0);
             return;
         }
 
@@ -130,8 +128,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onApiError(Exception error) {
-        Log.d(LOG_TAG, error.getLocalizedMessage());
-        Wootric.notifySurveyFinished(false);
+        Log.d(Constants.TAG, error.getLocalizedMessage());
+        Wootric.notifySurveyFinished(false, false, 0);
     }
 
     private void validateSurvey() {
@@ -166,8 +164,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 try {
                     showSurveyFragment();
                 } catch (IllegalStateException e) {
-                    Log.d(LOG_TAG, e.getLocalizedMessage());
-                    Wootric.notifySurveyFinished(false);
+                    Log.d(Constants.TAG, "showSurvey: " + e.getLocalizedMessage());
+                    Wootric.notifySurveyFinished(false, false, 0);
                 }
             }
         }, settings.getTimeDelayInMillis());
@@ -191,7 +189,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
             }
         } catch (NullPointerException e) {
-            Log.e(LOG_TAG, "showSurveyFragment: " + e.toString());
+            Log.e(Constants.TAG, "showSurveyFragment: " + e.toString());
             e.printStackTrace();
         }
     }
@@ -210,7 +208,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
             } catch (Exception e) {
-                Log.e(LOG_TAG, e.toString());
+                Log.e(Constants.TAG, "getOriginUrl: " + e.toString());
                 e.printStackTrace();
             }
         }

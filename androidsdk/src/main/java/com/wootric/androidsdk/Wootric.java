@@ -84,11 +84,11 @@ public class Wootric {
         return local;
     }
 
-    public static void notifySurveyFinished(boolean surveyShown) {
+    public static void notifySurveyFinished(boolean surveyShown, boolean responseSent, Integer resurvey_days) {
         if(singleton == null) return;
 
         if(surveyShown) {
-            singleton.preferencesUtils.touchLastSurveyed();
+            singleton.preferencesUtils.touchLastSurveyed(responseSent, resurvey_days);
         }
 
         singleton = null;

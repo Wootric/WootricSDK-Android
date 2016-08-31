@@ -267,7 +267,7 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void dismiss() {
         if(mIsTablet) {
-            Wootric.notifySurveyFinished(true);
+            notifySurveyFinished();
         }
 
         super.dismiss();
@@ -305,7 +305,12 @@ public class SurveyFragment extends DialogFragment
         super.onDismiss(dialog);
 
         if(!isResumedOnConfigurationChange) {
-            Wootric.notifySurveyFinished(true);
+            notifySurveyFinished();
         }
+    }
+
+    private void notifySurveyFinished() {
+        Integer resurvey_days = mResponseSent ? mSettings.getResurveyThrottle() : mSettings.getDeclineResurveyThrottle();
+        Wootric.notifySurveyFinished(true, mResponseSent, resurvey_days);
     }
 }

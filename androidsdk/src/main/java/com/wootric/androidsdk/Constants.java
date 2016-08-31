@@ -30,4 +30,10 @@ public class Constants {
     public static final long DAY_IN_MILLIS = 1000L *60L *60L *24L;
 
     public static final int NOT_SET = -1;
+
+    public static final long DEFAULT_RESURVEY_DAYS = 90L;
+
+    public static final long DEFAULT_DECLINE_RESURVEY_DAYS = 30L;
+
+    public static final String TAG = "WOOTRIC_SDK";
 }

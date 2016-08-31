@@ -24,14 +24,14 @@ package com.wootric.androidsdk.utils;
 
 import android.util.Log;
 
+import com.wootric.androidsdk.Constants;
+
 import java.util.Date;
 
 /**
  * Created by maciejwitowski on 11/24/15.
  */
 public final class Utils {
-
-    private static final String TAG = "WOOTRIC_SDK";
 
     private Utils(){}
 
@@ -45,13 +45,13 @@ public final class Utils {
 
     public static void checkDate(long date) {
         if (date > 9999999999L) {
-            Log.d(TAG, "WARNING: The created date exceeds the maximum 10 characters allowed. " +
+            Log.d(Constants.TAG, "WARNING: The created date exceeds the maximum 10 characters allowed. " +
                     "If you are using System.currentTimeMillis() divide it by 1000.");
         } else {
             Date d = new Date(date * 1000L);
             Date now = new Date();
             if (d.after(now)){
-                Log.d(TAG, "WARNING: The created date is on the future");
+                Log.d(Constants.TAG, "WARNING: The created date is on the future");
             }
         }
     }
