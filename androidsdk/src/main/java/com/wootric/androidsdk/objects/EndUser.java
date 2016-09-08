@@ -25,6 +25,8 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.wootric.androidsdk.utils.Utils;
+
 import java.util.HashMap;
 
 /**
@@ -36,6 +38,8 @@ public class EndUser implements Parcelable {
 
     private long id = -1;
     private String email;
+    private String externalId;
+    private String phoneNumber;
     private long createdAt = -1;
     private HashMap properties = new HashMap<>();
 
@@ -58,8 +62,24 @@ public class EndUser implements Parcelable {
         return email;
     }
 
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public boolean hasExternalId() {
+        return Utils.isNotEmpty(externalId);
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public boolean hasPhoneNumber() {
+        return Utils.isNotEmpty(phoneNumber);
+    }
+
     public String getEmailOrUnknown() {
-        return (email != null && !email.isEmpty()) ? email : UNKNOWN_EMAIL;
+        return Utils.isNotEmpty(email) ? email : UNKNOWN_EMAIL;
     }
 
     public long getCreatedAt() {
@@ -90,6 +110,14 @@ public class EndUser implements Parcelable {
         this.email = email;
     }
 
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
@@ -103,6 +131,8 @@ public class EndUser implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
         dest.writeString(this.email);
+        dest.writeString(this.externalId);
+        dest.writeString(this.phoneNumber);
         dest.writeLong(this.createdAt);
         dest.writeSerializable(this.properties);
     }
@@ -110,6 +140,8 @@ public class EndUser implements Parcelable {
     private EndUser(Parcel in) {
         this.id = in.readLong();
         this.email = in.readString();
+        this.externalId = in.readString();
+        this.phoneNumber = in.readString();
         this.createdAt = in.readLong();
         this.properties = (HashMap) in.readSerializable();
     }

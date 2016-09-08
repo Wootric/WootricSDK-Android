@@ -71,6 +71,8 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
         paramsMap.put("survey_immediately", String.valueOf(settings.isSurveyImmediately()));
 
         addOptionalParam("end_user_created_at", endUser.getCreatedAtOrNull());
+        addOptionalParam("external_id", endUser.getExternalId());
+        addOptionalParam("phone_number", endUser.getPhoneNumber());
         addOptionalParam("first_survey_delay", settings.getFirstSurveyDelay());
         addOptionalParam("daily_response_cap", settings.getDailyResponseCap());
         addOptionalParam("registered_percent", settings.getRegisteredPercent());

@@ -45,6 +45,9 @@ public class UpdateEndUserTask extends WootricRemoteRequestTask {
 
     @Override
     protected void buildParams() {
+        addOptionalParam("external_id", endUser.getExternalId());
+        addOptionalParam("phone_number", endUser.getPhoneNumber());
+
         if(endUser.hasProperties()) {
             for (Map.Entry<String, String> property : endUser.getProperties().entrySet()) {
                 paramsMap.put("properties[" + property.getKey() + "]", property.getValue());

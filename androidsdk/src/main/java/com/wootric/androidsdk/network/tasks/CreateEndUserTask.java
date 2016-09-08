@@ -51,6 +51,8 @@ public class CreateEndUserTask extends WootricRemoteRequestTask {
         paramsMap.put("email", endUser.getEmailOrUnknown());
 
         addOptionalParam("external_created_at", endUser.getCreatedAtOrNull());
+        addOptionalParam("external_id", endUser.getExternalId());
+        addOptionalParam("phone_number", endUser.getPhoneNumber());
 
         if(endUser.hasProperties()) {
             for (Map.Entry<String, String> property : endUser.getProperties().entrySet()) {

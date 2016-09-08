@@ -115,6 +115,20 @@ public class WootricTest {
         assertThat(wootric.endUser.getEmailOrUnknown()).isEqualTo("nps@example.com");
     }
 
+    @Test public void setEndUserExternalId() throws Exception {
+        Wootric wootric = Wootric.singleton;
+        wootric.setEndUserExternalId("a1b2c3d4");
+
+        assertThat(wootric.endUser.getExternalId()).isEqualTo("a1b2c3d4");
+    }
+
+    @Test public void setEndUserPhoneNumber() throws Exception {
+        Wootric wootric = Wootric.singleton;
+        wootric.setEndUserPhoneNumber("+0123456789");
+
+        assertThat(wootric.endUser.getPhoneNumber()).isEqualTo("+0123456789");
+    }
+
     /**
      * setProperties(HashMap<String, String> properties)
      */

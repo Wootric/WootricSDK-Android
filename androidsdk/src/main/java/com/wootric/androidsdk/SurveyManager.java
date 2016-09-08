@@ -107,7 +107,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     public void onGetEndUserIdSuccess(long endUserId) {
         endUser.setId(endUserId);
 
-        if(this.endUser.hasProperties()) {
+        if(this.endUser.hasProperties() ||
+           this.endUser.hasExternalId() ||
+           this.endUser.hasPhoneNumber()) {
             sendUpdateEndUserRequest();
         }
 
@@ -128,7 +130,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onApiError(Exception error) {
-        Log.d(Constants.TAG, error.getLocalizedMessage());
+        Log.e(Constants.TAG, "API error: " + error);
         Wootric.notifySurveyFinished(false, false, 0);
     }
 

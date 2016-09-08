@@ -28,6 +28,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.wootric.androidsdk.BuildConfig;
+import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.network.WootricApiCallback;
 
 import java.io.IOException;

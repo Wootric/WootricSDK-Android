@@ -1,3 +1,8 @@
+## 2.4.10 (2016-09-08)
+
+- Pass external_id & phone_number
+- Update tests
+
 ## 2.4.9 (2016-08-31)
 
 - Accept resurvey_throttle and decline_resurvey_throttle

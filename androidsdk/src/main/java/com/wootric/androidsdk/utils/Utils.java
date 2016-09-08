@@ -43,6 +43,14 @@ public final class Utils {
         return object;
     }
 
+    public static boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty() && !isWhitespaceString(s);
+    }
+
+    private static boolean isWhitespaceString(String s) {
+        return s.trim().length() == 0;
+    }
+
     public static void checkDate(long date) {
         if (date > 9999999999L) {
             Log.d(Constants.TAG, "WARNING: The created date exceeds the maximum 10 characters allowed. " +

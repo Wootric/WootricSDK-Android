@@ -109,6 +109,24 @@ public class Wootric {
     }
 
     /**
+     *  Set an end user's external id.
+     *
+     * @param externalId String of the end user's external id.
+     */
+    public void setEndUserExternalId(String externalId) {
+        endUser.setExternalId(externalId);
+    }
+
+    /**
+     *  Set the end user's phone number.
+     *
+     * @param phoneNumber String of the end user's phone number.
+     */
+    public void setEndUserPhoneNumber(String phoneNumber) {
+        endUser.setPhoneNumber(phoneNumber);
+    }
+
+    /**
      * Set the end user created date. The createdAt  must be a seconds unix time value and
      * it must be 10 digits only.
      * Important: If you use System.currentTimeMillis() make sure you divide it by 1000.

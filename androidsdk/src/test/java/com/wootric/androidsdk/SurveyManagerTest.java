@@ -144,9 +144,6 @@ public class SurveyManagerTest {
         long receivedId = 1;
 
         EndUser endUser = testEndUser();
-        HashMap endUserProperties = new HashMap();
-        endUserProperties.put("company", "wootric");
-        endUser.setProperties(endUserProperties);
 
         SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
@@ -159,6 +156,84 @@ public class SurveyManagerTest {
 
         surveyManager.onGetEndUserIdSuccess(receivedId);
 
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        HashMap<String, String> endUserProperties = new HashMap<>();
+        endUserProperties.put("company", "wootric");
+        endUser.setProperties(endUserProperties);
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(1)).updateEndUser(endUser, accessToken, surveyManager);
+    }
+
+    @Test
+    public void whenEndUserReceived_sendsRequestToUpdateEndUserPhoneNumber() throws Exception {
+        long receivedId = 1;
+
+        EndUser endUser = testEndUser();
+
+        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
+                surveyValidator));
+
+        final String accessToken = "test123test";
+        surveyManager.setAccessToken(accessToken);
+
+        doNothing().when(surveyManager).showSurvey();
+
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setPhoneNumber(null);
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setPhoneNumber("");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setPhoneNumber("     ");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setPhoneNumber("+0123456789");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(1)).updateEndUser(endUser, accessToken, surveyManager);
+    }
+
+    @Test
+    public void whenEndUserReceived_sendsRequestToUpdateEndUserExternalId() throws Exception {
+        long receivedId = 1;
+
+        EndUser endUser = testEndUser();
+
+        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
+                surveyValidator));
+
+        final String accessToken = "test123test";
+        surveyManager.setAccessToken(accessToken);
+
+        doNothing().when(surveyManager).showSurvey();
+
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setExternalId(null);
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setExternalId("");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setExternalId("     ");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
+        verify(wootricApiClient, times(0)).updateEndUser(endUser, accessToken, surveyManager);
+
+        endUser.setExternalId("a1b2c3d4");
+        surveyManager.onGetEndUserIdSuccess(receivedId);
         verify(wootricApiClient, times(1)).updateEndUser(endUser, accessToken, surveyManager);
     }
 
