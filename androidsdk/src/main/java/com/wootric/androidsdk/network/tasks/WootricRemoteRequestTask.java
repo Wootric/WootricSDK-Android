@@ -96,7 +96,13 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
             conn.connect();
 
-            InputStream is = conn.getInputStream();
+            int status = conn.getResponseCode();
+            InputStream is;
+            if (status >= 400 && status < 500) {
+                is = conn.getErrorStream();
+            } else {
+                is = conn.getInputStream();
+            }
             return readInput(is);
 
         } catch (IOException e) {

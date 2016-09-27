@@ -1,3 +1,7 @@
+## 2.4.11 (2016-09-27)
+
+- Fix error catching
+
 ## 2.4.10 (2016-09-08)
 
 - Pass external_id & phone_number

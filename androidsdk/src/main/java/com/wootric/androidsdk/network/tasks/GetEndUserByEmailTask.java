@@ -27,6 +27,7 @@ import com.wootric.androidsdk.network.WootricApiCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * Created by maciejwitowski on 10/13/15.
@@ -54,15 +55,27 @@ public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
     protected void onSuccess(String response) {
         if(response != null) {
             try {
-                JSONArray jsonArray = new JSONArray(response);
+                Object json = new JSONTokener(response).nextValue();
+                if (json instanceof JSONObject) {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String type = jsonResponse.getString("type");
+                    if (type.equals("error_list")) {
+                        JSONArray errors = new JSONArray(jsonResponse.getString("errors"));
+                        JSONObject jsonObject = errors.getJSONObject(0);
+                        String message = jsonObject.getString("message");
+                        onInvalidResponse(message);
+                        return;
+                    }
+                } else if (json instanceof JSONArray) {
+                    JSONArray jsonArray = new JSONArray(response);
 
-                if(jsonArray.length() > 0) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    long endUserId = jsonObject.getLong("id");
-                    wootricApiCallback.onGetEndUserIdSuccess(endUserId);
-                }
-                else {
-                    wootricApiCallback.onEndUserNotFound();
+                    if(jsonArray.length() > 0) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        long endUserId = jsonObject.getLong("id");
+                        wootricApiCallback.onGetEndUserIdSuccess(endUserId);
+                    } else {
+                        wootricApiCallback.onEndUserNotFound();
+                    }
                 }
             } catch (JSONException e) {
                 wootricApiCallback.onApiError(e);
