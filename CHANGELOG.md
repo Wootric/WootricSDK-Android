@@ -1,3 +1,7 @@
+## 2.4.12 (2016-10-12)
+
+- Intercept click event on tablet survey
+
 ## 2.4.11 (2016-09-27)
 
 - Fix error catching
