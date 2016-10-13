@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Settings;
 
 /**
@@ -45,7 +46,7 @@ public class ThankYouDialogFactory {
             thankYouDialog.setMessage(thankYouText);
         }
 
-        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "DONE", new DialogInterface.OnClickListener() {
+        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, context.getString(R.string.wootric_done), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
