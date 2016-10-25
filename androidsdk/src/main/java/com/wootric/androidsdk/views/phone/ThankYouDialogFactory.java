@@ -45,7 +45,7 @@ public class ThankYouDialogFactory {
             thankYouDialog.setMessage(thankYouText);
         }
 
-        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "DONE", new DialogInterface.OnClickListener() {
+        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

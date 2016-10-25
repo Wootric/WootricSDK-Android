@@ -1,3 +1,7 @@
+## 2.4.13 (2016-10-26)
+
+- Fix 'DONE' button text
+
 ## 2.4.12 (2016-10-12)
 
 - Intercept click event on tablet survey
