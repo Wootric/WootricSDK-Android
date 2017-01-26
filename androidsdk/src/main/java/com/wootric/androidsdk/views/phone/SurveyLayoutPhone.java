@@ -184,7 +184,6 @@ public class SurveyLayoutPhone extends LinearLayout
         etFeedbackBackground.setColorFilter(mColorBlack, PorterDuff.Mode.SRC_ATOP);
         etFeedbackBackground.setAlpha(26);
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
-        mEtFeedback.addTextChangedListener(etFeedbackTextWatcher());
 
         mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
@@ -222,28 +221,6 @@ public class SurveyLayoutPhone extends LinearLayout
                     Drawable etFeedbackBackground = mEtFeedback.getBackground();
                     etFeedbackBackground.setColorFilter(mColorSelected, PorterDuff.Mode.SRC_ATOP);
                     etFeedbackBackground.setAlpha(255);
-                }
-            }
-        };
-    }
-
-    private TextWatcher etFeedbackTextWatcher() {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(isFeedbackState()) {
-                    final boolean hasFeedback = !mEtFeedback.getText().toString().isEmpty();
-                    updateSubmitBtn(hasFeedback);
                 }
             }
         };
@@ -416,10 +393,6 @@ public class SurveyLayoutPhone extends LinearLayout
 
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(true);
-
-
-        final boolean hasFeedback = !mEtFeedback.getText().toString().isEmpty();
-        updateSubmitBtn(hasFeedback);
     }
 
     private void setupThankYouState() {

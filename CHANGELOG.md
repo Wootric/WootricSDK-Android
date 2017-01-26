@@ -1,3 +1,7 @@
+## 2.4.14 (2017-01-26)
+
+- Enable 'Send' button when no feedback text is provided on second screen
+
 ## 2.4.13 (2016-10-26)
 
 - Fix 'DONE' button text
