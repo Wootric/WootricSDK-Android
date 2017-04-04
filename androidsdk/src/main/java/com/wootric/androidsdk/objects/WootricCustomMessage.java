@@ -117,8 +117,8 @@ public class WootricCustomMessage implements Parcelable {
         this.placeholderTextsList.put(PROMOTER_TEXT_KEY, promoterPlaceholderText);
     }
 
-    public String getFollowupQuestionForScore(int scoreValue) {
-        final Score score = new Score(scoreValue);
+    public String getFollowupQuestionForScore(int scoreValue, String surveyType) {
+        final Score score = new Score(scoreValue, surveyType);
 
         if(score.isDetractor() && getDetractorQuestion() != null) {
             return getDetractorQuestion();
@@ -131,8 +131,8 @@ public class WootricCustomMessage implements Parcelable {
         }
     }
 
-    public String getPlaceholderForScore(int scoreValue) {
-        final Score score = new Score(scoreValue);
+    public String getPlaceholderForScore(int scoreValue, String surveyType) {
+        final Score score = new Score(scoreValue, surveyType);
 
         if(score.isDetractor() && getDetractorPlaceholder() != null) {
             return getDetractorPlaceholder();

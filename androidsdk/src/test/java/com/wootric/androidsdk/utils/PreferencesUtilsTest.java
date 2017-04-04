@@ -2,10 +2,8 @@ package com.wootric.androidsdk.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.wootric.androidsdk.Constants;
-import com.wootric.androidsdk.objects.Settings;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,10 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
-
-/**
- * Created by diegoserranoa on 8/19/16.
- */
 
 @RunWith(MockitoJUnitRunner.class)
 public class PreferencesUtilsTest {

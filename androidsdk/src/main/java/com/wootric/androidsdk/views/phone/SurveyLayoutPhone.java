@@ -88,16 +88,19 @@ public class SurveyLayoutPhone extends LinearLayout
     private int mColorBlack;
     private int mColorEnabled;
 
+    private String mSurveyType;
+    private int mScaleMinimum;
+    private int mScaleMaximum;
     private int mScoresCount;
 
-    private static final int STATE_NPS = 0;
+    private static final int STATE_SURVEY = 0;
     private static final int STATE_FEEDBACK = 1;
     private static final int STATE_THANK_YOU = 2;
 
-    private int mCurrentState = STATE_NPS;
+    private int mCurrentState = STATE_SURVEY;
 
     private View[] mCommonSurveyViews;
-    private View[] mNpsViews;
+    private View[] mSurveyViews;
     private View[] mFeedbackViews;
 
     private SurveyLayoutListener mSurveyLayoutListener;
@@ -122,12 +125,26 @@ public class SurveyLayoutPhone extends LinearLayout
     private void init(Context context) {
         mContext = context;
 
-        initResources();
         LayoutInflater.from(mContext).inflate(R.layout.wootric_survey_layout, this);
+    }
 
-        initNpsViewElements();
-        initFeedbackViewElements();
+    private void initResources() {
+        Resources res = mContext.getResources();
+        mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
+        mColorSelected = res.getColor(R.color.wootric_score_color);
+        mColorBlack = res.getColor(android.R.color.black);
+        mColorEnabled = res.getColor(R.color.wootric_survey_layout_header_background);
 
+        mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
+        mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
+
+        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
+        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+
+        mScoresCount = mScaleMaximum + 1;
+    }
+
+    private void initViews() {
         mBtnSubmit = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_submit);
         mBtnDismiss = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_dismiss);
         mBtnSubmit.setOnClickListener(new OnClickListener() {
@@ -151,29 +168,17 @@ public class SurveyLayoutPhone extends LinearLayout
         mThankYouLayout.setThankYouLayoutListener(this);
     }
 
-    private void initResources() {
-        Resources res = mContext.getResources();
-        mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
-        mColorSelected = res.getColor(R.color.wootric_score_color);
-        mColorBlack = res.getColor(android.R.color.black);
-        mColorEnabled = res.getColor(R.color.wootric_survey_layout_header_background);
-
-        mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
-        mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
-
-        mScoresCount = res.getInteger(R.integer.wootric_max_score) + 1;
-    }
-
-    private void initNpsViewElements() {
+    private void initSurveyViewElements() {
         mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_survey_layout_body);
         mScoreLayout = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_score_layout);
         mAnchorLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_likely);
         mAnchorNotLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_not_likely);
         mRatingBar = (RatingBar) mLayoutBody.findViewById(R.id.wootric_rating_bar);
 
-        mNpsViews = new View[]{ mRatingBar, mScoreLayout, mAnchorLikely, mAnchorNotLikely };
+        mSurveyViews = new View[]{ mRatingBar, mScoreLayout, mAnchorLikely, mAnchorNotLikely };
 
         initScoreLayout();
+        initViews();
 
         mRatingBar.setOnScoreChangedListener(this);
     }
@@ -193,7 +198,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private void initScoreLayout() {
         mScoreViews = new TextView[mScoresCount];
-        for(int score = 0; score < mScoreViews.length; score++) {
+        for(int score = mScaleMinimum; score < mScoreViews.length; score++) {
             TextView scoreView = buildScoreView(score);
             mScoreViews[score] = scoreView;
             mScoreLayout.addView(scoreView);
@@ -246,11 +251,11 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void updateAnchors(int newScore) {
-        boolean selectAnchorNotLikely = (newScore == 0);
+        boolean selectAnchorNotLikely = (newScore == mScaleMinimum);
         mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : Color.BLACK);
         mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? 1f : 0.38f);
 
-        boolean selectAnchorLikely = (newScore == 10);
+        boolean selectAnchorLikely = (newScore == mScaleMaximum);
         mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : Color.BLACK);
         mAnchorLikely.setAlpha(selectAnchorLikely ? 1f : 0.38f);
     }
@@ -258,14 +263,14 @@ public class SurveyLayoutPhone extends LinearLayout
     private void submitSurvey() {
         notifyListener();
 
-        Score score = new Score(mRatingBar.getSelectedScore());
+        Score score = new Score(mRatingBar.getSelectedScore(), mSettings.getSurveyType());
         boolean shouldSkipFeedbackScreen = score.isPromoter() &&
                 mSettings.shouldSkipFollowupScreenForPromoters();
 
 
         if(isFeedbackState() || shouldSkipFeedbackScreen) {
             updateState(STATE_THANK_YOU);
-        } else if(isNpsState()) {
+        } else if(isSurveyState()) {
             updateState(STATE_FEEDBACK);
         }
     }
@@ -288,7 +293,7 @@ public class SurveyLayoutPhone extends LinearLayout
         return new OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateState(STATE_NPS);
+                updateState(STATE_SURVEY);
             }
         };
     }
@@ -304,9 +309,16 @@ public class SurveyLayoutPhone extends LinearLayout
     @Override
     public void initWithSettings(Settings settings) {
         mSettings = settings;
+        mSurveyType = mSettings.getSurveyType();
+
+        initResources();
+        initSurveyViewElements();
+        initFeedbackViewElements();
+
         setTexts();
         setColors();
         updateState(mCurrentState);
+        mRatingBar.setScale(mSurveyType);
     }
 
     private void setTexts() {
@@ -359,8 +371,8 @@ public class SurveyLayoutPhone extends LinearLayout
     private void updateState(int state) {
         mCurrentState = state;
 
-        if(STATE_NPS == mCurrentState) {
-            setupNpsState();
+        if(STATE_SURVEY == mCurrentState) {
+            setupSurveyState();
         } else if(STATE_FEEDBACK == mCurrentState) {
             setupFeedbackState();
         } else {
@@ -368,12 +380,12 @@ public class SurveyLayoutPhone extends LinearLayout
         }
     }
 
-    private void setupNpsState() {
+    private void setupSurveyState() {
         setViewsVisibility(mCommonSurveyViews, true);
         setViewsVisibility(mFeedbackViews, false);
-        setViewsVisibility(mNpsViews, true);
+        setViewsVisibility(mSurveyViews, true);
 
-        mTvSurveyHeader.setText(mSettings.getNpsQuestion());
+        mTvSurveyHeader.setText(mSettings.getSurveyQuestion());
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 
@@ -385,7 +397,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private void setupFeedbackState() {
         setViewsVisibility(mCommonSurveyViews, true);
         setViewsVisibility(mFeedbackViews, true);
-        setViewsVisibility(mNpsViews, false);
+        setViewsVisibility(mSurveyViews, false);
 
         int currentScore = mRatingBar.getSelectedScore();
         mTvSurveyHeader.setText(mSettings.getFollowupQuestion(currentScore));
@@ -398,7 +410,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private void setupThankYouState() {
         setViewsVisibility(mCommonSurveyViews, false);
         setViewsVisibility(mFeedbackViews, false);
-        setViewsVisibility(mNpsViews, false);
+        setViewsVisibility(mSurveyViews, false);
         setKeyboardVisibility(false);
 
         mThankYouLayout.setVisibility(VISIBLE);
@@ -411,8 +423,8 @@ public class SurveyLayoutPhone extends LinearLayout
         mBtnSubmit.setEnabled(enable);
     }
 
-    private boolean isNpsState() {
-        return mCurrentState == STATE_NPS;
+    private boolean isSurveyState() {
+        return mCurrentState == STATE_SURVEY;
     }
 
     private boolean isFeedbackState() {

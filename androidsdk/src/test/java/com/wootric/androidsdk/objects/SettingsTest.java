@@ -12,10 +12,6 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
-/**
- * Created by maciejwitowski on 9/15/15.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class SettingsTest {
 
@@ -25,9 +21,6 @@ public class SettingsTest {
     @Mock
     WootricCustomMessage mockCustomMessage;
 
-    /**
-     * firstSurveyDelayPassed(long timeFrom)
-     */
     @Test
     public void whenTimeFromIsNotSet_itReturnsTrue() throws Exception {
         Settings settings = new Settings();
@@ -51,9 +44,6 @@ public class SettingsTest {
         assertThat(settings.firstSurveyDelayPassed(timeAfterFirstSurvey)).isFalse();
     }
 
-    /**
-     * mergeWithSurveyServerSettings(Settings settings)
-     */
     @Test
     public void setsAdminPanelCustomMessage() throws Exception {
         Settings settings = new Settings();
@@ -91,9 +81,6 @@ public class SettingsTest {
         assertThat(settings.getAdminPanelTimeDelay()).isEqualTo(10);
     }
 
-    /**
-     * getTimeDelayInMillis()
-     */
     @Test
     public void whenLocalTimeDelaySet_returnsLocalTimeDelayInMillis() {
         Settings settings = new Settings();
@@ -117,9 +104,6 @@ public class SettingsTest {
         assertThat(settings.getTimeDelayInMillis()).isEqualTo(0);
     }
 
-    /**
-     * Methods delegated to localized texts
-     */
     @Test
     public void delegatesMethodsToLocalizedTexts() {
         mockLocalizedTexts();
@@ -127,7 +111,7 @@ public class SettingsTest {
         Settings settings = new Settings();
         settings.setLocalizedTexts(mockLocalizedTexts);
 
-        assertThat(settings.getNpsQuestion()).isEqualTo("How likely");
+        assertThat(settings.getSurveyQuestion()).isEqualTo("How likely");
         assertThat(settings.getAnchorLikely()).isEqualTo("likely");
         assertThat(settings.getAnchorNotLikely()).isEqualTo("not likely");
         assertThat(settings.getBtnSubmit()).isEqualTo("SUBMIT");
@@ -135,26 +119,25 @@ public class SettingsTest {
         assertThat(settings.getFinalThankYou()).isEqualTo("Thank you!");
     }
 
-    /**
-     * getFollowupQuestion(int score)
-     */
     @Test
     public void whenLocalCustomMessageIsSet_returnsLocalCustomMessageQuestion() {
-        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10);
+        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS");
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(mockCustomMessage);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getFollowupQuestion(10)).isEqualTo("promoter");
     }
 
     @Test
     public void whenAdminPanelCustomMessageIsSet_returnsAdminPanelCustomMessageQuestion() {
-        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10);
+        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS");
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(null);
         settings.setAdminPanelCustomMessage(mockCustomMessage);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getFollowupQuestion(10)).isEqualTo("promoter");
     }
@@ -171,26 +154,25 @@ public class SettingsTest {
         assertThat(settings.getFollowupQuestion(10)).isEqualTo("followup question");
     }
 
-    /**
-     * getFollowupPlaceholder(int score)
-     */
     @Test
     public void whenLocalCustomMessageIsSet_returnsLocalCustomMessagePlaceholder() {
-        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10);
+        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS");
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(mockCustomMessage);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getFollowupPlaceholder(10)).isEqualTo("promoter");
     }
 
     @Test
     public void whenAdminPanelCustomMessageIsSet_returnsAdminPanelCustomMessagePlaceholder() {
-        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10);
+        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS");
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(null);
         settings.setAdminPanelCustomMessage(mockCustomMessage);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getFollowupPlaceholder(10)).isEqualTo("promoter");
     }
@@ -207,15 +189,13 @@ public class SettingsTest {
         assertThat(settings.getFollowupPlaceholder(10)).isEqualTo("followup placeholder");
     }
 
-    /**
-     * getThankYouMessage(int score)
-     */
     @Test
     public void whenCustomThankYouIsSet_returnsCustomThankYou() {
         Settings settings = new Settings();
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setText("thank you");
         settings.setCustomThankYou(customThankYou);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getCustomThankYouMessage(10)).isEqualTo("thank you");
     }
@@ -229,9 +209,6 @@ public class SettingsTest {
         assertThat(settings.getCustomThankYouMessage(10)).isEqualTo(null);
     }
 
-    /**
-     * getThankYouLinkText(int score)
-     */
     @Test
     public void whenCustomThankYouLinkIsNotSet_returnsNull() {
         Settings settings = new Settings();
@@ -244,13 +221,11 @@ public class SettingsTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setLinkText("Link text");
         settings.setCustomThankYou(customThankYou);
+        settings.setSurveyType("NPS");
 
         assertThat(settings.getThankYouLinkText(10)).isEqualTo("Link text");
     }
 
-    /**
-     * getThankYouLinkUri(int score)
-     */
     @Test
     public void whenCustomThankYouLinkUriIsNotSet_returnsNull() {
         Settings settings = new Settings();
@@ -258,7 +233,7 @@ public class SettingsTest {
     }
 
     private void mockLocalizedTexts() {
-        doReturn("How likely").when(mockLocalizedTexts).getNpsQuestion();
+        doReturn("How likely").when(mockLocalizedTexts).getSurveyQuestion();
         doReturn("likely").when(mockLocalizedTexts).getAnchorLikely();
         doReturn("not likely").when(mockLocalizedTexts).getAnchorNotLikely();
         doReturn("dismiss").when(mockLocalizedTexts).getDismiss();

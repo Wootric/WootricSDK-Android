@@ -124,7 +124,7 @@ public class SurveyFragment extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
         
-        if(!mIsTablet) {
+        if (!mIsTablet) {
             getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
 

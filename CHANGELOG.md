@@ -1,3 +1,7 @@
+## 2.5.0 (2017-04-11)
+
+- CES and CSAT support
+
 ## 2.4.14 (2017-01-26)
 
 - Enable 'Send' button when no feedback text is provided on second screen

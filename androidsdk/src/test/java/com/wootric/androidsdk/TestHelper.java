@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.test.mock.MockApplication;
 import android.test.mock.MockPackageManager;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 
-/**
- * Created by maciejwitowski on 9/14/15.
- */
 public class TestHelper {
 
     private static final String CLIENT_ID = "testClientId";

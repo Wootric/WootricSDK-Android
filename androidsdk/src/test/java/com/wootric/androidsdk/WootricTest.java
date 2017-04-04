@@ -27,10 +27,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by maciejwitowski on 4/11/15.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class WootricTest {
 
@@ -129,9 +125,6 @@ public class WootricTest {
         assertThat(wootric.endUser.getPhoneNumber()).isEqualTo("+0123456789");
     }
 
-    /**
-     * setProperties(HashMap<String, String> properties)
-     */
     @Test
     public void setsEndUserProperties() {
         Wootric wootric = Wootric.singleton;
@@ -150,9 +143,6 @@ public class WootricTest {
         assertThat(wootric.settings.isSurveyImmediately()).isTrue();
     }
 
-    /**
-     * setCustomMessage(CustomMessage customMessage)
-     */
     @Test
     public void setsLocalCustomMessageInSettings() {
         WootricCustomMessage customMessage = new WootricCustomMessage();
@@ -162,9 +152,6 @@ public class WootricTest {
         assertThat(wootric.settings.getLocalCustomMessage()).isEqualTo(customMessage);
     }
 
-    /**
-     * setDailyResponseCap(int value)
-     */
     @Test
     public void setsDailyResponseCapInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -172,9 +159,6 @@ public class WootricTest {
         assertThat(wootric.settings.getDailyResponseCap()).isEqualTo(20);
     }
 
-    /**
-     * setRegisteredPercent(int value)
-     */
     @Test
     public void setsRegisteredPercentInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -182,9 +166,6 @@ public class WootricTest {
         assertThat(wootric.settings.getRegisteredPercent()).isEqualTo(20);
     }
 
-    /**
-     * setVisitorPercent(int value)
-     */
     @Test
     public void setsVisitorPercentInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -192,9 +173,6 @@ public class WootricTest {
         assertThat(wootric.settings.getVisitorPercent()).isEqualTo(20);
     }
 
-    /**
-     * setResurveyThrottle(int value)
-     */
     @Test
     public void setsResurveyThrottleInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -202,9 +180,6 @@ public class WootricTest {
         assertThat(wootric.settings.getResurveyThrottle()).isEqualTo(20);
     }
 
-    /**
-     * setLanguageCode(String languageCode)
-     */
     @Test
     public void setsLanguageCodeInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -212,9 +187,6 @@ public class WootricTest {
         assertThat(wootric.settings.getLanguageCode()).isEqualTo("PL");
     }
 
-    /**
-     * setProductName(String productName)
-     */
     @Test
     public void setsProductNameInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -222,9 +194,6 @@ public class WootricTest {
         assertThat(wootric.settings.getProductName()).isEqualTo("Wootric");
     }
 
-    /**
-     * setRecommendTarget(String recommendTarget)
-     */
     @Test
     public void setsRecommendTargetInSettings() {
         Wootric wootric = Wootric.singleton;
@@ -232,9 +201,6 @@ public class WootricTest {
         assertThat(wootric.settings.getRecommendTarget()).isEqualTo("My Friend");
     }
 
-    /**
-     * setFacebookPageId(String facebookPage)
-     */
     @Test
     public void setsFacebookPage() {
         Wootric wootric = Wootric.singleton;
@@ -242,19 +208,12 @@ public class WootricTest {
         assertThat(wootric.settings.getFacebookPageId()).isEqualTo("https://www.facebook.com/test");
     }
 
-    /**
-     * setTwitterPage(String tweeterPage)
-     */
     @Test
     public void setsTweeterPage() {
         Wootric wootric = Wootric.singleton;
         wootric.setTwitterPage("https://www.tweeter.com/test");
         assertThat(wootric.settings.getTwitterPage()).isEqualTo("https://www.tweeter.com/test");
     }
-
-    /**
-     * survey()
-     */
 
     @Test public void survey_startsSurvey() throws Exception {
         Wootric.singleton = null;
@@ -320,9 +279,6 @@ public class WootricTest {
         verify(mockSurveyManager, times(0)).start();
     }
 
-    /**
-     * notifySurveyFinished()
-     */
     @Test
     public void whenEndUserWasSurveyed_updatesLastSurveyedAndResetsTheSingleton() {
         Wootric wootric = Wootric.singleton;

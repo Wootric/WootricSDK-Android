@@ -65,6 +65,7 @@ public class Settings implements Parcelable {
     private String recommendTarget;
     private String facebookPageId;
     private String twitterPage;
+    private String surveyType;
 
     private WootricCustomThankYou customThankYou;
 
@@ -86,6 +87,7 @@ public class Settings implements Parcelable {
         this.accountID = settings.accountID;
         this.resurveyThrottle = settings.resurveyThrottle;
         this.declineResurveyThrottle = settings.declineResurveyThrottle;
+        this.surveyType = settings.surveyType;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -138,8 +140,8 @@ public class Settings implements Parcelable {
         return localizedTexts;
     }
 
-    public String getNpsQuestion() {
-        return localizedTexts.getNpsQuestion();
+    public String getSurveyQuestion() {
+        return localizedTexts.getSurveyQuestion();
     }
 
     public String getAnchorLikely() {
@@ -166,11 +168,11 @@ public class Settings implements Parcelable {
         String followupQuestion = null;
 
         if(localCustomMessage != null) {
-            followupQuestion = localCustomMessage.getFollowupQuestionForScore(score);
+            followupQuestion = localCustomMessage.getFollowupQuestionForScore(score, surveyType);
         }
 
         if(followupQuestion == null && adminPanelCustomMessage != null) {
-            followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score);
+            followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score, surveyType);
         }
 
         if(followupQuestion == null) {
@@ -184,11 +186,11 @@ public class Settings implements Parcelable {
         String followupPlaceholder = null;
 
         if(localCustomMessage != null) {
-            followupPlaceholder = localCustomMessage.getPlaceholderForScore(score);
+            followupPlaceholder = localCustomMessage.getPlaceholderForScore(score, surveyType);
         }
 
         if(followupPlaceholder == null && adminPanelCustomMessage != null) {
-            followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score);
+            followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score, surveyType);
         }
 
         if(followupPlaceholder == null) {
@@ -202,7 +204,7 @@ public class Settings implements Parcelable {
         String thankYouMessage = null;
 
         if(customThankYou != null) {
-            thankYouMessage = customThankYou.getTextForScore(score);
+            thankYouMessage = customThankYou.getTextForScore(score, surveyType);
         }
 
         return thankYouMessage;
@@ -214,18 +216,18 @@ public class Settings implements Parcelable {
 
     public String getThankYouLinkText(int score) {
         return (customThankYou == null) ?
-                null : customThankYou.getLinkTextForScore(score);
+                null : customThankYou.getLinkTextForScore(score, surveyType);
     }
 
     public Uri getThankYouLinkUri(int score, String comment) {
         return (customThankYou == null) ?
-                null :  customThankYou.getLinkUri(score, comment);
+                null :  customThankYou.getLinkUri(score, comment, surveyType);
     }
 
     public boolean isThankYouActionConfigured(int score, String comment) {
         return customThankYou != null &&
-                customThankYou.getLinkTextForScore(score) != null &&
-                customThankYou.getLinkUri(score, comment) != null;
+                customThankYou.getLinkTextForScore(score, surveyType) != null &&
+                customThankYou.getLinkUri(score, comment, surveyType) != null;
     }
 
     public String getSocialShareQuestion() {
@@ -235,7 +237,6 @@ public class Settings implements Parcelable {
     public String getSocialShareDecline() {
         return localizedTexts.getSocialShareDecline();
     }
-
 
     public String getFinalThankYou() {
         return localizedTexts.getFinalThankYou();
@@ -369,6 +370,12 @@ public class Settings implements Parcelable {
         this.twitterPage = twitterPage;
     }
 
+    public String getSurveyType() { return surveyType; }
+
+    public void setSurveyType(String surveyType) {
+        this.surveyType = surveyType;
+    }
+
     public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         this.customThankYou = customThankYou;
     }
@@ -446,6 +453,7 @@ public class Settings implements Parcelable {
         dest.writeString(this.recommendTarget);
         dest.writeString(this.facebookPageId);
         dest.writeString(this.twitterPage);
+        dest.writeString(this.surveyType);
         dest.writeParcelable(this.customThankYou, 0);
     }
 
@@ -469,6 +477,7 @@ public class Settings implements Parcelable {
         this.recommendTarget = in.readString();
         this.facebookPageId = in.readString();
         this.twitterPage = in.readString();
+        this.surveyType = in.readString();
         this.customThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
     }
 
@@ -484,6 +493,7 @@ public class Settings implements Parcelable {
 
     public static Settings fromJson(JSONObject settingsObject) throws JSONException {
         Settings settings = new Settings();
+        settings.setSurveyType(settingsObject.optString("survey_type", "NPS"));
         settings.firstSurvey = settingsObject.optLong("first_survey");
         settings.timeDelay = settingsObject.optInt("time_delay");
         if (settingsObject.has("account_id")) {
@@ -504,7 +514,7 @@ public class Settings implements Parcelable {
         }
 
         JSONObject localizedTextsJson = settingsObject.optJSONObject("localized_texts");
-        settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson);
+        settings.localizedTexts = LocalizedTexts.fromJson(localizedTextsJson, settings.getSurveyType());
 
         JSONObject customMessagesJson = settingsObject.optJSONObject("messages");
         settings.adminPanelCustomMessage = WootricCustomMessage.fromJson(customMessagesJson);

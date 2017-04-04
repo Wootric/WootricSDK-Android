@@ -25,10 +25,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by maciejwitowski on 9/15/15.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class SurveyManagerTest {
 
@@ -41,9 +37,6 @@ public class SurveyManagerTest {
     @Mock
     SurveyValidator surveyValidator;
 
-    /**
-     * start()
-     */
     @Test
     public void sendsGetTrackingPixelRequest() throws Exception {
         User user = testUser();
@@ -103,9 +96,6 @@ public class SurveyManagerTest {
         verify(wootricApiClient, times(1)).authenticate(user, surveyManager);
     }
 
-    /**
-     * onAuthenticateSuccess(AuthenticationResponse authenticationResponse)
-     */
     @Test
     public void sendsGetEndUserRequest() throws Exception {
         EndUser endUser = new EndUser("nps@example.com");
@@ -119,9 +109,6 @@ public class SurveyManagerTest {
         verify(wootricApiClient, times(1)).getEndUserByEmail(endUser.getEmailOrUnknown(), accessToken, surveyManager);
     }
 
-    /**
-     * onGetEndUserSuccess(List<EndUser> endUsers)
-     */
     @Test
     public void whenEndUserReceived_showsSurvey() throws Exception {
         long receivedId = 1;
@@ -251,9 +238,6 @@ public class SurveyManagerTest {
         verify(wootricApiClient, times(1)).createEndUser(endUser, accessToken, surveyManager);
     }
 
-    /**
-     * onCreateEndUserSuccess(EndUser endUser)
-     */
     @Test
     public void showSurvey() throws Exception {
         EndUser endUser = testEndUser();

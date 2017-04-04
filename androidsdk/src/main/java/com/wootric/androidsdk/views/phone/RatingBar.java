@@ -33,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Score;
 
 /**
  * Created by maciejwitowski on 9/7/15.
@@ -40,6 +41,10 @@ import com.wootric.androidsdk.R;
 public class RatingBar extends View implements View.OnTouchListener {
 
     private Context mContext;
+
+    private String mSurveyType;
+    private int mScaleMinimum;
+    private int mScaleMaximum;
 
     private int mWidthSize;
     private int mHeightSize;
@@ -58,6 +63,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     private Paint mSelectedTrackPaint;
 
     private int mNotchCount;
+    private int mNotchTop;
     private float[] mNotchesLeftXCoordinates;
 
     public static final int SCORE_NOT_SET = -1;
@@ -94,6 +100,12 @@ public class RatingBar extends View implements View.OnTouchListener {
     private void initResources() {
         Resources res = mContext.getResources();
 
+        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
+        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+
+        mNotchTop = mScaleMaximum + 1;
+        mNotchCount = mNotchTop - mScaleMinimum;
+
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
         mColorSelected = res.getColor(R.color.wootric_score_color);
         mNotchMarginHorizontal = res.getDimension(R.dimen.wootric_rating_notch_margin_horizontal);
@@ -101,8 +113,7 @@ public class RatingBar extends View implements View.OnTouchListener {
         mTrackWidth = res.getDimension(R.dimen.wootric_rating_track_width);
         mRatingBarPaddingVertical = (int) res.getDimension(R.dimen.wootric_rating_bar_padding_vertical);
 
-        mNotchCount = res.getInteger(R.integer.wootric_max_score) + 1;
-        mNotchesLeftXCoordinates = new float[mNotchCount];
+        mNotchesLeftXCoordinates = new float[mNotchTop];
     }
 
     private void initPaints() {
@@ -154,9 +165,9 @@ public class RatingBar extends View implements View.OnTouchListener {
         float totalMarginHorizontal = mWidthSize - totalNotchesLength;
         mNotchMarginHorizontal = totalMarginHorizontal / (mNotchCount - 1);
 
-        float dX = (mWidthSize - totalNotchesLength - totalMarginHorizontal) / 2.0f + mNotchRadius*2;
+        float dX = (mWidthSize - totalNotchesLength - totalMarginHorizontal) / 2.0f + mNotchRadius * 2;
         float dY = mHeightSize / 2;
-        for (int i = 0; i < mNotchCount; i++) {
+        for (int i = mScaleMinimum; i < mNotchTop; i++) {
             initNotchCoordinates(i, dX);
 
             boolean markNotchSelected = (i <= mSelectedScore);
@@ -169,7 +180,7 @@ public class RatingBar extends View implements View.OnTouchListener {
             canvas.drawCircle(dX, dY, thisNotchRadius , markNotchSelected ? mSelectedNotchPaint : mNotSelectedNotchPaint);
 
             float nextDx = dX + (2 * mNotchRadius + mNotchMarginHorizontal);
-            if(i < mNotchCount - 1) {
+            if(i < mNotchTop - 1) {
                 boolean markTrackSelected = (i < mSelectedScore);
                 canvas.drawLine(dX + thisNotchRadius, dY, nextDx - mNotchRadius, dY, markTrackSelected ? mSelectedTrackPaint : mNotSelectedTrackPaint);
             }
@@ -179,7 +190,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     }
 
     private void initNotchCoordinates(int index, float dX) {
-        if(index == 0) {
+        if(index == mScaleMinimum) {
             mNotchesLeftXCoordinates[index] = dX - mNotchRadius;
         } else {
             mNotchesLeftXCoordinates[index] = dX - mNotchMarginHorizontal / 2;
@@ -199,14 +210,14 @@ public class RatingBar extends View implements View.OnTouchListener {
     }
 
     private int getTouchedScore(float touchedXCoordinate) {
-        int lastNotchIndex = mNotchCount - 1;
+        int lastNotchIndex = mNotchTop - 1;
 
         int touchedScore = SCORE_NOT_SET;
 
         if(touchedXCoordinate >= mNotchesLeftXCoordinates[lastNotchIndex]) {
             touchedScore = lastNotchIndex;
         } else {
-            for(int i = 0; i < mNotchCount - 1; i++) {
+            for(int i = mScaleMinimum; i < mNotchTop - 1; i++) {
                 float thisX = mNotchesLeftXCoordinates[i];
                 float nextX = mNotchesLeftXCoordinates[i + 1];
 
@@ -219,6 +230,11 @@ public class RatingBar extends View implements View.OnTouchListener {
         }
 
         return touchedScore;
+    }
+
+    public void setScale(String surveyType) {
+        mSurveyType = surveyType;
+        initResources();
     }
 
     public void setOnScoreChangedListener(OnScoreChangedListener onScoreChangedListener) {

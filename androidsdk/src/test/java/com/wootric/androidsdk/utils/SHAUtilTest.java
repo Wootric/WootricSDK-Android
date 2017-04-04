@@ -13,10 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static com.wootric.androidsdk.TestHelper.testEndUser;
 import static com.wootric.androidsdk.TestHelper.testUser;
 
-/**
- * Created by diegoserranoa on 5/19/16.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class SHAUtilTest {
 

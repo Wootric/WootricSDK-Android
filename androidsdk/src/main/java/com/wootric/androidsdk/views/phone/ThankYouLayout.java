@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
+import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
@@ -213,7 +214,8 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void initSocialLinks() {
-        boolean shouldShowFacebookBtn = (mScore >= 9 && mSettings.getFacebookPageId() != null);
+        Score score = new Score(mScore, mSettings.getSurveyType());
+        boolean shouldShowFacebookBtn = (score.isPromoter() && mSettings.getFacebookPageId() != null);
 
         mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mLayoutFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
@@ -222,7 +224,7 @@ public class ThankYouLayout extends RelativeLayout {
         mFaFacebookLike.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
 
         boolean shouldShowTwitterBtn =
-                        mScore >= 9 &&
+                        score.isPromoter() &&
                         mSettings.getTwitterPage() != null &&
                         mFeedback != null &&
                         !mFeedback.isEmpty();

@@ -7,9 +7,6 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by maciejwitowski on 9/17/15.
- */
 public class WootricCustomMessageTest {
 
     WootricCustomMessage customMessage;
@@ -39,57 +36,149 @@ public class WootricCustomMessageTest {
         assertThat(customMessage.getPromoterPlaceholder()).isEqualTo("promoter_prompt_text");
     }
 
-    /**
-     * getFollowupQuestionForScore(int score)
-     */
     @Test
-    public void returnsDetractorQuestion_forDetractorScore() throws Exception {
-        assertThat(customMessage.getFollowupQuestionForScore(0)).isEqualTo("detractor_followup_text");
-        assertThat(customMessage.getFollowupQuestionForScore(6)).isEqualTo("detractor_followup_text");
+    public void returnsDetractorQuestion_forNPSDetractorScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(0, "NPS")).isEqualTo("detractor_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(6, "NPS")).isEqualTo("detractor_followup_text");
     }
 
     @Test
-    public void returnsPassiveQuestion_forPassiveScore() throws Exception {
-        assertThat(customMessage.getFollowupQuestionForScore(7)).isEqualTo("passive_followup_text");
-        assertThat(customMessage.getFollowupQuestionForScore(8)).isEqualTo("passive_followup_text");
+    public void returnsPassiveQuestion_forNPSPassiveScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(7, "NPS")).isEqualTo("passive_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(8, "NPS")).isEqualTo("passive_followup_text");
     }
 
     @Test
-    public void returnsPromoterQuestion_forPromoterScore() throws Exception {
-        assertThat(customMessage.getFollowupQuestionForScore(9)).isEqualTo("promoter_followup_text");
-        assertThat(customMessage.getFollowupQuestionForScore(10)).isEqualTo("promoter_followup_text");
+    public void returnsPromoterQuestion_forNPSPromoterScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(9, "NPS")).isEqualTo("promoter_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(10, "NPS")).isEqualTo("promoter_followup_text");
     }
 
     @Test
-    public void returnsDefaultQuestion() throws Exception {
+    public void returnsDefaultQuestion_forNPS() throws Exception {
         customMessage.setFollowupQuestionsList(new HashMap<String, String>());
-        assertThat(customMessage.getFollowupQuestionForScore(9)).isEqualTo("followup_text");
-    }
-
-    /**
-     * getPlaceholderForScore(int score)
-     */
-    @Test
-    public void returnsDetractorPlaceholder_forDetractorScore() throws Exception {
-        assertThat(customMessage.getPlaceholderForScore(0)).isEqualTo("detractor_prompt_text");
-        assertThat(customMessage.getPlaceholderForScore(6)).isEqualTo("detractor_prompt_text");
+        assertThat(customMessage.getFollowupQuestionForScore(9, "NPS")).isEqualTo("followup_text");
     }
 
     @Test
-    public void returnsPassivePlaceholder_forPassiveScore() throws Exception {
-        assertThat(customMessage.getPlaceholderForScore(7)).isEqualTo("passive_prompt_text");
-        assertThat(customMessage.getPlaceholderForScore(8)).isEqualTo("passive_prompt_text");
+    public void returnsDetractorPlaceholder_forNPSDetractorScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(0, "NPS")).isEqualTo("detractor_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(6, "NPS")).isEqualTo("detractor_prompt_text");
     }
 
     @Test
-    public void returnsPromoterPlaceholder_forPromoterScore() throws Exception {
-        assertThat(customMessage.getPlaceholderForScore(9)).isEqualTo("promoter_prompt_text");
-        assertThat(customMessage.getPlaceholderForScore(10)).isEqualTo("promoter_prompt_text");
+    public void returnsPassivePlaceholder_forNPSPassiveScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(7, "NPS")).isEqualTo("passive_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(8, "NPS")).isEqualTo("passive_prompt_text");
     }
 
     @Test
-    public void returnsDefaultPlaceholder() throws Exception {
+    public void returnsPromoterPlaceholder_forNPSPromoterScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(9, "NPS")).isEqualTo("promoter_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(10, "NPS")).isEqualTo("promoter_prompt_text");
+    }
+
+    @Test
+    public void returnsDefaultPlaceholder_forNPS() throws Exception {
         customMessage.setPlaceholderTextsList(new HashMap<String, String>());
-        assertThat(customMessage.getPlaceholderForScore(9)).isEqualTo("prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(9, "NPS")).isEqualTo("prompt_text");
+    }
+
+    @Test
+    public void returnsDetractorQuestion_forCESDetractorScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(1, "CES")).isEqualTo("detractor_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(3, "CES")).isEqualTo("detractor_followup_text");
+    }
+
+    @Test
+    public void returnsPassiveQuestion_forCESPassiveScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(4, "CES")).isEqualTo("passive_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(5, "CES")).isEqualTo("passive_followup_text");
+    }
+
+    @Test
+    public void returnsPromoterQuestion_forCESPromoterScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(6, "CES")).isEqualTo("promoter_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(7, "CES")).isEqualTo("promoter_followup_text");
+    }
+
+    @Test
+    public void returnsDefaultQuestion_forCES() throws Exception {
+        customMessage.setFollowupQuestionsList(new HashMap<String, String>());
+        assertThat(customMessage.getFollowupQuestionForScore(1, "CES")).isEqualTo("followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(7, "CES")).isEqualTo("followup_text");
+    }
+
+    @Test
+    public void returnsDetractorPlaceholder_forCESDetractorScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(1, "CES")).isEqualTo("detractor_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(3, "CES")).isEqualTo("detractor_prompt_text");
+    }
+
+    @Test
+    public void returnsPassivePlaceholder_forCESPassiveScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(4, "CES")).isEqualTo("passive_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(5, "CES")).isEqualTo("passive_prompt_text");
+    }
+
+    @Test
+    public void returnsPromoterPlaceholder_forCESPromoterScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(6, "CES")).isEqualTo("promoter_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(7, "CES")).isEqualTo("promoter_prompt_text");
+    }
+
+    @Test
+    public void returnsDefaultPlaceholder_forCES() throws Exception {
+        customMessage.setPlaceholderTextsList(new HashMap<String, String>());
+        assertThat(customMessage.getPlaceholderForScore(1, "CES")).isEqualTo("prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(7, "CES")).isEqualTo("prompt_text");
+    }
+    //////////
+    @Test
+    public void returnsDetractorQuestion_forCSATDetractorScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(1, "CSAT")).isEqualTo("detractor_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(2, "CSAT")).isEqualTo("detractor_followup_text");
+    }
+
+    @Test
+    public void returnsPassiveQuestion_forCSATPassiveScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(3, "CSAT")).isEqualTo("passive_followup_text");
+    }
+
+    @Test
+    public void returnsPromoterQuestion_forCSATPromoterScore() throws Exception {
+        assertThat(customMessage.getFollowupQuestionForScore(4, "CSAT")).isEqualTo("promoter_followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(5, "CSAT")).isEqualTo("promoter_followup_text");
+    }
+
+    @Test
+    public void returnsDefaultQuestion_forCSAT() throws Exception {
+        customMessage.setFollowupQuestionsList(new HashMap<String, String>());
+        assertThat(customMessage.getFollowupQuestionForScore(1, "CSAT")).isEqualTo("followup_text");
+        assertThat(customMessage.getFollowupQuestionForScore(5, "CSAT")).isEqualTo("followup_text");
+    }
+
+    @Test
+    public void returnsDetractorPlaceholder_forCSATDetractorScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(1, "CSAT")).isEqualTo("detractor_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(2, "CSAT")).isEqualTo("detractor_prompt_text");
+    }
+
+    @Test
+    public void returnsPassivePlaceholder_forCSATPassiveScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(3, "CSAT")).isEqualTo("passive_prompt_text");
+    }
+
+    @Test
+    public void returnsPromoterPlaceholder_forCSATPromoterScore() throws Exception {
+        assertThat(customMessage.getPlaceholderForScore(4, "CSAT")).isEqualTo("promoter_prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(5, "CSAT")).isEqualTo("promoter_prompt_text");
+    }
+
+    @Test
+    public void returnsDefaultPlaceholder_forCSAT() throws Exception {
+        customMessage.setPlaceholderTextsList(new HashMap<String, String>());
+        assertThat(customMessage.getPlaceholderForScore(1, "CSAT")).isEqualTo("prompt_text");
+        assertThat(customMessage.getPlaceholderForScore(5, "CSAT")).isEqualTo("prompt_text");
     }
 }

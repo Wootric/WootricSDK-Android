@@ -36,4 +36,8 @@ public class Constants {
     public static final long DEFAULT_DECLINE_RESURVEY_DAYS = 30L;
 
     public static final String TAG = "WOOTRIC_SDK";
+
+    public static final String CES = "CES";
+
+    public static final String CSAT = "CSAT";
 }

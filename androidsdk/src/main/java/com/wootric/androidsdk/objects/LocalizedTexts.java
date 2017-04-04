@@ -25,6 +25,8 @@ package com.wootric.androidsdk.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.wootric.androidsdk.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +42,7 @@ public class LocalizedTexts implements Parcelable {
     private static final String SOCIAL_SHARE_QUESTION_KEY = "question";
     private static final String SOCIAL_SHARE_DECLINE_KEY = "decline";
 
-    private String npsQuestion;
+    private String surveyQuestion;
     private HashMap<String, String> anchors;
     private String followupQuestion;
     private String followupPlaceholder;
@@ -52,8 +54,8 @@ public class LocalizedTexts implements Parcelable {
 
     public LocalizedTexts() {}
 
-    public String getNpsQuestion() {
-        return npsQuestion;
+    public String getSurveyQuestion() {
+        return surveyQuestion;
     }
 
     public String getAnchorLikely() {
@@ -103,7 +105,7 @@ public class LocalizedTexts implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.npsQuestion);
+        dest.writeString(this.surveyQuestion);
         dest.writeSerializable(this.anchors);
         dest.writeString(this.followupQuestion);
         dest.writeString(this.followupPlaceholder);
@@ -115,7 +117,7 @@ public class LocalizedTexts implements Parcelable {
     }
 
     private LocalizedTexts(Parcel in) {
-        this.npsQuestion = in.readString();
+        this.surveyQuestion = in.readString();
         this.anchors = (HashMap<String, String>) in.readSerializable();
         this.followupQuestion = in.readString();
         this.followupPlaceholder = in.readString();
@@ -136,16 +138,34 @@ public class LocalizedTexts implements Parcelable {
         }
     };
 
-    public static LocalizedTexts fromJson(JSONObject localizedTextsJson) throws JSONException {
+    public static LocalizedTexts fromJson(JSONObject localizedTextsJson, String surveyType) throws JSONException {
         LocalizedTexts localizedTexts = new LocalizedTexts();
-        localizedTexts.npsQuestion = localizedTextsJson.optString("nps_question");
 
-        JSONObject anchorsJson = localizedTextsJson.optJSONObject("anchors");
-        localizedTexts.anchors = new HashMap<>();
+        if (surveyType.equals(Constants.CES) || surveyType.equals(Constants.CSAT)) {
+            localizedTexts.surveyQuestion = localizedTextsJson.optString(surveyType.toLowerCase() + "_question");
 
-        if(anchorsJson != null) {
-            localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.optString(ANCHOR_LIKELY_KEY));
-            localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.optString(ANCHOR_NOT_LIKELY_KEY));
+            JSONObject anchorsJson = localizedTextsJson.optJSONObject(surveyType.toLowerCase() + "_anchors");
+            localizedTexts.anchors = new HashMap<>();
+
+            if(anchorsJson != null) {
+                if (surveyType.equals(Constants.CES)) {
+                    localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.optString("very_easy"));
+                    localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.optString("very_difficult"));
+                } else {
+                    localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.optString("very_satisfied"));
+                    localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.optString("very_unsatisfied"));
+                }
+            }
+        } else {
+            localizedTexts.surveyQuestion = localizedTextsJson.optString("nps_question");
+
+            JSONObject anchorsJson = localizedTextsJson.optJSONObject("anchors");
+            localizedTexts.anchors = new HashMap<>();
+
+            if(anchorsJson != null) {
+                localizedTexts.anchors.put(ANCHOR_LIKELY_KEY, anchorsJson.optString(ANCHOR_LIKELY_KEY));
+                localizedTexts.anchors.put(ANCHOR_NOT_LIKELY_KEY, anchorsJson.optString(ANCHOR_NOT_LIKELY_KEY));
+            }
         }
 
         localizedTexts.followupQuestion = localizedTextsJson.optString("followup_question");

@@ -20,10 +20,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by maciejwitowski on 9/14/15.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class SurveyValidatorTest {
 
@@ -38,10 +34,6 @@ public class SurveyValidatorTest {
 
     @Mock
     SurveyValidator.OnSurveyValidatedListener onSurveyValidatedListener;
-
-    /**
-     * validate()
-     */
 
     @Test
     public void checksEligibility_whenNotRecentlySurveyed() throws Exception {
@@ -157,9 +149,6 @@ public class SurveyValidatorTest {
         verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
     }
 
-    /**
-     * onEligibilityChecked(EligibilityResponse eligibilityResponse)
-     */
     @Test
     public void notifiesListener_whenEligibleEqualsTrue() throws Exception {
         Settings settings = new Settings();

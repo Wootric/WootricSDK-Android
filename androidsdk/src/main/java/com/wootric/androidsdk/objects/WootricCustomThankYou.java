@@ -49,8 +49,8 @@ public class WootricCustomThankYou implements Parcelable {
     private boolean scoreInUrl;
     private boolean commentInUrl;
 
-    public String getTextForScore(int scoreValue) {
-        Score score = new Score(scoreValue);
+    public String getTextForScore(int scoreValue, String surveyType) {
+        Score score = new Score(scoreValue, surveyType);
 
         if(score.isDetractor() && detractorText != null) {
             return detractorText;
@@ -63,8 +63,8 @@ public class WootricCustomThankYou implements Parcelable {
         }
     }
 
-    public String getLinkTextForScore(int scoreValue) {
-        Score score = new Score(scoreValue);
+    public String getLinkTextForScore(int scoreValue, String surveyType) {
+        Score score = new Score(scoreValue, surveyType);
 
         if(score.isDetractor() && detractorLinkText != null) {
             return detractorLinkText;
@@ -77,8 +77,8 @@ public class WootricCustomThankYou implements Parcelable {
         }
     }
 
-    public Uri getLinkUri(int score, String comment) {
-        Uri uri = getLinkUriForScore(score);
+    public Uri getLinkUri(int score, String comment, String surveyType) {
+        Uri uri = getLinkUriForScore(score, surveyType);
 
         if(uri != null) {
             if(scoreInUrl) {
@@ -97,8 +97,8 @@ public class WootricCustomThankYou implements Parcelable {
         return uri;
     }
 
-    private Uri getLinkUriForScore(int scoreValue) {
-        Score score = new Score(scoreValue);
+    private Uri getLinkUriForScore(int scoreValue, String surveyType) {
+        Score score = new Score(scoreValue, surveyType);
 
         if(score.isDetractor() && detractorLinkUri != null) {
             return detractorLinkUri;

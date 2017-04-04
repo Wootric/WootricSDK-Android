@@ -55,14 +55,14 @@ import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
 public class SurveyLayoutTablet extends LinearLayout
         implements SurveyLayout, ScoreView.OnScoreClickListener, ThankYouLayoutListener {
 
-    private static final int STATE_NPS = 0;
+    private static final int STATE_SURVEY = 0;
     private static final int STATE_FEEDBACK = 1;
     private static final int STATE_THANK_YOU = 2;
 
     private Context mContext;
 
-    RelativeLayout mNpsLayout;
-    private TextView mTvNpsQuestion;
+    RelativeLayout mSurveyLayout;
+    private TextView mTvSurveyQuestion;
     private TextView mTvAnchorLikely;
     private TextView mTvAnchorNotLikely;
     private LinearLayout mScoreLayout;
@@ -89,7 +89,12 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private int mCurrentState;
 
+    private String mSurveyType;
+    private int mScaleMinimum;
+    private int mScaleMaximum;
+
     private int mScoresCount;
+    private int mScoresTop;
     private ScoreView[] mScoreViews;
     private int mCurrentScore = -1;
 
@@ -115,14 +120,13 @@ public class SurveyLayoutTablet extends LinearLayout
     private void init(Context context) {
         mContext = context;
 
-        initResources();
         LayoutInflater.from(mContext).inflate(R.layout.wootric_survey_layout, this);
 
         Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
 
-        mNpsLayout = (RelativeLayout) findViewById(R.id.wootric_nps_layout);
+        mSurveyLayout = (RelativeLayout) findViewById(R.id.wootric_nps_layout);
 
-        mTvNpsQuestion = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
+        mTvSurveyQuestion = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
 
         mRatingContainer = (LinearLayout) findViewById(R.id.wootric_layout_rating_with_anchors);
         mTvAnchorLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_likely);
@@ -213,13 +217,17 @@ public class SurveyLayoutTablet extends LinearLayout
     private void initResources() {
         final Resources res = getResources();
 
-        mScoresCount = res.getInteger(R.integer.wootric_max_score) + 1;
+        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
+        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+
+        mScoresTop = mScaleMaximum + 1;
+        mScoresCount =  mScoresTop - mScaleMinimum;
     }
 
     private void initScoreLayout() {
-        mScoreViews = new ScoreView[mScoresCount];
+        mScoreViews = new ScoreView[mScoresTop];
 
-        for(int score = 0; score < mScoresCount; score++) {
+        for(int score = mScaleMinimum; score < mScoresTop; score++) {
             ScoreView scoreView = new ScoreView(mContext);
             scoreView.setText(String.valueOf(score));
             scoreView.setOnScoreClickListener(this);
@@ -236,12 +244,16 @@ public class SurveyLayoutTablet extends LinearLayout
     @Override
     public void initWithSettings(Settings settings) {
         mSettings = settings;
+        mSurveyType = mSettings.getSurveyType();
+        initResources();
+        initScoreLayout();
+        updateState(mCurrentState);
         setTexts();
     }
 
     private void setTexts() {
         if(mSettings != null) {
-            mTvNpsQuestion.setText(mSettings.getNpsQuestion());
+            mTvSurveyQuestion.setText(mSettings.getSurveyQuestion());
             mTvAnchorLikely.setText(mSettings.getAnchorLikely());
             mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
             mBtnSubmit.setText(mSettings.getBtnSubmit());
@@ -251,8 +263,8 @@ public class SurveyLayoutTablet extends LinearLayout
     private void updateState(int state) {
         mCurrentState = state;
 
-        if(STATE_NPS == mCurrentState) {
-            setupNpsState();
+        if(STATE_SURVEY == mCurrentState) {
+            setupSurveyState();
         } else if(STATE_FEEDBACK == mCurrentState) {
             setupFeedbackState();
         } else {
@@ -260,14 +272,14 @@ public class SurveyLayoutTablet extends LinearLayout
         }
     }
 
-    private void setupNpsState() {
+    private void setupSurveyState() {
         mLayoutFollowup.setVisibility(GONE);
     }
 
     private void setupFeedbackState() {
         setFeedbackTexts();
 
-        mTvNpsQuestion.setVisibility(GONE);
+        mTvSurveyQuestion.setVisibility(GONE);
         mLayoutFollowup.setAlpha(0);
         mLayoutFollowup.setVisibility(VISIBLE);
         fadeInView(mLayoutFollowup);
@@ -289,7 +301,7 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void setupThankYouState() {
-        mNpsLayout.setVisibility(GONE);
+        mSurveyLayout.setVisibility(GONE);
 
         initThankYouActionBtn();
         initSocialLinks();
@@ -321,7 +333,8 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void initSocialLinks() {
-        boolean shouldShowFacebookBtn = (mCurrentScore >= 9 && mSettings.getFacebookPageId() != null);
+        Score score = new Score(mCurrentScore, mSurveyType);
+        boolean shouldShowFacebookBtn = (score.isPromoter() && mSettings.getFacebookPageId() != null);
 
         mBtnFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mBtnFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
@@ -329,7 +342,7 @@ public class SurveyLayoutTablet extends LinearLayout
         final String feedback = getFeedback();
 
         boolean shouldShowTwitterBtn =
-                mCurrentScore >= 9 &&
+                        score.isPromoter() &&
                         mSettings.getTwitterPage() != null &&
                         feedback != null &&
                         !feedback.isEmpty();
@@ -383,11 +396,11 @@ public class SurveyLayoutTablet extends LinearLayout
 
         mCurrentScore = scoreValue;
 
-        Score score = new Score(mCurrentScore);
+        Score score = new Score(mCurrentScore, mSettings.getSurveyType());
         boolean shouldSkipFeedbackScreen = score.isPromoter() &&
                 mSettings.shouldSkipFollowupScreenForPromoters();
 
-        if(mCurrentScore != STATE_FEEDBACK) {
+        if(mCurrentScore != Constants.NOT_SET) {
             if(shouldSkipFeedbackScreen) {
                 updateState(STATE_THANK_YOU);
             } else {
