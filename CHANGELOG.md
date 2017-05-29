@@ -1,3 +1,7 @@
+## 2.5.1 (2017-05-26)
+
+- Fix white text over white background
+
 ## 2.5.0 (2017-04-11)
 
 - CES and CSAT support

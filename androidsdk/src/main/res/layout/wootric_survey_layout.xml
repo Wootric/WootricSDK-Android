@@ -72,6 +72,7 @@
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:textSize="@dimen/wootric_et_feedback_text_size"
+            android:textColor="@android:color/black"
             android:paddingBottom="@dimen/wootric_et_feedback_padding"
             android:paddingTop="@dimen/wootric_et_feedback_padding"
             android:hint="@string/wootric_example_followup_placeholder" />
