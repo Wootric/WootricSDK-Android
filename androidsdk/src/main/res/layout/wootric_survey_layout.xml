@@ -1,125 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/wootric_survey_layout_tv_header"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/wootric_survey_layout_header_background"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/wootric_survey_layout_header_text_size"
-        android:padding="@dimen/wootric_survey_layout_header_padding"
-        android:text="@string/wootric_example_nps_question"/>
-
-    <RelativeLayout
-        android:id="@+id/wootric_survey_layout_body"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/wootric_survey_layout_body_padding"
-        android:background="@android:color/white">
-
-        <LinearLayout
-            android:id="@+id/wootric_score_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/wootric_score_layout_height"
-            android:orientation="horizontal"/>
-
-        <com.wootric.androidsdk.views.phone.RatingBar
-            android:id="@+id/wootric_rating_bar"
-            android:layout_below="@+id/wootric_score_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/wootric_anchor_not_likely"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wootric_rating_bar"
-            android:textColor="@android:color/black"
-            android:alpha="0.38"
-            android:layout_marginBottom="@dimen/wootric_anchors_margin_bottom"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="@dimen/wootric_anchors_text_size"
-            android:text="@string/wootric_example_anchor_not_likely"/>
-
-        <TextView
-            android:id="@+id/wootric_anchor_likely"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/wootric_rating_bar"
-            android:textColor="@android:color/black"
-            android:alpha="0.38"
-            android:layout_marginBottom="@dimen/wootric_anchors_margin_bottom"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textSize="@dimen/wootric_anchors_text_size"
-            android:text="@string/wootric_example_anchor_likely"/>
-
-        <EditText
-            android:id="@+id/wootric_et_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nextFocusUp="@id/wootric_et_feedback"
-            android:nextFocusLeft="@id/wootric_et_feedback"
-            android:textCursorDrawable="@drawable/wootric_feedback_cursor"
-            android:layout_alignParentTop="true"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:textSize="@dimen/wootric_et_feedback_text_size"
-            android:textColor="@android:color/black"
-            android:paddingBottom="@dimen/wootric_et_feedback_padding"
-            android:paddingTop="@dimen/wootric_et_feedback_padding"
-            android:hint="@string/wootric_example_followup_placeholder" />
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/wootric_btn_edit_score"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textSize="@dimen/wootric_button_text"
-            android:textColor="@color/wootric_survey_layout_header_background"
-            android:padding="@dimen/wootric_btn_padding"
-            android:layout_alignParentBottom="true"
-            android:text="@string/wootric_example_btn_edit_score" />
+            android:background="@color/wootric_survey_layout_header_background"
+            android:drawableLeft="@drawable/ic_wootric_left_arrow"
+            android:drawableStart="@drawable/ic_wootric_left_arrow"
+            android:drawablePadding="@dimen/wootric_edit_button_drawable_padding"
+            android:paddingStart="@dimen/wootric_edit_button_padding_left"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/wootric_edit_button_padding_left"
+            android:paddingTop="@dimen/wootric_edit_button_padding_top"
+            android:text="@string/wootric_example_btn_edit_score"
+            android:textColor="@color/edit_score_color"
+            android:textSize="@dimen/wootric_button_text" />
 
         <TextView
-            android:id="@+id/wootric_btn_submit"
-            android:layout_width="wrap_content"
+            android:id="@+id/wootric_survey_layout_tv_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textSize="@dimen/wootric_button_text"
-            android:textColor="@android:color/black"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/wootric_btn_padding"
-            android:alpha="0.26"
-            android:enabled="false"
-            android:text="@string/wootric_example_btn_submit"/>
-
-        <TextView
-            android:id="@+id/wootric_btn_dismiss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/wootric_btn_submit"
-            android:layout_toStartOf="@+id/wootric_btn_submit"
-            android:textSize="@dimen/wootric_button_text"
-            android:textColor="@color/wootric_survey_layout_header_background"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/wootric_btn_padding"
-            android:layout_marginRight="@dimen/wootric_button_margin"
-            android:layout_marginEnd="@dimen/wootric_button_margin"
-            android:text="@string/wootric_example_btn_dismiss"/>
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:background="@color/wootric_survey_layout_header_background"
+            android:padding="@dimen/wootric_survey_layout_header_padding"
+            android:text="@string/wootric_example_nps_question"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/wootric_survey_layout_header_text_size" />
+    </LinearLayout>
 
     <com.wootric.androidsdk.views.phone.ThankYouLayout
         android:id="@+id/wootric_thank_you_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/wootric_survey_layout_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <LinearLayout
+            android:id="@+id/wootric_score_layout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/wootric_score_layout_height"
+            android:layout_marginLeft="@dimen/wootric_score_layout_margin_left"
+            android:layout_marginRight="@dimen/wootric_score_layout_margin_right"
+            android:layout_marginTop="@dimen/wootric_score_layout_margin_top"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/wootric_score_layout_margin_start"
+            android:layout_marginEnd="@dimen/wootric_score_layout_margin_end" />
+
+        <com.wootric.androidsdk.views.phone.RatingBar
+            android:id="@+id/wootric_rating_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/wootric_rating_bar_layout_margin_left"
+            android:layout_marginRight="@dimen/wootric_rating_bar_layout_margin_right"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/wootric_rating_bar_layout_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_score_layout"
+            android:layout_marginStart="@dimen/wootric_rating_bar_layout_margin_start"
+            android:layout_marginEnd="@dimen/wootric_rating_bar_layout_margin_end"
+            app:layout_constraintHorizontal_bias="0.0" />
+
+        <TextView
+            android:id="@+id/wootric_anchor_not_likely"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.38"
+            android:text="@string/wootric_example_anchor_not_likely"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/wootric_anchors_text_size"
+            android:layout_marginLeft="@dimen/wootric_not_likely_layout_margin_left"
+            android:layout_marginStart="@dimen/wootric_not_likely_layout_margin_start"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="@dimen/wootric_not_likely_layout_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_rating_bar" />
+
+        <TextView
+            android:id="@+id/wootric_anchor_likely"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.38"
+            android:text="@string/wootric_example_anchor_likely"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/wootric_anchors_text_size"
+            android:layout_marginRight="@dimen/wootric_likely_layout_margin_right"
+            android:layout_marginEnd="@dimen/wootric_likely_layout_margin_end"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/wootric_likely_layout_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_rating_bar" />
+
+        <EditText
+            android:id="@+id/wootric_et_feedback"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/wootric_et_feedback_margin_left"
+            android:layout_marginRight="@dimen/wootric_et_feedback_margin_right"
+            android:layout_marginTop="@dimen/wootric_et_feedback_margin_top"
+            android:hint="@string/wootric_example_followup_placeholder"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:nextFocusLeft="@id/wootric_et_feedback"
+            android:nextFocusUp="@id/wootric_et_feedback"
+            android:paddingBottom="@dimen/wootric_et_feedback_padding"
+            android:paddingTop="@dimen/wootric_et_feedback_padding"
+            android:textColor="@android:color/black"
+            android:textCursorDrawable="@drawable/wootric_feedback_cursor"
+            android:textSize="@dimen/wootric_et_feedback_text_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_anchor_likely"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginStart="@dimen/wootric_et_feedback_margin_start"
+            android:layout_marginEnd="@dimen/wootric_et_feedback_margin_end" />
+
+        <TextView
+            android:id="@+id/wootric_btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.26"
+            android:enabled="false"
+            android:padding="@dimen/wootric_btn_padding"
+            android:text="@string/wootric_example_btn_submit"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/wootric_button_text"
+            android:layout_marginTop="@dimen/wootric_button_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_et_feedback"
+            android:layout_marginRight="@dimen/wootric_button_margin_right"
+            android:layout_marginEnd="@dimen/wootric_button_margin_end"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/wootric_btn_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/wootric_btn_padding"
+            android:text="@string/wootric_example_btn_dismiss"
+            android:textColor="@color/wootric_survey_layout_header_background"
+            android:textSize="@dimen/wootric_button_text"
+            app:layout_constraintRight_toLeftOf="@+id/wootric_btn_submit"
+            android:layout_marginRight="@dimen/wootric_dismiss_button_margin_right"
+            android:layout_marginEnd="@dimen/wootric_dismiss_button_margin_end"
+            android:layout_marginTop="@dimen/wootric_button_margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/wootric_et_feedback" />
+    </android.support.constraint.ConstraintLayout>
 </merge>

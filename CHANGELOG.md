@@ -1,3 +1,9 @@
+## 2.5.2 (2017-06-14)
+
+- Fix space in between DISMISS and SEND button
+- Update text Edit score to new position
+- Update RelativeLayout to ConstraintLayout
+
 ## 2.5.1 (2017-05-26)
 
 - Fix white text over white background

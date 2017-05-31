@@ -10,4 +10,5 @@
     <color name="wootric_social">#2F80C1</color>
     <color name="wootric_edit_text_background">#05000000</color>
     <color name="wootric_edit_text_border">#19000000</color>
+    <color name="edit_score_color">#8df5f3f3</color>
 </resources>

@@ -7,6 +7,11 @@
     <dimen name="wootric_rating_notch_radius">4dp</dimen>
     <dimen name="wootric_rating_notch_margin_horizontal">8dp</dimen>
     <dimen name="wootric_rating_track_width">2dp</dimen>
+    <dimen name="wootric_rating_bar_layout_margin_left">24dp</dimen>
+    <dimen name="wootric_rating_bar_layout_margin_right">24dp</dimen>
+    <dimen name="wootric_rating_bar_layout_margin_top">6dp</dimen>
+    <dimen name="wootric_rating_bar_layout_margin_start">24dp</dimen>
+    <dimen name="wootric_rating_bar_layout_margin_end">24dp</dimen>
 
     <!-- RatingLayout -->
     <dimen name="wootric_selected_score_text_size">18dp</dimen>
@@ -15,17 +20,45 @@
     <dimen name="wootric_anchors_margin_bottom">24dp</dimen>
     <dimen name="wootric_anchors_text_size">12sp</dimen>
     <dimen name="wootric_survey_layout_body_padding">24dp</dimen>
+    <dimen name="wootric_score_layout_height">24dp</dimen>
+    <dimen name="wootric_score_layout_margin_left">24dp</dimen>
+    <dimen name="wootric_score_layout_margin_right">24dp</dimen>
+    <dimen name="wootric_score_layout_margin_top">24dp</dimen>
+    <dimen name="wootric_score_layout_margin_start">24dp</dimen>
+    <dimen name="wootric_score_layout_margin_end">24dp</dimen>
+
+    <!--  Not likely and likely -->
+    <dimen name="wootric_not_likely_layout_margin_left">24dp</dimen>
+    <dimen name="wootric_not_likely_layout_margin_top">2dp</dimen>
+    <dimen name="wootric_not_likely_layout_margin_start">24dp</dimen>
+    <dimen name="wootric_likely_layout_margin_right">24dp</dimen>
+    <dimen name="wootric_likely_layout_margin_top">2dp</dimen>
+    <dimen name="wootric_likely_layout_margin_end">24dp</dimen>
 
     <!--  Buttons -->
     <dimen name="wootric_button_height">36dp</dimen>
     <dimen name="wootric_button_text">12sp</dimen>
     <dimen name="wootric_button_padding">8dp</dimen>
     <dimen name="wootric_button_margin">8dp</dimen>
-    <dimen name="wootric_score_layout_height">24dp</dimen>
+    <dimen name="wootric_button_margin_top">38dp</dimen>
+    <dimen name="wootric_button_margin_left">24dp</dimen>
+    <dimen name="wootric_button_margin_right">24dp</dimen>
+    <dimen name="wootric_button_margin_start">24dp</dimen>
+    <dimen name="wootric_button_margin_end">24dp</dimen>
+    <dimen name="wootric_dismiss_button_margin_right">18dp</dimen>
+    <dimen name="wootric_dismiss_button_margin_end">18dp</dimen>
+    <dimen name="wootric_edit_button_drawable_padding">10dp</dimen>
+    <dimen name="wootric_edit_button_padding_left">32dp</dimen>
+    <dimen name="wootric_edit_button_padding_top">16dp</dimen>
 
     <!-- Feedback Layout -->
     <dimen name="wootric_et_feedback_text_size">16sp</dimen>
-    <dimen name="wootric_et_feedback_padding">16dp</dimen>
+    <dimen name="wootric_et_feedback_padding">16dp</dimen>]
+    <dimen name="wootric_et_feedback_margin_left">24dp</dimen>
+    <dimen name="wootric_et_feedback_margin_right">24dp</dimen>
+    <dimen name="wootric_et_feedback_margin_top">24dp</dimen>
+    <dimen name="wootric_et_feedback_margin_start">24dp</dimen>
+    <dimen name="wootric_et_feedback_margin_end">24dp</dimen>
 
     <!-- ThankYouLayout-->
     <dimen name="wootric_thank_you_layout_padding">24dp</dimen>
