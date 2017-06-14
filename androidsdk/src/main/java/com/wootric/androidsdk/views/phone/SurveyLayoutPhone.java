@@ -23,16 +23,13 @@
 package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,7 +38,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
@@ -64,7 +60,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private Context mContext;
 
-    private RelativeLayout mLayoutBody;
+    private ConstraintLayout mLayoutBody;
     private TextView mTvSurveyHeader;
 
     private RatingBar mRatingBar;
@@ -169,7 +165,7 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void initSurveyViewElements() {
-        mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_survey_layout_body);
+        mLayoutBody = (ConstraintLayout) findViewById(R.id.wootric_survey_layout_body);
         mScoreLayout = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_score_layout);
         mAnchorLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_likely);
         mAnchorNotLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_not_likely);
@@ -190,7 +186,7 @@ public class SurveyLayoutPhone extends LinearLayout
         etFeedbackBackground.setAlpha(26);
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
 
-        mBtnEditScore = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_edit_score);
+        mBtnEditScore = (TextView) findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
 
         mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
@@ -336,9 +332,9 @@ public class SurveyLayoutPhone extends LinearLayout
         mColorEnabled = res.getColor(mSettings.getSurveyColor());
         mRatingBar.setSelectedColor(mColorSelected);
 
-        mBtnEditScore.setTextColor(mColorEnabled);
         mBtnDismiss.setTextColor(mColorEnabled);
 
+        mBtnEditScore.setBackgroundColor(mColorEnabled);
         mTvSurveyHeader.setBackgroundColor(mColorEnabled);
 
         setCursorDrawableColor(mEtFeedback, mColorSelected);
@@ -435,37 +431,6 @@ public class SurveyLayoutPhone extends LinearLayout
         return mEtFeedback.getText().toString();
     }
 
-    private void setButtonsForKeyboardShown(int alignBottom){
-        int padding = (int) getResources().getDimension(R.dimen.wootric_survey_layout_header_padding);
-        int btnPaddingValue = (int) getResources().getDimension(R.dimen.wootric_btn_padding);
-
-        RelativeLayout.LayoutParams llp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        llp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
-        llp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        llp.addRule(RelativeLayout.BELOW, mEtFeedback.getId());
-        mBtnEditScore.setPadding(btnPaddingValue, padding, btnPaddingValue, btnPaddingValue);
-
-
-        RelativeLayout.LayoutParams llp2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        llp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
-        llp2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        llp2.addRule(RelativeLayout.ALIGN_BASELINE, mBtnEditScore.getId());
-
-        RelativeLayout.LayoutParams llp1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        llp1.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, alignBottom);
-        llp1.addRule(RelativeLayout.LEFT_OF, mBtnSubmit.getId());
-        llp1.addRule(RelativeLayout.ALIGN_BASELINE, mBtnEditScore.getId());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            llp.addRule(RelativeLayout.ALIGN_PARENT_START);
-            llp2.addRule(RelativeLayout.ALIGN_PARENT_END);
-            llp1.addRule(RelativeLayout.START_OF, mBtnSubmit.getId());
-        }
-        mBtnEditScore.setLayoutParams(llp);
-        mBtnDismiss.setLayoutParams(llp1);
-        mBtnSubmit.setLayoutParams(llp2);
-    }
-
     private void setKeyboardVisibility(boolean showKeyboard) {
         final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -473,15 +438,8 @@ public class SurveyLayoutPhone extends LinearLayout
             mEtFeedback.requestFocus();
             mEtFeedback.setHorizontallyScrolling(false);
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-                setButtonsForKeyboardShown(0);
-            }
-
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
-
         } else {
-            setButtonsForKeyboardShown(1);
-
             mEtFeedback.clearFocus();
             imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), 0);
         }
