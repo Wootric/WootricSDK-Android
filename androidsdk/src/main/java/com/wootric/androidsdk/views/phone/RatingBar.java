@@ -54,13 +54,10 @@ public class RatingBar extends View implements View.OnTouchListener {
 
     private float mNotchRadius;
     private float mNotchMarginHorizontal;
-    private float mTrackWidth;
     private int mRatingBarPaddingVertical;
 
     private Paint mNotSelectedNotchPaint;
     private Paint mSelectedNotchPaint;
-    private Paint mNotSelectedTrackPaint;
-    private Paint mSelectedTrackPaint;
 
     private int mNotchCount;
     private int mNotchTop;
@@ -110,7 +107,6 @@ public class RatingBar extends View implements View.OnTouchListener {
         mColorSelected = res.getColor(R.color.wootric_score_color);
         mNotchMarginHorizontal = res.getDimension(R.dimen.wootric_rating_notch_margin_horizontal);
         mNotchRadius = res.getDimension(R.dimen.wootric_rating_notch_radius);
-        mTrackWidth = res.getDimension(R.dimen.wootric_rating_track_width);
         mRatingBarPaddingVertical = (int) res.getDimension(R.dimen.wootric_rating_bar_padding_vertical);
 
         mNotchesLeftXCoordinates = new float[mNotchTop];
@@ -128,22 +124,6 @@ public class RatingBar extends View implements View.OnTouchListener {
             {
                 setStyle(Paint.Style.FILL);
                 setColor(mColorSelected);
-            }
-        };
-
-        mNotSelectedTrackPaint = new Paint() {
-            {
-                setStyle(Paint.Style.STROKE);
-                setColor(mColorNotSelected);
-                setStrokeWidth(mTrackWidth);
-            }
-        };
-
-        mSelectedTrackPaint = new Paint() {
-            {
-                setStyle(Paint.Style.STROKE);
-                setColor(mColorSelected);
-                setStrokeWidth(mTrackWidth);
             }
         };
     }
@@ -179,13 +159,7 @@ public class RatingBar extends View implements View.OnTouchListener {
 
             canvas.drawCircle(dX, dY, thisNotchRadius , markNotchSelected ? mSelectedNotchPaint : mNotSelectedNotchPaint);
 
-            float nextDx = dX + (2 * mNotchRadius + mNotchMarginHorizontal);
-            if(i < mNotchTop - 1) {
-                boolean markTrackSelected = (i < mSelectedScore);
-                canvas.drawLine(dX + thisNotchRadius, dY, nextDx - mNotchRadius, dY, markTrackSelected ? mSelectedTrackPaint : mNotSelectedTrackPaint);
-            }
-
-            dX = nextDx;
+            dX = dX + (2 * mNotchRadius + mNotchMarginHorizontal);
         }
     }
 
