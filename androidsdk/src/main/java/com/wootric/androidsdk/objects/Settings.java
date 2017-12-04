@@ -25,6 +25,8 @@ package com.wootric.androidsdk.objects;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.FontRes;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
@@ -69,10 +71,17 @@ public class Settings implements Parcelable {
 
     private WootricCustomThankYou customThankYou;
 
-    private int surveyColor = Constants.NOT_SET;
-    private int scoreColor = Constants.NOT_SET;
-    private int thankYouButtonBackgroundColor = Constants.NOT_SET;
-    private int socialSharingColor = Constants.NOT_SET;
+    private @FontRes int surveyDefaultFontResId = Constants.NOT_SET;
+    private @FontRes int surveyTitleFontResId = Constants.NOT_SET;
+    private @FontRes int surveyBtnFontResId = Constants.NOT_SET;
+
+    private @ColorRes int surveyTitleBackgroundColor = Constants.NOT_SET;
+    private @ColorRes int surveyTitleTextColor = Constants.NOT_SET;
+    private @ColorRes int surveyScoreColor = Constants.NOT_SET;
+    private @ColorRes int surveyBtnColor = Constants.NOT_SET;
+
+    private @ColorRes int thankYouButtonBackgroundColor = Constants.NOT_SET;
+    private @ColorRes int socialSharingColor = Constants.NOT_SET;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -380,48 +389,103 @@ public class Settings implements Parcelable {
         this.customThankYou = customThankYou;
     }
 
-    public int getSurveyColor() {
-        if (surveyColor != Constants.NOT_SET){
-            return surveyColor;
-        }
-        return R.color.wootric_survey_layout_header_background;
-    }
-
-    public void setSurveyColor(int surveyColor) {
-        this.surveyColor = surveyColor;
-    }
-
-    public int getScoreColor() {
-        if (scoreColor != Constants.NOT_SET){
-            return scoreColor;
+    public int getSurveyScoreColor() {
+        if (surveyScoreColor != Constants.NOT_SET){
+            return surveyScoreColor;
         }
         return R.color.wootric_score_color;
     }
 
-    public void setScoreColor(int scoreColor) {
-        this.scoreColor = scoreColor;
+    public void setSurveyScoreColorResId(int surveyScoreColor) {
+        this.surveyScoreColor = surveyScoreColor;
     }
 
-    public int getThankYouButtonBackgroundColor () {
+    public int getSurveyBtnColor() {
+        if (surveyBtnColor != Constants.NOT_SET){
+            return surveyBtnColor;
+        }
+        return R.color.wootric_survey_layout_header_background;
+    }
+
+    public void setSurveyBtnColor(@ColorRes int surveyBtnColor) {
+        this.surveyBtnColor = surveyBtnColor;
+    }
+
+    public int getThankYouButtonBackgroundColorResId() {
         if (thankYouButtonBackgroundColor != Constants.NOT_SET) {
             return thankYouButtonBackgroundColor;
         }
         return R.color.wootric_score_color;
     }
 
-    public void setThankYouButtonBackgroundColor (int thankYouButtonBackgroundColor) {
+    public void setThankYouButtonBackgroundColorResId(int thankYouButtonBackgroundColor) {
         this.thankYouButtonBackgroundColor = thankYouButtonBackgroundColor;
     }
 
-    public int getSocialSharingColor () {
+    public int getSocialSharingColorResId() {
         if (socialSharingColor != Constants.NOT_SET) {
             return socialSharingColor;
         }
         return R.color.wootric_social;
     }
 
-    public void setSocialSharingColor (int socialSharingColor) {
+    public void setSocialSharingColorResId(@ColorRes int socialSharingColor) {
         this.socialSharingColor = socialSharingColor;
+    }
+
+    public int getSurveyDefaultFontResId(){
+        if (surveyDefaultFontResId != Constants.NOT_SET) {
+            return surveyDefaultFontResId;
+        }
+        return Constants.NOT_SET;
+    }
+
+    public void setSurveyDefaultFontResId(@FontRes int surveyDefaultFontResId){
+        this.surveyDefaultFontResId = surveyDefaultFontResId;
+    }
+
+    public int getSurveyTitleFontResId(){
+        if (surveyTitleFontResId != Constants.NOT_SET) {
+           return surveyTitleFontResId;
+        }
+        return Constants.NOT_SET;
+    }
+
+    public void setSurveyTitleFontResId(@FontRes int surveyTitleFontResId){
+        this.surveyTitleFontResId = surveyTitleFontResId;
+    }
+
+    public int getSurveyBtnFontResId(){
+        if (surveyBtnFontResId != Constants.NOT_SET) {
+            return surveyBtnFontResId;
+        }
+        return Constants.NOT_SET;
+    }
+
+    public void setSurveyBtnFontResId(@FontRes int surveyBtnFontResId){
+        this.surveyBtnFontResId = surveyBtnFontResId;
+    }
+
+    public int getSurveyTitleBackgroundColorResId(){
+        if (surveyTitleBackgroundColor != Constants.NOT_SET) {
+            return surveyTitleBackgroundColor;
+        }
+        return R.color.wootric_survey_layout_header_background;
+    }
+
+    public void setSurveyTitleBackgroundColorResId(@ColorRes int surveyTitleBackgroundColor){
+        this.surveyTitleBackgroundColor = surveyTitleBackgroundColor;
+    }
+
+    public int getSurveyTitleTextColorResId(){
+        if (surveyTitleTextColor != Constants.NOT_SET) {
+            return surveyTitleTextColor;
+        }
+        return R.color.wootric_survey_title_header_text;
+    }
+
+    public void setSurveyTitleTextColorResId(@ColorRes int surveyTitleTextColor){
+        this.surveyTitleTextColor = surveyTitleTextColor;
     }
 
     public Settings() {

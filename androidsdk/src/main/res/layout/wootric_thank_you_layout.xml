@@ -30,6 +30,7 @@
             android:gravity="center"
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
+            android:fontFamily="@font/fontawesome_webfont"
             android:text="@string/fa_thumbs_up" />
 
         <TextView
@@ -58,6 +59,7 @@
             android:gravity="center"
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
+            android:fontFamily="@font/fontawesome_webfont"
             android:text="@string/fa_facebook" />
 
         <TextView
@@ -86,6 +88,7 @@
             android:gravity="center"
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
+            android:fontFamily="@font/fontawesome_webfont"
             android:text="@string/fa_twitter" />
 
         <TextView

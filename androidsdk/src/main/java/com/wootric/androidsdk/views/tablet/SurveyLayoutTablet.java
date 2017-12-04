@@ -23,8 +23,6 @@
 package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -41,7 +39,6 @@ import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
-import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
@@ -122,28 +119,26 @@ public class SurveyLayoutTablet extends LinearLayout
 
         LayoutInflater.from(mContext).inflate(R.layout.wootric_survey_layout, this);
 
-        Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
+        mSurveyLayout = findViewById(R.id.wootric_nps_layout);
 
-        mSurveyLayout = (RelativeLayout) findViewById(R.id.wootric_nps_layout);
+        mTvSurveyQuestion = findViewById(R.id.wootric_survey_layout_tv_header);
 
-        mTvSurveyQuestion = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
+        mRatingContainer = findViewById(R.id.wootric_layout_rating_with_anchors);
+        mTvAnchorLikely = mRatingContainer.findViewById(R.id.wootric_anchor_likely);
+        mTvAnchorNotLikely = mRatingContainer.findViewById(R.id.wootric_anchor_not_likely);
+        mScoreLayout = mRatingContainer.findViewById(R.id.wootric_rating_bar);
 
-        mRatingContainer = (LinearLayout) findViewById(R.id.wootric_layout_rating_with_anchors);
-        mTvAnchorLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_likely);
-        mTvAnchorNotLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_not_likely);
-        mScoreLayout = (LinearLayout) mRatingContainer.findViewById(R.id.wootric_rating_bar);
-
-        mLayoutFollowup = (RelativeLayout) findViewById(R.id.wootric_layout_followup);
-        mTvFollowupQuestion = (TextView) mLayoutFollowup.findViewById(R.id.wootric_tv_followup);
-        mEtFeedback = (EditText) mLayoutFollowup.findViewById(R.id.wootric_et_feedback);
-        mBtnSubmit = (Button) mLayoutFollowup.findViewById(R.id.wootric_btn_submit);
+        mLayoutFollowup = findViewById(R.id.wootric_layout_followup);
+        mTvFollowupQuestion = mLayoutFollowup.findViewById(R.id.wootric_tv_followup);
+        mEtFeedback = mLayoutFollowup.findViewById(R.id.wootric_et_feedback);
+        mBtnSubmit = mLayoutFollowup.findViewById(R.id.wootric_btn_submit);
         mBtnSubmit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitSurvey();
             }
         });
-        mBtnDismiss = (TextView) findViewById(R.id.wootric_btn_dismiss);
+        mBtnDismiss = findViewById(R.id.wootric_btn_dismiss);
         mBtnDismiss.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,7 +146,7 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
-        mBtnThankYouDismiss = (TextView) findViewById(R.id.wootric_btn_thank_you_dismiss);
+        mBtnThankYouDismiss = findViewById(R.id.wootric_btn_thank_you_dismiss);
         mBtnThankYouDismiss.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,17 +154,13 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
-        mBtnFacebookLike = (Button) findViewById(R.id.btn_facebook_like);
-        mBtnTwitter = (Button) findViewById(R.id.btn_twitter);
-        mBtnFacebook = (Button) findViewById(R.id.btn_facebook);
-        mBtnThankYouDone = (Button) findViewById(R.id.wootric_btn_thank_you_done);
-        mBtnThankYouAction = (Button) findViewById(R.id.wootric_btn_thank_you_action);
-        mTvThankYou = (TextView) findViewById(R.id.wootric_tv_thank_you);
-        mTvCustomThankYou = (TextView) findViewById(R.id.wootric_tv_custom_thank_you);
-
-        mBtnFacebookLike.setTypeface(iconFont);
-        mBtnTwitter.setTypeface(iconFont);
-        mBtnFacebook.setTypeface(iconFont);
+        mBtnFacebookLike = findViewById(R.id.btn_facebook_like);
+        mBtnTwitter = findViewById(R.id.btn_twitter);
+        mBtnFacebook = findViewById(R.id.btn_facebook);
+        mBtnThankYouDone = findViewById(R.id.wootric_btn_thank_you_done);
+        mBtnThankYouAction = findViewById(R.id.wootric_btn_thank_you_action);
+        mTvThankYou = findViewById(R.id.wootric_tv_thank_you);
+        mTvCustomThankYou = findViewById(R.id.wootric_tv_custom_thank_you);
 
         mBtnFacebookLike.setOnClickListener(new OnClickListener() {
             @Override
@@ -206,7 +197,7 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
-        mThankYouLayout = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
+        mThankYouLayout = findViewById(R.id.wootric_thank_you_layout_body);
 
         setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
@@ -215,8 +206,6 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void initResources() {
-        final Resources res = getResources();
-
         mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
         mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
 

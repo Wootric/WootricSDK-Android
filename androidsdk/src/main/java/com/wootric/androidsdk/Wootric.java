@@ -24,6 +24,8 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.ColorRes;
+import android.support.annotation.FontRes;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
@@ -298,35 +300,75 @@ public class Wootric {
     }
 
     /**
-     * Changes background color and text buttons color for the survey.
-     * @param surveyColor survey color reference int.
+     * Changes text buttons color for the survey.
+     * @param surveyBtnColor survey color reference int.
      */
-    public void setSurveyColor(int surveyColor) {
-        settings.setSurveyColor(surveyColor);
+    public void setSurveyBtnColor(@ColorRes int surveyBtnColor) {
+        settings.setSurveyBtnColor(surveyBtnColor);
     }
 
     /**
-     * Changes score selector color and comment highlight color.
-     * @param scoreColor score color reference int.
+     * Changes score selector color.
+     * @param surveyScoreColor score color reference int.
      */
-    public void setScoreColor(int scoreColor) {
-        settings.setScoreColor(scoreColor);
+    public void setSurveyScoreColor(@ColorRes int surveyScoreColor) {
+        settings.setSurveyScoreColorResId(surveyScoreColor);
     }
 
     /**
      * Changes Thank You button color on the final view.
      * @param thankYouButtonBackgroundColor background color reference int.
      */
-    public void setThankYouButtonBackgroundColor(int thankYouButtonBackgroundColor) {
-        settings.setThankYouButtonBackgroundColor(thankYouButtonBackgroundColor);
+    public void setThankYouButtonBackgroundColor(@ColorRes int thankYouButtonBackgroundColor) {
+        settings.setThankYouButtonBackgroundColorResId(thankYouButtonBackgroundColor);
     }
 
     /**
      * Changes Facebook and Twitter buttons colors.
      * @param socialSharingColor social color reference int.
      */
-    public void setSocialSharingColor(int socialSharingColor) {
-        settings.setSocialSharingColor(socialSharingColor);
+    public void setSocialSharingColor(@ColorRes int socialSharingColor) {
+        settings.setSocialSharingColorResId(socialSharingColor);
+    }
+
+    /**
+     * Default font for all texts and buttons.
+     * @param surveyDefaultFontResId font resource id.
+     */
+    public void setSurveyDefaultFontResId(@FontRes int surveyDefaultFontResId){
+        settings.setSurveyDefaultFontResId(surveyDefaultFontResId);
+    }
+
+    /**
+     * Font family for all title texts.
+     * @param surveyTitleFontResId font resource id.
+     */
+    public void setSurveyTitleFontResId(@FontRes int surveyTitleFontResId){
+        settings.setSurveyTitleFontResId(surveyTitleFontResId);
+    }
+
+    /**
+     * Font family for all button texts.
+     * @param surveyBtnFontResId font resource id.
+     */
+    public void setSurveyBtnFontResId(@FontRes int surveyBtnFontResId){
+        settings.setSurveyBtnFontResId(surveyBtnFontResId);
+    }
+
+    /**
+     * Changes the background of the title text.
+     * @param surveyTitleBackgroundColor title background color reference int.
+     */
+    public void setSurveyTitleBackgroundColor(@ColorRes int surveyTitleBackgroundColor){
+        settings.setSurveyTitleBackgroundColorResId(surveyTitleBackgroundColor);
+    }
+
+    /**
+     * Changes the color of the title texts.
+     * @param surveyTitleTextColor title text color reference int.
+     */
+    public void setSurveyTitleTextColor(@ColorRes int surveyTitleTextColor){
+        settings.setSurveyTitleTextColorResId(surveyTitleTextColor);
     }
 
     /**

@@ -6,7 +6,6 @@
     <dimen name="wootric_rating_bar_padding_vertical">24dp</dimen>
     <dimen name="wootric_rating_notch_radius">4dp</dimen>
     <dimen name="wootric_rating_notch_margin_horizontal">8dp</dimen>
-    <dimen name="wootric_rating_track_width">2dp</dimen>
     <dimen name="wootric_rating_bar_layout_margin_left">24dp</dimen>
     <dimen name="wootric_rating_bar_layout_margin_right">24dp</dimen>
     <dimen name="wootric_rating_bar_layout_margin_top">6dp</dimen>

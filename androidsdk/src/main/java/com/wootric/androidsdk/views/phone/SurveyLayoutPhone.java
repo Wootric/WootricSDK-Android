@@ -30,6 +30,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +43,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
@@ -79,7 +83,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private float mScoreTextSizeSelected;
     private float mScoreTextSizeNotSelected;
 
-    private int mColorSelected;
+    private int mScoreColor;
     private int mColorNotSelected;
     private int mColorBlack;
     private int mColorEnabled;
@@ -127,7 +131,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private void initResources() {
         Resources res = mContext.getResources();
         mColorNotSelected = res.getColor(R.color.wootric_dark_gray);
-        mColorSelected = res.getColor(R.color.wootric_score_color);
+        mScoreColor = res.getColor(R.color.wootric_score_color);
         mColorBlack = res.getColor(android.R.color.black);
         mColorEnabled = res.getColor(R.color.wootric_survey_layout_header_background);
 
@@ -141,8 +145,8 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void initViews() {
-        mBtnSubmit = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_submit);
-        mBtnDismiss = (TextView) mLayoutBody.findViewById(R.id.wootric_btn_dismiss);
+        mBtnSubmit = mLayoutBody.findViewById(R.id.wootric_btn_submit);
+        mBtnDismiss = mLayoutBody.findViewById(R.id.wootric_btn_dismiss);
         mBtnSubmit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,20 +160,20 @@ public class SurveyLayoutPhone extends LinearLayout
             }
         });
 
-        mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
+        mTvSurveyHeader = findViewById(R.id.wootric_survey_layout_tv_header);
 
         mCommonSurveyViews = new View[]{ mLayoutBody, mTvSurveyHeader };
 
-        mThankYouLayout = (ThankYouLayout) findViewById(R.id.wootric_thank_you_layout);
+        mThankYouLayout = findViewById(R.id.wootric_thank_you_layout);
         mThankYouLayout.setThankYouLayoutListener(this);
     }
 
     private void initSurveyViewElements() {
-        mLayoutBody = (ConstraintLayout) findViewById(R.id.wootric_survey_layout_body);
-        mScoreLayout = (LinearLayout) mLayoutBody.findViewById(R.id.wootric_score_layout);
-        mAnchorLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_likely);
-        mAnchorNotLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_not_likely);
-        mRatingBar = (RatingBar) mLayoutBody.findViewById(R.id.wootric_rating_bar);
+        mLayoutBody = findViewById(R.id.wootric_survey_layout_body);
+        mScoreLayout = mLayoutBody.findViewById(R.id.wootric_score_layout);
+        mAnchorLikely = mLayoutBody.findViewById(R.id.wootric_anchor_likely);
+        mAnchorNotLikely = mLayoutBody.findViewById(R.id.wootric_anchor_not_likely);
+        mRatingBar = mLayoutBody.findViewById(R.id.wootric_rating_bar);
 
         mSurveyViews = new View[]{ mRatingBar, mScoreLayout, mAnchorLikely, mAnchorNotLikely };
 
@@ -180,13 +184,13 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void initFeedbackViewElements() {
-        mEtFeedback = (EditText) mLayoutBody.findViewById(R.id.wootric_et_feedback);
+        mEtFeedback = mLayoutBody.findViewById(R.id.wootric_et_feedback);
         Drawable etFeedbackBackground = mEtFeedback.getBackground();
         etFeedbackBackground.setColorFilter(mColorBlack, PorterDuff.Mode.SRC_ATOP);
         etFeedbackBackground.setAlpha(26);
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
 
-        mBtnEditScore = (TextView) findViewById(R.id.wootric_btn_edit_score);
+        mBtnEditScore = findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
 
         mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
@@ -210,6 +214,9 @@ public class SurveyLayoutPhone extends LinearLayout
         scoreView.setText(String.valueOf(score));
         scoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
         scoreView.setTextColor(mColorNotSelected);
+        if(mSettings.getSurveyDefaultFontResId() != Constants.NOT_SET){
+            scoreView.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+        }
 
         return scoreView;
     }
@@ -220,7 +227,7 @@ public class SurveyLayoutPhone extends LinearLayout
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) {
                     Drawable etFeedbackBackground = mEtFeedback.getBackground();
-                    etFeedbackBackground.setColorFilter(mColorSelected, PorterDuff.Mode.SRC_ATOP);
+                    etFeedbackBackground.setColorFilter(mColorBlack, PorterDuff.Mode.SRC_ATOP);
                     etFeedbackBackground.setAlpha(255);
                 }
             }
@@ -229,30 +236,34 @@ public class SurveyLayoutPhone extends LinearLayout
 
     @Override
     public void onScoreChanged(int oldScore, int newScore) {
-        updateSelectedScore(oldScore, newScore);
+        updateSelectedScore(newScore);
         updateSubmitBtn(true);
         updateAnchors(newScore);
     }
 
-    private void updateSelectedScore(int oldScore, int newScore) {
-        if(oldScore != RatingBar.SCORE_NOT_SET) {
-            TextView oldScoreView = mScoreViews[oldScore];
-            oldScoreView.setTextColor(mColorNotSelected);
-            oldScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
+    private void updateSelectedScore(int newScore) {
+        for(int i = 0; i < mScoreViews.length; i++){
+            TextView scoreView = mScoreViews[i];
+            if(i == newScore) {
+                scoreView.setTextColor(mScoreColor);
+                scoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeSelected));
+            } else if(i < newScore){
+                scoreView.setTextColor(mScoreColor);
+                scoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
+            } else {
+                scoreView.setTextColor(mColorNotSelected);
+                scoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
+            }
         }
-
-        TextView newScoreView = mScoreViews[newScore];
-        newScoreView.setTextColor(mColorSelected);
-        newScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeSelected));
     }
 
     private void updateAnchors(int newScore) {
         boolean selectAnchorNotLikely = (newScore == mScaleMinimum);
-        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mColorSelected : Color.BLACK);
+        mAnchorNotLikely.setTextColor(selectAnchorNotLikely ? mScoreColor : Color.BLACK);
         mAnchorNotLikely.setAlpha(selectAnchorNotLikely ? 1f : 0.38f);
 
         boolean selectAnchorLikely = (newScore == mScaleMaximum);
-        mAnchorLikely.setTextColor(selectAnchorLikely ? mColorSelected : Color.BLACK);
+        mAnchorLikely.setTextColor(selectAnchorLikely ? mScoreColor : Color.BLACK);
         mAnchorLikely.setAlpha(selectAnchorLikely ? 1f : 0.38f);
     }
 
@@ -313,6 +324,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
         setTexts();
         setColors();
+        setFonts();
         updateState(mCurrentState);
         mRatingBar.setScale(mSurveyType);
     }
@@ -328,16 +340,50 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private void setColors() {
         Resources res = mContext.getResources();
-        mColorSelected = res.getColor(mSettings.getScoreColor());
-        mColorEnabled = res.getColor(mSettings.getSurveyColor());
-        mRatingBar.setSelectedColor(mColorSelected);
+        mScoreColor = res.getColor(mSettings.getSurveyScoreColor());
+        mColorEnabled = res.getColor(mSettings.getSurveyBtnColor());
+        mRatingBar.setSelectedColor(mScoreColor);
 
-        mBtnDismiss.setTextColor(mColorEnabled);
+        mBtnDismiss.setTextColor(mColorBlack);
+        mBtnDismiss.setAlpha(0.26f);
 
-        mBtnEditScore.setBackgroundColor(mColorEnabled);
-        mTvSurveyHeader.setBackgroundColor(mColorEnabled);
+        mTvSurveyHeader.setBackgroundColor(ContextCompat.getColor(getContext(), mSettings.getSurveyTitleBackgroundColorResId()));
+        mTvSurveyHeader.setTextColor(ContextCompat.getColor(getContext(), mSettings.getSurveyTitleTextColorResId()));
+        mBtnEditScore.setBackgroundColor(ContextCompat.getColor(getContext(), mSettings.getSurveyTitleBackgroundColorResId()));
+        mBtnEditScore.setTextColor(ContextCompat.getColor(getContext(), mSettings.getSurveyTitleTextColorResId()));
 
-        setCursorDrawableColor(mEtFeedback, mColorSelected);
+        for(Drawable drawable : mBtnEditScore.getCompoundDrawables()){
+            if(drawable == null){
+                continue;
+            }
+            Drawable wrapDrawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(), mSettings.getSurveyTitleTextColorResId()));
+        }
+
+        setCursorDrawableColor(mEtFeedback, mColorBlack);
+    }
+
+    private void setFonts() {
+        if(mSettings.getSurveyDefaultFontResId() != Constants.NOT_SET){
+            mBtnEditScore.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mTvSurveyHeader.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mAnchorNotLikely.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mAnchorLikely.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mBtnSubmit.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mBtnDismiss.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mBtnEditScore.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+            mEtFeedback.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyDefaultFontResId()));
+        }
+
+        if(mSettings.getSurveyTitleFontResId() != Constants.NOT_SET){
+            mTvSurveyHeader.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyTitleFontResId()));
+        }
+
+        if(mSettings.getSurveyBtnFontResId() != Constants.NOT_SET){
+            mBtnEditScore.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyBtnFontResId()));
+            mBtnSubmit.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyBtnFontResId()));
+            mBtnDismiss.setTypeface(ResourcesCompat.getFont(getContext(), mSettings.getSurveyBtnFontResId()));
+        }
     }
 
     private static void setCursorDrawableColor(EditText editText, int color) {
