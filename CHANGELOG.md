@@ -1,3 +1,10 @@
+## 2.6.0 (2018-02-01)
+
+- Update Gradle and Build Libraries
+- Use Fragment from Support Library v4
+- Add `SURVEY_DIALOG_TAG` to Fragment Transaction
+- Fix Survey Layout hides from bottom if Survey question is long
+
 ## 2.5.2 (2017-06-14)
 
 - Fix space in between DISMISS and SEND button

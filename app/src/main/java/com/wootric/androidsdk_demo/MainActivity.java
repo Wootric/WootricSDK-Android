@@ -1,12 +1,12 @@
 package com.wootric.androidsdk_demo;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final String CLIENT_ID = "CLIENT ID";
     private static final String CLIENT_SECRET = "CLIENT SECRET";

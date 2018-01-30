@@ -1,6 +1,6 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
@@ -87,7 +87,7 @@ public class SurveyManagerTest {
     public void sendsGetAccessTokenRequest() throws Exception {
         User user = testUser();
         Settings settings = new Settings();
-        SurveyManager surveyManager = new SurveyManager(new Activity(),
+        SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, user, testEndUser(), settings, preferencesUtils,
                 surveyValidator);
 
@@ -99,7 +99,7 @@ public class SurveyManagerTest {
     @Test
     public void sendsGetEndUserRequest() throws Exception {
         EndUser endUser = new EndUser("nps@example.com");
-        SurveyManager surveyManager = new SurveyManager(new Activity(),
+        SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator);
 
@@ -114,7 +114,7 @@ public class SurveyManagerTest {
         long receivedId = 1;
 
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
@@ -132,7 +132,7 @@ public class SurveyManagerTest {
 
         EndUser endUser = testEndUser();
 
-        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
@@ -158,7 +158,7 @@ public class SurveyManagerTest {
 
         EndUser endUser = testEndUser();
 
-        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
@@ -194,7 +194,7 @@ public class SurveyManagerTest {
 
         EndUser endUser = testEndUser();
 
-        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 
@@ -227,7 +227,7 @@ public class SurveyManagerTest {
     @Test
     public void whenEndUserNotFound_sendsRequestToCreateEndUser() throws Exception {
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = new SurveyManager(new Activity(),
+        SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator);
         final String accessToken = "test123test";
@@ -241,7 +241,7 @@ public class SurveyManagerTest {
     @Test
     public void showSurvey() throws Exception {
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = spy(new SurveyManager(new Activity(),
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
                 surveyValidator));
 

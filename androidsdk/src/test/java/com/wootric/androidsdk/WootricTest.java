@@ -1,6 +1,6 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.User;
@@ -57,7 +57,7 @@ public class WootricTest {
     @Test public void fails_whenClientIdIsNull() throws Exception {
         try {
             Wootric.singleton = null;
-            Wootric.init(new Activity(), null, CLIENT_SECRET, ACCOUNT_TOKEN);
+            Wootric.init(new FragmentActivity(), null, CLIENT_SECRET, ACCOUNT_TOKEN);
             fail("Null client id should throw exception");
         } catch (IllegalArgumentException expected) {
         }
@@ -66,7 +66,7 @@ public class WootricTest {
     @Test public void fails_whenClientSecretIsNull() throws Exception {
         try {
             Wootric.singleton = null;
-            Wootric.init(new Activity(), CLIENT_ID, null, ACCOUNT_TOKEN);
+            Wootric.init(new FragmentActivity(), CLIENT_ID, null, ACCOUNT_TOKEN);
             fail("Null client secret should throw exception");
         } catch (IllegalArgumentException expected) {
         }
@@ -75,7 +75,7 @@ public class WootricTest {
     @Test public void fails_whenAccountTokenIsNull() throws Exception {
         try {
             Wootric.singleton = null;
-            Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, null);
+            Wootric.init(new FragmentActivity(), CLIENT_ID, CLIENT_SECRET, null);
             fail("Null account token should throw exception");
         } catch (IllegalArgumentException expected) {
         }
@@ -137,7 +137,7 @@ public class WootricTest {
     }
 
     @Test public void setSurveyImmediately() throws Exception {
-        Wootric wootric = Wootric.init(new Activity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(new FragmentActivity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
         wootric.setSurveyImmediately(true);
 
         assertThat(wootric.settings.isSurveyImmediately()).isTrue();

@@ -22,8 +22,8 @@
 
 package com.wootric.androidsdk;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
@@ -45,7 +45,7 @@ import static com.wootric.androidsdk.utils.Utils.checkNotNull;
  */
 public class Wootric {
 
-    final WeakReference<Activity> weakActivity;
+    final WeakReference<FragmentActivity> weakActivity;
     final WeakReference<Context> weakContext;
 
     final EndUser endUser;
@@ -66,7 +66,7 @@ public class Wootric {
      * @param clientSecret Found in API section of the Wootric's admin panel.
      * @param accountToken Found in Install section of the Wootric's admin panel.
      */
-    public static Wootric init(Activity activity, String clientId, String clientSecret, String accountToken) {
+    public static Wootric init(FragmentActivity activity, String clientId, String clientSecret, String accountToken) {
         Wootric local = singleton;
         if(local == null) {
             synchronized (Wootric.class) {
@@ -362,7 +362,7 @@ public class Wootric {
     }
 
 
-    private Wootric(Activity activity, String clientId, String clientSecret, String accountToken) {
+    private Wootric(FragmentActivity activity, String clientId, String clientSecret, String accountToken) {
         weakActivity = new WeakReference<>(activity);
         weakContext = new WeakReference<>(activity.getApplicationContext());
 
@@ -379,7 +379,7 @@ public class Wootric {
         return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
     }
 
-    SurveyManager buildSurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user,
+    SurveyManager buildSurveyManager(FragmentActivity activity, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
                                      SurveyValidator surveyValidator) {
         return new SurveyManager(activity, wootricApiClient, user, endUser,

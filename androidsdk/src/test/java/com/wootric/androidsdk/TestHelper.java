@@ -1,9 +1,9 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.support.v4.app.FragmentActivity;
 import android.test.mock.MockPackageManager;
 
 import com.wootric.androidsdk.objects.EndUser;
@@ -24,7 +24,7 @@ public class TestHelper {
         return new EndUser();
     }
 
-    public static final Activity TEST_ACTIVITY = new Activity() {
+    public static final FragmentActivity TEST_ACTIVITY = new FragmentActivity() {
         @Override
         public PackageManager getPackageManager() {
             return TEST_PACKAGE_MANAGER;
