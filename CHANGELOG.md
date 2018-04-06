@@ -1,3 +1,7 @@
+## 2.6.1 (2018-04-09)
+
+- Fix Layout for short followup question
+
 ## 2.6.0 (2018-02-01)
 
 - Update Gradle and Build Libraries
