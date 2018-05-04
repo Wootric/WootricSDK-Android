@@ -66,6 +66,7 @@ public class Wootric {
      * @param clientSecret Found in API section of the Wootric's admin panel.
      * @param accountToken Found in Install section of the Wootric's admin panel.
      */
+    @Deprecated
     public static Wootric init(FragmentActivity activity, String clientId, String clientSecret, String accountToken) {
         Wootric local = singleton;
         if(local == null) {
@@ -77,6 +78,30 @@ public class Wootric {
                     checkNotNull(clientSecret, "Client Secret");
                     checkNotNull(accountToken, "Account Token");
                     singleton = local = new Wootric(activity, clientId, clientSecret, accountToken);
+                }
+            }
+        }
+
+        return local;
+    }
+
+    /**
+     * It configures the SDK with required parameters.
+     *
+     * @param activity Activity where the survey will be presented.
+     * @param clientId Found in API section of the Wootric's admin panel.
+     * @param accountToken Found in Install section of the Wootric's admin panel.
+     */
+    public static Wootric init(FragmentActivity activity, String clientId, String accountToken) {
+        Wootric local = singleton;
+        if(local == null) {
+            synchronized (Wootric.class) {
+                local = singleton;
+                if(local == null) {
+                    checkNotNull(activity, "Activity");
+                    checkNotNull(clientId, "Client Id");
+                    checkNotNull(accountToken, "Account Token");
+                    singleton = local = new Wootric(activity, clientId, accountToken);
                 }
             }
         }
@@ -368,6 +393,18 @@ public class Wootric {
 
         endUser = new EndUser();
         user = new User(clientId, clientSecret, accountToken);
+        settings = new Settings();
+
+        preferencesUtils = new PreferencesUtils(weakContext);
+        permissionsValidator = new PermissionsValidator(weakContext);
+    }
+
+    private Wootric(FragmentActivity activity, String clientId, String accountToken) {
+        weakActivity = new WeakReference<>(activity);
+        weakContext = new WeakReference<>(activity.getApplicationContext());
+
+        endUser = new EndUser();
+        user = new User(clientId, accountToken);
         settings = new Settings();
 
         preferencesUtils = new PreferencesUtils(weakContext);

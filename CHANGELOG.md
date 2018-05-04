@@ -1,3 +1,7 @@
+## 2.7.0 (2018-05-08)
+
+- Add new method that just needs client_id & doesn't require the client_secret
+
 ## 2.6.1 (2018-04-09)
 
 - Fix Layout for short followup question
