@@ -30,13 +30,18 @@ import android.os.Parcelable;
  */
 public class User implements Parcelable {
 
-    private final String clientId;
-    private final String clientSecret;
-    private final String accountToken;
+    private String clientId;
+    private String clientSecret;
+    private String accountToken;
 
     public User(String clientId, String clientSecret, String accountToken) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.accountToken = accountToken;
+    }
+
+    public User(String clientId, String accountToken) {
+        this.clientId = clientId;
         this.accountToken = accountToken;
     }
 

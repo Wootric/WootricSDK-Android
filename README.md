@@ -28,14 +28,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.6.1</version>
+    <version>2.7.0</version>
 </dependency>
 ```
 
 ### Using Gradle
 
 ```xml
-compile 'com.wootric:wootric-sdk-android:2.6.1'
+compile 'com.wootric:wootric-sdk-android:2.7.0'
 ```
 
 ## Initializing Wootric
@@ -74,12 +74,12 @@ WootricSDK task is to present a fully functional survey view with just a few lin
     import com.wootric.androidsdk.Wootric;
     ```
 
-4. Configure the SDK with your client ID, secret and account token:
+4. Configure the SDK with your client ID and account token:
 
     All you need to do is to add this code to your Activity's `onCreate` method:
     
     ```java
-    Wootric wootric = Wootric.init(this, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+    Wootric wootric = Wootric.init(this, CLIENT_ID, ACCOUNT_TOKEN);
     ```
 
 5. To display the survey (if user is eligible - this check is built in the method) use:
@@ -99,7 +99,7 @@ import com.wootric.androidsdk.Wootric;
 
 // Inside your Activity's onCreate method
 
-Wootric wootric = Wootric.init(this, YOUR_CLIENT_ID, YOUR_CLIENT_SECRET, YOUR_ACCOUNT_TOKEN);
+Wootric wootric = Wootric.init(this, YOUR_CLIENT_ID, YOUR_ACCOUNT_TOKEN);
 wootric.setEndUserEmail("nps@example.com");
 // Use only for testing
 wootric.setSurveyImmediately(true);

@@ -50,7 +50,9 @@ public class GetAccessTokenTask extends WootricRemoteRequestTask {
     protected void buildParams() {
         paramsMap.put("grant_type", "client_credentials");
         paramsMap.put("client_id", clientId);
-        paramsMap.put("client_secret", clientSecret);
+        if (clientSecret != null) {
+            paramsMap.put("client_secret", clientSecret);
+        }
     }
 
     @Override
