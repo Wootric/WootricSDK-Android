@@ -52,6 +52,7 @@ public class Settings implements Parcelable {
     private int timeDelay = Constants.NOT_SET;
 
     private boolean surveyImmediately;
+    private boolean showOptOut;
     private boolean skipFollowupScreenForPromoters;
 
     private Integer dailyResponseCap;
@@ -109,6 +110,12 @@ public class Settings implements Parcelable {
     public void setSurveyImmediately(boolean surveyImmediately) {
         this.surveyImmediately = surveyImmediately;
     }
+
+    public void setShowOptOut(boolean showOptOut) {
+        this.showOptOut = showOptOut;
+    }
+
+    public boolean isShowOptOut() { return showOptOut; }
 
     public boolean isSurveyImmediately() {
         return surveyImmediately;

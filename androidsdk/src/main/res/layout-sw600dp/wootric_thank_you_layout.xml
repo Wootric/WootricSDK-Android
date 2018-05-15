@@ -97,7 +97,8 @@
             android:layout_margin="8dp"/>
     </LinearLayout>
 
-    <include layout="@layout/wootric_footer"
+    <include android:id="@+id/wootric_footer"
+        layout="@layout/wootric_footer"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:gravity="center"

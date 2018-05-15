@@ -70,4 +70,13 @@
     <dimen name="wootric_social_text_size">18sp</dimen>
     <dimen name="wootric_social_drawable_padding">8dp</dimen>
     <dimen name="wootric_thank_you_action_button_margin">16dp</dimen>
+
+    <!-- Footer Layout -->
+    <dimen name="wootric_footer_layout_margin_left">24dp</dimen>
+    <dimen name="wootric_footer_layout_margin_right">24dp</dimen>
+    <dimen name="wootric_footer_layout_margin_start">24dp</dimen>
+    <dimen name="wootric_footer_layout_margin_end">24dp</dimen>
+    <dimen name="wootric_footer_layout_dot_separator_width">4dp</dimen>
+    <dimen name="wootric_footer_layout_dot_separator_height">4dp</dimen>
+    <dimen name="wootric_footer_layout_dot_separator_margin">8dp</dimen>
 </resources>

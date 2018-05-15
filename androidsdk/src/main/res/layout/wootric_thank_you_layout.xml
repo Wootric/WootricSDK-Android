@@ -116,6 +116,7 @@
         android:id="@+id/wootric_btn_thank_you_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/wootric_tv_thank_you"
         android:layout_gravity="end"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -123,5 +124,6 @@
         android:textSize="@dimen/wootric_button_text"
         android:textColor="@color/wootric_survey_layout_header_background"
         android:padding="@dimen/wootric_btn_padding"
+        android:layout_marginTop="280dp"
         android:text="@string/wootric_example_btn_dismiss"/>
 </RelativeLayout>

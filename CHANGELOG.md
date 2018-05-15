@@ -1,3 +1,7 @@
+## 2.8.0 (2018-05-18)
+
+- Add new method to show opt out link
+
 ## 2.7.0 (2018-05-08)
 
 - Add new method that just needs client_id & doesn't require the client_secret

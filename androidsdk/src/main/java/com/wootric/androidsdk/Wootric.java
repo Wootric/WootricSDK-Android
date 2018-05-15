@@ -193,6 +193,15 @@ public class Wootric {
     }
 
     /**
+     * If showOptOut is set to YES then opt out link will be shown
+     * return "true" and opt out link will be shown
+     * @param showOptOut A boolean to set if opt out link is to be shown.
+     */
+    public void setShowOptOut(boolean showOptOut) {
+        this.settings.setShowOptOut(showOptOut);
+    }
+
+    /**
      * Wootric provides designated class for providing custom messages
      * @param customMessage WootricCustomMessage object
      */

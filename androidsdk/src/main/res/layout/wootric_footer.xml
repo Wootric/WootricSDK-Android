@@ -15,21 +15,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:gravity="center"
+        android:gravity="left"
         android:padding="4dp"
+        android:layout_marginLeft="@dimen/wootric_footer_layout_margin_left"
+        android:layout_marginStart="@dimen/wootric_footer_layout_margin_start"
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/wootric_btn_opt_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wootric_powered_by"
+            android:text="@string/wootric_opt_out"
             android:textColor="@android:color/black"
-            android:alpha="0.3"/>
+            android:alpha="0.3"
+            android:visibility="gone"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/wootric_powered_by"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/wootric"
-            android:textColor="@color/wootric_brand_color" />
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:layout_marginEnd="@dimen/wootric_footer_layout_margin_end"
+            android:layout_marginRight="@dimen/wootric_footer_layout_margin_right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wootric_powered_by"
+                android:textColor="@android:color/black"
+                android:alpha="0.3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wootric"
+                android:textColor="@color/wootric_brand_color" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

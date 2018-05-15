@@ -31,12 +31,14 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.R;
@@ -76,6 +78,8 @@ public class SurveyFragment extends DialogFragment
     private String mAccessToken;
     private String mUniqueLink;
     private Settings mSettings;
+    private LinearLayout mPoweredBy;
+    private TextView mBtnOptOut;
 
     private boolean mResponseSent;
 
@@ -123,6 +127,7 @@ public class SurveyFragment extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
+        mPoweredBy = (LinearLayout) view.findViewById(R.id.wootric_powered_by);
         
         if (!mIsTablet) {
             getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
@@ -132,6 +137,24 @@ public class SurveyFragment extends DialogFragment
         mSurveyLayout.setSurveyLayoutListener(this);
 
         mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
+        mBtnOptOut = (TextView) view.findViewById(R.id.wootric_btn_opt_out);
+
+        if (mSettings.isShowOptOut()) {
+            mBtnOptOut.setVisibility(View.VISIBLE);
+            mBtnOptOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    optOut();
+                }
+            });
+
+            if(!mIsTablet) {
+                mPoweredBy.setGravity(Gravity.RIGHT);
+            } else {
+                TextView mDotSeparator = (TextView) view.findViewById(R.id.footer_dot_separator);
+                mDotSeparator.setVisibility(View.VISIBLE);
+            }
+        }
 
         return view;
     }
@@ -219,6 +242,14 @@ public class SurveyFragment extends DialogFragment
         mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink);
         mResponseSent = true;
         priority++;
+    }
+
+    @Override
+    public void onHideOptOut() {
+        if (mSettings.isShowOptOut() && mBtnOptOut != null && !mIsTablet) {
+            mPoweredBy.setGravity(Gravity.CENTER);
+            mBtnOptOut.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -312,5 +343,20 @@ public class SurveyFragment extends DialogFragment
     private void notifySurveyFinished() {
         Integer resurvey_days = mResponseSent ? mSettings.getResurveyThrottle() : mSettings.getDeclineResurveyThrottle();
         Wootric.notifySurveyFinished(true, mResponseSent, resurvey_days);
+    }
+
+
+    private void optOut() {
+        String optOutUrl = "https://app.wootric.com/opt_out?token=" + mUser.getAccountToken()
+            + "&metric_type=" + mSettings.getSurveyType()
+                + "&end_user_id=" + Long.toString(mEndUser.getId())
+                + "&end_user_email=" + mEndUser.getEmail()
+                + "&unique_link=" + mUniqueLink
+                + "&opt_out_token=" + mAccessToken;
+
+        Intent optOut = new Intent(Intent.ACTION_VIEW, Uri.parse(optOutUrl));
+        startActivity(optOut);
+
+        dismiss();
     }
 }

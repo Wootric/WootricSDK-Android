@@ -285,6 +285,12 @@ public class SurveyLayoutPhone extends LinearLayout
         }
     }
 
+    private void hideOptOut() {
+        if(mSurveyLayoutListener != null) {
+            mSurveyLayoutListener.onHideOptOut();
+        }
+    }
+
     private OnClickListener onEditScoreClick() {
         return new OnClickListener() {
             @Override
@@ -407,6 +413,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setViewsVisibility(mCommonSurveyViews, false);
         setViewsVisibility(mFeedbackViews, false);
         setViewsVisibility(mSurveyViews, false);
+        hideOptOut();
         setKeyboardVisibility(false);
 
         mThankYouLayout.setVisibility(VISIBLE);

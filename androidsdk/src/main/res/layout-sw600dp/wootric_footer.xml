@@ -18,4 +18,24 @@
         android:layout_height="wrap_content"
         android:text="@string/wootric"
         android:textColor="@color/wootric_survey_layout_header_background" />
+
+    <TextView
+        android:id="@+id/footer_dot_separator"
+        android:layout_width="@dimen/wootric_footer_layout_dot_separator_width"
+        android:layout_height="@dimen/wootric_footer_layout_dot_separator_height"
+        android:gravity="center"
+        android:layout_margin="@dimen/wootric_footer_layout_dot_separator_margin"
+        android:background="@drawable/footer_dot_separator"
+        android:alpha="0.3"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/wootric_btn_opt_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wootric_opt_out"
+        android:clickable="true"
+        android:textColor="@android:color/black"
+        android:alpha="0.3"
+        android:visibility="gone"/>
 </LinearLayout>
