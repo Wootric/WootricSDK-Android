@@ -88,6 +88,7 @@
                     android:layout_marginStart="@dimen/wootric_rating_bar_layout_margin_start"
                     android:layout_marginTop="@dimen/wootric_rating_bar_layout_margin_top"
                     android:gravity="center"
+                    android:layoutDirection="ltr"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
