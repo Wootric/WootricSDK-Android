@@ -24,7 +24,7 @@ public class TestHelper {
         return new EndUser();
     }
 
-    public static final FragmentActivity TEST_ACTIVITY = new FragmentActivity() {
+    public static final FragmentActivity TEST_FRAGMENT_ACTIVITY = new FragmentActivity() {
         @Override
         public PackageManager getPackageManager() {
             return TEST_PACKAGE_MANAGER;

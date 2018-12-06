@@ -22,6 +22,7 @@
 
 package com.wootric.androidsdk;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 
@@ -45,7 +46,8 @@ import static com.wootric.androidsdk.utils.Utils.checkNotNull;
  */
 public class Wootric {
 
-    final WeakReference<FragmentActivity> weakActivity;
+    WeakReference<FragmentActivity> weakFragmentActivity;
+    WeakReference<Activity> weakActivity;
     final WeakReference<Context> weakContext;
 
     final EndUser endUser;
@@ -61,23 +63,47 @@ public class Wootric {
     /**
      * It configures the SDK with required parameters.
      *
-     * @param activity Activity where the survey will be presented.
+     * @param fragmentActivity FragmentActivity where the survey will be presented.
      * @param clientId Found in API section of the Wootric's admin panel.
      * @param clientSecret Found in API section of the Wootric's admin panel.
      * @param accountToken Found in Install section of the Wootric's admin panel.
      */
     @Deprecated
-    public static Wootric init(FragmentActivity activity, String clientId, String clientSecret, String accountToken) {
+    public static Wootric init(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
         Wootric local = singleton;
         if(local == null) {
             synchronized (Wootric.class) {
                 local = singleton;
                 if(local == null) {
-                    checkNotNull(activity, "Activity");
+                    checkNotNull(fragmentActivity, "FragmentActivity");
                     checkNotNull(clientId, "Client Id");
                     checkNotNull(clientSecret, "Client Secret");
                     checkNotNull(accountToken, "Account Token");
-                    singleton = local = new Wootric(activity, clientId, clientSecret, accountToken);
+                    singleton = local = new Wootric(fragmentActivity, clientId, clientSecret, accountToken);
+                }
+            }
+        }
+
+        return local;
+    }
+
+    /**
+     * It configures the SDK with required parameters.
+     *
+     * @param fragmentActivity FragmentActivity where the survey will be presented.
+     * @param clientId Found in API section of the Wootric's admin panel.
+     * @param accountToken Found in Install section of the Wootric's admin panel.
+     */
+    public static Wootric init(FragmentActivity fragmentActivity, String clientId, String accountToken) {
+        Wootric local = singleton;
+        if(local == null) {
+            synchronized (Wootric.class) {
+                local = singleton;
+                if(local == null) {
+                    checkNotNull(fragmentActivity, "FragmentActivity");
+                    checkNotNull(clientId, "Client Id");
+                    checkNotNull(accountToken, "Account Token");
+                    singleton = local = new Wootric(fragmentActivity, clientId, accountToken);
                 }
             }
         }
@@ -92,7 +118,7 @@ public class Wootric {
      * @param clientId Found in API section of the Wootric's admin panel.
      * @param accountToken Found in Install section of the Wootric's admin panel.
      */
-    public static Wootric init(FragmentActivity activity, String clientId, String accountToken) {
+    public static Wootric init(Activity activity, String clientId, String accountToken) {
         Wootric local = singleton;
         if(local == null) {
             synchronized (Wootric.class) {
@@ -391,14 +417,20 @@ public class Wootric {
         SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
                 wootricRemoteClient, preferencesUtils);
 
-        return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                user, endUser, settings, preferencesUtils, surveyValidator);
+        if (weakFragmentActivity != null) {
+            return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyValidator);
+        } else {
+            return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyValidator);
+        }
+
     }
 
 
-    private Wootric(FragmentActivity activity, String clientId, String clientSecret, String accountToken) {
-        weakActivity = new WeakReference<>(activity);
-        weakContext = new WeakReference<>(activity.getApplicationContext());
+    private Wootric(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
+        weakFragmentActivity = new WeakReference<>(fragmentActivity);
+        weakContext = new WeakReference<>(fragmentActivity.getApplicationContext());
 
         endUser = new EndUser();
         user = new User(clientId, clientSecret, accountToken);
@@ -408,7 +440,7 @@ public class Wootric {
         permissionsValidator = new PermissionsValidator(weakContext);
     }
 
-    private Wootric(FragmentActivity activity, String clientId, String accountToken) {
+    private Wootric(Activity activity, String clientId, String accountToken) {
         weakActivity = new WeakReference<>(activity);
         weakContext = new WeakReference<>(activity.getApplicationContext());
 
@@ -425,7 +457,14 @@ public class Wootric {
         return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
     }
 
-    SurveyManager buildSurveyManager(FragmentActivity activity, WootricRemoteClient wootricApiClient, User user,
+    SurveyManager buildSurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user,
+                                     EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
+                                     SurveyValidator surveyValidator) {
+        return new SurveyManager(fragmentActivity, wootricApiClient, user, endUser,
+                settings, preferencesUtils, surveyValidator);
+    }
+
+    SurveyManager buildSurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
                                      SurveyValidator surveyValidator) {
         return new SurveyManager(activity, wootricApiClient, user, endUser,

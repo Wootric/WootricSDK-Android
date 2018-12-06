@@ -16,7 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.HashMap;
 
 import static com.wootric.androidsdk.TestHelper.ORIGIN_URL;
-import static com.wootric.androidsdk.TestHelper.TEST_ACTIVITY;
+import static com.wootric.androidsdk.TestHelper.TEST_FRAGMENT_ACTIVITY;
 import static com.wootric.androidsdk.TestHelper.testEndUser;
 import static com.wootric.androidsdk.TestHelper.testUser;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +41,7 @@ public class SurveyManagerTest {
     public void sendsGetTrackingPixelRequest() throws Exception {
         User user = testUser();
         EndUser endUser = testEndUser();
-        SurveyManager surveyManager = new SurveyManager(TEST_ACTIVITY,
+        SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, user, endUser, new Settings(), preferencesUtils,
                 surveyValidator);
 
@@ -50,9 +50,10 @@ public class SurveyManagerTest {
         verify(wootricApiClient, times(1)).getTrackingPixel(user, endUser, ORIGIN_URL);
     }
 
+
     @Test
     public void updatesLastSeen() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(TEST_ACTIVITY,
+        SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
@@ -63,7 +64,7 @@ public class SurveyManagerTest {
 
     @Test
     public void validatesSurvey() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(TEST_ACTIVITY,
+        SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
@@ -74,7 +75,7 @@ public class SurveyManagerTest {
 
     @Test
     public void setsOnSurveyValidatedListener() throws Exception {
-        SurveyManager surveyManager = new SurveyManager(TEST_ACTIVITY,
+        SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
                 surveyValidator);
 
@@ -240,6 +241,23 @@ public class SurveyManagerTest {
 
     @Test
     public void showSurvey() throws Exception {
+        EndUser endUser = testEndUser();
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
+                surveyValidator));
+
+        doNothing().when(surveyManager).showSurvey();
+
+        EndUser receivedEndUser = new EndUser();
+        receivedEndUser.setId(1);
+        surveyManager.onCreateEndUserSuccess(receivedEndUser.getId());
+
+        assertThat(endUser.getId()).isEqualTo(receivedEndUser.getId());
+        verify(surveyManager, times(1)).showSurvey();
+    }
+
+    @Test
+    public void showSurveyWithActivity() throws Exception {
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,

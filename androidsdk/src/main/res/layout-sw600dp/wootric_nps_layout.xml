@@ -3,7 +3,8 @@
     android:id="@+id/wootric_nps_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true">
+    android:clickable="true"
+    android:layoutDirection="ltr">
 
     <TextView
         android:id="@+id/wootric_btn_dismiss"

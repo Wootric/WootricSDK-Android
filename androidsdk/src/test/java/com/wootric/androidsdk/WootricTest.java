@@ -17,7 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
 
-import static com.wootric.androidsdk.TestHelper.TEST_ACTIVITY;
+import static com.wootric.androidsdk.TestHelper.TEST_FRAGMENT_ACTIVITY;
 import static junit.framework.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -43,8 +43,8 @@ public class WootricTest {
     @Before
     public void setUp() {
         Wootric.singleton = null;
-        Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
     }
 
     @Test public void fails_whenContextIsNull() throws Exception {
@@ -89,10 +89,10 @@ public class WootricTest {
 
     @Test public void inits_singleton() throws Exception {
         Wootric.singleton = null;
-        Wootric wootric = Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric wootric_1 = Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric wootric_2 = Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
-        Wootric wootric_3 = Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric_1 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric_2 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric wootric_3 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
 
         assertThat(wootric).isEqualTo(wootric_1);
         assertThat(wootric_2).isEqualTo(wootric_3);
@@ -229,8 +229,8 @@ public class WootricTest {
 
     @Test public void survey_startsSurvey() throws Exception {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
@@ -239,12 +239,12 @@ public class WootricTest {
                 eq(wootric_1.endUser), eq(wootric_1.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -264,8 +264,8 @@ public class WootricTest {
     @Test
     public void doesNotStartSurvey_whenSurveyInProgress() {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
@@ -274,12 +274,12 @@ public class WootricTest {
                 eq(wootric_1.endUser), eq(wootric_1.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
@@ -300,8 +300,8 @@ public class WootricTest {
     @Test
     public void doesNotStartSurvey_whenPermissionsValidatorChecksReturnsFalse() {
         Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
@@ -310,12 +310,12 @@ public class WootricTest {
                 eq(wootric_1.endUser), eq(wootric_1.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
 
 
-        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));
 
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakActivity.get()),
+        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
                 any(PreferencesUtils.class), eq(mockSurveyValidator));

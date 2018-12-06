@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:layoutDirection="ltr">
 
     <com.wootric.androidsdk.views.phone.SurveyLayoutPhone
         android:id="@+id/wootric_survey_layout"

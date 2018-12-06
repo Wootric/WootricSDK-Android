@@ -22,6 +22,7 @@
 
 package com.wootric.androidsdk;
 
+import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -35,14 +36,15 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
-import com.wootric.androidsdk.views.SurveyFragment;
+import com.wootric.androidsdk.views.support.SurveyFragment;
 
 /**
  * Created by maciejwitowski on 9/3/15.
  */
 public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback {
 
-    private final FragmentActivity activity;
+    private Activity activity;
+    private FragmentActivity fragmentActivity;
     private final WootricRemoteClient wootricApiClient;
     private final User user;
     private final EndUser endUser;
@@ -55,10 +57,21 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
-    SurveyManager(FragmentActivity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+    SurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+                   Settings settings, PreferencesUtils preferencesUtils,
+                   SurveyValidator surveyValidator) {
+        this.fragmentActivity = fragmentActivity;
+        this.wootricApiClient = wootricApiClient;
+        this.user = user;
+        this.endUser = endUser;
+        this.surveyValidator = surveyValidator;
+        this.settings = settings;
+        this.preferencesUtils = preferencesUtils;
+    }
+
+    SurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, PreferencesUtils preferencesUtils,
                   SurveyValidator surveyValidator) {
-
         this.activity = activity;
         this.wootricApiClient = wootricApiClient;
         this.user = user;
@@ -175,20 +188,38 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     private void showSurveyFragment() {
         try {
-            final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            if (fragmentActivity != null) {
+                final FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
 
-            SurveyFragment surveyFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
-                    accessToken, settings, user);
+                SurveyFragment surveySupportFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
+                        accessToken, settings, user);
 
-            final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
+                final boolean isTablet = fragmentActivity.getResources().getBoolean(R.bool.isTablet);
 
-            if(isTablet) {
-                fragmentManager.beginTransaction()
-                        .add(android.R.id.content, surveyFragment, SURVEY_DIALOG_TAG)
-                        .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
-                        .addToBackStack(null).commit();
+                if(isTablet) {
+                    fragmentActivityManager.beginTransaction()
+                            .add(android.R.id.content, surveySupportFragment, SURVEY_DIALOG_TAG)
+                            .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
+                            .addToBackStack(null).commit();
+                } else {
+                    surveySupportFragment.show(fragmentActivityManager, SURVEY_DIALOG_TAG);
+                }
             } else {
-                surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+                final android.app.FragmentManager fragmentManager = activity.getFragmentManager();
+
+                com.wootric.androidsdk.views.SurveyFragment surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(endUser, getOriginUrl(),
+                        accessToken, settings, user);
+
+                final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
+
+                if(isTablet) {
+                    fragmentManager.beginTransaction()
+                            .add(android.R.id.content, surveyFragment, SURVEY_DIALOG_TAG)
+                            .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
+                            .addToBackStack(null).commit();
+                } else {
+                    surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+                }
             }
         } catch (NullPointerException e) {
             Log.e(Constants.TAG, "showSurveyFragment: " + e.toString());
@@ -203,11 +234,18 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     private String getOriginUrl() {
         if(originUrl == null) {
             PackageManager pm;
+            String packageName;
             ApplicationInfo appInfo;
 
             try {
-                pm = activity.getPackageManager();
-                appInfo = pm.getApplicationInfo(activity.getApplicationInfo().packageName, 0);
+                if (fragmentActivity != null) {
+                    pm = fragmentActivity.getPackageManager();
+                    packageName = fragmentActivity.getApplicationInfo().packageName;
+                } else {
+                    pm = activity.getPackageManager();
+                    packageName = activity.getApplicationInfo().packageName;
+                }
+                appInfo = pm.getApplicationInfo(packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
             } catch (Exception e) {
                 Log.e(Constants.TAG, "getOriginUrl: " + e.toString());

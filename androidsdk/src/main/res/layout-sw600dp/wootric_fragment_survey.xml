@@ -7,4 +7,5 @@
     android:background="@android:color/white"
     android:layout_gravity="bottom"
     android:gravity="center"
+    android:layoutDirection="ltr"
     xmlns:android="http://schemas.android.com/apk/res/android" />

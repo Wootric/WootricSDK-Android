@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wootric.androidsdk_demo" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.wootric.androidsdk_demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -8,7 +9,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/wootric_app_name"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:supportsRtl">
         <activity
             android:name=".MainActivity" >
 

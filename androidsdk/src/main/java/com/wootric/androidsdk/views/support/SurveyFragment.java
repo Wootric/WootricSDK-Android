@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.wootric.androidsdk.views;
+package com.wootric.androidsdk.views.support;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,7 +30,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +51,8 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.SHAUtil;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
+import com.wootric.androidsdk.views.SurveyLayout;
+import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 import java.lang.ref.WeakReference;
@@ -60,7 +62,7 @@ import java.util.Date;
  * Created by maciejwitowski on 9/4/15.
  */
 public class SurveyFragment extends DialogFragment
-    implements SurveyLayoutListener {
+        implements SurveyLayoutListener {
 
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
@@ -128,7 +130,7 @@ public class SurveyFragment extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.wootric_fragment_survey, container, false);
         mPoweredBy = (LinearLayout) view.findViewById(R.id.wootric_powered_by);
-        
+
         if (!mIsTablet) {
             getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         }
@@ -348,7 +350,7 @@ public class SurveyFragment extends DialogFragment
 
     private void optOut() {
         String optOutUrl = "https://app.wootric.com/opt_out?token=" + mUser.getAccountToken()
-            + "&metric_type=" + mSettings.getSurveyType()
+                + "&metric_type=" + mSettings.getSurveyType()
                 + "&end_user_id=" + Long.toString(mEndUser.getId())
                 + "&end_user_email=" + mEndUser.getEmail()
                 + "&unique_link=" + mUniqueLink

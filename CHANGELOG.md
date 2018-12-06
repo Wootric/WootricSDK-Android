@@ -1,3 +1,8 @@
+## 2.9.0 (2018-12-06)
+
+- Add back support for Activity (fixes [#4](https://github.com/Wootric/segment-android-integration-wootric/issues/4) & [#5](https://github.com/Wootric/segment-android-integration-wootric/issues/5))
+- Fix RTL issue (fixes [#48](https://github.com/Wootric/WootricSDK-Android/issues/48))
+
 ## 2.8.0 (2018-05-18)
 
 - Add new method to show opt out link
