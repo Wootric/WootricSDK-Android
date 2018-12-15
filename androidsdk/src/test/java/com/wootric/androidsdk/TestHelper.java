@@ -8,6 +8,9 @@ import android.test.mock.MockPackageManager;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.utils.PreferencesUtils;
+
+import java.lang.ref.WeakReference;
 
 public class TestHelper {
 
@@ -22,6 +25,11 @@ public class TestHelper {
 
     public static EndUser testEndUser() {
         return new EndUser();
+    }
+
+    public static PreferencesUtils testPreferenceUtils() {
+        WeakReference weakContext = new WeakReference<>(TEST_FRAGMENT_ACTIVITY.getApplicationContext());
+        return new PreferencesUtils(weakContext);
     }
 
     public static final FragmentActivity TEST_FRAGMENT_ACTIVITY = new FragmentActivity() {

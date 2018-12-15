@@ -34,6 +34,8 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by maciejwitowski on 10/13/15.
  */
@@ -70,6 +72,12 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
         paramsMap.put("survey_immediately", String.valueOf(settings.isSurveyImmediately()));
 
+        if(endUser.hasProperties()) {
+            for (Map.Entry<String, String> property : endUser.getProperties().entrySet()) {
+                paramsMap.put("properties[" + property.getKey() + "]", property.getValue());
+            }
+        }
+
         addOptionalParam("end_user_created_at", endUser.getCreatedAtOrNull());
         addOptionalParam("external_id", endUser.getExternalId());
         addOptionalParam("phone_number", endUser.getPhoneNumber());
@@ -100,6 +108,13 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
             try {
                 JSONObject jsonObject = new JSONObject(response);
 
+                if (jsonObject.has("sampling_rule")) {
+                    endUser.getProperties().put("Wootric sampling rule", jsonObject.getJSONObject("sampling_rule").getString("name"));
+                }
+
+                String code = jsonObject.getJSONObject("details").getString("code");
+                String description = jsonObject.getJSONObject("details").getString("why");
+
                 eligible = jsonObject.getBoolean("eligible");
                 if (eligible) {
                     Log.d(Constants.TAG, "Server says the user is eligible for survey");
@@ -110,7 +125,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
                 else {
                     Log.d(Constants.TAG, "Server says the user is NOT eligible for survey");
                 }
-
+                Log.d(Constants.TAG, "Code: " + code + ". Description: " + description);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

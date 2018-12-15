@@ -44,7 +44,7 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     private final WootricRemoteClient wootricRemoteClient;
     private final PreferencesUtils preferencesUtils;
 
-    SurveyValidator(User user, EndUser endUser, Settings settings,
+    public SurveyValidator(User user, EndUser endUser, Settings settings,
                     WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
         this.user = user;
         this.endUser = endUser;

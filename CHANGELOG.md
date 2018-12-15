@@ -1,3 +1,7 @@
+## 2.10.0 (2018-12-18)
+
+- Add support for Property Based Sampling
+
 ## 2.9.0 (2018-12-06)
 
 - Add back support for Activity (fixes [#4](https://github.com/Wootric/segment-android-integration-wootric/issues/4) & [#5](https://github.com/Wootric/segment-android-integration-wootric/issues/5))
