@@ -1,3 +1,7 @@
+## 2.11.0 (2019-02-04)
+
+- Add new method showSurveyInActivity
+
 ## 2.10.0 (2018-12-18)
 
 - Add support for Property Based Sampling

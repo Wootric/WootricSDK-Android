@@ -48,7 +48,7 @@ public class Wootric {
 
     WeakReference<FragmentActivity> weakFragmentActivity;
     WeakReference<Activity> weakActivity;
-    final WeakReference<Context> weakContext;
+    WeakReference<Context> weakContext;
 
     final EndUser endUser;
     final User user;
@@ -123,7 +123,7 @@ public class Wootric {
         if(local == null) {
             synchronized (Wootric.class) {
                 local = singleton;
-                if(local == null) {
+                if (local == null) {
                     checkNotNull(activity, "Activity");
                     checkNotNull(clientId, "Client Id");
                     checkNotNull(accountToken, "Account Token");
@@ -410,6 +410,17 @@ public class Wootric {
         surveyInProgress = true;
     }
 
+    public void showSurveyInActivity(Activity activity) {
+        if (!permissionsValidator.check() || surveyInProgress) {
+            return;
+        }
+
+        getSurveyManagerForActivity(activity).start();
+
+        surveyInProgress = true;
+    }
+
+
     private SurveyManager getSurveyManager() {
         OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
         WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
@@ -424,9 +435,34 @@ public class Wootric {
             return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
                     user, endUser, settings, preferencesUtils, surveyValidator);
         }
-
     }
 
+    private SurveyManager getSurveyManagerForActivity(Activity activity) {
+        if (activity instanceof FragmentActivity) {
+            weakFragmentActivity = new WeakReference<>((FragmentActivity) activity);
+        } else {
+            weakActivity = new WeakReference<>(activity);
+        }
+
+        weakContext = new WeakReference<>(activity.getApplicationContext());
+
+        preferencesUtils = new PreferencesUtils(weakContext);
+        permissionsValidator = new PermissionsValidator(weakContext);
+
+        OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
+
+        SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
+                wootricRemoteClient, preferencesUtils);
+
+        if (activity instanceof FragmentActivity) {
+            return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyValidator);
+        } else {
+            return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyValidator);
+        }
+    }
 
     private Wootric(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
         weakFragmentActivity = new WeakReference<>(fragmentActivity);

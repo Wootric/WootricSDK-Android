@@ -261,6 +261,40 @@ public class WootricTest {
         assertThat(wootric_1.surveyInProgress).isTrue();
     }
 
+    @Test public void showSurveyInActivity_startsSurvey() throws Exception {
+        Wootric.singleton = null;
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+
+        doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator(eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
+
+        doReturn(mockSurveyValidator).when(wootric_1).buildSurveyValidator(eq(wootric_1.user),
+                eq(wootric_1.endUser), eq(wootric_1.settings), any(WootricRemoteClient.class), any(PreferencesUtils.class));
+
+
+        doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
+                any(WootricRemoteClient.class), eq(wootric.user),
+                eq(wootric.endUser), eq(wootric.settings),
+                any(PreferencesUtils.class), eq(mockSurveyValidator));
+
+        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
+                any(WootricRemoteClient.class), eq(wootric_1.user),
+                eq(wootric_1.endUser), eq(wootric_1.settings),
+                any(PreferencesUtils.class), eq(mockSurveyValidator));
+
+        wootric.permissionsValidator = mockPermissionsValidator;
+        wootric_1.permissionsValidator = mockPermissionsValidator;
+        doReturn(true).when(wootric.permissionsValidator).check();
+        doReturn(true).when(wootric_1.permissionsValidator).check();
+
+        wootric.showSurveyInActivity(TEST_FRAGMENT_ACTIVITY);
+        wootric_1.showSurveyInActivity(TEST_FRAGMENT_ACTIVITY);
+        verify(mockSurveyManager, times(2)).start();
+        assertThat(wootric.surveyInProgress).isTrue();
+        assertThat(wootric_1.surveyInProgress).isTrue();
+    }
+
     @Test
     public void doesNotStartSurvey_whenSurveyInProgress() {
         Wootric.singleton = null;
