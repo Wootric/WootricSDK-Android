@@ -84,6 +84,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private int mColorBlack;
     private int mColorEnabled;
 
+    private Score mScore;
     private String mSurveyType;
     private int mScaleMinimum;
     private int mScaleMaximum;
@@ -134,8 +135,10 @@ public class SurveyLayoutPhone extends LinearLayout
         mScoreTextSizeSelected = res.getDimension(R.dimen.wootric_selected_score_text_size);
         mScoreTextSizeNotSelected = res.getDimension(R.dimen.wootric_not_selected_score_text_size);
 
-        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
-        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+        mScore = new Score(0, mSurveyType, mSettings.getSurveyTypeScale());
+
+        mScaleMinimum = mSurveyType == null ? 0 : mScore.minimumScore();
+        mScaleMaximum = mSurveyType == null ? 10 : mScore.maximumScore();
 
         mScoresCount = mScaleMaximum + 1;
     }
@@ -259,7 +262,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private void submitSurvey() {
         notifyListener();
 
-        Score score = new Score(mRatingBar.getSelectedScore(), mSettings.getSurveyType());
+        Score score = new Score(mRatingBar.getSelectedScore(), mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
         boolean shouldSkipFeedbackScreen = score.isPromoter() &&
                 mSettings.shouldSkipFollowupScreenForPromoters();
 
@@ -320,7 +323,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setTexts();
         setColors();
         updateState(mCurrentState);
-        mRatingBar.setScale(mSurveyType);
+        mRatingBar.setScale(mSurveyType, mSettings.getSurveyTypeScale());
     }
 
     private void setTexts() {

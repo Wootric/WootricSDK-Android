@@ -14,8 +14,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorText("detractor");
 
-        assertThat(customThankYou.getTextForScore(0, "NPS")).isEqualTo("detractor");
-        assertThat(customThankYou.getTextForScore(6, "NPS")).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(0, "NPS", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(6, "NPS", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -23,8 +23,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveText("passive");
 
-        assertThat(customThankYou.getTextForScore(7, "NPS")).isEqualTo("passive");
-        assertThat(customThankYou.getTextForScore(8, "NPS")).isEqualTo("passive");
+        assertThat(customThankYou.getTextForScore(7, "NPS", 0)).isEqualTo("passive");
+        assertThat(customThankYou.getTextForScore(8, "NPS", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -32,8 +32,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterText("promoter");
 
-        assertThat(customThankYou.getTextForScore(9, "NPS")).isEqualTo("promoter");
-        assertThat(customThankYou.getTextForScore(10, "NPS")).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(9, "NPS", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(10, "NPS", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -41,8 +41,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setText("thank you");
 
-        assertThat(customThankYou.getTextForScore(0, "NPS")).isEqualTo("thank you");
-        assertThat(customThankYou.getTextForScore(9, "NPS")).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(0, "NPS", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(9, "NPS", 0)).isEqualTo("thank you");
     }
 
     @Test
@@ -50,8 +50,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorLinkText("detractor");
 
-        assertThat(customThankYou.getLinkTextForScore(0, "NPS")).isEqualTo("detractor");
-        assertThat(customThankYou.getLinkTextForScore(6, "NPS")).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(0, "NPS", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(6, "NPS", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -59,8 +59,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveLinkText("passive");
 
-        assertThat(customThankYou.getLinkTextForScore(7, "NPS")).isEqualTo("passive");
-        assertThat(customThankYou.getLinkTextForScore(8, "NPS")).isEqualTo("passive");
+        assertThat(customThankYou.getLinkTextForScore(7, "NPS", 0)).isEqualTo("passive");
+        assertThat(customThankYou.getLinkTextForScore(8, "NPS", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -68,8 +68,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterLinkText("promoter");
 
-        assertThat(customThankYou.getLinkTextForScore(9, "NPS")).isEqualTo("promoter");
-        assertThat(customThankYou.getLinkTextForScore(10, "NPS")).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(9, "NPS", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(10, "NPS", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -77,8 +77,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setLinkText("thank you");
 
-        assertThat(customThankYou.getLinkTextForScore(0, "NPS")).isEqualTo("thank you");
-        assertThat(customThankYou.getLinkTextForScore(9, "NPS")).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(0, "NPS", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(9, "NPS", 0)).isEqualTo("thank you");
     }
 
     @Test
@@ -86,8 +86,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorText("detractor");
 
-        assertThat(customThankYou.getTextForScore(1, "CES")).isEqualTo("detractor");
-        assertThat(customThankYou.getTextForScore(3, "CES")).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(1, "CES", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(3, "CES", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -95,8 +95,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveText("passive");
 
-        assertThat(customThankYou.getTextForScore(4, "CES")).isEqualTo("passive");
-        assertThat(customThankYou.getTextForScore(5, "CES")).isEqualTo("passive");
+        assertThat(customThankYou.getTextForScore(4, "CES", 0)).isEqualTo("passive");
+        assertThat(customThankYou.getTextForScore(5, "CES", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -104,8 +104,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterText("promoter");
 
-        assertThat(customThankYou.getTextForScore(6, "CES")).isEqualTo("promoter");
-        assertThat(customThankYou.getTextForScore(7, "CES")).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(6, "CES", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(7, "CES", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -113,8 +113,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setText("thank you");
 
-        assertThat(customThankYou.getTextForScore(1, "CES")).isEqualTo("thank you");
-        assertThat(customThankYou.getTextForScore(7, "CES")).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(1, "CES", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(7, "CES", 0)).isEqualTo("thank you");
     }
 
     @Test
@@ -122,8 +122,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorLinkText("detractor");
 
-        assertThat(customThankYou.getLinkTextForScore(1, "CES")).isEqualTo("detractor");
-        assertThat(customThankYou.getLinkTextForScore(3, "CES")).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(1, "CES", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(3, "CES", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -131,8 +131,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveLinkText("passive");
 
-        assertThat(customThankYou.getLinkTextForScore(4, "CES")).isEqualTo("passive");
-        assertThat(customThankYou.getLinkTextForScore(5, "CES")).isEqualTo("passive");
+        assertThat(customThankYou.getLinkTextForScore(4, "CES", 0)).isEqualTo("passive");
+        assertThat(customThankYou.getLinkTextForScore(5, "CES", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -140,8 +140,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterLinkText("promoter");
 
-        assertThat(customThankYou.getLinkTextForScore(6, "CES")).isEqualTo("promoter");
-        assertThat(customThankYou.getLinkTextForScore(7, "CES")).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(6, "CES", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(7, "CES", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -149,8 +149,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setLinkText("thank you");
 
-        assertThat(customThankYou.getLinkTextForScore(1, "CES")).isEqualTo("thank you");
-        assertThat(customThankYou.getLinkTextForScore(7, "CES")).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(1, "CES", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(7, "CES", 0)).isEqualTo("thank you");
     }
 
     @Test
@@ -158,8 +158,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorText("detractor");
 
-        assertThat(customThankYou.getTextForScore(1, "CSAT")).isEqualTo("detractor");
-        assertThat(customThankYou.getTextForScore(2, "CSAT")).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(1, "CSAT", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getTextForScore(2, "CSAT", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -167,7 +167,7 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveText("passive");
 
-        assertThat(customThankYou.getTextForScore(3, "CSAT")).isEqualTo("passive");
+        assertThat(customThankYou.getTextForScore(3, "CSAT", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -175,8 +175,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterText("promoter");
 
-        assertThat(customThankYou.getTextForScore(4, "CSAT")).isEqualTo("promoter");
-        assertThat(customThankYou.getTextForScore(5, "CSAT")).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(4, "CSAT", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getTextForScore(5, "CSAT", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -184,8 +184,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setText("thank you");
 
-        assertThat(customThankYou.getTextForScore(1, "CSAT")).isEqualTo("thank you");
-        assertThat(customThankYou.getTextForScore(5, "CSAT")).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(1, "CSAT", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getTextForScore(5, "CSAT", 0)).isEqualTo("thank you");
     }
 
     @Test
@@ -193,8 +193,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setDetractorLinkText("detractor");
 
-        assertThat(customThankYou.getLinkTextForScore(1, "CSAT")).isEqualTo("detractor");
-        assertThat(customThankYou.getLinkTextForScore(2, "CSAT")).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(1, "CSAT", 0)).isEqualTo("detractor");
+        assertThat(customThankYou.getLinkTextForScore(2, "CSAT", 0)).isEqualTo("detractor");
     }
 
     @Test
@@ -202,7 +202,7 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPassiveLinkText("passive");
 
-        assertThat(customThankYou.getLinkTextForScore(3, "CSAT")).isEqualTo("passive");
+        assertThat(customThankYou.getLinkTextForScore(3, "CSAT", 0)).isEqualTo("passive");
     }
 
     @Test
@@ -210,8 +210,8 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setPromoterLinkText("promoter");
 
-        assertThat(customThankYou.getLinkTextForScore(4, "CSAT")).isEqualTo("promoter");
-        assertThat(customThankYou.getLinkTextForScore(5, "CSAT")).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(4, "CSAT", 0)).isEqualTo("promoter");
+        assertThat(customThankYou.getLinkTextForScore(5, "CSAT", 0)).isEqualTo("promoter");
     }
 
     @Test
@@ -219,7 +219,7 @@ public class WootricCustomThankYouTest {
         WootricCustomThankYou customThankYou = new WootricCustomThankYou();
         customThankYou.setLinkText("thank you");
 
-        assertThat(customThankYou.getLinkTextForScore(1, "CSAT")).isEqualTo("thank you");
-        assertThat(customThankYou.getLinkTextForScore(5, "CSAT")).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(1, "CSAT", 0)).isEqualTo("thank you");
+        assertThat(customThankYou.getLinkTextForScore(5, "CSAT", 0)).isEqualTo("thank you");
     }
 }

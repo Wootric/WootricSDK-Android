@@ -134,7 +134,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
         }
         builder.appendQueryParameter("os_name", "Android");
         builder.appendQueryParameter("os_version", Build.VERSION.RELEASE);
-        builder.appendQueryParameter("sdk_version", BuildConfig.VERSION_NAME);
+        builder.appendQueryParameter("sdk_version", "android-" + BuildConfig.VERSION_NAME);
 
         return builder.build().getEncodedQuery();
     }

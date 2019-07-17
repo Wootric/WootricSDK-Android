@@ -74,6 +74,7 @@ public class Settings implements Parcelable {
     private int scoreColor = Constants.NOT_SET;
     private int thankYouButtonBackgroundColor = Constants.NOT_SET;
     private int socialSharingColor = Constants.NOT_SET;
+    private int surveyTypeScale = 0;
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -92,7 +93,6 @@ public class Settings implements Parcelable {
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
-
         Boolean firstCriteria = timeFrom == Constants.NOT_SET;
         Boolean secondCriteria;
         if (getFirstSurveyDelay() != null) {
@@ -175,11 +175,11 @@ public class Settings implements Parcelable {
         String followupQuestion = null;
 
         if(localCustomMessage != null) {
-            followupQuestion = localCustomMessage.getFollowupQuestionForScore(score, surveyType);
+            followupQuestion = localCustomMessage.getFollowupQuestionForScore(score, surveyType, surveyTypeScale);
         }
 
         if(followupQuestion == null && adminPanelCustomMessage != null) {
-            followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score, surveyType);
+            followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score, surveyType, surveyTypeScale);
         }
 
         if(followupQuestion == null) {
@@ -193,11 +193,11 @@ public class Settings implements Parcelable {
         String followupPlaceholder = null;
 
         if(localCustomMessage != null) {
-            followupPlaceholder = localCustomMessage.getPlaceholderForScore(score, surveyType);
+            followupPlaceholder = localCustomMessage.getPlaceholderForScore(score, surveyType, surveyTypeScale);
         }
 
         if(followupPlaceholder == null && adminPanelCustomMessage != null) {
-            followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score, surveyType);
+            followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score, surveyType, surveyTypeScale);
         }
 
         if(followupPlaceholder == null) {
@@ -211,7 +211,7 @@ public class Settings implements Parcelable {
         String thankYouMessage = null;
 
         if(customThankYou != null) {
-            thankYouMessage = customThankYou.getTextForScore(score, surveyType);
+            thankYouMessage = customThankYou.getTextForScore(score, surveyType, surveyTypeScale);
         }
 
         return thankYouMessage;
@@ -223,18 +223,18 @@ public class Settings implements Parcelable {
 
     public String getThankYouLinkText(int score) {
         return (customThankYou == null) ?
-                null : customThankYou.getLinkTextForScore(score, surveyType);
+                null : customThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale);
     }
 
     public Uri getThankYouLinkUri(int score, String comment) {
         return (customThankYou == null) ?
-                null :  customThankYou.getLinkUri(score, comment, surveyType);
+                null :  customThankYou.getLinkUri(score, comment, surveyType, surveyTypeScale);
     }
 
     public boolean isThankYouActionConfigured(int score, String comment) {
         return customThankYou != null &&
-                customThankYou.getLinkTextForScore(score, surveyType) != null &&
-                customThankYou.getLinkUri(score, comment, surveyType) != null;
+                customThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale) != null &&
+                customThankYou.getLinkUri(score, comment, surveyType, surveyTypeScale) != null;
     }
 
     public String getSocialShareQuestion() {
@@ -379,12 +379,19 @@ public class Settings implements Parcelable {
 
     public String getSurveyType() { return surveyType; }
 
+    public int getSurveyTypeScale() { return surveyTypeScale; }
+
     public void setSurveyType(String surveyType) {
         this.surveyType = surveyType;
     }
 
     public void setCustomThankYou(WootricCustomThankYou customThankYou) {
         this.customThankYou = customThankYou;
+    }
+
+    public void setCustomSurveyTypeScale(int customSurveyTypeScale) {
+        this.surveyTypeScale = customSurveyTypeScale < 0 ? 0 : customSurveyTypeScale;
+
     }
 
     public int getSurveyColor() {

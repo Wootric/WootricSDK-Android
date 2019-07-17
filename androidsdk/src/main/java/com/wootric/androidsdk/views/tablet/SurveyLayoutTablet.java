@@ -93,7 +93,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private int mScaleMinimum;
     private int mScaleMaximum;
 
-    private int mScoresCount;
+    private Score mScore;
     private int mScoresTop;
     private ScoreView[] mScoreViews;
     private int mCurrentScore = -1;
@@ -217,11 +217,10 @@ public class SurveyLayoutTablet extends LinearLayout
     private void initResources() {
         final Resources res = getResources();
 
-        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
-        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+        mScaleMinimum = mSurveyType == null ? 0 : mScore.minimumScore();
+        mScaleMaximum = mSurveyType == null ? 10 : mScore.maximumScore();
 
         mScoresTop = mScaleMaximum + 1;
-        mScoresCount =  mScoresTop - mScaleMinimum;
     }
 
     private void initScoreLayout() {
@@ -245,6 +244,9 @@ public class SurveyLayoutTablet extends LinearLayout
     public void initWithSettings(Settings settings) {
         mSettings = settings;
         mSurveyType = mSettings.getSurveyType();
+
+        mScore = new Score(mCurrentScore, mSurveyType, mSettings.getSurveyTypeScale());
+
         initResources();
         initScoreLayout();
         updateState(mCurrentState);
@@ -333,8 +335,7 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void initSocialLinks() {
-        Score score = new Score(mCurrentScore, mSurveyType);
-        boolean shouldShowFacebookBtn = (score.isPromoter() && mSettings.getFacebookPageId() != null);
+        boolean shouldShowFacebookBtn = (mScore.isPromoter() && mSettings.getFacebookPageId() != null);
 
         mBtnFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mBtnFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
@@ -342,7 +343,7 @@ public class SurveyLayoutTablet extends LinearLayout
         final String feedback = getFeedback();
 
         boolean shouldShowTwitterBtn =
-                        score.isPromoter() &&
+                        mScore.isPromoter() &&
                         mSettings.getTwitterPage() != null &&
                         feedback != null &&
                         !feedback.isEmpty();
@@ -396,7 +397,7 @@ public class SurveyLayoutTablet extends LinearLayout
 
         mCurrentScore = scoreValue;
 
-        Score score = new Score(mCurrentScore, mSettings.getSurveyType());
+        Score score = new Score(mCurrentScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
         boolean shouldSkipFeedbackScreen = score.isPromoter() &&
                 mSettings.shouldSkipFollowupScreenForPromoters();
 

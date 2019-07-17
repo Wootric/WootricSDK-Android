@@ -1,3 +1,7 @@
+## 2.12.0 (2019-07-17)
+
+- Add support for custom scale
+
 ## 2.11.0 (2019-02-04)
 
 - Add new method showSurveyInActivity

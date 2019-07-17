@@ -398,6 +398,13 @@ public class Wootric {
     }
 
     /**
+     *
+     */
+    public void setSurveyTypeScale(int surveyTypeScale) {
+        settings.setCustomSurveyTypeScale(surveyTypeScale);
+    }
+
+    /**
      * Starts the survey if configuration is correctly set and elibility returns true.
      */
     public void survey() {

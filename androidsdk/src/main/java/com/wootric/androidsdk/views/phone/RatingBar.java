@@ -43,6 +43,7 @@ public class RatingBar extends View implements View.OnTouchListener {
     private Context mContext;
 
     private String mSurveyType;
+    private int mSurveyTypeScale;
     private int mScaleMinimum;
     private int mScaleMaximum;
 
@@ -99,9 +100,10 @@ public class RatingBar extends View implements View.OnTouchListener {
 
     private void initResources() {
         Resources res = mContext.getResources();
+        Score score = new Score(-1, mSurveyType, mSurveyTypeScale);
 
-        mScaleMinimum = mSurveyType == null ? 0 : Score.minimumScore(mSurveyType);
-        mScaleMaximum = mSurveyType == null ? 10 : Score.maximumScore(mSurveyType);
+        mScaleMinimum = mSurveyType == null ? 0 : score.minimumScore();
+        mScaleMaximum = mSurveyType == null ? 10 : score.maximumScore();
 
         mNotchTop = mScaleMaximum + 1;
         mNotchCount = mNotchTop - mScaleMinimum;
@@ -232,8 +234,9 @@ public class RatingBar extends View implements View.OnTouchListener {
         return touchedScore;
     }
 
-    public void setScale(String surveyType) {
+    public void setScale(String surveyType, int surveyTypeScale) {
         mSurveyType = surveyType;
+        mSurveyTypeScale = surveyTypeScale;
         initResources();
     }
 

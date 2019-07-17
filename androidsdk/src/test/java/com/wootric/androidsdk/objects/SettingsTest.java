@@ -121,7 +121,7 @@ public class SettingsTest {
 
     @Test
     public void whenLocalCustomMessageIsSet_returnsLocalCustomMessageQuestion() {
-        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS");
+        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS", 0);
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(mockCustomMessage);
@@ -132,7 +132,7 @@ public class SettingsTest {
 
     @Test
     public void whenAdminPanelCustomMessageIsSet_returnsAdminPanelCustomMessageQuestion() {
-        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS");
+        doReturn("promoter").when(mockCustomMessage).getFollowupQuestionForScore(10, "NPS", 0);
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(null);
@@ -156,7 +156,7 @@ public class SettingsTest {
 
     @Test
     public void whenLocalCustomMessageIsSet_returnsLocalCustomMessagePlaceholder() {
-        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS");
+        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS", 0);
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(mockCustomMessage);
@@ -167,7 +167,7 @@ public class SettingsTest {
 
     @Test
     public void whenAdminPanelCustomMessageIsSet_returnsAdminPanelCustomMessagePlaceholder() {
-        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS");
+        doReturn("promoter").when(mockCustomMessage).getPlaceholderForScore(10, "NPS", 0    );
 
         Settings settings = new Settings();
         settings.setLocalCustomMessage(null);

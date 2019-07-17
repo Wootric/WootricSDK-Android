@@ -214,7 +214,7 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void initSocialLinks() {
-        Score score = new Score(mScore, mSettings.getSurveyType());
+        Score score = new Score(mScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
         boolean shouldShowFacebookBtn = (score.isPromoter() && mSettings.getFacebookPageId() != null);
 
         mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
