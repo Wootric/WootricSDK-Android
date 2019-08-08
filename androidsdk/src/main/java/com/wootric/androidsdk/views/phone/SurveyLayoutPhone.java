@@ -263,9 +263,8 @@ public class SurveyLayoutPhone extends LinearLayout
         notifyListener();
 
         Score score = new Score(mRatingBar.getSelectedScore(), mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
-        boolean shouldSkipFeedbackScreen = score.isPromoter() &&
-                mSettings.shouldSkipFollowupScreenForPromoters();
-
+        boolean shouldSkipFeedbackScreen = mSettings.skipFeedbackScreen() ||
+                (score.isPromoter() && mSettings.shouldSkipFollowupScreenForPromoters());
 
         if(isFeedbackState() || shouldSkipFeedbackScreen) {
             updateState(STATE_THANK_YOU);

@@ -398,8 +398,8 @@ public class SurveyLayoutTablet extends LinearLayout
         mCurrentScore = scoreValue;
 
         Score score = new Score(mCurrentScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
-        boolean shouldSkipFeedbackScreen = score.isPromoter() &&
-                mSettings.shouldSkipFollowupScreenForPromoters();
+        boolean shouldSkipFeedbackScreen = mSettings.skipFeedbackScreen() ||
+                (score.isPromoter() && mSettings.shouldSkipFollowupScreenForPromoters());
 
         if(mCurrentScore != Constants.NOT_SET) {
             if(shouldSkipFeedbackScreen) {

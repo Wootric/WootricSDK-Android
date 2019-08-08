@@ -386,4 +386,13 @@ public class WootricTest {
         assertThat(Wootric.singleton).isNull();
         verify(wootric.preferencesUtils, never()).touchLastSurveyed(false, 0);
     }
+
+    @Test
+    public void whenSkipFeedbackScreenTrue_doesNotShowFeedbackScreen() {
+        Wootric.singleton = null;
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
+        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        wootric.skipFeedbackScreen(true);
+        wootric_1.skipFeedbackScreen(true);
+    }
 }

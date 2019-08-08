@@ -398,7 +398,16 @@ public class Wootric {
     }
 
     /**
-     *
+      * Setter to skip feedback screen and go to thank you message.
+      * @param skipFeedbackScreen boolean value.
+      */
+    public void skipFeedbackScreen(boolean skipFeedbackScreen) {
+        settings.setSkipFeedbackScreen(skipFeedbackScreen);
+    }
+
+    /**
+     * Set Survey Type Scale
+     * @param surveyTypeScale typeScale int
      */
     public void setSurveyTypeScale(int surveyTypeScale) {
         settings.setCustomSurveyTypeScale(surveyTypeScale);
