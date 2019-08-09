@@ -1,3 +1,11 @@
+## 2.13.0 (2019-08-09)
+
+- Add callbacks
+- Remove tracking pixel
+- Fix timeDelay bug
+- Fix ThankYou dialog dismiss bug
+- Add skipFeebackScreen
+
 ## 2.12.0 (2019-07-17)
 
 - Add support for custom scale
