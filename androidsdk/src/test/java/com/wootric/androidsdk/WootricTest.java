@@ -242,12 +242,12 @@ public class WootricTest {
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         wootric.permissionsValidator = mockPermissionsValidator;
         wootric_1.permissionsValidator = mockPermissionsValidator;
@@ -276,12 +276,12 @@ public class WootricTest {
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         wootric.permissionsValidator = mockPermissionsValidator;
         wootric_1.permissionsValidator = mockPermissionsValidator;
@@ -311,12 +311,12 @@ public class WootricTest {
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         wootric.permissionsValidator = mockPermissionsValidator;
         wootric_1.permissionsValidator = mockPermissionsValidator;
@@ -347,12 +347,12 @@ public class WootricTest {
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager(eq(wootric_1.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric_1.user),
                 eq(wootric_1.endUser), eq(wootric_1.settings),
-                any(PreferencesUtils.class), eq(mockSurveyValidator));
+                any(PreferencesUtils.class), eq(mockSurveyValidator), any(WootricSurveyCallback.class));
 
         wootric.permissionsValidator = mockPermissionsValidator;
         wootric_1.permissionsValidator = mockPermissionsValidator;

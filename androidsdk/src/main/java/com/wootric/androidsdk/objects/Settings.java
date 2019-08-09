@@ -25,6 +25,7 @@ package com.wootric.androidsdk.objects;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
@@ -141,6 +142,7 @@ public class Settings implements Parcelable {
 
         if(timeDelay != Constants.NOT_SET) {
             time = timeDelay;
+
         } else if(adminPanelTimeDelay != Constants.NOT_SET) {
             time = adminPanelTimeDelay;
         } else {
@@ -516,7 +518,8 @@ public class Settings implements Parcelable {
         Settings settings = new Settings();
         settings.setSurveyType(settingsObject.optString("survey_type", "NPS"));
         settings.firstSurvey = settingsObject.optLong("first_survey");
-        settings.timeDelay = settingsObject.optInt("time_delay");
+        settings.adminPanelTimeDelay = settingsObject.optInt("time_delay");
+
         if (settingsObject.has("account_id")) {
             settings.accountID = settingsObject.optLong("account_id");
         } else {

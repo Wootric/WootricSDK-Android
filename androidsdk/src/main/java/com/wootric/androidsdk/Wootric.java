@@ -49,6 +49,7 @@ public class Wootric {
     WeakReference<FragmentActivity> weakFragmentActivity;
     WeakReference<Activity> weakActivity;
     WeakReference<Context> weakContext;
+    WootricSurveyCallback surveyCallback;
 
     final EndUser endUser;
     final User user;
@@ -150,6 +151,9 @@ public class Wootric {
         return singleton;
     }
 
+    public void setSurveyCallback(WootricSurveyCallback surveyCallback){
+        this.surveyCallback = surveyCallback;
+    }
     /**
      *  End user email is optional. If not provided, the end user will be considered as "Unknown".
      *
@@ -406,6 +410,14 @@ public class Wootric {
     }
 
     /**
+     * Change the time delay to show the survey (in seconds).
+     * @param  customTimeDelay int value
+     */
+    public void setCustomTimeDelay(int customTimeDelay) {
+        settings.setTimeDelay(customTimeDelay);
+    }
+
+    /**
      * Set Survey Type Scale
      * @param surveyTypeScale typeScale int
      */
@@ -446,10 +458,10 @@ public class Wootric {
 
         if (weakFragmentActivity != null) {
             return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator);
+                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
         } else {
             return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator);
+                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
         }
     }
 
@@ -473,10 +485,10 @@ public class Wootric {
 
         if (activity instanceof FragmentActivity) {
             return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator);
+                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
         } else {
             return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator);
+                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
         }
     }
 
@@ -511,15 +523,15 @@ public class Wootric {
 
     SurveyManager buildSurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
-                                     SurveyValidator surveyValidator) {
+                                     SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
         return new SurveyManager(fragmentActivity, wootricApiClient, user, endUser,
-                settings, preferencesUtils, surveyValidator);
+                settings, preferencesUtils, surveyValidator, surveyCallback);
     }
 
     SurveyManager buildSurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user,
                                      EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
-                                     SurveyValidator surveyValidator) {
+                                     SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
         return new SurveyManager(activity, wootricApiClient, user, endUser,
-                settings, preferencesUtils, surveyValidator);
+                settings, preferencesUtils, surveyValidator, surveyCallback);
     }
 }

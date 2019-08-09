@@ -27,15 +27,19 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.wootric.androidsdk.WootricSurveyCallback;
 import com.wootric.androidsdk.objects.Settings;
+
+import java.util.HashMap;
 
 /**
  * Created by maciejwitowski on 10/2/15.
  */
 public class ThankYouDialogFactory {
 
-    public static Dialog create(Context context, Settings settings, int score) {
+    public static Dialog create(Context context, Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback) {
         AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
+        thankYouDialog.setCancelable(false);
         final String customThankYouText = settings.getCustomThankYouMessage(score);
         final String thankYouText = settings.getThankYouMessage();
 
@@ -49,6 +53,14 @@ public class ThankYouDialogFactory {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+                if (surveyCallback != null) {
+                    HashMap<String, Object> hashMap = new HashMap();
+                    if (score != -1) {
+                        hashMap.put("score", score);
+                    }
+                    hashMap.put("text", text);
+                    surveyCallback.onSurveyDidHide(hashMap);
+                }
             }
         });
 

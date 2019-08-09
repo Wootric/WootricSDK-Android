@@ -29,7 +29,6 @@ import com.wootric.androidsdk.network.tasks.CreateEndUserTask;
 import com.wootric.androidsdk.network.tasks.CreateResponseTask;
 import com.wootric.androidsdk.network.tasks.GetAccessTokenTask;
 import com.wootric.androidsdk.network.tasks.GetEndUserByEmailTask;
-import com.wootric.androidsdk.network.tasks.GetTrackingPixelTask;
 import com.wootric.androidsdk.network.tasks.UpdateEndUserTask;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -45,14 +44,6 @@ public class WootricRemoteClient {
 
     public WootricRemoteClient(OfflineDataHandler offlineDataHandler) {
         this.offlineDataHandler = offlineDataHandler;
-    }
-
-    public void getTrackingPixel(User user, EndUser endUser, String originUrl) {
-        new GetTrackingPixelTask(
-                user,
-                endUser,
-                originUrl
-        ).execute();
     }
 
     public void

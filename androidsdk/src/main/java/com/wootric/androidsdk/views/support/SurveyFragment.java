@@ -43,6 +43,7 @@ import android.widget.TextView;
 import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.Wootric;
+import com.wootric.androidsdk.WootricSurveyCallback;
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
@@ -57,6 +58,7 @@ import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by maciejwitowski on 9/4/15.
@@ -73,6 +75,7 @@ public class SurveyFragment extends DialogFragment
 
     private SurveyLayout mSurveyLayout;
     private LinearLayout mFooter;
+    private WootricSurveyCallback mSurveyCallback;
 
     private EndUser mEndUser;
     private User mUser;
@@ -83,7 +86,10 @@ public class SurveyFragment extends DialogFragment
     private LinearLayout mPoweredBy;
     private TextView mBtnOptOut;
 
+    private int mScore = -1;
+    private String mText;
     private boolean mResponseSent;
+    private boolean mShouldShowSimpleDialog;
 
     private WootricRemoteClient mWootricApiClient;
     private SocialHandler mSocialHandler;
@@ -107,6 +113,10 @@ public class SurveyFragment extends DialogFragment
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setSurveyCallback(WootricSurveyCallback surveyCallback) {
+        mSurveyCallback = surveyCallback;
     }
 
     @Override
@@ -242,6 +252,8 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onSurveySubmit(int score, String text) {
         mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink);
+        mScore = score;
+        mText = text;
         mResponseSent = true;
         priority++;
     }
@@ -299,11 +311,11 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void dismiss() {
+        super.dismiss();
+
         if(mIsTablet) {
             notifySurveyFinished();
         }
-
-        super.dismiss();
     }
 
     @Override
@@ -320,10 +332,22 @@ public class SurveyFragment extends DialogFragment
         final Activity activity = getActivity();
 
         if (activity != null) {
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore()).show();
+            mShouldShowSimpleDialog = true;
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback).show();
         }
 
         dismiss();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mSurveyCallback != null) {
+            mSurveyCallback.onSurveyWillHide();
+        }
+        if (mIsTablet) {
+            this.onDestroy();
+        }
     }
 
     @Override
@@ -331,6 +355,15 @@ public class SurveyFragment extends DialogFragment
         super.onDestroy();
 
         isResumedOnConfigurationChange = true;
+
+        if (mSurveyCallback != null && !mShouldShowSimpleDialog) {
+            HashMap<String, Object> hashMap = new HashMap();
+            if (mScore != -1) {
+                hashMap.put("score", mScore);
+            }
+            hashMap.put("text", mText);
+            mSurveyCallback.onSurveyDidHide(hashMap);
+        }
     }
 
     @Override

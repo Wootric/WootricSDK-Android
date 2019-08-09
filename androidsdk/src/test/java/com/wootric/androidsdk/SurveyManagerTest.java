@@ -1,5 +1,9 @@
 package com.wootric.androidsdk;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -20,6 +24,7 @@ import static com.wootric.androidsdk.TestHelper.TEST_FRAGMENT_ACTIVITY;
 import static com.wootric.androidsdk.TestHelper.testEndUser;
 import static com.wootric.androidsdk.TestHelper.testUser;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -37,25 +42,14 @@ public class SurveyManagerTest {
     @Mock
     SurveyValidator surveyValidator;
 
-    @Test
-    public void sendsGetTrackingPixelRequest() throws Exception {
-        User user = testUser();
-        EndUser endUser = testEndUser();
-        SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
-                wootricApiClient, user, endUser, new Settings(), preferencesUtils,
-                surveyValidator);
-
-        surveyManager.start();
-
-        verify(wootricApiClient, times(1)).getTrackingPixel(user, endUser, ORIGIN_URL);
-    }
-
+    @Mock
+    WootricSurveyCallback surveyCallback;
 
     @Test
     public void updatesLastSeen() throws Exception {
         SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
 
         surveyManager.start();
 
@@ -66,7 +60,7 @@ public class SurveyManagerTest {
     public void validatesSurvey() throws Exception {
         SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
 
         surveyManager.start();
 
@@ -77,7 +71,7 @@ public class SurveyManagerTest {
     public void setsOnSurveyValidatedListener() throws Exception {
         SurveyManager surveyManager = new SurveyManager(TEST_FRAGMENT_ACTIVITY,
                 wootricApiClient, testUser(), testEndUser(), new Settings(), preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
 
         surveyManager.start();
 
@@ -90,7 +84,7 @@ public class SurveyManagerTest {
         Settings settings = new Settings();
         SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, user, testEndUser(), settings, preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
 
         surveyManager.onSurveyValidated(new Settings());
 
@@ -102,7 +96,7 @@ public class SurveyManagerTest {
         EndUser endUser = new EndUser("nps@example.com");
         SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
 
         final String accessToken = "test123test";
         surveyManager.onAuthenticateSuccess(accessToken);
@@ -117,7 +111,7 @@ public class SurveyManagerTest {
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         doNothing().when(surveyManager).showSurvey();
 
@@ -135,7 +129,7 @@ public class SurveyManagerTest {
 
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         final String accessToken = "test123test";
         surveyManager.setAccessToken(accessToken);
@@ -161,7 +155,7 @@ public class SurveyManagerTest {
 
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         final String accessToken = "test123test";
         surveyManager.setAccessToken(accessToken);
@@ -197,7 +191,7 @@ public class SurveyManagerTest {
 
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         final String accessToken = "test123test";
         surveyManager.setAccessToken(accessToken);
@@ -230,7 +224,7 @@ public class SurveyManagerTest {
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator);
+                surveyValidator, surveyCallback);
         final String accessToken = "test123test";
         surveyManager.setAccessToken(accessToken);
 
@@ -244,7 +238,7 @@ public class SurveyManagerTest {
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         doNothing().when(surveyManager).showSurvey();
 
@@ -261,7 +255,7 @@ public class SurveyManagerTest {
         EndUser endUser = testEndUser();
         SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
                 wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
-                surveyValidator));
+                surveyValidator, surveyCallback));
 
         doNothing().when(surveyManager).showSurvey();
 
@@ -271,5 +265,18 @@ public class SurveyManagerTest {
 
         assertThat(endUser.getId()).isEqualTo(receivedEndUser.getId());
         verify(surveyManager, times(1)).showSurvey();
+    }
+
+    @Test
+    public void surveyCallbackWillShow() throws Exception {
+        EndUser endUser = testEndUser();
+
+        SurveyManager surveyManager = spy(new SurveyManager(new FragmentActivity(),
+                wootricApiClient, testUser(), endUser, new Settings(), preferencesUtils,
+                surveyValidator, surveyCallback));
+
+        surveyManager.showSurvey();
+
+        verify(surveyCallback, times(1)).onSurveyWillShow();
     }
 }

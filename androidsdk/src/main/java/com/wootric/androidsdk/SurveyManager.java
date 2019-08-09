@@ -23,12 +23,16 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 
 import com.wootric.androidsdk.network.WootricApiCallback;
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -38,6 +42,8 @@ import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.views.support.SurveyFragment;
 
+import java.util.HashMap;
+
 /**
  * Created by maciejwitowski on 9/3/15.
  */
@@ -45,6 +51,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     private Activity activity;
     private FragmentActivity fragmentActivity;
+    private WootricSurveyCallback surveyCallback;
     private final WootricRemoteClient wootricApiClient;
     private final User user;
     private final EndUser endUser;
@@ -59,7 +66,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     SurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                    Settings settings, PreferencesUtils preferencesUtils,
-                   SurveyValidator surveyValidator) {
+                   SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
         this.fragmentActivity = fragmentActivity;
         this.wootricApiClient = wootricApiClient;
         this.user = user;
@@ -67,11 +74,12 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         this.surveyValidator = surveyValidator;
         this.settings = settings;
         this.preferencesUtils = preferencesUtils;
+        this.surveyCallback = surveyCallback;
     }
 
     SurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
                   Settings settings, PreferencesUtils preferencesUtils,
-                  SurveyValidator surveyValidator) {
+                  SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
         this.activity = activity;
         this.wootricApiClient = wootricApiClient;
         this.user = user;
@@ -79,10 +87,10 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         this.surveyValidator = surveyValidator;
         this.settings = settings;
         this.preferencesUtils = preferencesUtils;
+        this.surveyCallback = surveyCallback;
     }
 
     void start() {
-        sendGetTrackingPixelRequest();
         preferencesUtils.touchLastSeen();
 
         validateSurvey();
@@ -152,10 +160,6 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         surveyValidator.validate();
     }
 
-    private void sendGetTrackingPixelRequest() {
-        wootricApiClient.getTrackingPixel(user, endUser, getOriginUrl());
-    }
-
     private void sendGetAccessTokenRequest() {
         wootricApiClient.authenticate(user, this);
     }
@@ -173,6 +177,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     }
 
     void showSurvey() {
+        if (surveyCallback != null) {
+            surveyCallback.onSurveyWillShow();
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -196,6 +203,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
                 final boolean isTablet = fragmentActivity.getResources().getBoolean(R.bool.isTablet);
 
+                surveySupportFragment.setSurveyCallback(surveyCallback);
                 if(isTablet) {
                     fragmentActivityManager.beginTransaction()
                             .add(android.R.id.content, surveySupportFragment, SURVEY_DIALOG_TAG)
@@ -210,8 +218,10 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 com.wootric.androidsdk.views.SurveyFragment surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(endUser, getOriginUrl(),
                         accessToken, settings, user);
 
+
                 final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
 
+                surveyFragment.setSurveyCallback(surveyCallback);
                 if(isTablet) {
                     fragmentManager.beginTransaction()
                             .add(android.R.id.content, surveyFragment, SURVEY_DIALOG_TAG)
@@ -219,6 +229,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                             .addToBackStack(null).commit();
                 } else {
                     surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
+                }
+                if (surveyCallback != null){
+                    surveyCallback.onSurveyDidShow();
                 }
             }
         } catch (NullPointerException e) {
