@@ -47,6 +47,10 @@ public final class Utils {
         return s != null && !s.isEmpty() && !isWhitespaceString(s);
     }
 
+    public static boolean isBlank(String s) {
+        return s == null || (s != null && (s.isEmpty() || isWhitespaceString(s)));
+    }
+
     private static boolean isWhitespaceString(String s) {
         return s.trim().length() == 0;
     }

@@ -35,6 +35,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import static com.wootric.androidsdk.utils.Utils.isBlank;
+
 /**
  * Created by maciejwitowski on 5/5/15.
  */
@@ -49,6 +51,12 @@ public class Settings implements Parcelable {
 
     private WootricCustomMessage adminPanelCustomMessage;
     private WootricCustomMessage localCustomMessage;
+
+    private WootricSocial adminPanelSocial;
+    private WootricSocial localSocial;
+
+    private WootricCustomThankYou localCustomThankYou;
+    private WootricCustomThankYou adminPanelCustomThankYou;
 
     private int timeDelay = Constants.NOT_SET;
 
@@ -66,11 +74,7 @@ public class Settings implements Parcelable {
     private String languageCode;
     private String productName;
     private String recommendTarget;
-    private String facebookPageId;
-    private String twitterPage;
     private String surveyType;
-
-    private WootricCustomThankYou customThankYou;
 
     private int surveyColor = Constants.NOT_SET;
     private int scoreColor = Constants.NOT_SET;
@@ -80,12 +84,14 @@ public class Settings implements Parcelable {
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
-        if(settings == null) {
+        if (settings == null) {
             return;
         }
 
         this.adminPanelCustomMessage = settings.adminPanelCustomMessage;
         this.adminPanelTimeDelay = settings.adminPanelTimeDelay;
+        this.adminPanelCustomThankYou = settings.adminPanelCustomThankYou;
+        this.adminPanelSocial = settings.adminPanelSocial;
         this.localizedTexts = settings.localizedTexts;
         this.userID = settings.userID;
         this.accountID = settings.accountID;
@@ -140,10 +146,10 @@ public class Settings implements Parcelable {
     public int getTimeDelayInMillis() {
         int time;
 
-        if(timeDelay != Constants.NOT_SET) {
+        if (timeDelay != Constants.NOT_SET) {
             time = timeDelay;
 
-        } else if(adminPanelTimeDelay != Constants.NOT_SET) {
+        } else if (adminPanelTimeDelay != Constants.NOT_SET) {
             time = adminPanelTimeDelay;
         } else {
             time = 0;
@@ -183,15 +189,15 @@ public class Settings implements Parcelable {
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
 
-        if(localCustomMessage != null) {
+        if (localCustomMessage != null) {
             followupQuestion = localCustomMessage.getFollowupQuestionForScore(score, surveyType, surveyTypeScale);
         }
 
-        if(followupQuestion == null && adminPanelCustomMessage != null) {
+        if (isBlank(followupQuestion) && adminPanelCustomMessage != null) {
             followupQuestion =  adminPanelCustomMessage.getFollowupQuestionForScore(score, surveyType, surveyTypeScale);
         }
 
-        if(followupQuestion == null) {
+        if (isBlank(followupQuestion)) {
             followupQuestion = localizedTexts.getFollowupQuestion();
         }
 
@@ -201,15 +207,15 @@ public class Settings implements Parcelable {
     public String getFollowupPlaceholder(int score) {
         String followupPlaceholder = null;
 
-        if(localCustomMessage != null) {
+        if (localCustomMessage != null) {
             followupPlaceholder = localCustomMessage.getPlaceholderForScore(score, surveyType, surveyTypeScale);
         }
 
-        if(followupPlaceholder == null && adminPanelCustomMessage != null) {
+        if (isBlank(followupPlaceholder) && adminPanelCustomMessage != null) {
             followupPlaceholder =  adminPanelCustomMessage.getPlaceholderForScore(score, surveyType, surveyTypeScale);
         }
 
-        if(followupPlaceholder == null) {
+        if (isBlank(followupPlaceholder)) {
             followupPlaceholder = localizedTexts.getFollowupPlaceholder();
         }
 
@@ -219,31 +225,182 @@ public class Settings implements Parcelable {
     public String getCustomThankYouMessage(int score) {
         String thankYouMessage = null;
 
-        if(customThankYou != null) {
-            thankYouMessage = customThankYou.getTextForScore(score, surveyType, surveyTypeScale);
+        if (localCustomThankYou != null) {
+            thankYouMessage = localCustomThankYou.getTextForScore(score, surveyType, surveyTypeScale);
+        }
+
+        if (isBlank(thankYouMessage) && adminPanelCustomThankYou != null) {
+            thankYouMessage =  adminPanelCustomThankYou.getTextForScore(score, surveyType, surveyTypeScale);
+
+            if (isBlank(thankYouMessage)) {
+                Score mScore = new Score(score, this.getSurveyType(), this.getSurveyTypeScale());
+                if (mScore.isPromoter() && (adminPanelCustomThankYou.getUniqueByScore() || isTwitterEnabled() || isFacebookEnabled())) {
+                    thankYouMessage = localizedTexts.getSocialShareQuestion();
+                }
+            }
         }
 
         return thankYouMessage;
     }
 
-    public String getThankYouMessage() {
-        return localizedTexts.getFinalThankYou();
+
+    public String getFinalThankYou(int score) {
+        String finalThankYou = null;
+
+        if (localCustomThankYou != null) {
+            finalThankYou = localCustomThankYou.getFinalThankYouForScore(score, surveyType, surveyTypeScale);
+        }
+
+        if (isBlank(finalThankYou) && adminPanelCustomThankYou != null) {
+            finalThankYou =  adminPanelCustomThankYou.getFinalThankYouForScore(score, surveyType, surveyTypeScale);
+        }
+
+        if (isBlank(finalThankYou) && localizedTexts != null) {
+            finalThankYou = localizedTexts.getFinalThankYou();
+        }
+
+        return finalThankYou;
     }
 
     public String getThankYouLinkText(int score) {
-        return (customThankYou == null) ?
-                null : customThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale);
+        String thankYouLinkText = null;
+
+        if (localCustomThankYou != null) {
+            thankYouLinkText = localCustomThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminPanelCustomThankYou != null && thankYouLinkText == null) {
+            thankYouLinkText = adminPanelCustomThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale);
+        }
+
+        return thankYouLinkText;
     }
 
-    public Uri getThankYouLinkUri(int score, String comment) {
-        return (customThankYou == null) ?
-                null :  customThankYou.getLinkUri(score, comment, surveyType, surveyTypeScale);
+    public Uri getThankYouLinkUri(String email, int score, String comment) {
+        Uri thankYouLinkUri = null;
+
+        if (localCustomThankYou != null) {
+            thankYouLinkUri = localCustomThankYou.getLinkUri(score, surveyType, surveyTypeScale);
+
+        }
+
+        if (adminPanelCustomThankYou != null && thankYouLinkUri == null) {
+            thankYouLinkUri = adminPanelCustomThankYou.getLinkUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (thankYouLinkUri != null) {
+            thankYouLinkUri = addEmail(thankYouLinkUri, email, score);
+            thankYouLinkUri = addScore(thankYouLinkUri, score);
+            thankYouLinkUri = addComment(thankYouLinkUri, comment, score);
+        }
+
+        return thankYouLinkUri;
     }
 
-    public boolean isThankYouActionConfigured(int score, String comment) {
-        return customThankYou != null &&
-                customThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale) != null &&
-                customThankYou.getLinkUri(score, comment, surveyType, surveyTypeScale) != null;
+    private Uri addEmail(Uri link, String email, int score) {
+        Boolean localEmailInUri = null;
+        Boolean adminEmailInUri = null;
+        boolean addEmail = false;
+
+        if (localCustomThankYou != null) {
+            localEmailInUri = localCustomThankYou.getEmailInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminPanelCustomThankYou != null) {
+            adminEmailInUri = adminPanelCustomThankYou.getEmailInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminEmailInUri != null) {
+            addEmail = adminEmailInUri;
+        }
+
+        if (localEmailInUri != null) {
+            addEmail = localEmailInUri;
+        }
+
+        if (addEmail){
+            link = link.buildUpon()
+                    .appendQueryParameter("wootric_email", email)
+                    .build();
+        }
+
+        return link;
+    }
+
+    private Uri addScore(Uri link, int score) {
+        Boolean localScoreInUri = null;
+        Boolean adminScoreInUri = null;
+        boolean addScore = false;
+
+        if (localCustomThankYou != null) {
+            localScoreInUri = localCustomThankYou.getScoreInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminPanelCustomThankYou != null) {
+            adminScoreInUri = adminPanelCustomThankYou.getScoreInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminScoreInUri != null) {
+            addScore = adminScoreInUri;
+        }
+
+        if (localScoreInUri != null) {
+            addScore = localScoreInUri;
+        }
+
+        if (addScore){
+            link = link.buildUpon()
+                    .appendQueryParameter("wootric_score", String.valueOf(score))
+                    .build();
+        }
+
+        return link;
+    }
+
+    private Uri addComment(Uri link, String comment, int score) {
+        Boolean localCommentInUri = null;
+        Boolean adminCommentInUri = null;
+        boolean addComment = false;
+
+        if (localCustomThankYou != null) {
+            localCommentInUri = localCustomThankYou.getCommentInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminPanelCustomThankYou != null) {
+            adminCommentInUri = adminPanelCustomThankYou.getCommentInUri(score, surveyType, surveyTypeScale);
+        }
+
+        if (adminCommentInUri != null) {
+            addComment = adminCommentInUri;
+        }
+
+        if (localCommentInUri != null) {
+            addComment = localCommentInUri;
+        }
+
+        if (addComment){
+            link = link.buildUpon()
+                    .appendQueryParameter("wootric_comment", comment)
+                    .build();
+        }
+
+        return link;
+    }
+
+    public boolean isThankYouActionConfigured(String email, int score, String comment) {
+        return isLocalThankYouConfigured(score) || isAdminPanelThankYouConfigured(score);
+    }
+
+    private boolean isLocalThankYouConfigured(int score) {
+        return localCustomThankYou != null &&
+                localCustomThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale) != null &&
+                localCustomThankYou.getLinkUri(score, surveyType, surveyTypeScale) != null;
+    }
+
+    private boolean isAdminPanelThankYouConfigured(int score) {
+        return adminPanelCustomThankYou != null &&
+                adminPanelCustomThankYou.getLinkTextForScore(score, surveyType, surveyTypeScale) != null &&
+                adminPanelCustomThankYou.getLinkUri(score, surveyType, surveyTypeScale) != null;
     }
 
     public String getSocialShareQuestion() {
@@ -254,9 +411,6 @@ public class Settings implements Parcelable {
         return localizedTexts.getSocialShareDecline();
     }
 
-    public String getFinalThankYou() {
-        return localizedTexts.getFinalThankYou();
-    }
 
     public void setTimeDelay(int timeDelay) {
         this.timeDelay = timeDelay;
@@ -296,6 +450,20 @@ public class Settings implements Parcelable {
 
     public WootricCustomMessage getAdminPanelCustomMessage() {
         return adminPanelCustomMessage;
+    }
+
+    public void setLocalCustomThankYou(WootricCustomThankYou localCustomThankYou) {
+        this.localCustomThankYou = localCustomThankYou;
+    }
+
+    public WootricCustomThankYou getLocalCustomThankYou() { return localCustomThankYou; }
+
+    public void setAdminPanelCustomThankYou(WootricCustomThankYou adminPanelCustomThankYou) {
+        this.adminPanelCustomThankYou = adminPanelCustomThankYou;
+    }
+
+    public WootricCustomThankYou getAdminPanelCustomThankYou() {
+        return adminPanelCustomThankYou;
     }
 
     public void setAdminPanelTimeDelay(int adminPanelTimeDelay) {
@@ -371,20 +539,60 @@ public class Settings implements Parcelable {
     }
 
     public String getFacebookPageId() {
+        String facebookPageId;
+
+        facebookPageId = localSocial.getFacebookPageId();
+
+        if (isBlank(facebookPageId) && adminPanelSocial != null) {
+            facebookPageId = adminPanelSocial.getFacebookPageId();
+        }
+
         return facebookPageId;
     }
 
-    public void setFacebookPageId(String facebookPageId) {
-        this.facebookPageId = facebookPageId;
-    }
+    public void setFacebookPageId(String facebookPageId) { this.localSocial.setFacebookPageId(facebookPageId); }
 
     public String getTwitterPage() {
+        String twitterPage;
+
+        twitterPage = localSocial.getTwitterPage();
+
+        if (isBlank(twitterPage) && adminPanelSocial != null) {
+            twitterPage = adminPanelSocial.getTwitterPage();
+        }
+
         return twitterPage;
     }
 
-    public void setTwitterPage(String twitterPage) {
-        this.twitterPage = twitterPage;
+    public boolean isTwitterEnabled() {
+        boolean twitterEnabled = false;
+
+        if (adminPanelSocial != null && adminPanelSocial.isTwitterEnabled() != null) {
+            twitterEnabled = adminPanelSocial.isTwitterEnabled();
+        }
+
+        if (localSocial != null && localSocial.isTwitterEnabled() != null) {
+            twitterEnabled = localSocial.isTwitterEnabled();
+        }
+
+        return twitterEnabled;
     }
+
+    public boolean isFacebookEnabled() {
+        boolean facebookEnabled = false;
+
+        if (adminPanelSocial != null && adminPanelSocial.isFacebookEnabled() != null) {
+            facebookEnabled = adminPanelSocial.isFacebookEnabled();
+        }
+
+        if (localSocial != null && localSocial.isFacebookEnabled() != null) {
+            facebookEnabled = localSocial.isFacebookEnabled();
+        }
+
+        return facebookEnabled;
+    }
+
+    public void setTwitterPage(String twitterPage) { this.localSocial.setTwitterPage(twitterPage); }
 
     public String getSurveyType() { return surveyType; }
 
@@ -395,7 +603,7 @@ public class Settings implements Parcelable {
     }
 
     public void setCustomThankYou(WootricCustomThankYou customThankYou) {
-        this.customThankYou = customThankYou;
+        this.localCustomThankYou = customThankYou;
     }
 
     public void setCustomSurveyTypeScale(int customSurveyTypeScale) {
@@ -448,6 +656,7 @@ public class Settings implements Parcelable {
     }
 
     public Settings() {
+        this.localSocial = new WootricSocial();
     }
 
     @Override
@@ -474,10 +683,11 @@ public class Settings implements Parcelable {
         dest.writeString(this.languageCode);
         dest.writeString(this.productName);
         dest.writeString(this.recommendTarget);
-        dest.writeString(this.facebookPageId);
-        dest.writeString(this.twitterPage);
         dest.writeString(this.surveyType);
-        dest.writeParcelable(this.customThankYou, 0);
+        dest.writeParcelable(this.localCustomThankYou, 0);
+        dest.writeParcelable(this.adminPanelCustomThankYou, 0);
+        dest.writeParcelable(this.localSocial, 0);
+        dest.writeParcelable(this.adminPanelSocial, 0);
     }
 
     private Settings(Parcel in) {
@@ -498,10 +708,11 @@ public class Settings implements Parcelable {
         this.languageCode = in.readString();
         this.productName = in.readString();
         this.recommendTarget = in.readString();
-        this.facebookPageId = in.readString();
-        this.twitterPage = in.readString();
         this.surveyType = in.readString();
-        this.customThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
+        this.localCustomThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
+        this.adminPanelCustomThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
+        this.localSocial = in.readParcelable(WootricSocial.class.getClassLoader());
+        this.adminPanelSocial = in.readParcelable(WootricSocial.class.getClassLoader());
     }
 
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {
@@ -542,6 +753,12 @@ public class Settings implements Parcelable {
 
         JSONObject customMessagesJson = settingsObject.optJSONObject("messages");
         settings.adminPanelCustomMessage = WootricCustomMessage.fromJson(customMessagesJson);
+
+        JSONObject customThankYouJson = settingsObject.optJSONObject("custom_thank_you");
+        settings.adminPanelCustomThankYou = WootricCustomThankYou.fromJson(customThankYouJson);
+
+        JSONObject socialJson = settingsObject.optJSONObject("social");
+        settings.adminPanelSocial = WootricSocial.fromJson(socialJson);
 
         return settings;
     }

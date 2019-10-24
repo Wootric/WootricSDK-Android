@@ -31,9 +31,10 @@ public interface SurveyLayout {
 
     void setSurveyLayoutListener(SurveyLayoutListener surveyLayoutListener);
 
-    void initWithSettings(Settings settings);
+    void initWithSettings(Settings settings, String email);
     int getSelectedScore();
     String getFeedback();
+    String getEmail();
 
     void showThankYouLayout();
 }

@@ -16,11 +16,20 @@
         android:text="@string/wootric_thank_you"
         android:textColor="@android:color/black" />
 
+    <TextView
+        android:id="@+id/wootric_tv_thank_you_setup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wootric_tv_thank_you"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:textSize="@dimen/wootric_social_text_size" />
+
     <LinearLayout
         android:id="@+id/wootric_layout_facebook_like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wootric_tv_thank_you"
+        android:layout_below="@+id/wootric_tv_thank_you_setup"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -127,4 +136,5 @@
         android:padding="@dimen/wootric_btn_padding"
         android:layout_marginTop="280dp"
         android:text="@string/wootric_example_btn_dismiss"/>
+
 </RelativeLayout>

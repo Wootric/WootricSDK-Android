@@ -41,10 +41,10 @@ public class SocialHandler {
         this.mContext = mContext;
     }
 
-    public void shareOnFacebook(String facebookId) {
+    public void shareOnFacebook(String facebookUrl) {
         if (mContext == null) return;
 
-        String urlToShare = "https://www.facebook.com/" + facebookId;
+        String urlToShare = facebookUrl;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, urlToShare);
@@ -67,10 +67,10 @@ public class SocialHandler {
         mContext.startActivity(intent);
     }
 
-    public void goToFacebook(String facebookId) {
+    public void goToFacebook(String facebookUrl) {
         if (mContext == null) return;
 
-        final String url = "https://www.facebook.com/" + facebookId;
+        final String url = facebookUrl;
         final Uri facebookSchemeUri = Uri.parse("fb://facewebmodal/f?href=" + url);
         Intent intent = new Intent(Intent.ACTION_VIEW, facebookSchemeUri);
 

@@ -1,3 +1,7 @@
+## 2.14.0 (2019-11-14)
+
+- Add support of admin panel values for 3rd screen
+
 ## 2.13.0 (2019-08-09)
 
 - Add callbacks

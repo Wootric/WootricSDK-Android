@@ -97,6 +97,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private int mScoresTop;
     private ScoreView[] mScoreViews;
     private int mCurrentScore = -1;
+    private String mCurrentEmail;
 
     private SurveyLayoutListener mSurveyLayoutListener;
 
@@ -241,8 +242,9 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     @Override
-    public void initWithSettings(Settings settings) {
+    public void initWithSettings(Settings settings, String email) {
         mSettings = settings;
+        mCurrentEmail = email;
         mSurveyType = mSettings.getSurveyType();
 
         mScore = new Score(mCurrentScore, mSurveyType, mSettings.getSurveyTypeScale());
@@ -295,7 +297,7 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private void initThankYouActionBtn() {
         final String feedback = getFeedback();
-        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentScore, feedback);
+        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentEmail, mCurrentScore, feedback);
         final String thankYouLinkText = mSettings.getThankYouLinkText(mCurrentScore);
 
         mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
@@ -303,7 +305,10 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void setupThankYouState() {
+        final String feedback = getFeedback();
         mSurveyLayout.setVisibility(GONE);
+
+        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentEmail, mCurrentScore, feedback) ;
 
         initThankYouActionBtn();
         initSocialLinks();
@@ -316,17 +321,16 @@ public class SurveyLayoutTablet extends LinearLayout
         mBtnThankYouDone.setVisibility(shouldShowThankYouDone ? GONE : VISIBLE);
         mBtnThankYouDone.setText(mSettings.getSocialShareDecline());
 
-        final String customThankYouText = mSettings.getCustomThankYouMessage(mCurrentScore);
-        final String thankYouText = mSettings.getThankYouMessage();
+        final String thankYouText = mSettings.getFinalThankYou(mCurrentScore);
+        final String thankYouSetupText = mSettings.getCustomThankYouMessage(mCurrentScore);
 
-        if (customThankYouText != null) {
-            mTvCustomThankYou.setText(customThankYouText);
+        mTvThankYou.setText(thankYouText);
+
+        if (thankYouSetupText != null) {
+            mTvCustomThankYou.setText(thankYouSetupText);
             mTvCustomThankYou.setVisibility(VISIBLE);
-            mTvThankYou.setVisibility(GONE);
         } else {
-            mTvThankYou.setText(thankYouText);
             mTvCustomThankYou.setVisibility(GONE);
-            mTvThankYou.setVisibility(VISIBLE);
         }
 
         mThankYouLayout.setAlpha(0);
@@ -335,7 +339,10 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void initSocialLinks() {
-        boolean shouldShowFacebookBtn = (mScore.isPromoter() && mSettings.getFacebookPageId() != null);
+        Score score = new Score(mCurrentScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
+        boolean shouldShowFacebookBtn = (score.isPromoter() &&
+                                            mSettings.isFacebookEnabled() &&
+                                            mSettings.getFacebookPageId() != null);
 
         mBtnFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mBtnFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
@@ -343,11 +350,11 @@ public class SurveyLayoutTablet extends LinearLayout
         final String feedback = getFeedback();
 
         boolean shouldShowTwitterBtn =
-                        mScore.isPromoter() &&
+                        score.isPromoter() &&
+                        mSettings.isTwitterEnabled() &&
                         mSettings.getTwitterPage() != null &&
                         feedback != null &&
                         !feedback.isEmpty();
-
         mBtnTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
     }
 
@@ -365,10 +372,11 @@ public class SurveyLayoutTablet extends LinearLayout
         }
     }
 
-    private void setupState(int surveyState, int selectedScore) {
+    private void setupState(String email, int surveyState, int selectedScore) {
         updateState(surveyState);
 
         mCurrentScore = selectedScore;
+        mCurrentEmail = email;
         if(mCurrentScore != Constants.NOT_SET) {
             mScoreViews[mCurrentScore].setSelected(true);
         }
@@ -383,6 +391,9 @@ public class SurveyLayoutTablet extends LinearLayout
     public String getFeedback() {
         return mEtFeedback.getText().toString();
     }
+
+    @Override
+    public String getEmail() { return mCurrentEmail; }
 
     @Override
     public void showThankYouLayout() {
@@ -486,12 +497,13 @@ public class SurveyLayoutTablet extends LinearLayout
     protected void onRestoreInstanceState(Parcelable state) {
         SurveyLayoutSavedState savedState = (SurveyLayoutSavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
-        setupState(savedState.getCurrentState(), savedState.getCurrentScore());
+        setupState(savedState.getCurrentEmail(), savedState.getCurrentState(), savedState.getCurrentScore());
     }
 
     private static class SurveyLayoutSavedState extends View.BaseSavedState {
         private int currentState;
         private int currentScore;
+        private String currentEmail;
 
         public SurveyLayoutSavedState(Parcelable superState) {
             super(superState);
@@ -499,8 +511,17 @@ public class SurveyLayoutTablet extends LinearLayout
 
         public SurveyLayoutSavedState(Parcel source) {
             super(source);
+            currentEmail = source.readString();
             currentState = source.readInt();
             currentScore = source.readInt();
+        }
+
+        public String getCurrentEmail() {
+            return currentEmail;
+        }
+
+        public void setCurrentEmail(String currentEmail) {
+            this.currentEmail = currentEmail;
         }
 
         public int getCurrentState() {

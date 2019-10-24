@@ -26,10 +26,18 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by maciejwitowski on 9/23/15.
  */
 public class WootricCustomThankYou implements Parcelable {
+
+    private String finalThankYou;
+    private String detractorFinalThankYou;
+    private String passiveFinalThankYou;
+    private String promoterFinalThankYou;
 
     private String text;
     private String detractorText;
@@ -46,8 +54,34 @@ public class WootricCustomThankYou implements Parcelable {
     private Uri passiveLinkUri;
     private Uri promoterLinkUri;
 
-    private boolean scoreInUrl;
-    private boolean commentInUrl;
+    private Boolean emailInUrl;
+    private Boolean detractorEmailInUrl;
+    private Boolean passiveEmailInUrl;
+    private Boolean promoterEmailInUrl;
+    private Boolean scoreInUrl;
+    private Boolean detractorScoreInUrl;
+    private Boolean passiveScoreInUrl;
+    private Boolean promoterScoreInUrl;
+    private Boolean commentInUrl;
+    private Boolean detractorCommentInUrl;
+    private Boolean passiveCommentInUrl;
+    private Boolean promoterCommentInUrl;
+
+    private boolean uniqueByScore = false;
+
+    public String getFinalThankYouForScore(int scoreValue, String surveyType, int surveyTypeScale) {
+        Score score = new Score(scoreValue, surveyType, surveyTypeScale);
+
+        if(score.isDetractor() && detractorFinalThankYou != null) {
+            return detractorFinalThankYou;
+        } else if(score.isPassive() && passiveFinalThankYou != null) {
+            return passiveFinalThankYou;
+        } else if(score.isPromoter() && promoterFinalThankYou != null) {
+            return promoterFinalThankYou;
+        } else {
+            return finalThankYou;
+        }
+    }
 
     public String getTextForScore(int scoreValue, String surveyType, int surveyTypeScale) {
         Score score = new Score(scoreValue, surveyType, surveyTypeScale);
@@ -77,24 +111,8 @@ public class WootricCustomThankYou implements Parcelable {
         }
     }
 
-    public Uri getLinkUri(int score, String comment, String surveyType, int surveyTypeScale) {
-        Uri uri = getLinkUriForScore(score, surveyType, surveyTypeScale);
-
-        if(uri != null) {
-            if(scoreInUrl) {
-                uri = uri.buildUpon()
-                        .appendQueryParameter("wootric_score", String.valueOf(score))
-                        .build();
-            }
-
-            if(commentInUrl) {
-                uri = uri.buildUpon()
-                        .appendQueryParameter("wootric_comment", comment)
-                        .build();
-            }
-        }
-
-        return uri;
+    public Uri getLinkUri(int score, String surveyType, int surveyTypeScale) {
+        return getLinkUriForScore(score, surveyType, surveyTypeScale);
     }
 
     private Uri getLinkUriForScore(int scoreValue, String surveyType, int surveyTypeScale) {
@@ -109,6 +127,86 @@ public class WootricCustomThankYou implements Parcelable {
         } else {
             return linkUri;
         }
+    }
+
+    public Boolean getEmailInUri(int score, String surveyType, int surveyTypeScale) {
+        return getEmailInUriForScore(score, surveyType, surveyTypeScale);
+    }
+
+    private Boolean getEmailInUriForScore(int scoreValue, String surveyType, int surveyTypeScale) {
+        Score score = new Score(scoreValue, surveyType, surveyTypeScale);
+
+        if (this.uniqueByScore) {
+            if(score.isDetractor()) {
+                return detractorEmailInUrl;
+            } else if(score.isPassive()) {
+                return passiveEmailInUrl;
+            } else if(score.isPromoter()) {
+                return promoterEmailInUrl;
+            }
+        }
+
+        return emailInUrl;
+    }
+
+    public Boolean getScoreInUri(int score, String surveyType, int surveyTypeScale) {
+        return getScoreInUriForScore(score, surveyType, surveyTypeScale);
+    }
+
+    private Boolean getScoreInUriForScore(int scoreValue, String surveyType, int surveyTypeScale) {
+        Score score = new Score(scoreValue, surveyType, surveyTypeScale);
+
+        if (this.uniqueByScore) {
+            if(score.isDetractor()) {
+                return detractorScoreInUrl;
+            } else if(score.isPassive()) {
+                return passiveScoreInUrl;
+            } else if(score.isPromoter()) {
+                return promoterScoreInUrl;
+            }
+        }
+
+        return scoreInUrl;
+    }
+
+    public Boolean getCommentInUri(int score, String surveyType, int surveyTypeScale) {
+        return getCommentInUriForScore(score, surveyType, surveyTypeScale);
+    }
+
+    private Boolean getCommentInUriForScore(int scoreValue, String surveyType, int surveyTypeScale) {
+        Score score = new Score(scoreValue, surveyType, surveyTypeScale);
+
+        if (this.uniqueByScore) {
+            if(score.isDetractor()) {
+                return detractorCommentInUrl;
+            } else if(score.isPassive()) {
+                return passiveCommentInUrl;
+            } else if(score.isPromoter()) {
+                return promoterCommentInUrl;
+            }
+        }
+
+        return commentInUrl;
+    }
+
+    public boolean getUniqueByScore() {
+        return this.uniqueByScore;
+    }
+
+    public void setFinalThankYou(String finalThankYou) {
+        this.finalThankYou = finalThankYou;
+    }
+
+    public void setDetractorFinalThankYou(String detractorFinalThankYou) {
+        this.detractorFinalThankYou = detractorFinalThankYou;
+    }
+
+    public void setPassiveFinalThankYou(String passiveFinalThankYou) {
+        this.passiveFinalThankYou = passiveFinalThankYou;
+    }
+
+    public void setPromoterFinalThankYou(String promoterFinalThankYou) {
+        this.promoterFinalThankYou = promoterFinalThankYou;
     }
 
     public void setText(String text) {
@@ -159,12 +257,52 @@ public class WootricCustomThankYou implements Parcelable {
         this.promoterLinkUri = promoterLinkUrl;
     }
 
+    public void setEmailInUrl(boolean emailInUrl) {
+        this.emailInUrl = emailInUrl;
+    }
+
+    public void setDetractorEmailInUrl(boolean detractorEmailInUrl) {
+        this.detractorEmailInUrl = detractorEmailInUrl;
+    }
+
+    public void setPassiveEmailInUrl(boolean passiveEmailInUrl) {
+        this.passiveEmailInUrl = passiveEmailInUrl;
+    }
+
+    public void setPromoterEmailInUrl(boolean promoterEmailInUrl) {
+        this.promoterEmailInUrl = promoterEmailInUrl;
+    }
+
     public void setScoreInUrl(boolean scoreInUrl) {
         this.scoreInUrl = scoreInUrl;
     }
 
+    public void setDetractorScoreInUrl(boolean detractorScoreInUrl) {
+        this.detractorScoreInUrl = detractorScoreInUrl;
+    }
+
+    public void setPassiveScoreInUrl(boolean passiveScoreInUrl) {
+        this.passiveScoreInUrl = passiveScoreInUrl;
+    }
+
+    public void setPromoterScoreInUrl(boolean promoterScoreInUrl) {
+        this.promoterScoreInUrl = promoterScoreInUrl;
+    }
+
     public void setCommentInUrl(boolean commentInUrl) {
         this.commentInUrl = commentInUrl;
+    }
+
+    public void setDetractorCommentInUrl(boolean detractorCommentInUrl) {
+        this.detractorCommentInUrl = detractorCommentInUrl;
+    }
+
+    public void setPassiveCommentInUrl(boolean passiveCommentInUrl) {
+        this.passiveCommentInUrl = passiveCommentInUrl;
+    }
+
+    public void setPromoterCommentInUrl(boolean promoterCommentInUrl) {
+        this.promoterCommentInUrl = promoterCommentInUrl;
     }
 
 
@@ -220,4 +358,88 @@ public class WootricCustomThankYou implements Parcelable {
             return new WootricCustomThankYou[size];
         }
     };
+
+    public static WootricCustomThankYou fromJson(JSONObject customThankYouJson) throws JSONException {
+        if(customThankYouJson == null) return null;
+
+        WootricCustomThankYou wootricCustomThankYou = new WootricCustomThankYou();
+
+        JSONObject thankYouMessagesJson = customThankYouJson.optJSONObject("thank_you_messages");
+        JSONObject thankYouLinksJson = customThankYouJson.optJSONObject("thank_you_links");
+
+        if (thankYouMessagesJson != null) {
+            JSONObject thankYouMainList = thankYouMessagesJson.optJSONObject("thank_you_main_list");
+            JSONObject thankYouSetupList = thankYouMessagesJson.optJSONObject("thank_you_setup_list");
+
+            wootricCustomThankYou.finalThankYou = thankYouMessagesJson.optString("thank_you_main");
+            wootricCustomThankYou.setText(thankYouMessagesJson.optString("thank_you_setup"));
+
+            if (thankYouMainList != null) {
+                wootricCustomThankYou.uniqueByScore = true;
+                wootricCustomThankYou.detractorFinalThankYou = thankYouMainList.optString("detractor_thank_you_main");
+                wootricCustomThankYou.passiveFinalThankYou = thankYouMainList.optString("passive_thank_you_main");
+                wootricCustomThankYou.promoterFinalThankYou = thankYouMainList.optString("promoter_thank_you_main");
+            }
+
+            if (thankYouSetupList != null) {
+                wootricCustomThankYou.uniqueByScore = true;
+                wootricCustomThankYou.setDetractorText(thankYouSetupList.optString("detractor_thank_you_setup"));
+                wootricCustomThankYou.setPassiveText(thankYouSetupList.optString("passive_thank_you_setup"));
+                wootricCustomThankYou.setPromoterText(thankYouSetupList.optString("promoter_thank_you_setup"));
+            }
+        }
+
+        if (thankYouLinksJson != null) {
+            JSONObject thankYouLinkTextList = thankYouLinksJson.optJSONObject("thank_you_link_text_list");
+            JSONObject thankYouLinkUrlList = thankYouLinksJson.optJSONObject("thank_you_link_url_list");
+            JSONObject thankYouLinkUrlSettingsList =  thankYouLinksJson.optJSONObject("thank_you_link_url_settings_list");
+            JSONObject thankYouLinkUrlSettings = thankYouLinksJson.optJSONObject("thank_you_link_url_settings");
+
+            wootricCustomThankYou.setLinkText(thankYouLinksJson.optString("thank_you_link_text", null));
+            wootricCustomThankYou.setLinkUri(Uri.parse(thankYouLinksJson.optString("thank_you_link_url")));
+            wootricCustomThankYou.setEmailInUrl(thankYouLinkUrlSettings.getBoolean("add_email_param_to_url"));
+            wootricCustomThankYou.setScoreInUrl(thankYouLinkUrlSettings.getBoolean("add_score_param_to_url"));
+            wootricCustomThankYou.setCommentInUrl(thankYouLinkUrlSettings.getBoolean("add_comment_param_to_url"));
+
+            if (thankYouLinkTextList != null) {
+                wootricCustomThankYou.uniqueByScore = true;
+                wootricCustomThankYou.setDetractorLinkText(thankYouLinkTextList.optString("detractor_thank_you_link_text", null));
+                wootricCustomThankYou.setPassiveLinkText(thankYouLinkTextList.optString("passive_thank_you_link_text", null));
+                wootricCustomThankYou.setPromoterLinkText(thankYouLinkTextList.optString("promoter_thank_you_link_text", null));
+            }
+
+            if (thankYouLinkUrlList != null) {
+                wootricCustomThankYou.uniqueByScore = true;
+                wootricCustomThankYou.setDetractorLinkUri(Uri.parse(thankYouLinkUrlList.optString("detractor_thank_you_link_url")));
+                wootricCustomThankYou.setPassiveLinkUri(Uri.parse(thankYouLinkUrlList.optString("passive_thank_you_link_url")));
+                wootricCustomThankYou.setPromoterLinkUri(Uri.parse(thankYouLinkUrlList.optString("promoter_thank_you_link_url")));
+            }
+
+            if (thankYouLinkUrlSettingsList != null) {
+                JSONObject detractorThankYouLinkUrlSettingsList =  thankYouLinkUrlSettingsList.optJSONObject("detractor_thank_you_link_url_settings");
+                JSONObject passiveThankYouLinkUrlSettingsList =  thankYouLinkUrlSettingsList.optJSONObject("passive_thank_you_link_url_settings");
+                JSONObject promoterThankYouLinkUrlSettingsList =  thankYouLinkUrlSettingsList.optJSONObject("promoter_thank_you_link_url_settings");
+
+                if (detractorThankYouLinkUrlSettingsList != null) {
+                    wootricCustomThankYou.setDetractorEmailInUrl(detractorThankYouLinkUrlSettingsList.getBoolean("add_email_param_to_url"));
+                    wootricCustomThankYou.setDetractorScoreInUrl(detractorThankYouLinkUrlSettingsList.getBoolean("add_score_param_to_url"));
+                    wootricCustomThankYou.setDetractorCommentInUrl(detractorThankYouLinkUrlSettingsList.getBoolean("add_comment_param_to_url"));
+                }
+
+                if (passiveThankYouLinkUrlSettingsList != null) {
+                    wootricCustomThankYou.setPassiveEmailInUrl(passiveThankYouLinkUrlSettingsList.getBoolean("add_email_param_to_url"));
+                    wootricCustomThankYou.setPassiveScoreInUrl(passiveThankYouLinkUrlSettingsList.getBoolean("add_score_param_to_url"));
+                    wootricCustomThankYou.setPassiveCommentInUrl(passiveThankYouLinkUrlSettingsList.getBoolean("add_comment_param_to_url"));
+                }
+
+                if (promoterThankYouLinkUrlSettingsList != null) {
+                    wootricCustomThankYou.setPromoterEmailInUrl(promoterThankYouLinkUrlSettingsList.getBoolean("add_email_param_to_url"));
+                    wootricCustomThankYou.setPromoterScoreInUrl(promoterThankYouLinkUrlSettingsList.getBoolean("add_score_param_to_url"));
+                    wootricCustomThankYou.setPromoterCommentInUrl(promoterThankYouLinkUrlSettingsList.getBoolean("add_comment_param_to_url"));
+                }
+            }
+        }
+
+        return wootricCustomThankYou;
+    }
 }

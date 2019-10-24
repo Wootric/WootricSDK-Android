@@ -40,14 +40,9 @@ public class ThankYouDialogFactory {
     public static Dialog create(Context context, Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback) {
         AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
         thankYouDialog.setCancelable(false);
-        final String customThankYouText = settings.getCustomThankYouMessage(score);
-        final String thankYouText = settings.getThankYouMessage();
+        final String thankYouText = settings.getFinalThankYou(score);
 
-        if (customThankYouText != null) {
-            thankYouDialog.setMessage(customThankYouText);
-        } else {
-            thankYouDialog.setMessage(thankYouText);
-        }
+        thankYouDialog.setMessage(thankYouText);
 
         thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
             @Override

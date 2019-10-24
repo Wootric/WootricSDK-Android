@@ -85,6 +85,7 @@ public class SurveyLayoutPhone extends LinearLayout
     private int mColorEnabled;
 
     private Score mScore;
+    private String mEmail;
     private String mSurveyType;
     private int mScaleMinimum;
     private int mScaleMaximum;
@@ -311,8 +312,9 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     @Override
-    public void initWithSettings(Settings settings) {
+    public void initWithSettings(Settings settings, String email) {
         mSettings = settings;
+        mEmail = email;
         mSurveyType = mSettings.getSurveyType();
 
         initResources();
@@ -419,7 +421,7 @@ public class SurveyLayoutPhone extends LinearLayout
         setKeyboardVisibility(false);
 
         mThankYouLayout.setVisibility(VISIBLE);
-        mThankYouLayout.initValues(mSettings, mRatingBar.getSelectedScore(), getFeedback());
+        mThankYouLayout.initValues(mSettings, mEmail, mRatingBar.getSelectedScore(), getFeedback());
     }
 
     private void updateSubmitBtn(boolean enable) {
@@ -439,6 +441,7 @@ public class SurveyLayoutPhone extends LinearLayout
     public String getFeedback() {
         return mEtFeedback.getText().toString();
     }
+    public String getEmail() { return mEmail; }
 
     private void setKeyboardVisibility(boolean showKeyboard) {
         final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);

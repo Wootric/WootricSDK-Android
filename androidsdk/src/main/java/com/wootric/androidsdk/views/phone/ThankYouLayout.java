@@ -52,6 +52,7 @@ public class ThankYouLayout extends RelativeLayout {
     private LinearLayout mLayoutTwitter;
 
     private TextView mTvThankYou;
+    private TextView mTvThankYouSetup;
     private TextView mTvFacebookLike;
     private TextView mTvFacebook;
     private TextView mTvTwitter;
@@ -65,6 +66,7 @@ public class ThankYouLayout extends RelativeLayout {
 
     private String mFeedback;
     private int mScore;
+    private String mEmail;
     private Settings mSettings;
 
     public ThankYouLayout(Context context) {
@@ -89,6 +91,7 @@ public class ThankYouLayout extends RelativeLayout {
 
         mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
         mTvThankYou = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you);
+        mTvThankYouSetup = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you_setup);
         mFaFacebookLike = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_facebook_like);
         mFaFacebook = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_facebook);
         mFaTwitter = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_twitter);
@@ -176,8 +179,9 @@ public class ThankYouLayout extends RelativeLayout {
         mThankYouLayoutListener = thankYouLayoutListener;
     }
 
-    public void initValues(Settings settings, int score, String feedback) {
+    public void initValues(Settings settings, String email, int score, String feedback) {
         mSettings = settings;
+        mEmail = email;
         mScore = score;
         mFeedback = feedback;
 
@@ -185,13 +189,13 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void initValues() {
-        final String customThankYouText = mSettings.getCustomThankYouMessage(mScore);
-        final String thankYouText = mSettings.getThankYouMessage();
+        final String thankYouText = mSettings.getFinalThankYou(mScore);
+        final String thankYouSetupText = mSettings.getCustomThankYouMessage(mScore);
 
-        if (customThankYouText != null) {
-            mTvThankYou.setText(customThankYouText);
-        } else {
-            mTvThankYou.setText(thankYouText);
+        mTvThankYou.setText(thankYouText);
+
+        if (thankYouSetupText != null) {
+            mTvThankYouSetup.setText(thankYouSetupText);
         }
 
         mBtnDone.setTextColor(getResources().getColor(mSettings.getSurveyColor()));
@@ -204,7 +208,7 @@ public class ThankYouLayout extends RelativeLayout {
     }
 
     private void initThankYouActionBtn() {
-        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mScore, mFeedback);
+        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mEmail, mScore, mFeedback);
         final String thankYouLinkText = mSettings.getThankYouLinkText(mScore);
         final int thankYouBackgroundColor =  getResources().getColor(mSettings.getThankYouButtonBackgroundColor());
 
@@ -215,7 +219,9 @@ public class ThankYouLayout extends RelativeLayout {
 
     private void initSocialLinks() {
         Score score = new Score(mScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
-        boolean shouldShowFacebookBtn = (score.isPromoter() && mSettings.getFacebookPageId() != null);
+        boolean shouldShowFacebookBtn = (score.isPromoter() &&
+                                            mSettings.isFacebookEnabled() &&
+                                            mSettings.getFacebookPageId() != null);
 
         mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mLayoutFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
@@ -225,6 +231,7 @@ public class ThankYouLayout extends RelativeLayout {
 
         boolean shouldShowTwitterBtn =
                         score.isPromoter() &&
+                        mSettings.isTwitterEnabled() &&
                         mSettings.getTwitterPage() != null &&
                         mFeedback != null &&
                         !mFeedback.isEmpty();

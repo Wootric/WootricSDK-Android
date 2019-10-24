@@ -173,7 +173,7 @@ public class SurveyFragment extends DialogFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSurveyLayout.initWithSettings(mSettings);
+        mSurveyLayout.initWithSettings(mSettings, mEndUser.getEmail());
     }
 
     @Override
@@ -297,7 +297,7 @@ public class SurveyFragment extends DialogFragment
 
     @Override
     public void onThankYouActionClick() {
-        final Uri uri = mSettings.getThankYouLinkUri(mSurveyLayout.getSelectedScore(), mSurveyLayout.getFeedback());
+        final Uri uri = mSettings.getThankYouLinkUri(mSurveyLayout.getEmail(), mSurveyLayout.getSelectedScore(), mSurveyLayout.getFeedback());
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         final Activity activity = getActivity();
 
