@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.wootric.androidsdk.utils.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,8 +41,8 @@ public class WootricSocial implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.facebookPageId);
         dest.writeString(this.twitterPage);
-        dest.writeByte(facebookEnabled ? (byte) 1 : (byte) 0);
-        dest.writeByte(twitterEnabled ? (byte) 1 : (byte) 0);
+        dest.writeByte(Utils.getByteValue(facebookEnabled));
+        dest.writeByte(Utils.getByteValue(twitterEnabled));
     }
 
     public WootricSocial() {

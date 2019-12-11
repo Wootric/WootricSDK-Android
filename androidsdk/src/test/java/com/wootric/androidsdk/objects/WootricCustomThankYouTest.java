@@ -1,13 +1,19 @@
 package com.wootric.androidsdk.objects;
 
+import android.os.Parcel;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by maciejwitowski on 9/23/15.
  */
 public class WootricCustomThankYouTest {
+
+    private Parcel mParcel = mock(Parcel.class);
 
     @Test
     public void returnsDetractorQuestion_forNPSDetractorScore() throws Exception {
@@ -221,5 +227,20 @@ public class WootricCustomThankYouTest {
 
         assertThat(customThankYou.getLinkTextForScore(1, "CSAT", 0)).isEqualTo("thank you");
         assertThat(customThankYou.getLinkTextForScore(5, "CSAT", 0)).isEqualTo("thank you");
+    }
+
+    @Test
+    public void testWootricCustomThankYouParcelable(){
+        doReturn("testing parcel").when(mParcel).readString();
+        WootricCustomThankYou customThankYou = new WootricCustomThankYou();
+        customThankYou.setText("testing parcel");
+
+        Parcel parcel = mParcel;
+        customThankYou.writeToParcel(parcel, 0);
+
+        parcel.setDataPosition(0);
+
+        WootricCustomThankYou createdFromParcel = WootricCustomThankYou.CREATOR.createFromParcel(parcel);
+        assertThat(createdFromParcel.getTextForScore(10, "NPS", 0)).isEqualTo("testing parcel");
     }
 }

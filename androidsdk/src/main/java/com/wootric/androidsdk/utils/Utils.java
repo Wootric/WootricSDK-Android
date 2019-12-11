@@ -67,4 +67,12 @@ public final class Utils {
             }
         }
     }
+
+    public static byte getByteValue(Boolean bool) {
+        if (bool != null) {
+            return bool ? (byte) 1 : (byte) 0;
+        } else {
+            return (byte) 0;
+        }
+    }
 }

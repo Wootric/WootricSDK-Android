@@ -1,3 +1,7 @@
+## 2.14.1 (2019-12-18)
+
+- Fix bug while writing to parcel
+
 ## 2.14.0 (2019-11-14)
 
 - Add support of admin panel values for 3rd screen

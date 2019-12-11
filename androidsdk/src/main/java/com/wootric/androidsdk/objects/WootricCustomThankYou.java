@@ -26,6 +26,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.wootric.androidsdk.utils.Utils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -325,8 +327,18 @@ public class WootricCustomThankYou implements Parcelable {
         dest.writeParcelable(this.detractorLinkUri, 0);
         dest.writeParcelable(this.passiveLinkUri, 0);
         dest.writeParcelable(this.promoterLinkUri, 0);
-        dest.writeByte(scoreInUrl ? (byte) 1 : (byte) 0);
-        dest.writeByte(commentInUrl ? (byte) 1 : (byte) 0);
+        dest.writeByte(Utils.getByteValue(this.emailInUrl));
+        dest.writeByte(Utils.getByteValue(this.detractorEmailInUrl));
+        dest.writeByte(Utils.getByteValue(this.passiveEmailInUrl));
+        dest.writeByte(Utils.getByteValue(this.promoterEmailInUrl));
+        dest.writeByte(Utils.getByteValue(this.scoreInUrl));
+        dest.writeByte(Utils.getByteValue(this.detractorScoreInUrl));
+        dest.writeByte(Utils.getByteValue(this.passiveScoreInUrl));
+        dest.writeByte(Utils.getByteValue(this.promoterScoreInUrl));
+        dest.writeByte(Utils.getByteValue(this.commentInUrl));
+        dest.writeByte(Utils.getByteValue(this.detractorCommentInUrl));
+        dest.writeByte(Utils.getByteValue(this.passiveCommentInUrl));
+        dest.writeByte(Utils.getByteValue(this.promoterCommentInUrl));
     }
 
     public WootricCustomThankYou() {
@@ -345,8 +357,18 @@ public class WootricCustomThankYou implements Parcelable {
         this.detractorLinkUri = in.readParcelable(Uri.class.getClassLoader());
         this.passiveLinkUri = in.readParcelable(Uri.class.getClassLoader());
         this.promoterLinkUri = in.readParcelable(Uri.class.getClassLoader());
+        this.emailInUrl = in.readByte() != 0;
+        this.detractorEmailInUrl = in.readByte() != 0;
+        this.passiveEmailInUrl = in.readByte() != 0;
+        this.promoterEmailInUrl = in.readByte() != 0;
         this.scoreInUrl = in.readByte() != 0;
+        this.detractorScoreInUrl = in.readByte() != 0;
+        this.passiveScoreInUrl = in.readByte() != 0;
+        this.promoterScoreInUrl = in.readByte() != 0;
         this.commentInUrl = in.readByte() != 0;
+        this.detractorCommentInUrl = in.readByte() != 0;
+        this.passiveCommentInUrl = in.readByte() != 0;
+        this.promoterCommentInUrl = in.readByte() != 0;
     }
 
     public static final Creator<WootricCustomThankYou> CREATOR = new Creator<WootricCustomThankYou>() {
