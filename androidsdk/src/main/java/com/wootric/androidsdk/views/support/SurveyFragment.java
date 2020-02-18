@@ -52,6 +52,7 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.SHAUtil;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
+import com.wootric.androidsdk.views.OnSurveyFinishedListener;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
@@ -63,9 +64,7 @@ import java.util.HashMap;
 /**
  * Created by maciejwitowski on 9/4/15.
  */
-public class SurveyFragment extends DialogFragment
-        implements SurveyLayoutListener {
-
+public class SurveyFragment extends DialogFragment implements SurveyLayoutListener {
     private static final String ARG_ORIGIN_URL = "com.wootric.androidsdk.arg.origin_url";
     private static final String ARG_END_USER = "com.wootric.androidsdk.arg.end_user";
     private static final String ARG_USER = "com.wootric.androidsdk.arg.user";
@@ -76,6 +75,7 @@ public class SurveyFragment extends DialogFragment
     private SurveyLayout mSurveyLayout;
     private LinearLayout mFooter;
     private WootricSurveyCallback mSurveyCallback;
+    private OnSurveyFinishedListener mOnSurveyFinishedListener;
 
     private EndUser mEndUser;
     private User mUser;
@@ -117,6 +117,10 @@ public class SurveyFragment extends DialogFragment
 
     public void setSurveyCallback(WootricSurveyCallback surveyCallback) {
         mSurveyCallback = surveyCallback;
+    }
+
+    public void setOnSurveyFinishedListener(OnSurveyFinishedListener onSurveyFinishedListener) {
+        mOnSurveyFinishedListener = onSurveyFinishedListener;
     }
 
     @Override
@@ -333,7 +337,7 @@ public class SurveyFragment extends DialogFragment
 
         if (activity != null) {
             mShouldShowSimpleDialog = true;
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback).show();
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener).show();
         }
 
         dismiss();
@@ -356,14 +360,18 @@ public class SurveyFragment extends DialogFragment
 
         isResumedOnConfigurationChange = true;
 
-        if (mSurveyCallback != null && !mShouldShowSimpleDialog) {
-            HashMap<String, Object> hashMap = new HashMap();
-            if (mScore != -1) {
-                hashMap.put("score", mScore);
+        if (!mShouldShowSimpleDialog) {
+            mOnSurveyFinishedListener.onSurveyFinished();
+            if (mSurveyCallback != null) {
+                HashMap<String, Object> hashMap = new HashMap();
+                if (mScore != -1) {
+                    hashMap.put("score", mScore);
+                }
+                hashMap.put("text", mText);
+                mSurveyCallback.onSurveyDidHide(hashMap);
             }
-            hashMap.put("text", mText);
-            mSurveyCallback.onSurveyDidHide(hashMap);
         }
+
     }
 
     @Override
@@ -379,7 +387,6 @@ public class SurveyFragment extends DialogFragment
         Integer resurvey_days = mResponseSent ? mSettings.getResurveyThrottle() : mSettings.getDeclineResurveyThrottle();
         Wootric.notifySurveyFinished(true, mResponseSent, resurvey_days);
     }
-
 
     private void optOut() {
         String optOutUrl = "https://app.wootric.com/opt_out?token=" + mUser.getAccountToken()

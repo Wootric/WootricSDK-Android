@@ -1,6 +1,5 @@
 package com.wootric.androidsdk.objects;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -15,6 +14,16 @@ public class WootricSocial implements Parcelable {
 
     private Boolean facebookEnabled;
     private Boolean twitterEnabled;
+
+    public WootricSocial() {}
+
+    public WootricSocial(WootricSocial wootricSocial) {
+        if (wootricSocial == null) return;
+        this.facebookPageId = wootricSocial.facebookPageId;
+        this.twitterPage = wootricSocial.twitterPage;
+        this.facebookEnabled = wootricSocial.facebookEnabled;
+        this.twitterEnabled = wootricSocial.twitterEnabled;
+    }
 
     public void setFacebookPageId(String facebookPageId) { this.facebookPageId = facebookPageId; }
 
@@ -45,9 +54,6 @@ public class WootricSocial implements Parcelable {
         dest.writeByte(Utils.getByteValue(twitterEnabled));
     }
 
-    public WootricSocial() {
-    }
-
     private WootricSocial(Parcel in) {
         this.facebookPageId = in.readString();
         this.twitterPage = in.readString();
@@ -59,7 +65,6 @@ public class WootricSocial implements Parcelable {
         public WootricSocial createFromParcel(Parcel source) {
             return new WootricSocial(source);
         }
-
         public WootricSocial[] newArray(int size) {
             return new WootricSocial[size];
         }

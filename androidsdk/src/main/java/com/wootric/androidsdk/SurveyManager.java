@@ -22,13 +22,20 @@
 
 package com.wootric.androidsdk;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
+
 import android.util.Log;
 
 import com.wootric.androidsdk.network.WootricApiCallback;
@@ -36,64 +43,129 @@ import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
+import com.wootric.androidsdk.objects.WootricEvent;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+import com.wootric.androidsdk.utils.Utils;
+import com.wootric.androidsdk.views.OnSurveyFinishedListener;
 import com.wootric.androidsdk.views.support.SurveyFragment;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback {
+public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback, LifecycleObserver, OnSurveyFinishedListener {
 
+    private OnSurveyFinishedListener onSurveyFinishedListener = this;
     private Activity activity;
     private FragmentActivity fragmentActivity;
-    private WootricSurveyCallback surveyCallback;
-    private final WootricRemoteClient wootricApiClient;
-    private final User user;
-    private final EndUser endUser;
-    private final SurveyValidator surveyValidator;
-    private final Settings settings;
-    private final PreferencesUtils preferencesUtils;
+    private SurveyValidator surveyValidator;
+    private ArrayList<String> registeredEvents = new ArrayList<>();
+    private ConcurrentLinkedQueue eventQueue = new ConcurrentLinkedQueue<WootricEvent>();
+    private boolean surveyRunning = false;
+
+    private WootricEvent currentEvent;
 
     private String accessToken;
     private String originUrl;
 
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
-    SurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
-                   Settings settings, PreferencesUtils preferencesUtils,
-                   SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
-        this.fragmentActivity = fragmentActivity;
-        this.wootricApiClient = wootricApiClient;
-        this.user = user;
-        this.endUser = endUser;
-        this.surveyValidator = surveyValidator;
-        this.settings = settings;
-        this.preferencesUtils = preferencesUtils;
-        this.surveyCallback = surveyCallback;
+    static volatile SurveyManager sharedInstance;
+
+    private SurveyManager() {
+        if (sharedInstance != null){
+            throw new RuntimeException("Use getSharedInstance() method to get the single instance of this class.");
+        }
     }
 
-    SurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
-                  Settings settings, PreferencesUtils preferencesUtils,
-                  SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
-        this.activity = activity;
-        this.wootricApiClient = wootricApiClient;
-        this.user = user;
-        this.endUser = endUser;
-        this.surveyValidator = surveyValidator;
-        this.settings = settings;
-        this.preferencesUtils = preferencesUtils;
-        this.surveyCallback = surveyCallback;
+    public static SurveyManager getSharedInstance() {
+        if (sharedInstance == null){
+            synchronized (SurveyManager.class) {
+                if (sharedInstance == null) sharedInstance = new SurveyManager();
+            }
+        }
+        return sharedInstance;
     }
 
-    void start() {
+    synchronized void start(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+               Settings settings, PreferencesUtils preferencesUtils, WootricSurveyCallback surveyCallback, SurveyValidator sv) {
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        Activity activity1 = activity;
+        WootricRemoteClient wootricApiClient1 = wootricApiClient;
+        User user1 = new User(user);
+        EndUser endUser1 = new EndUser(endUser);
+        Settings settings1 = new Settings(settings);
+        PreferencesUtils preferencesUtils1 = preferencesUtils;
+        WootricSurveyCallback surveyCallback1 = surveyCallback;
+        sv.buildSurveyValidator(user1, endUser1, settings1, wootricApiClient1, preferencesUtils1);
+
+        WootricEvent event = new WootricEvent(activity1, wootricApiClient1,
+                user1, endUser1, settings1, preferencesUtils1, surveyCallback1, sv);
+
         preferencesUtils.touchLastSeen();
 
-        validateSurvey();
+        eventQueue.add(event);
+
+        runSurvey();
+    }
+
+    synchronized void start(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
+               Settings settings, PreferencesUtils preferencesUtils, WootricSurveyCallback surveyCallback, SurveyValidator sv) {
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+
+        FragmentActivity fragmentActivity1 = fragmentActivity;
+        WootricRemoteClient wootricApiClient1 = wootricApiClient;
+        User user1 = new User(user);
+        EndUser endUser1 = new EndUser(endUser);
+        Settings settings1 = new Settings(settings);
+        PreferencesUtils preferencesUtils1 = preferencesUtils;
+        WootricSurveyCallback surveyCallback1 = surveyCallback;
+        sv.buildSurveyValidator(user1, endUser1, settings1, wootricApiClient1, preferencesUtils1);
+
+        WootricEvent event = new WootricEvent(fragmentActivity1, wootricApiClient1,
+                user1, endUser1, settings1, preferencesUtils1, surveyCallback1, sv);
+
+        eventQueue.add(event);
+
+        preferencesUtils.touchLastSeen();
+
+        runSurvey();
+    }
+
+    private void runSurvey() {
+        synchronized (this) {
+            if (!surveyRunning && !eventQueue.isEmpty()) {
+                surveyRunning = true;
+                currentEvent = (WootricEvent) eventQueue.poll();
+                if (currentEvent != null) {
+                    surveyValidator = currentEvent.getSurveyValidator();
+                    surveyValidator.setOnSurveyValidatedListener(this);
+                    if (Utils.isBlank(currentEvent.getSettings().getEventName())) {
+                        surveyValidator.validate();
+                    } else {
+                        if (registeredEvents.isEmpty()) {
+                            surveyValidator.getRegisteredEvents();
+                        } else {
+                            if (currentEvent.getSettings().isSurveyImmediately() || registeredEvents.contains(currentEvent.getSettings().getEventName())) {
+                                surveyValidator.validate();
+                            } else {
+                                Log.e(Constants.TAG, "Event name not registered: " + currentEvent.getSettings().getEventName());
+                                this.surveyRunning = false;
+                                runSurvey();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onSurveyValidated(Settings surveyServerSettings) {
-        settings.mergeWithSurveyServerSettings(surveyServerSettings);
+        currentEvent.getSettings().mergeWithSurveyServerSettings(surveyServerSettings);
+        this.eventQueue.clear();
 
         sendGetAccessTokenRequest();
     }
@@ -101,12 +173,36 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     @Override
     public void onSurveyNotNeeded() {
         Wootric.notifySurveyFinished(false, false, 0);
+        this.surveyRunning = false;
+        runSurvey();
+    }
+
+    @Override
+    public void onRegisteredEvents(ArrayList<String> registeredEvents) {
+        this.registeredEvents = registeredEvents;
+        if (currentEvent == null) {
+            this.surveyRunning = false;
+            runSurvey();
+        } else {
+            if (!currentEvent.getSettings().getEventName().isEmpty()) {
+                if (currentEvent.getSettings().isSurveyImmediately() || registeredEvents.contains(currentEvent.getSettings().getEventName())){
+                    surveyValidator.validate();
+                } else {
+                    Log.e(Constants.TAG, "Event name not registered: " + currentEvent.getSettings().getEventName());
+                    this.surveyRunning = false;
+                    runSurvey();
+                }
+            } else {
+                surveyValidator.validate();
+            }
+        }
     }
 
     @Override
     public void onAuthenticateSuccess(String accessToken) {
         if(accessToken == null) {
             Wootric.notifySurveyFinished(false, false, 0);
+            this.surveyRunning = false;
             return;
         }
 
@@ -116,16 +212,16 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     }
 
     private void sendOfflineData() {
-        wootricApiClient.processOfflineData(accessToken);
+        currentEvent.getWootricApiClient().processOfflineData(accessToken);
     }
 
     @Override
     public void onGetEndUserIdSuccess(long endUserId) {
-        endUser.setId(endUserId);
+        currentEvent.getEndUser().setId(endUserId);
 
-        if(this.endUser.hasProperties() ||
-           this.endUser.hasExternalId() ||
-           this.endUser.hasPhoneNumber()) {
+        if(currentEvent.getEndUser().hasProperties() ||
+                currentEvent.getEndUser().hasExternalId() ||
+                currentEvent.getEndUser().hasPhoneNumber()) {
             sendUpdateEndUserRequest();
         }
 
@@ -139,7 +235,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onCreateEndUserSuccess(long endUserId) {
-        this.endUser.setId(endUserId);
+        currentEvent.getEndUser().setId(endUserId);
 
         showSurvey();
     }
@@ -148,32 +244,28 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     public void onApiError(Exception error) {
         Log.e(Constants.TAG, "API error: " + error);
         Wootric.notifySurveyFinished(false, false, 0);
-    }
-
-    private void validateSurvey() {
-        surveyValidator.setOnSurveyValidatedListener(this);
-        surveyValidator.validate();
+        this.surveyRunning = false;
     }
 
     private void sendGetAccessTokenRequest() {
-        wootricApiClient.authenticate(user, this);
+        currentEvent.getWootricApiClient().authenticate(currentEvent.getUser(), this);
     }
 
     private void sendGetEndUserRequest() {
-        wootricApiClient.getEndUserByEmail(endUser.getEmailOrUnknown(), accessToken, this);
+        currentEvent.getWootricApiClient().getEndUserByEmail(currentEvent.getEndUser().getEmailOrUnknown(), accessToken, this);
     }
 
     private void sendCreateEndUserRequest() {
-        wootricApiClient.createEndUser(endUser, accessToken, this);
+        currentEvent.getWootricApiClient().createEndUser(currentEvent.getEndUser(), accessToken, this);
     }
 
     private void sendUpdateEndUserRequest() {
-        wootricApiClient.updateEndUser(endUser, accessToken, this);
+        currentEvent.getWootricApiClient().updateEndUser(currentEvent.getEndUser(), accessToken, this);
     }
 
     void showSurvey() {
-        if (surveyCallback != null) {
-            surveyCallback.onSurveyWillShow();
+        if (currentEvent.getSurveyCallback() != null) {
+            currentEvent.getSurveyCallback().onSurveyWillShow();
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -185,20 +277,23 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                     Wootric.notifySurveyFinished(false, false, 0);
                 }
             }
-        }, settings.getTimeDelayInMillis());
+        }, currentEvent.getSettings().getTimeDelayInMillis());
     }
 
+    @SuppressLint("ResourceType")
     private void showSurveyFragment() {
+        this.activity = currentEvent.getActivity();
         try {
             if (fragmentActivity != null) {
                 final FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
 
-                SurveyFragment surveySupportFragment = SurveyFragment.newInstance(endUser, getOriginUrl(),
-                        accessToken, settings, user);
+                SurveyFragment surveySupportFragment = SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                        accessToken, currentEvent.getSettings(), currentEvent.getUser());
+                surveySupportFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
                 final boolean isTablet = fragmentActivity.getResources().getBoolean(R.bool.isTablet);
 
-                surveySupportFragment.setSurveyCallback(surveyCallback);
+                surveySupportFragment.setSurveyCallback(currentEvent.getSurveyCallback());
                 if(isTablet) {
                     fragmentActivityManager.beginTransaction()
                             .add(android.R.id.content, surveySupportFragment, SURVEY_DIALOG_TAG)
@@ -210,13 +305,14 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
             } else {
                 final android.app.FragmentManager fragmentManager = activity.getFragmentManager();
 
-                com.wootric.androidsdk.views.SurveyFragment surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(endUser, getOriginUrl(),
-                        accessToken, settings, user);
+                com.wootric.androidsdk.views.SurveyFragment surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                        accessToken, currentEvent.getSettings(), currentEvent.getUser());
+                surveyFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
 
                 final boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
 
-                surveyFragment.setSurveyCallback(surveyCallback);
+                surveyFragment.setSurveyCallback(currentEvent.getSurveyCallback());
                 if(isTablet) {
                     fragmentManager.beginTransaction()
                             .add(android.R.id.content, surveyFragment, SURVEY_DIALOG_TAG)
@@ -225,8 +321,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 } else {
                     surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
                 }
-                if (surveyCallback != null){
-                    surveyCallback.onSurveyDidShow();
+                if (currentEvent.getSurveyCallback() != null){
+                    currentEvent.getSurveyCallback().onSurveyDidShow();
                 }
             }
         } catch (NullPointerException e) {
@@ -266,5 +362,19 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         }
 
         return originUrl;
+    }
+
+    public WootricEvent getCurrentEvent() { return this.currentEvent; }
+
+    public int eventQueueCount() { return this.eventQueue.size(); }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    public void onBackground() {
+        registeredEvents.clear();
+    }
+
+    @Override
+    public void onSurveyFinished() {
+        this.surveyRunning = false;
     }
 }

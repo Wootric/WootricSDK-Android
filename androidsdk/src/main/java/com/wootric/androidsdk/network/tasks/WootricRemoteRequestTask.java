@@ -42,7 +42,6 @@ import java.util.Map;
  * Created by maciejwitowski on 10/13/15.
  */
 public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, String> {
-
     private static final String HTTP_AGENT = "Wootric-Mobile-SDK";
 
     static final String REQUEST_TYPE_POST = "POST";
@@ -56,6 +55,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     protected static final String END_USERS_URL = API_ENDPOINT + "/v1/end_users";
     protected static final String OAUTH_URL = API_ENDPOINT + "/oauth/token";
     protected static final String ELIGIBLE_URL = SURVEY_ENDPOINT + "/eligible.json";
+    protected static final String REGISTERED_EVENTS_URL = SURVEY_ENDPOINT + "/registered_events.json";
 
     private final String requestType;
     private final String accessToken;
@@ -72,7 +72,6 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
     @Override
     protected String doInBackground(Void... params) {
-
         String urlWithParams = requestUrl() + "?" + requestParams();
         Log.d("WOOTRIC_SDK", "request: " + urlWithParams);
 
@@ -166,10 +165,6 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     }
 
     protected abstract String requestUrl();
-    protected void onSuccess(String response) {
-        // Nothing by default
-    }
-
     protected abstract void buildParams();
-
+    protected void onSuccess(String response) { }
 }

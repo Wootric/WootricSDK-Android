@@ -26,26 +26,41 @@ import android.util.Log;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.network.responses.EligibilityResponse;
+import com.wootric.androidsdk.network.responses.RegisteredEventsResponse;
 import com.wootric.androidsdk.network.tasks.CheckEligibilityTask;
+import com.wootric.androidsdk.network.tasks.GetRegisteredEventsTask;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import java.util.ArrayList;
+
 /**
  * Created by maciejwitowski on 9/3/15.
  */
-public class SurveyValidator implements CheckEligibilityTask.Callback {
+public class SurveyValidator implements CheckEligibilityTask.Callback, GetRegisteredEventsTask.Callback {
 
     private OnSurveyValidatedListener onSurveyValidatedListener;
-    private final User user;
-    private final EndUser endUser;
-    private final Settings settings;
-    private final WootricRemoteClient wootricRemoteClient;
-    private final PreferencesUtils preferencesUtils;
+    private User user;
+    private EndUser endUser;
+    private Settings settings;
+    private WootricRemoteClient wootricRemoteClient;
+    private PreferencesUtils preferencesUtils;
+
+    public SurveyValidator() {}
 
     public SurveyValidator(User user, EndUser endUser, Settings settings,
                     WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
+        this.user = user;
+        this.endUser = endUser;
+        this.settings = settings;
+        this.wootricRemoteClient = wootricRemoteClient;
+        this.preferencesUtils = preferencesUtils;
+    }
+
+    public void buildSurveyValidator(User user, EndUser endUser, Settings settings,
+                                     WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
         this.user = user;
         this.endUser = endUser;
         this.settings = settings;
@@ -58,7 +73,6 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
     }
 
     public void validate() {
-
         Boolean immediate = settings.isSurveyImmediately();
         Boolean recently = preferencesUtils.wasRecentlySurveyed();
         Boolean firstDelay = firstSurveyDelayPassed();
@@ -69,7 +83,16 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         Log.d(Constants.TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
         Log.d(Constants.TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
 
-        if (immediate || !recently || firstDelay || lastSeen) {
+        if (immediate) {
+            Log.d(Constants.TAG, "Needs survey. Will check with server.");
+            checkEligibility();
+        } else if (recently) {
+            Log.d(Constants.TAG, "Doesn't need survey. Recently surveyed.");
+            notifyShouldNotShowSurvey();
+        } else if (firstDelay) {
+            Log.d(Constants.TAG, "Needs survey. Will check with server.");
+            checkEligibility();
+        } else if (lastSeen) {
             Log.d(Constants.TAG, "Needs survey. Will check with server.");
             checkEligibility();
         } else {
@@ -80,12 +103,16 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
 
     @Override
     public void onEligibilityChecked(EligibilityResponse eligibilityResponse) {
-
         if(eligibilityResponse.isEligible()) {
             notifyShouldShowSurvey(eligibilityResponse.getSettings());
         } else {
             notifyShouldNotShowSurvey();
         }
+    }
+
+    @Override
+    public void onRegisteredEventsList(RegisteredEventsResponse registeredEventsResponse) {
+        notifyRegisteredEventsRetrieved(registeredEventsResponse.getRegisteredEvents());
     }
 
     private boolean firstSurveyDelayPassed() {
@@ -100,6 +127,8 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         wootricRemoteClient.checkEligibility(user, endUser, settings, preferencesUtils, this);
     }
 
+    public void getRegisteredEvents() { wootricRemoteClient.getRegisteredEvents(user, this); }
+
     private void notifyShouldShowSurvey(Settings settings) {
         if(onSurveyValidatedListener != null) {
             onSurveyValidatedListener.onSurveyValidated(settings);
@@ -112,8 +141,15 @@ public class SurveyValidator implements CheckEligibilityTask.Callback {
         }
     }
 
+    private void notifyRegisteredEventsRetrieved(ArrayList<String> registeredEvents){
+        if(onSurveyValidatedListener != null) {
+            onSurveyValidatedListener.onRegisteredEvents(registeredEvents);
+        }
+    }
+
     interface OnSurveyValidatedListener {
         void onSurveyValidated(Settings settings);
         void onSurveyNotNeeded();
+        void onRegisteredEvents(ArrayList<String> registeredEvents);
     }
 }

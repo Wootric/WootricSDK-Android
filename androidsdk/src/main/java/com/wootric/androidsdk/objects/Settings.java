@@ -25,7 +25,6 @@ package com.wootric.androidsdk.objects;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
@@ -41,7 +40,6 @@ import static com.wootric.androidsdk.utils.Utils.isBlank;
  * Created by maciejwitowski on 5/5/15.
  */
 public class Settings implements Parcelable {
-
     private Long firstSurvey = -1L;
     private int adminPanelTimeDelay = Constants.NOT_SET;
     private LocalizedTexts localizedTexts;
@@ -75,12 +73,51 @@ public class Settings implements Parcelable {
     private String productName;
     private String recommendTarget;
     private String surveyType;
+    private String eventName;
 
     private int surveyColor = Constants.NOT_SET;
     private int scoreColor = Constants.NOT_SET;
     private int thankYouButtonBackgroundColor = Constants.NOT_SET;
     private int socialSharingColor = Constants.NOT_SET;
     private int surveyTypeScale = 0;
+
+    public Settings(Settings settings) {
+        this.firstSurvey = settings.firstSurvey;
+        this.adminPanelTimeDelay = settings.getAdminPanelTimeDelay();
+        this.localizedTexts = new LocalizedTexts(settings.getLocalizedTexts());
+        this.userID = settings.getUserID();
+        this.accountID = settings.getAccountID();
+        this.adminPanelCustomMessage = new WootricCustomMessage(settings.getAdminPanelCustomMessage());
+        this.localCustomMessage = new WootricCustomMessage(settings.getLocalCustomMessage());
+        this.adminPanelSocial = new WootricSocial(settings.adminPanelSocial);
+        this.localSocial = new WootricSocial(settings.localSocial);
+        this.localCustomThankYou = new WootricCustomThankYou(settings.localCustomThankYou);
+        this.adminPanelCustomThankYou = new WootricCustomThankYou(settings.adminPanelCustomThankYou);
+        this.timeDelay = settings.timeDelay;
+        this.surveyImmediately = settings.surveyImmediately;
+        this.showOptOut = settings.showOptOut;
+        this.skipFollowupScreenForPromoters = settings.skipFollowupScreenForPromoters;
+        this.skipFeedbackScreen = settings.skipFeedbackScreen;
+        this.dailyResponseCap = settings.dailyResponseCap;
+        this.registeredPercent = settings.registeredPercent;
+        this.visitorPercent = settings.visitorPercent;
+        this.resurveyThrottle = settings.resurveyThrottle;
+        this.declineResurveyThrottle = settings.declineResurveyThrottle;
+        this.languageCode = settings.languageCode;
+        this.productName = settings.productName;
+        this.recommendTarget = settings.recommendTarget;
+        this.surveyType = settings.surveyType;
+        this.eventName = settings.eventName;
+        this.surveyColor = settings.surveyColor;
+        this.scoreColor = settings.scoreColor;
+        this.thankYouButtonBackgroundColor = settings.thankYouButtonBackgroundColor;
+        this.socialSharingColor = settings.socialSharingColor;
+        this.surveyTypeScale = settings.surveyTypeScale;
+    }
+
+    public Settings() {
+        this.localSocial = new WootricSocial();
+    }
 
     // Sets values from the argument settings only if they are not provided yet
     public void mergeWithSurveyServerSettings(Settings settings) {
@@ -522,6 +559,14 @@ public class Settings implements Parcelable {
         this.languageCode = languageCode;
     }
 
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -655,10 +700,6 @@ public class Settings implements Parcelable {
         this.socialSharingColor = socialSharingColor;
     }
 
-    public Settings() {
-        this.localSocial = new WootricSocial();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -719,7 +760,6 @@ public class Settings implements Parcelable {
         public Settings createFromParcel(Parcel source) {
             return new Settings(source);
         }
-
         public Settings[] newArray(int size) {
             return new Settings[size];
         }

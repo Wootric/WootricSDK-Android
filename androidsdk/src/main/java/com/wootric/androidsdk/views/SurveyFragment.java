@@ -31,7 +31,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.DialogFragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +74,7 @@ public class SurveyFragment extends DialogFragment
     private SurveyLayout mSurveyLayout;
     private LinearLayout mFooter;
     private WootricSurveyCallback mSurveyCallback;
+    private OnSurveyFinishedListener mOnSurveyFinishedListener;
 
     private EndUser mEndUser;
     private User mUser;
@@ -116,6 +116,10 @@ public class SurveyFragment extends DialogFragment
 
     public void setSurveyCallback(WootricSurveyCallback surveyCallback) {
         mSurveyCallback = surveyCallback;
+    }
+
+    public void setOnSurveyFinishedListener(OnSurveyFinishedListener onSurveyFinishedListener) {
+        mOnSurveyFinishedListener = onSurveyFinishedListener;
     }
 
     @Override
@@ -332,7 +336,7 @@ public class SurveyFragment extends DialogFragment
 
         if (activity != null) {
             mShouldShowSimpleDialog = true;
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback).show();
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener).show();
         }
 
         dismiss();
@@ -356,13 +360,16 @@ public class SurveyFragment extends DialogFragment
 
         isResumedOnConfigurationChange = true;
 
-        if (mSurveyCallback != null && !mShouldShowSimpleDialog) {
-            HashMap<String, Object> hashMap = new HashMap();
-            if (mScore != -1) {
-                hashMap.put("score", mScore);
+        if (!mShouldShowSimpleDialog) {
+            mOnSurveyFinishedListener.onSurveyFinished();
+            if (mSurveyCallback != null) {
+                HashMap<String, Object> hashMap = new HashMap();
+                if (mScore != -1) {
+                    hashMap.put("score", mScore);
+                }
+                hashMap.put("text", mText);
+                mSurveyCallback.onSurveyDidHide(hashMap);
             }
-            hashMap.put("text", mText);
-            mSurveyCallback.onSurveyDidHide(hashMap);
         }
     }
 
@@ -379,7 +386,6 @@ public class SurveyFragment extends DialogFragment
         Integer resurvey_days = mResponseSent ? mSettings.getResurveyThrottle() : mSettings.getDeclineResurveyThrottle();
         Wootric.notifySurveyFinished(true, mResponseSent, resurvey_days);
     }
-
 
     private void optOut() {
         String optOutUrl = "https://app.wootric.com/opt_out?token=" + mUser.getAccountToken()

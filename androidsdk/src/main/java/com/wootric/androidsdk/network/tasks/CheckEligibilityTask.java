@@ -30,6 +30,7 @@ import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
+import com.wootric.androidsdk.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +64,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
         paramsMap.put("account_token", user.getAccountToken());
 
         String email = endUser.getEmail();
+        String eventName = settings.getEventName();
         // If email is not set, we send an empty string in order to be consistent with web beacon
         if(email == null) {
             email = "";
@@ -76,6 +78,10 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
             for (Map.Entry<String, String> property : endUser.getProperties().entrySet()) {
                 paramsMap.put("properties[" + property.getKey() + "]", property.getValue());
             }
+        }
+
+        if (Utils.isNotEmpty(eventName)) {
+            paramsMap.put("event_name", eventName);
         }
 
         addOptionalParam("end_user_created_at", endUser.getCreatedAtOrNull());
@@ -102,7 +108,8 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
     @Override
     protected void onSuccess(String response) {
         boolean eligible = false;
-        Settings settings = null;
+        String eventName = this.settings.getEventName();
+        Settings serverSettings = null;
 
         if(response != null) {
             try {
@@ -110,6 +117,10 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
                 if (jsonObject.has("sampling_rule")) {
                     endUser.getProperties().put("Wootric sampling rule", jsonObject.getJSONObject("sampling_rule").getString("name"));
+                }
+
+                if (Utils.isNotEmpty(eventName)) {
+                    endUser.getProperties().put("custom_event_name", eventName);
                 }
 
                 String code = jsonObject.getJSONObject("details").getString("code");
@@ -120,7 +131,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
                     Log.d(Constants.TAG, "Server says the user is eligible for survey");
 
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
-                    settings = Settings.fromJson(settingsObject);
+                    serverSettings = Settings.fromJson(settingsObject);
                 }
                 else {
                     Log.d(Constants.TAG, "Server says the user is NOT eligible for survey");
@@ -131,7 +142,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
             }
         }
 
-        EligibilityResponse eligibilityResponse = new EligibilityResponse(eligible, settings);
+        EligibilityResponse eligibilityResponse = new EligibilityResponse(eligible, serverSettings);
         surveyCallback.onEligibilityChecked(eligibilityResponse);
     }
 

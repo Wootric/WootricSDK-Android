@@ -1,3 +1,7 @@
+## 2.15.0 (2020-04-28)
+
+- Add support for event based sampling
+
 ## 2.14.2 (2020-02-28)
 
 - Fix bug when thank_you_link_url_settings is not present

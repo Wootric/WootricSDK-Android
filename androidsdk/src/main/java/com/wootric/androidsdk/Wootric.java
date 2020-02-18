@@ -55,7 +55,6 @@ public class Wootric {
     final User user;
     final Settings settings;
 
-    boolean surveyInProgress;
     PreferencesUtils preferencesUtils;
     PermissionsValidator permissionsValidator;
 
@@ -154,6 +153,15 @@ public class Wootric {
     public void setSurveyCallback(WootricSurveyCallback surveyCallback){
         this.surveyCallback = surveyCallback;
     }
+    /**
+     *  Set event.
+     *
+     * @param eventName String of the event name.
+     */
+    public void setEventName(String eventName) {
+        settings.setEventName(eventName);
+    }
+
     /**
      *  End user email is optional. If not provided, the end user will be considered as "Unknown".
      *
@@ -426,43 +434,56 @@ public class Wootric {
     }
 
     /**
+     * Starts the survey with an event name if configuration is correctly set and elibility returns true.
+     */
+    public void survey(String eventName) {
+        this.setEventName(eventName);
+        if (!permissionsValidator.check()) {
+            return;
+        }
+
+        OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
+        SurveyValidator surveyValidator = buildSurveyValidator();
+
+        if (weakFragmentActivity != null) {
+            buildSurveyManager().start(weakFragmentActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyCallback, surveyValidator);
+        } else {
+            buildSurveyManager().start(weakActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyCallback, surveyValidator);
+        }
+    }
+
+    /**
      * Starts the survey if configuration is correctly set and elibility returns true.
      */
     public void survey() {
-        if (!permissionsValidator.check() || surveyInProgress) {
+        this.survey("");
+    }
+
+    public void showSurveyInActivity(Activity activity, String eventName) {
+        this.setEventName(eventName);
+        if (!permissionsValidator.check()) {
             return;
         }
 
-        getSurveyManager().start();
-
-        surveyInProgress = true;
-    }
-
-    public void showSurveyInActivity(Activity activity) {
-        if (!permissionsValidator.check() || surveyInProgress) {
-            return;
-        }
-
-        getSurveyManagerForActivity(activity).start();
-
-        surveyInProgress = true;
-    }
-
-
-    private SurveyManager getSurveyManager() {
         OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
         WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
-
-        SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
-                wootricRemoteClient, preferencesUtils);
+        SurveyValidator surveyValidator = buildSurveyValidator();
 
         if (weakFragmentActivity != null) {
-            return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
+            getSurveyManagerForActivity(activity).start(weakFragmentActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyCallback, surveyValidator);
         } else {
-            return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
+            getSurveyManagerForActivity(activity).start(weakActivity.get(), wootricRemoteClient,
+                    user, endUser, settings, preferencesUtils, surveyCallback, surveyValidator);
         }
+    }
+
+
+    public void showSurveyInActivity(Activity activity) {
+        this.showSurveyInActivity(activity, "");
     }
 
     private SurveyManager getSurveyManagerForActivity(Activity activity) {
@@ -477,19 +498,7 @@ public class Wootric {
         preferencesUtils = new PreferencesUtils(weakContext);
         permissionsValidator = new PermissionsValidator(weakContext);
 
-        OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
-        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
-
-        SurveyValidator surveyValidator = buildSurveyValidator(user, endUser, settings,
-                wootricRemoteClient, preferencesUtils);
-
-        if (activity instanceof FragmentActivity) {
-            return buildSurveyManager(weakFragmentActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
-        } else {
-            return buildSurveyManager(weakActivity.get(), wootricRemoteClient,
-                    user, endUser, settings, preferencesUtils, surveyValidator, surveyCallback);
-        }
+        return buildSurveyManager();
     }
 
     private Wootric(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
@@ -516,22 +525,11 @@ public class Wootric {
         permissionsValidator = new PermissionsValidator(weakContext);
     }
 
-    SurveyValidator buildSurveyValidator(User user, EndUser endUser, Settings settings,
-                                         WootricRemoteClient wootricRemoteClient, PreferencesUtils preferencesUtils) {
-        return new SurveyValidator(user, endUser, settings, wootricRemoteClient, preferencesUtils);
+    SurveyValidator buildSurveyValidator() {
+        return new SurveyValidator();
     }
 
-    SurveyManager buildSurveyManager(FragmentActivity fragmentActivity, WootricRemoteClient wootricApiClient, User user,
-                                     EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
-                                     SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
-        return new SurveyManager(fragmentActivity, wootricApiClient, user, endUser,
-                settings, preferencesUtils, surveyValidator, surveyCallback);
-    }
-
-    SurveyManager buildSurveyManager(Activity activity, WootricRemoteClient wootricApiClient, User user,
-                                     EndUser endUser, Settings settings, PreferencesUtils preferencesUtils,
-                                     SurveyValidator surveyValidator, WootricSurveyCallback surveyCallback) {
-        return new SurveyManager(activity, wootricApiClient, user, endUser,
-                settings, preferencesUtils, surveyValidator, surveyCallback);
+    SurveyManager buildSurveyManager() {
+        return SurveyManager.getSharedInstance();
     }
 }

@@ -29,10 +29,15 @@ import android.os.Parcelable;
  * Created by maciejwitowski on 4/21/15.
  */
 public class User implements Parcelable {
-
     private String clientId;
     private String clientSecret;
     private String accountToken;
+
+    public User(User user) {
+        this.clientId = user.clientId;
+        this.clientSecret = user.clientSecret;
+        this.accountToken = user.accountToken;
+    }
 
     public User(String clientId, String clientSecret, String accountToken) {
         this.clientId = clientId;
@@ -79,7 +84,6 @@ public class User implements Parcelable {
         public User createFromParcel(Parcel source) {
             return new User(source);
         }
-
         public User[] newArray(int size) {
             return new User[size];
         }

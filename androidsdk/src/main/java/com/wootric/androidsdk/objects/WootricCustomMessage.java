@@ -34,14 +34,12 @@ import java.util.HashMap;
  * Created by maciejwitowski on 4/17/15.
  */
 public class WootricCustomMessage implements Parcelable {
-
     private static final String DETRACTOR_QUESTION_KEY = "detractor_question";
     private static final String PASSIVE_QUESTION_KEY = "passive_question";
     private static final String PROMOTER_QUESTION_KEY = "promoter_question";
     private static final String DETRACTOR_TEXT_KEY = "detractor_text";
     private static final String PASSIVE_TEXT_KEY = "passive_text";
     private static final String PROMOTER_TEXT_KEY = "promoter_text";
-
 
     private String followupQuestion;
     private HashMap<String, String> followupQuestionsList;
@@ -51,6 +49,18 @@ public class WootricCustomMessage implements Parcelable {
     public WootricCustomMessage() {
         this.followupQuestionsList = new HashMap<>();
         this.placeholderTextsList = new HashMap<>();
+    }
+
+    public WootricCustomMessage(WootricCustomMessage wootricCustomMessage) {
+        this.followupQuestionsList = new HashMap<>();
+        this.placeholderTextsList = new HashMap<>();
+
+        if (wootricCustomMessage == null) return;
+
+        this.followupQuestion = wootricCustomMessage.followupQuestion;
+        this.followupQuestionsList = wootricCustomMessage.followupQuestionsList;
+        this.placeholderText = wootricCustomMessage.placeholderText;
+        this.placeholderTextsList = wootricCustomMessage.placeholderTextsList;
     }
 
     public String getFollowupQuestion() {
@@ -174,10 +184,7 @@ public class WootricCustomMessage implements Parcelable {
     }
 
     public static final Creator<WootricCustomMessage> CREATOR = new Creator<WootricCustomMessage>() {
-        public WootricCustomMessage createFromParcel(Parcel source) {
-            return new WootricCustomMessage(source);
-        }
-
+        public WootricCustomMessage createFromParcel(Parcel source) { return new WootricCustomMessage(source); }
         public WootricCustomMessage[] newArray(int size) {
             return new WootricCustomMessage[size];
         }

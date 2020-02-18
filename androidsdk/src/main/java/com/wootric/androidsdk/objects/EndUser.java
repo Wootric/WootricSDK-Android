@@ -33,7 +33,6 @@ import java.util.HashMap;
  * Created by maciejwitowski on 4/21/15.
  */
 public class EndUser implements Parcelable {
-
     private static final String UNKNOWN_EMAIL = "Unknown";
 
     private long id = -1;
@@ -44,6 +43,15 @@ public class EndUser implements Parcelable {
     private HashMap properties = new HashMap<>();
 
     public EndUser() {}
+
+    public EndUser(EndUser endUser) {
+        this.id = endUser.id;
+        this.email = endUser.email;
+        this.externalId = endUser.externalId;
+        this.phoneNumber = endUser.phoneNumber;
+        this.createdAt = endUser.createdAt;
+        this.properties = endUser.properties;
+    }
 
     public EndUser(String email) {
         this.email = email;
@@ -150,7 +158,6 @@ public class EndUser implements Parcelable {
         public EndUser createFromParcel(Parcel source) {
             return new EndUser(source);
         }
-
         public EndUser[] newArray(int size) {
             return new EndUser[size];
         }

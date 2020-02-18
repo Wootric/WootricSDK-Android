@@ -36,7 +36,6 @@ import java.util.HashMap;
  * Created by maciejwitowski on 9/3/15.
  */
 public class LocalizedTexts implements Parcelable {
-
     private static final String ANCHOR_LIKELY_KEY = "likely";
     private static final String ANCHOR_NOT_LIKELY_KEY = "not_likely";
     private static final String SOCIAL_SHARE_QUESTION_KEY = "question";
@@ -53,6 +52,19 @@ public class LocalizedTexts implements Parcelable {
     private HashMap<String, String> socialShare;
 
     public LocalizedTexts() {}
+
+    public LocalizedTexts(LocalizedTexts localizedTexts) {
+        if (localizedTexts == null) return;
+        this.surveyQuestion = localizedTexts.surveyQuestion;
+        this.anchors = localizedTexts.anchors;
+        this.followupQuestion = localizedTexts.followupQuestion;
+        this.followupPlaceholder = localizedTexts.followupPlaceholder;
+        this.finalThankYou = localizedTexts.finalThankYou;
+        this.send = localizedTexts.send;
+        this.dismiss = localizedTexts.dismiss;
+        this.editScore = localizedTexts.editScore;
+        this.socialShare = localizedTexts.socialShare;
+    }
 
     public String getSurveyQuestion() {
         return surveyQuestion;
@@ -132,13 +144,12 @@ public class LocalizedTexts implements Parcelable {
         public LocalizedTexts createFromParcel(Parcel source) {
             return new LocalizedTexts(source);
         }
-
         public LocalizedTexts[] newArray(int size) {
             return new LocalizedTexts[size];
         }
     };
 
-    public static LocalizedTexts fromJson(JSONObject localizedTextsJson, String surveyType) throws JSONException {
+    static LocalizedTexts fromJson(JSONObject localizedTextsJson, String surveyType) throws JSONException {
         LocalizedTexts localizedTexts = new LocalizedTexts();
 
         if (surveyType.equals(Constants.CES) || surveyType.equals(Constants.CSAT)) {
@@ -178,7 +189,7 @@ public class LocalizedTexts implements Parcelable {
         JSONObject socialShareJson = localizedTextsJson.getJSONObject("social_share");
         localizedTexts.socialShare = new HashMap<>();
 
-        if(socialShareJson != null) {
+        if(socialShareJson.has(SOCIAL_SHARE_QUESTION_KEY) && socialShareJson.has(SOCIAL_SHARE_DECLINE_KEY)) {
             localizedTexts.socialShare.put(SOCIAL_SHARE_QUESTION_KEY, socialShareJson.optString(SOCIAL_SHARE_QUESTION_KEY));
             localizedTexts.socialShare.put(SOCIAL_SHARE_DECLINE_KEY, socialShareJson.optString(SOCIAL_SHARE_DECLINE_KEY));
         }

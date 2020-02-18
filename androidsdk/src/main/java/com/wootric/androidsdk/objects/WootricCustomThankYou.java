@@ -35,7 +35,6 @@ import org.json.JSONObject;
  * Created by maciejwitowski on 9/23/15.
  */
 public class WootricCustomThankYou implements Parcelable {
-
     private String finalThankYou;
     private String detractorFinalThankYou;
     private String passiveFinalThankYou;
@@ -70,6 +69,41 @@ public class WootricCustomThankYou implements Parcelable {
     private Boolean promoterCommentInUrl;
 
     private boolean uniqueByScore = false;
+
+    public WootricCustomThankYou() {}
+
+    public WootricCustomThankYou(WootricCustomThankYou wootricCustomThankYou) {
+        if (wootricCustomThankYou == null) return;
+        this.finalThankYou = wootricCustomThankYou.finalThankYou;
+        this.detractorFinalThankYou = wootricCustomThankYou.detractorFinalThankYou;
+        this.passiveFinalThankYou = wootricCustomThankYou.passiveFinalThankYou;
+        this.promoterFinalThankYou = wootricCustomThankYou.promoterFinalThankYou;
+        this.text = wootricCustomThankYou.text;
+        this.detractorText = wootricCustomThankYou.detractorText;
+        this.passiveText = wootricCustomThankYou.passiveText;
+        this.promoterText = wootricCustomThankYou.promoterText;
+        this.linkText = wootricCustomThankYou.linkText;
+        this.detractorLinkText = wootricCustomThankYou.detractorLinkText;
+        this.passiveLinkText = wootricCustomThankYou.passiveLinkText;
+        this.promoterLinkText = wootricCustomThankYou.promoterLinkText;
+        this.linkUri = wootricCustomThankYou.linkUri;
+        this.detractorLinkUri = wootricCustomThankYou.detractorLinkUri;
+        this.passiveLinkUri = wootricCustomThankYou.passiveLinkUri;
+        this.promoterLinkUri = wootricCustomThankYou.promoterLinkUri;
+        this.emailInUrl = wootricCustomThankYou.emailInUrl;
+        this.detractorEmailInUrl = wootricCustomThankYou.detractorEmailInUrl;
+        this.passiveEmailInUrl = wootricCustomThankYou.passiveEmailInUrl;
+        this.promoterEmailInUrl = wootricCustomThankYou.promoterEmailInUrl;
+        this.scoreInUrl = wootricCustomThankYou.scoreInUrl;
+        this.detractorScoreInUrl = wootricCustomThankYou.detractorScoreInUrl;
+        this.passiveScoreInUrl = wootricCustomThankYou.passiveScoreInUrl;
+        this.promoterScoreInUrl = wootricCustomThankYou.promoterScoreInUrl;
+        this.commentInUrl = wootricCustomThankYou.commentInUrl;
+        this.detractorCommentInUrl = wootricCustomThankYou.detractorCommentInUrl;
+        this.passiveCommentInUrl = wootricCustomThankYou.passiveCommentInUrl;
+        this.promoterCommentInUrl = wootricCustomThankYou.promoterCommentInUrl;
+        this.uniqueByScore = wootricCustomThankYou.uniqueByScore;
+    }
 
     public String getFinalThankYouForScore(int scoreValue, String surveyType, int surveyTypeScale) {
         Score score = new Score(scoreValue, surveyType, surveyTypeScale);
@@ -307,7 +341,6 @@ public class WootricCustomThankYou implements Parcelable {
         this.promoterCommentInUrl = promoterCommentInUrl;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -339,9 +372,6 @@ public class WootricCustomThankYou implements Parcelable {
         dest.writeByte(Utils.getByteValue(this.detractorCommentInUrl));
         dest.writeByte(Utils.getByteValue(this.passiveCommentInUrl));
         dest.writeByte(Utils.getByteValue(this.promoterCommentInUrl));
-    }
-
-    public WootricCustomThankYou() {
     }
 
     private WootricCustomThankYou(Parcel in) {
