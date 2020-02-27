@@ -3,12 +3,16 @@ package com.wootric.androidsdk;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 public class TestHelper {
@@ -50,4 +54,22 @@ public class TestHelper {
     private static final ApplicationInfo TEST_APPLICATION_INFO = new ApplicationInfo() {
         public static final String packageName = "";
     };
+
+    public String loadJSONFromAsset(String fileName) throws IOException {
+        String json = null;
+        try {
+            String path = "src/test/resources/" + fileName;
+            File file = new File(path);
+            InputStream is = new FileInputStream(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 }

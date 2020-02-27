@@ -2,7 +2,13 @@ package com.wootric.androidsdk.objects;
 
 import android.os.Parcel;
 
+import com.wootric.androidsdk.TestHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -242,5 +248,30 @@ public class WootricCustomThankYouTest {
 
         WootricCustomThankYou createdFromParcel = WootricCustomThankYou.CREATOR.createFromParcel(parcel);
         assertThat(createdFromParcel.getTextForScore(10, "NPS", 0)).isEqualTo("testing parcel");
+    }
+
+    @Test
+    public void testWootricCustomThankYouFromJson() throws IOException, JSONException {
+        TestHelper helper = new TestHelper();
+        JSONObject customThankYouJson = new JSONObject(helper.loadJSONFromAsset("custom_thank_you.json"));
+
+        WootricCustomThankYou customThankYou = WootricCustomThankYou.fromJson(customThankYouJson);
+
+        assertThat(customThankYou).isNotNull();
+        assertThat(customThankYou.getEmailInUri(0, "NPS", 0)).isTrue();
+        assertThat(customThankYou.getScoreInUri(0, "NPS", 0)).isFalse();
+    }
+
+    @Test
+    public void testWootricCustomThankYouFromJsonWhenThankYouLinkUrlSettingsIsNull() throws IOException, JSONException {
+        TestHelper helper = new TestHelper();
+        JSONObject customThankYouJson = new JSONObject(helper.loadJSONFromAsset("custom_thank_you.json"));
+
+        customThankYouJson.getJSONObject("thank_you_links").remove("thank_you_link_url_settings");
+
+        WootricCustomThankYou customThankYou = WootricCustomThankYou.fromJson(customThankYouJson);
+
+        assertThat(customThankYou).isNotNull();
+        assertThat(customThankYouJson.optJSONObject("thank_you_links").optString("thank_you_link_url_settings")).isNullOrEmpty();
     }
 }

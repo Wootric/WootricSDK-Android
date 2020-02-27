@@ -419,9 +419,12 @@ public class WootricCustomThankYou implements Parcelable {
 
             wootricCustomThankYou.setLinkText(thankYouLinksJson.optString("thank_you_link_text", null));
             wootricCustomThankYou.setLinkUri(Uri.parse(thankYouLinksJson.optString("thank_you_link_url")));
-            wootricCustomThankYou.setEmailInUrl(thankYouLinkUrlSettings.getBoolean("add_email_param_to_url"));
-            wootricCustomThankYou.setScoreInUrl(thankYouLinkUrlSettings.getBoolean("add_score_param_to_url"));
-            wootricCustomThankYou.setCommentInUrl(thankYouLinkUrlSettings.getBoolean("add_comment_param_to_url"));
+
+            if (thankYouLinkUrlSettings != null) {
+                wootricCustomThankYou.setEmailInUrl(thankYouLinkUrlSettings.getBoolean("add_email_param_to_url"));
+                wootricCustomThankYou.setScoreInUrl(thankYouLinkUrlSettings.getBoolean("add_score_param_to_url"));
+                wootricCustomThankYou.setCommentInUrl(thankYouLinkUrlSettings.getBoolean("add_comment_param_to_url"));
+            }
 
             if (thankYouLinkTextList != null) {
                 wootricCustomThankYou.uniqueByScore = true;

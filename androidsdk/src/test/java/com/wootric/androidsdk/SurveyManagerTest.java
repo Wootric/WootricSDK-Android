@@ -1,10 +1,6 @@
 package com.wootric.androidsdk;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
@@ -19,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
 
-import static com.wootric.androidsdk.TestHelper.ORIGIN_URL;
 import static com.wootric.androidsdk.TestHelper.TEST_FRAGMENT_ACTIVITY;
 import static com.wootric.androidsdk.TestHelper.testEndUser;
 import static com.wootric.androidsdk.TestHelper.testUser;

@@ -1,0 +1,38 @@
+{
+  "thank_you_links": {
+    "thank_you_link_text": "All",
+    "thank_you_link_url": "https://all.com",
+    "thank_you_link_url_settings": {
+      "add_email_param_to_url": "true",
+      "add_score_param_to_url": "true",
+      "add_comment_param_to_url": "true"
+    },
+    "thank_you_link_text_list": {
+      "detractor_thank_you_link_text": "Detractor thank you link text",
+      "passive_thank_you_link_text": "Passive thank you link text",
+      "promoter_thank_you_link_text": "Promoter thank you link text"
+    },
+    "thank_you_link_url_list": {
+      "detractor_thank_you_link_url": "http://detractor.com/",
+      "passive_thank_you_link_url": "http://passive.com/",
+      "promoter_thank_you_link_url": "http://promoter.com/"
+    },
+    "thank_you_link_url_settings_list": {
+      "detractor_thank_you_link_url_settings": {
+        "add_email_param_to_url": "true",
+        "add_score_param_to_url": "false",
+        "add_comment_param_to_url": "true"
+      },
+      "passive_thank_you_link_url_settings": {
+        "add_email_param_to_url": "true",
+        "add_score_param_to_url": "true",
+        "add_comment_param_to_url": "true"
+      },
+      "promoter_thank_you_link_url_settings": {
+        "add_email_param_to_url": "true",
+        "add_score_param_to_url": "true",
+        "add_comment_param_to_url": "true"
+      }
+    }
+  }
+}

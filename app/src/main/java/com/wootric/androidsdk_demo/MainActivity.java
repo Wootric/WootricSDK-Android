@@ -1,15 +1,15 @@
 package com.wootric.androidsdk_demo;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.view.View;
 
 import com.wootric.androidsdk.Wootric;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final String CLIENT_ID = "CLIENT ID";
-    private static final String ACCOUNT_TOKEN = "ACCOUNT TOKEN";
+    private static final String CLIENT_ID = "CLIENT_ID";
+    private static final String ACCOUNT_TOKEN = "ACCOUNT_TOKEN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

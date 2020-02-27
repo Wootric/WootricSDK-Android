@@ -1,3 +1,8 @@
+## 2.14.2 (2020-02-28)
+
+- Fix bug when thank_you_link_url_settings is not present
+- Migrate to AndroidX
+
 ## 2.14.1 (2019-12-18)
 
 - Fix bug while writing to parcel

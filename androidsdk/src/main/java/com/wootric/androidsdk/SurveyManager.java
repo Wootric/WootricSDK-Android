@@ -23,16 +23,13 @@
 package com.wootric.androidsdk;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
-import android.view.View;
 
 import com.wootric.androidsdk.network.WootricApiCallback;
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -41,8 +38,6 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.views.support.SurveyFragment;
-
-import java.util.HashMap;
 
 /**
  * Created by maciejwitowski on 9/3/15.
