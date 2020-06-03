@@ -361,7 +361,9 @@ public class SurveyFragment extends DialogFragment
         isResumedOnConfigurationChange = true;
 
         if (!mShouldShowSimpleDialog) {
-            mOnSurveyFinishedListener.onSurveyFinished();
+            if (mOnSurveyFinishedListener != null) {
+                mOnSurveyFinishedListener.onSurveyFinished();
+            }
             if (mSurveyCallback != null) {
                 HashMap<String, Object> hashMap = new HashMap();
                 if (mScore != -1) {

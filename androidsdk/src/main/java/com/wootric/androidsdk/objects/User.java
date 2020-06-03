@@ -30,18 +30,15 @@ import android.os.Parcelable;
  */
 public class User implements Parcelable {
     private String clientId;
-    private String clientSecret;
     private String accountToken;
 
     public User(User user) {
         this.clientId = user.clientId;
-        this.clientSecret = user.clientSecret;
         this.accountToken = user.accountToken;
     }
 
     public User(String clientId, String clientSecret, String accountToken) {
         this.clientId = clientId;
-        this.clientSecret = clientSecret;
         this.accountToken = accountToken;
     }
 
@@ -50,16 +47,24 @@ public class User implements Parcelable {
         this.accountToken = accountToken;
     }
 
+    public User(String accountToken) {
+        this.accountToken = accountToken;
+    }
+
     public String getClientId() {
         return clientId;
     }
 
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
     public String getAccountToken() {
         return accountToken;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setAccountToken(String accountToken) {
+        this.accountToken = accountToken;
     }
 
     @Override
@@ -70,13 +75,11 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.clientId);
-        dest.writeString(this.clientSecret);
         dest.writeString(this.accountToken);
     }
 
     private User(Parcel in) {
         this.clientId = in.readString();
-        this.clientSecret = in.readString();
         this.accountToken = in.readString();
     }
 

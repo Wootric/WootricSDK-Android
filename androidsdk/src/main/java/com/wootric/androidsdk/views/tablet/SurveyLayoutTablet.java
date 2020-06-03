@@ -287,7 +287,6 @@ public class SurveyLayoutTablet extends LinearLayout
         mLayoutFollowup.setAlpha(0);
         mLayoutFollowup.setVisibility(VISIBLE);
         fadeInView(mLayoutFollowup);
-        setKeyboardVisibility(true);
     }
 
     private void setFeedbackTexts() {
@@ -307,6 +306,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private void setupThankYouState() {
         final String feedback = getFeedback();
         mSurveyLayout.setVisibility(GONE);
+        setKeyboardVisibility(false);
 
         boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentEmail, mCurrentScore, feedback) ;
 
@@ -368,7 +368,7 @@ public class SurveyLayoutTablet extends LinearLayout
             imm.showSoftInput(mEtFeedback, InputMethodManager.SHOW_IMPLICIT);
         } else {
             mEtFeedback.clearFocus();
-            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+            imm.hideSoftInputFromWindow(mEtFeedback.getWindowToken(), 0);
         }
     }
 
@@ -441,6 +441,7 @@ public class SurveyLayoutTablet extends LinearLayout
     }
 
     private void dismissSurvey() {
+        setKeyboardVisibility(false);
         if(mSurveyLayoutListener != null) {
             mSurveyLayoutListener.onDismissClick();
         }

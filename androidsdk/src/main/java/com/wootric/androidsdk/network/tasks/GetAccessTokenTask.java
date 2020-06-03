@@ -33,12 +33,10 @@ import org.json.JSONObject;
 public class GetAccessTokenTask extends WootricRemoteRequestTask {
 
     private final String clientId;
-    private final String clientSecret;
 
-    public GetAccessTokenTask(String clientId, String clientSecret, WootricApiCallback wootricApiCallback) {
+    public GetAccessTokenTask(String clientId, WootricApiCallback wootricApiCallback) {
         super(REQUEST_TYPE_POST, null, wootricApiCallback);
         this.clientId = clientId;
-        this.clientSecret = clientSecret;
     }
 
     @Override
@@ -50,9 +48,6 @@ public class GetAccessTokenTask extends WootricRemoteRequestTask {
     protected void buildParams() {
         paramsMap.put("grant_type", "client_credentials");
         paramsMap.put("client_id", clientId);
-        if (clientSecret != null) {
-            paramsMap.put("client_secret", clientSecret);
-        }
     }
 
     @Override

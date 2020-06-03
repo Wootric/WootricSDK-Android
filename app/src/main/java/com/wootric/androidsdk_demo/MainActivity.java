@@ -8,7 +8,6 @@ import com.wootric.androidsdk.Wootric;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final String CLIENT_ID = "CLIENT_ID";
     private static final String ACCOUNT_TOKEN = "ACCOUNT_TOKEN";
 
     @Override
@@ -24,7 +23,7 @@ public class MainActivity extends FragmentActivity {
 
     private void startSurvey() {
 
-        Wootric wootric = Wootric.init(this, CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(this, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
         wootric.setSurveyImmediately(true);
         wootric.survey();

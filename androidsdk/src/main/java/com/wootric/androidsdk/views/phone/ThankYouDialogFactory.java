@@ -49,7 +49,9 @@ public class ThankYouDialogFactory {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-                onSurveyFinishedListener.onSurveyFinished();
+                if (onSurveyFinishedListener != null) {
+                    onSurveyFinishedListener.onSurveyFinished();
+                }
                 if (surveyCallback != null) {
                     HashMap<String, Object> hashMap = new HashMap();
                     if (score != -1) {

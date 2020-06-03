@@ -1,5 +1,8 @@
 package com.wootric.androidsdk;
 
+import android.content.res.Resources;
+import android.view.Window;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -12,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.HashMap;
@@ -34,44 +38,29 @@ public class WootricTest {
     @Mock SurveyValidator mockSurveyValidator;
     @Mock PreferencesUtils mockPreferencesUtils;
     @Mock PermissionsValidator mockPermissionsValidator;
+    @Mock Resources mResources;
+    @Mock FragmentActivity mFragmentActivity;
+    @Mock Window mWindow;
 
     private static final String CLIENT_ID = "client_id";
-    private static final String CLIENT_SECRET = "client_secret";
     private static final String ACCOUNT_TOKEN = "account_token";
 
     @Before
     public void setUp() {
         Wootric.singleton = null;
-        Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
+
+        Mockito.when(mResources.getBoolean(R.bool.isTablet)).thenReturn(true);
+        Mockito.when(mFragmentActivity.getResources()).thenReturn(mResources);
+        Mockito.when(mFragmentActivity.getWindow()).thenReturn(mWindow);
+        Wootric.init(mFragmentActivity, ACCOUNT_TOKEN);
     }
 
     @Test public void fails_whenContextIsNull() throws Exception {
         try {
             Wootric.singleton = null;
-            Wootric.init(null, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+            Wootric.init(null, ACCOUNT_TOKEN);
             Wootric.init(null, CLIENT_ID, ACCOUNT_TOKEN);
             fail("Null activity should throw exception");
-        } catch (IllegalArgumentException expected) {
-        }
-    }
-
-    @Test public void fails_whenClientIdIsNull() throws Exception {
-        try {
-            Wootric.singleton = null;
-            Wootric.init(new FragmentActivity(), null, CLIENT_SECRET, ACCOUNT_TOKEN);
-            Wootric.init(new FragmentActivity(), null, ACCOUNT_TOKEN);
-            fail("Null client id should throw exception");
-        } catch (IllegalArgumentException expected) {
-        }
-    }
-
-    @Test public void fails_whenClientSecretIsNull() throws Exception {
-        try {
-            Wootric.singleton = null;
-            Wootric.init(new FragmentActivity(), CLIENT_ID, null, ACCOUNT_TOKEN);
-            Wootric.init(new FragmentActivity(), CLIENT_ID, ACCOUNT_TOKEN);
-            fail("Null client secret should throw exception");
         } catch (IllegalArgumentException expected) {
         }
     }
@@ -79,7 +68,6 @@ public class WootricTest {
     @Test public void fails_whenAccountTokenIsNull() throws Exception {
         try {
             Wootric.singleton = null;
-            Wootric.init(new FragmentActivity(), CLIENT_ID, CLIENT_SECRET, null);
             Wootric.init(new FragmentActivity(), CLIENT_ID, null);
             fail("Null account token should throw exception");
         } catch (IllegalArgumentException expected) {
@@ -87,9 +75,8 @@ public class WootricTest {
     }
 
     @Test public void inits_singleton() throws Exception {
-        Wootric.singleton = null;
-        Wootric wootric = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric wootric_1 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric wootric_1 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
         Wootric wootric_2 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
         Wootric wootric_3 = Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN);
 
@@ -103,8 +90,6 @@ public class WootricTest {
 
     @Test public void init_sets_user() throws Exception {
         final User user = Wootric.singleton.user;
-        assertThat(user.getClientId()).isEqualTo(CLIENT_ID);
-        assertThat(user.getClientSecret()).isEqualTo(CLIENT_SECRET);
         assertThat(user.getAccountToken()).isEqualTo(ACCOUNT_TOKEN);
     }
 
@@ -145,13 +130,10 @@ public class WootricTest {
     }
 
     @Test public void setSurveyImmediately() throws Exception {
-        Wootric wootric = Wootric.init(new FragmentActivity(), CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN);
-        Wootric wootric_1 = Wootric.init(new FragmentActivity(), CLIENT_ID, ACCOUNT_TOKEN);
+        Wootric wootric = Wootric.init(new FragmentActivity(), CLIENT_ID, ACCOUNT_TOKEN);
         wootric.setSurveyImmediately(true);
-        wootric_1.setSurveyImmediately(true);
 
         assertThat(wootric.settings.isSurveyImmediately()).isTrue();
-        assertThat(wootric_1.settings.isSurveyImmediately()).isTrue();
     }
 
     @Test
@@ -227,46 +209,32 @@ public class WootricTest {
     }
 
     @Test public void survey_startsSurvey() throws Exception {
-        Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator();
-        doReturn(mockSurveyValidator).when(wootric_1).buildSurveyValidator();
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager();
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager();
 
         wootric.permissionsValidator = mockPermissionsValidator;
-        wootric_1.permissionsValidator = mockPermissionsValidator;
         doReturn(true).when(wootric.permissionsValidator).check();
-        doReturn(true).when(wootric_1.permissionsValidator).check();
 
         wootric.survey();
-        wootric_1.survey();
-        verify(mockSurveyManager, times(2)).start(eq(wootric.weakFragmentActivity.get()),
+        verify(mockSurveyManager, times(1)).start(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), any(WootricSurveyCallback.class), eq(mockSurveyValidator));
     }
 
     @Test public void showSurveyInActivity_startsSurvey() throws Exception {
-        Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator();
-        doReturn(mockSurveyValidator).when(wootric_1).buildSurveyValidator();
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager();
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager();
 
         wootric.permissionsValidator = mockPermissionsValidator;
-        wootric_1.permissionsValidator = mockPermissionsValidator;
         doReturn(true).when(wootric.permissionsValidator).check();
-        doReturn(true).when(wootric_1.permissionsValidator).check();
 
         wootric.showSurveyInActivity(TEST_FRAGMENT_ACTIVITY);
-        wootric_1.showSurveyInActivity(TEST_FRAGMENT_ACTIVITY);
-        verify(mockSurveyManager, times(2)).start(eq(wootric.weakFragmentActivity.get()),
+        verify(mockSurveyManager, times(1)).start(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
                 eq(wootric.endUser), eq(wootric.settings),
                 any(PreferencesUtils.class), any(WootricSurveyCallback.class), eq(mockSurveyValidator));
@@ -274,26 +242,16 @@ public class WootricTest {
 
     @Test
     public void doesNotStartSurvey_whenPermissionsValidatorChecksReturnsFalse() {
-        Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, ACCOUNT_TOKEN));
 
         doReturn(mockSurveyValidator).when(wootric).buildSurveyValidator();
 
-        doReturn(mockSurveyValidator).when(wootric_1).buildSurveyValidator();
-
-
         doReturn(mockSurveyManager).when(wootric).buildSurveyManager();
 
-        doReturn(mockSurveyManager).when(wootric_1).buildSurveyManager();
-
         wootric.permissionsValidator = mockPermissionsValidator;
-        wootric_1.permissionsValidator = mockPermissionsValidator;
         doReturn(false).when(wootric.permissionsValidator).check();
-        doReturn(false).when(wootric_1.permissionsValidator).check();
 
         wootric.survey();
-        wootric_1.survey();
 
         verify(mockSurveyManager, times(0)).start(eq(wootric.weakFragmentActivity.get()),
                 any(WootricRemoteClient.class), eq(wootric.user),
@@ -323,10 +281,8 @@ public class WootricTest {
 
     @Test
     public void whenSkipFeedbackScreenTrue_doesNotShowFeedbackScreen() {
-        Wootric.singleton = null;
-        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, CLIENT_SECRET, ACCOUNT_TOKEN));
-        Wootric wootric_1 = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, CLIENT_ID, ACCOUNT_TOKEN));
+        Wootric wootric = spy(Wootric.init(TEST_FRAGMENT_ACTIVITY, ACCOUNT_TOKEN));
         wootric.skipFeedbackScreen(true);
-        wootric_1.skipFeedbackScreen(true);
+        assertThat(wootric.settings.skipFeedbackScreen()).isTrue();
     }
 }

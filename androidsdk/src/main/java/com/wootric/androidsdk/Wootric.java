@@ -24,6 +24,8 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.WindowManager;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -59,33 +61,6 @@ public class Wootric {
     PermissionsValidator permissionsValidator;
 
     static volatile Wootric singleton;
-
-    /**
-     * It configures the SDK with required parameters.
-     *
-     * @param fragmentActivity FragmentActivity where the survey will be presented.
-     * @param clientId Found in API section of the Wootric's admin panel.
-     * @param clientSecret Found in API section of the Wootric's admin panel.
-     * @param accountToken Found in Install section of the Wootric's admin panel.
-     */
-    @Deprecated
-    public static Wootric init(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
-        Wootric local = singleton;
-        if(local == null) {
-            synchronized (Wootric.class) {
-                local = singleton;
-                if(local == null) {
-                    checkNotNull(fragmentActivity, "FragmentActivity");
-                    checkNotNull(clientId, "Client Id");
-                    checkNotNull(clientSecret, "Client Secret");
-                    checkNotNull(accountToken, "Account Token");
-                    singleton = local = new Wootric(fragmentActivity, clientId, clientSecret, accountToken);
-                }
-            }
-        }
-
-        return local;
-    }
 
     /**
      * It configures the SDK with required parameters.
@@ -128,6 +103,50 @@ public class Wootric {
                     checkNotNull(clientId, "Client Id");
                     checkNotNull(accountToken, "Account Token");
                     singleton = local = new Wootric(activity, clientId, accountToken);
+                }
+            }
+        }
+
+        return local;
+    }
+
+    /**
+     * It configures the SDK with required parameters.
+     *
+     * @param fragmentActivity FragmentActivity where the survey will be presented.
+     * @param accountToken Found in Install section of the Wootric's admin panel.
+     */
+    public static Wootric init(FragmentActivity fragmentActivity, String accountToken) {
+        Wootric local = singleton;
+        if(local == null) {
+            synchronized (Wootric.class) {
+                local = singleton;
+                if(local == null) {
+                    checkNotNull(fragmentActivity, "FragmentActivity");
+                    checkNotNull(accountToken, "Account Token");
+                    singleton = local = new Wootric(fragmentActivity, accountToken);
+                }
+            }
+        }
+
+        return local;
+    }
+
+    /**
+     * It configures the SDK with required parameters.
+     *
+     * @param activity Activity where the survey will be presented.
+     * @param accountToken Found in Install section of the Wootric's admin panel.
+     */
+    public static Wootric init(Activity activity, String accountToken) {
+        Wootric local = singleton;
+        if(local == null) {
+            synchronized (Wootric.class) {
+                local = singleton;
+                if (local == null) {
+                    checkNotNull(activity, "Activity");;
+                    checkNotNull(accountToken, "Account Token");
+                    singleton = local = new Wootric(activity, accountToken);
                 }
             }
         }
@@ -501,12 +520,15 @@ public class Wootric {
         return buildSurveyManager();
     }
 
-    private Wootric(FragmentActivity fragmentActivity, String clientId, String clientSecret, String accountToken) {
+    private Wootric(FragmentActivity fragmentActivity, String clientId, String accountToken) {
+        if (fragmentActivity != null && fragmentActivity.getResources().getBoolean(R.bool.isTablet)) {
+            fragmentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
         weakFragmentActivity = new WeakReference<>(fragmentActivity);
         weakContext = new WeakReference<>(fragmentActivity.getApplicationContext());
 
         endUser = new EndUser();
-        user = new User(clientId, clientSecret, accountToken);
+        user = new User(accountToken);
         settings = new Settings();
 
         preferencesUtils = new PreferencesUtils(weakContext);
@@ -514,11 +536,44 @@ public class Wootric {
     }
 
     private Wootric(Activity activity, String clientId, String accountToken) {
+        if (activity != null && activity.getResources().getBoolean(R.bool.isTablet)) {
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
         weakActivity = new WeakReference<>(activity);
         weakContext = new WeakReference<>(activity.getApplicationContext());
 
         endUser = new EndUser();
-        user = new User(clientId, accountToken);
+        user = new User(accountToken);
+        settings = new Settings();
+
+        preferencesUtils = new PreferencesUtils(weakContext);
+        permissionsValidator = new PermissionsValidator(weakContext);
+    }
+
+    private Wootric(FragmentActivity fragmentActivity, String accountToken) {
+        if (fragmentActivity != null && fragmentActivity.getResources().getBoolean(R.bool.isTablet)) {
+            fragmentActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+        weakFragmentActivity = new WeakReference<>(fragmentActivity);
+        weakContext = new WeakReference<>(fragmentActivity.getApplicationContext());
+
+        endUser = new EndUser();
+        user = new User(accountToken);
+        settings = new Settings();
+
+        preferencesUtils = new PreferencesUtils(weakContext);
+        permissionsValidator = new PermissionsValidator(weakContext);
+    }
+
+    private Wootric(Activity activity, String accountToken) {
+        if (activity != null && activity.getResources().getBoolean(R.bool.isTablet)) {
+            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+        weakActivity = new WeakReference<>(activity);
+        weakContext = new WeakReference<>(activity.getApplicationContext());
+
+        endUser = new EndUser();
+        user = new User(accountToken);
         settings = new Settings();
 
         preferencesUtils = new PreferencesUtils(weakContext);

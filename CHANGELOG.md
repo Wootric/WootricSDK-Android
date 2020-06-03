@@ -1,3 +1,10 @@
+## 2.16.0 (2020-06-11)
+
+- Add support for SamplingGroups
+- Remove clientSecret initializer
+- Fix keyboard on tablets
+- Fix exceptions
+
 ## 2.15.0 (2020-04-28)
 
 - Add support for event based sampling

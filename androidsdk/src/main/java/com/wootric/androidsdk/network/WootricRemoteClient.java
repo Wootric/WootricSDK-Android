@@ -51,7 +51,7 @@ public class WootricRemoteClient {
     }
 
     public void authenticate(User user, final WootricApiCallback wootricApiCallback) {
-        new GetAccessTokenTask(user.getClientId(), user.getClientSecret(), wootricApiCallback).execute();
+        new GetAccessTokenTask(user.getClientId(), wootricApiCallback).execute();
     }
 
     public void getEndUserByEmail(String email, String accessToken, final WootricApiCallback wootricApiCallback) {

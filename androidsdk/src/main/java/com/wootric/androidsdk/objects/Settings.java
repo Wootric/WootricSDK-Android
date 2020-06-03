@@ -81,6 +81,9 @@ public class Settings implements Parcelable {
     private int socialSharingColor = Constants.NOT_SET;
     private int surveyTypeScale = 0;
 
+    private String clientID;
+    private String accountToken;
+
     public Settings(Settings settings) {
         this.firstSurvey = settings.firstSurvey;
         this.adminPanelTimeDelay = settings.getAdminPanelTimeDelay();
@@ -279,7 +282,6 @@ public class Settings implements Parcelable {
 
         return thankYouMessage;
     }
-
 
     public String getFinalThankYou(int score) {
         String finalThankYou = null;
@@ -700,6 +702,14 @@ public class Settings implements Parcelable {
         this.socialSharingColor = socialSharingColor;
     }
 
+    public String getAccountToken() {
+        return this.accountToken;
+    }
+
+    public String getClientId() {
+        return this.clientID;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -729,6 +739,8 @@ public class Settings implements Parcelable {
         dest.writeParcelable(this.adminPanelCustomThankYou, 0);
         dest.writeParcelable(this.localSocial, 0);
         dest.writeParcelable(this.adminPanelSocial, 0);
+        dest.writeString(this.accountToken);
+        dest.writeString(this.clientID);
     }
 
     private Settings(Parcel in) {
@@ -754,6 +766,8 @@ public class Settings implements Parcelable {
         this.adminPanelCustomThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
         this.localSocial = in.readParcelable(WootricSocial.class.getClassLoader());
         this.adminPanelSocial = in.readParcelable(WootricSocial.class.getClassLoader());
+        this.accountToken = in.readString();
+        this.clientID = in.readString();
     }
 
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {
@@ -770,6 +784,14 @@ public class Settings implements Parcelable {
         settings.setSurveyType(settingsObject.optString("survey_type", "NPS"));
         settings.firstSurvey = settingsObject.optLong("first_survey");
         settings.adminPanelTimeDelay = settingsObject.optInt("time_delay");
+
+        if (settingsObject.has("account_token")) {
+            settings.accountToken = settingsObject.optString("account_token");
+        }
+
+        if (settingsObject.has("client_id")) {
+            settings.clientID = settingsObject.optString("client_id");
+        }
 
         if (settingsObject.has("account_id")) {
             settings.accountID = settingsObject.optLong("account_id");

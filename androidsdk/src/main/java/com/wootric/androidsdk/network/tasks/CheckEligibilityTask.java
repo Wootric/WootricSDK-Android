@@ -132,6 +132,8 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
                     serverSettings = Settings.fromJson(settingsObject);
+                    this.user.setAccountToken(serverSettings.getAccountToken());
+                    this.user.setClientId(serverSettings.getClientId());
                 }
                 else {
                     Log.d(Constants.TAG, "Server says the user is NOT eligible for survey");

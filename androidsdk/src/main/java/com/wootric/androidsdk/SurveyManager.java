@@ -26,7 +26,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.fragment.app.FragmentActivity;
@@ -283,6 +282,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     @SuppressLint("ResourceType")
     private void showSurveyFragment() {
         this.activity = currentEvent.getActivity();
+        this.fragmentActivity = currentEvent.getFragmentActivity();
         try {
             if (fragmentActivity != null) {
                 final FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
