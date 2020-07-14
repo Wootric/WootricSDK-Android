@@ -28,8 +28,10 @@ import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -137,6 +139,18 @@ public class SurveyLayoutTablet extends LinearLayout
         mLayoutFollowup = (RelativeLayout) findViewById(R.id.wootric_layout_followup);
         mTvFollowupQuestion = (TextView) mLayoutFollowup.findViewById(R.id.wootric_tv_followup);
         mEtFeedback = (EditText) mLayoutFollowup.findViewById(R.id.wootric_et_feedback);
+        mEtFeedback.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mEtFeedback.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    submitSurvey();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         mBtnSubmit = (Button) mLayoutFollowup.findViewById(R.id.wootric_btn_submit);
         mBtnSubmit.setOnClickListener(new OnClickListener() {
             @Override
@@ -261,6 +275,7 @@ public class SurveyLayoutTablet extends LinearLayout
             mTvAnchorLikely.setText(mSettings.getAnchorLikely());
             mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
             mBtnSubmit.setText(mSettings.getBtnSubmit());
+            mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         }
     }
 

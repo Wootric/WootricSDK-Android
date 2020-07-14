@@ -33,8 +33,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -189,6 +191,17 @@ public class SurveyLayoutPhone extends LinearLayout
         etFeedbackBackground.setColorFilter(mColorBlack, PorterDuff.Mode.SRC_ATOP);
         etFeedbackBackground.setAlpha(26);
         mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
+        mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
+        mEtFeedback.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mEtFeedback.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    submitSurvey();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mBtnEditScore = (TextView) findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());

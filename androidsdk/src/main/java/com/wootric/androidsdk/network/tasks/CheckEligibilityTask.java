@@ -116,7 +116,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
                 JSONObject jsonObject = new JSONObject(response);
 
                 if (jsonObject.has("sampling_rule")) {
-                    endUser.getProperties().put("Wootric sampling rule", jsonObject.getJSONObject("sampling_rule").getString("name"));
+                    endUser.getProperties().put("Wootric Sampling Rule", jsonObject.getJSONObject("sampling_rule").getString("name"));
                 }
 
                 if (Utils.isNotEmpty(eventName)) {

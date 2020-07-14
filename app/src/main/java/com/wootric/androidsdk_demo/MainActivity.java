@@ -22,7 +22,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void startSurvey() {
-
         Wootric wootric = Wootric.init(this, ACCOUNT_TOKEN);
         wootric.setEndUserEmail("nps@example.com");
         wootric.setSurveyImmediately(true);

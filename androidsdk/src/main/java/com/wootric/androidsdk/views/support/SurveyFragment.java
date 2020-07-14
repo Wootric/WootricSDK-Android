@@ -154,6 +154,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
         mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
         mBtnOptOut = (TextView) view.findViewById(R.id.wootric_btn_opt_out);
+        mBtnOptOut.setText(mSettings.getBtnOptOut());
 
         if (mSettings.isShowOptOut()) {
             mBtnOptOut.setVisibility(View.VISIBLE);
