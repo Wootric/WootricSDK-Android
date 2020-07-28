@@ -1,3 +1,11 @@
+## 2.17.0 (2020-07-30)
+
+- Add support to show Footer section in Landscape mode
+- Fix Wootric Sampling Rule property
+- Add log message
+- Fix opt-out button to retrieve text from server translations
+- Change Enter button action on feedback screen to advance to next screen
+
 ## 2.16.0 (2020-06-11)
 
 - Add support for SamplingGroups

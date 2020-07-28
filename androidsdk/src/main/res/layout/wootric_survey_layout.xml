@@ -21,39 +21,39 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/wootric_btn_edit_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/wootric_survey_layout_header_background"
-                android:drawableLeft="@drawable/ic_wootric_left_arrow"
-                android:drawableStart="@drawable/ic_wootric_left_arrow"
-                android:drawablePadding="@dimen/wootric_edit_button_drawable_padding"
-                android:paddingStart="@dimen/wootric_edit_button_padding_left"
-                android:gravity="center_vertical"
-                android:includeFontPadding="false"
-                android:paddingLeft="@dimen/wootric_edit_button_padding_left"
-                android:paddingTop="@dimen/wootric_edit_button_padding_top"
-                android:text="@string/wootric_example_btn_edit_score"
-                android:textColor="@color/edit_score_color"
-                android:textSize="@dimen/wootric_button_text" />
+                <TextView
+                    android:id="@+id/wootric_btn_edit_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/wootric_survey_layout_header_background"
+                    android:drawableLeft="@drawable/ic_wootric_left_arrow"
+                    android:drawableStart="@drawable/ic_wootric_left_arrow"
+                    android:drawablePadding="@dimen/wootric_edit_button_drawable_padding"
+                    android:paddingStart="@dimen/wootric_edit_button_padding_left"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:paddingLeft="@dimen/wootric_edit_button_padding_left"
+                    android:paddingTop="@dimen/wootric_edit_button_padding_top"
+                    android:text="@string/wootric_example_btn_edit_score"
+                    android:textColor="@color/edit_score_color"
+                    android:textSize="@dimen/wootric_button_text" />
 
-            <TextView
-                android:id="@+id/wootric_survey_layout_tv_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/wootric_survey_layout_header_background"
-                android:padding="@dimen/wootric_survey_layout_header_padding"
-                android:text="@string/wootric_example_nps_question"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/wootric_survey_layout_header_text_size" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/wootric_survey_layout_tv_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/wootric_survey_layout_header_background"
+                    android:padding="@dimen/wootric_survey_layout_header_padding"
+                    android:text="@string/wootric_example_nps_question"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/wootric_survey_layout_header_text_size" />
+            </LinearLayout>
 
-        <com.wootric.androidsdk.views.phone.ThankYouLayout
-            android:id="@+id/wootric_thank_you_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <com.wootric.androidsdk.views.phone.ThankYouLayout
+                android:id="@+id/wootric_thank_you_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/wootric_survey_layout_body"
@@ -133,6 +133,7 @@
                     android:layout_marginTop="@dimen/wootric_et_feedback_margin_top"
                     android:hint="@string/wootric_example_followup_placeholder"
                     android:imeOptions="actionDone"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:nextFocusLeft="@id/wootric_et_feedback"
                     android:nextFocusUp="@id/wootric_et_feedback"

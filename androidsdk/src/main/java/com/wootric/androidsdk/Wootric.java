@@ -478,7 +478,7 @@ public class Wootric {
      * Starts the survey if configuration is correctly set and elibility returns true.
      */
     public void survey() {
-        this.survey("");
+        this.survey(settings.getEventName());
     }
 
     public void showSurveyInActivity(Activity activity, String eventName) {

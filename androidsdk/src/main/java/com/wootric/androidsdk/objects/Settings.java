@@ -226,6 +226,8 @@ public class Settings implements Parcelable {
         return localizedTexts.getEditScore().toUpperCase();
     }
 
+    public String getBtnOptOut() { return localizedTexts.getOptOut().toUpperCase(); }
+
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
 

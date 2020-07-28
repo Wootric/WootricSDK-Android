@@ -50,8 +50,6 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
     protected static final String API_ENDPOINT = "https://api.wootric.com";
     protected static final String SURVEY_ENDPOINT = "https://survey.wootric.com";
-
-
     protected static final String END_USERS_URL = API_ENDPOINT + "/v1/end_users";
     protected static final String OAUTH_URL = API_ENDPOINT + "/oauth/token";
     protected static final String ELIGIBLE_URL = SURVEY_ENDPOINT + "/eligible.json";
@@ -104,6 +102,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
             return readInput(is);
 
         } catch (IOException e) {
+            Log.d("WOOTRIC_SDK", "Request failed with error: " + e.getMessage());
             onError(e);
         }
 

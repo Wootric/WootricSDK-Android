@@ -66,6 +66,8 @@
                 android:textCursorDrawable="@drawable/wootric_tablet_feedback_cursor"
                 android:textColor="#78000000"
                 android:background="@null"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 android:padding="16dp"
                 android:textSize="14sp"
                 android:maxLines="2"

@@ -154,6 +154,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
         mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
         mBtnOptOut = (TextView) view.findViewById(R.id.wootric_btn_opt_out);
+        mBtnOptOut.setText(mSettings.getBtnOptOut());
 
         if (mSettings.isShowOptOut()) {
             mBtnOptOut.setVisibility(View.VISIBLE);
@@ -213,7 +214,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
                 lp.height = screenHeight*4/5;
                 lp.width = screenWidth;
             } else {
-                lp.height = screenWidth;
+                lp.height = screenWidth*19/20;
                 lp.width = screenHeight*4/5;
             }
         } else {
@@ -227,7 +228,6 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
         }
 
         window.setAttributes(lp);
-        mFooter.setVisibility(isPortraitMode ? View.VISIBLE : View.GONE);
     }
 
     private void setupState(Bundle savedInstanceState) {

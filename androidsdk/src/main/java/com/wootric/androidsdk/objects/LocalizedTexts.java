@@ -49,6 +49,7 @@ public class LocalizedTexts implements Parcelable {
     private String send;
     private String dismiss;
     private String editScore;
+    private String optOut;
     private HashMap<String, String> socialShare;
 
     public LocalizedTexts() {}
@@ -63,6 +64,7 @@ public class LocalizedTexts implements Parcelable {
         this.send = localizedTexts.send;
         this.dismiss = localizedTexts.dismiss;
         this.editScore = localizedTexts.editScore;
+        this.optOut = localizedTexts.optOut;
         this.socialShare = localizedTexts.socialShare;
     }
 
@@ -102,6 +104,8 @@ public class LocalizedTexts implements Parcelable {
         return editScore;
     }
 
+    public String getOptOut() {return optOut; }
+
     public String getSocialShareQuestion() {
         return socialShare.get(SOCIAL_SHARE_QUESTION_KEY);
     }
@@ -125,6 +129,7 @@ public class LocalizedTexts implements Parcelable {
         dest.writeString(this.send);
         dest.writeString(this.dismiss);
         dest.writeString(this.editScore);
+        dest.writeString(this.optOut);
         dest.writeSerializable(this.socialShare);
     }
 
@@ -137,6 +142,7 @@ public class LocalizedTexts implements Parcelable {
         this.send = in.readString();
         this.dismiss = in.readString();
         this.editScore = in.readString();
+        this.optOut = in.readString();
         this.socialShare = (HashMap<String, String>) in.readSerializable();
     }
 
@@ -185,6 +191,7 @@ public class LocalizedTexts implements Parcelable {
         localizedTexts.send = localizedTextsJson.optString("send");
         localizedTexts.dismiss = localizedTextsJson.optString("dismiss");
         localizedTexts.editScore = localizedTextsJson.optString("edit_score");
+        localizedTexts.optOut = localizedTextsJson.optString("opt_out_button");
 
         JSONObject socialShareJson = localizedTextsJson.getJSONObject("social_share");
         localizedTexts.socialShare = new HashMap<>();
