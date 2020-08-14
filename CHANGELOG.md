@@ -1,3 +1,8 @@
+## 2.18.0 (2020-08-18)
+
+- Add stop() method
+- Fix surveyDidShow callback for FragmentActivity
+
 ## 2.17.0 (2020-07-30)
 
 - Add support to show Footer section in Landscape mode

@@ -453,6 +453,14 @@ public class Wootric {
     }
 
     /**
+     * Hides a survey if it’s displayed without generating a decline.
+     * If the delay time is still running stop will abort that survey from happening.
+     */
+    public void stop() {
+        buildSurveyManager().stop();
+    }
+
+    /**
      * Starts the survey with an event name if configuration is correctly set and elibility returns true.
      */
     public void survey(String eventName) {
@@ -500,9 +508,8 @@ public class Wootric {
         }
     }
 
-
     public void showSurveyInActivity(Activity activity) {
-        this.showSurveyInActivity(activity, "");
+        this.showSurveyInActivity(activity, settings.getEventName());
     }
 
     private SurveyManager getSurveyManagerForActivity(Activity activity) {

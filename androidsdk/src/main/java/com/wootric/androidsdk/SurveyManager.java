@@ -69,6 +69,11 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     private String accessToken;
     private String originUrl;
 
+    Handler handler = new Handler();
+    FragmentManager fragmentActivityManager;
+    SurveyFragment surveySupportFragment;
+    com.wootric.androidsdk.views.SurveyFragment surveyFragment;
+
     private static final String SURVEY_DIALOG_TAG = "survey_dialog_tag";
 
     static volatile SurveyManager sharedInstance;
@@ -86,6 +91,19 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
             }
         }
         return sharedInstance;
+    }
+
+    synchronized void stop() {
+        handler.removeCallbacks(surveyRunner);
+
+        surveyRunning = false;
+
+        if (fragmentActivity != null) {
+            surveySupportFragment.dismiss();
+        } else if (activity != null) {
+            surveyFragment.dismiss();
+        }
+        Log.d(Constants.TAG, "Survey stopped");
     }
 
     synchronized void start(Activity activity, WootricRemoteClient wootricApiClient, User user, EndUser endUser,
@@ -263,21 +281,24 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     }
 
     void showSurvey() {
+        handler.postDelayed(surveyRunner, currentEvent.getSettings().getTimeDelayInMillis());
+
         if (currentEvent.getSurveyCallback() != null) {
             currentEvent.getSurveyCallback().onSurveyWillShow();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    showSurveyFragment();
-                } catch (IllegalStateException e) {
-                    Log.d(Constants.TAG, "showSurvey: " + e.getLocalizedMessage());
-                    Wootric.notifySurveyFinished(false, false, 0);
-                }
-            }
-        }, currentEvent.getSettings().getTimeDelayInMillis());
     }
+
+    public Runnable surveyRunner = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                showSurveyFragment();
+            } catch (IllegalStateException e) {
+                Log.d(Constants.TAG, "showSurvey: " + e.getLocalizedMessage());
+                Wootric.notifySurveyFinished(false, false, 0);
+            }
+        }
+    };
 
     @SuppressLint("ResourceType")
     private void showSurveyFragment() {
@@ -285,9 +306,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         this.fragmentActivity = currentEvent.getFragmentActivity();
         try {
             if (fragmentActivity != null) {
-                final FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
+                fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
 
-                SurveyFragment surveySupportFragment = SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                surveySupportFragment = SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
                         accessToken, currentEvent.getSettings(), currentEvent.getUser());
                 surveySupportFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
@@ -305,7 +326,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
             } else {
                 final android.app.FragmentManager fragmentManager = activity.getFragmentManager();
 
-                com.wootric.androidsdk.views.SurveyFragment surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
                         accessToken, currentEvent.getSettings(), currentEvent.getUser());
                 surveyFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
@@ -321,9 +342,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 } else {
                     surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
                 }
-                if (currentEvent.getSurveyCallback() != null){
-                    currentEvent.getSurveyCallback().onSurveyDidShow();
-                }
+            }
+            if (currentEvent.getSurveyCallback() != null){
+                currentEvent.getSurveyCallback().onSurveyDidShow();
             }
         } catch (NullPointerException e) {
             Log.e(Constants.TAG, "showSurveyFragment: " + e.toString());
