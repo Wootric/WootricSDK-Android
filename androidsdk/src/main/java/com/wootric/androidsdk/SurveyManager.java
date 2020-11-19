@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -34,8 +35,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
-
-import android.util.Log;
 
 import com.wootric.androidsdk.network.WootricApiCallback;
 import com.wootric.androidsdk.network.WootricRemoteClient;
@@ -319,7 +318,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                     fragmentActivityManager.beginTransaction()
                             .add(android.R.id.content, surveySupportFragment, SURVEY_DIALOG_TAG)
                             .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
-                            .addToBackStack(null).commit();
+                            .commit();
                 } else {
                     surveySupportFragment.show(fragmentActivityManager, SURVEY_DIALOG_TAG);
                 }
@@ -338,7 +337,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                     fragmentManager.beginTransaction()
                             .add(android.R.id.content, surveyFragment, SURVEY_DIALOG_TAG)
                             .setCustomAnimations(R.anim.slide_up_dialog, R.anim.slide_down_dialog)
-                            .addToBackStack(null).commit();
+                            .commit();
                 } else {
                     surveyFragment.show(fragmentManager, SURVEY_DIALOG_TAG);
                 }
@@ -397,5 +396,11 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     @Override
     public void onSurveyFinished() {
         this.surveyRunning = false;
+        if (this.surveyFragment != null) {
+            this.surveyFragment = null;
+        }
+        if (this.surveySupportFragment != null) {
+            this.surveySupportFragment = null;
+        }
     }
 }

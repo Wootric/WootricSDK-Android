@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +38,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.R;
@@ -349,15 +350,11 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
         if (mSurveyCallback != null) {
             mSurveyCallback.onSurveyWillHide();
         }
-        if (mIsTablet) {
-            this.onDestroy();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         isResumedOnConfigurationChange = true;
 
         if (!mShouldShowSimpleDialog) {

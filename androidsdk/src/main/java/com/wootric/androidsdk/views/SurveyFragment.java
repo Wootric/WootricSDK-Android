@@ -24,13 +24,13 @@ package com.wootric.androidsdk.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -348,16 +348,11 @@ public class SurveyFragment extends DialogFragment
         if (mSurveyCallback != null) {
             mSurveyCallback.onSurveyWillHide();
         }
-
-        if (mIsTablet) {
-            this.onDestroy();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         isResumedOnConfigurationChange = true;
 
         if (!mShouldShowSimpleDialog) {
