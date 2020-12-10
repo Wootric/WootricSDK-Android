@@ -57,8 +57,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener, WootricApiCallback, LifecycleObserver, OnSurveyFinishedListener {
 
     private OnSurveyFinishedListener onSurveyFinishedListener = this;
-    private Activity activity;
-    private FragmentActivity fragmentActivity;
     private SurveyValidator surveyValidator;
     private ArrayList<String> registeredEvents = new ArrayList<>();
     private ConcurrentLinkedQueue eventQueue = new ConcurrentLinkedQueue<WootricEvent>();
@@ -70,7 +68,6 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     private String originUrl;
 
     Handler handler = new Handler();
-    FragmentManager fragmentActivityManager;
     SurveyFragment surveySupportFragment;
     com.wootric.androidsdk.views.SurveyFragment surveyFragment;
 
@@ -98,10 +95,12 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
         surveyRunning = false;
 
-        if (fragmentActivity != null) {
+        if (surveySupportFragment != null) {
             surveySupportFragment.dismiss();
-        } else if (activity != null) {
+            surveySupportFragment = null;
+        } else if (surveyFragment != null) {
             surveyFragment.dismiss();
+            surveyFragment = null;
         }
         Log.d(Constants.TAG, "Survey stopped");
     }
@@ -302,13 +301,13 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @SuppressLint("ResourceType")
     private void showSurveyFragment() {
-        this.activity = currentEvent.getActivity();
-        this.fragmentActivity = currentEvent.getFragmentActivity();
+        Activity activity = currentEvent.getActivity();
+        FragmentActivity fragmentActivity = currentEvent.getFragmentActivity();
         try {
             if (fragmentActivity != null) {
-                fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
+                FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
 
-                surveySupportFragment = SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                surveySupportFragment = SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(fragmentActivity),
                         accessToken, currentEvent.getSettings(), currentEvent.getUser());
                 surveySupportFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
@@ -326,7 +325,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
             } else {
                 final android.app.FragmentManager fragmentManager = activity.getFragmentManager();
 
-                surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(currentEvent.getEndUser(), getOriginUrl(),
+                surveyFragment = com.wootric.androidsdk.views.SurveyFragment.newInstance(
+                        currentEvent.getEndUser(), getOriginUrl(activity),
                         accessToken, currentEvent.getSettings(), currentEvent.getUser());
                 surveyFragment.setOnSurveyFinishedListener(onSurveyFinishedListener);
 
@@ -356,20 +356,15 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         this.accessToken = accessToken;
     }
 
-    private String getOriginUrl() {
+    private String getOriginUrl(Activity activity) {
         if(originUrl == null) {
             PackageManager pm;
             String packageName;
             ApplicationInfo appInfo;
 
             try {
-                if (fragmentActivity != null) {
-                    pm = fragmentActivity.getPackageManager();
-                    packageName = fragmentActivity.getApplicationInfo().packageName;
-                } else {
-                    pm = activity.getPackageManager();
-                    packageName = activity.getApplicationInfo().packageName;
-                }
+                pm = activity.getPackageManager();
+                packageName = activity.getApplicationInfo().packageName;
                 appInfo = pm.getApplicationInfo(packageName, 0);
                 originUrl = pm.getApplicationLabel(appInfo).toString();
             } catch (Exception e) {
