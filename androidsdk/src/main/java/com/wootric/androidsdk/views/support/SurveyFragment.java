@@ -349,9 +349,6 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
         if (mSurveyCallback != null) {
             mSurveyCallback.onSurveyWillHide();
         }
-        if (mIsTablet) {
-            this.onDestroy();
-        }
     }
 
     @Override

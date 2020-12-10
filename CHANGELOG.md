@@ -1,3 +1,7 @@
+## 2.18.1 (2020-12-16)
+
+- Fix memory leaks
+
 ## 2.18.0 (2020-08-18)
 
 - Add stop() method

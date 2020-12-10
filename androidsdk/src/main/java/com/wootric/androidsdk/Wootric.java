@@ -155,9 +155,9 @@ public class Wootric {
     }
 
     public static void notifySurveyFinished(boolean surveyShown, boolean responseSent, Integer resurvey_days) {
-        if(singleton == null) return;
+        if (singleton == null) return;
 
-        if(surveyShown) {
+        if (surveyShown) {
             singleton.preferencesUtils.touchLastSurveyed(responseSent, resurvey_days);
         }
 

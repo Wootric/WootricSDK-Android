@@ -1,8 +1,10 @@
 package com.wootric.androidsdk_demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentActivity;
 import android.view.View;
+
 
 import com.wootric.androidsdk.Wootric;
 
@@ -19,6 +21,11 @@ public class MainActivity extends FragmentActivity {
 
     public void showSurvey(View view) {
         startSurvey();
+    }
+
+    public void showAnotherActivity(View view) {
+        finish();
+        startActivity(new Intent(this, AnotherActivity.class));
     }
 
     private void startSurvey() {

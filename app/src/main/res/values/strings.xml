@@ -2,4 +2,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="wootric_app_name">Wootric Demo</string>
     <string name="start_survey_hint">Manually Start Survey</string>
+    <string name="navigate_other_activity">Navigate to another activity</string>
+    <string name="go_back">Go back</string>
 </resources>

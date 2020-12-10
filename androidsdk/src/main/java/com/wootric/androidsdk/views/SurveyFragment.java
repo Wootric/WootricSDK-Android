@@ -348,10 +348,6 @@ public class SurveyFragment extends DialogFragment
         if (mSurveyCallback != null) {
             mSurveyCallback.onSurveyWillHide();
         }
-
-        if (mIsTablet) {
-            this.onDestroy();
-        }
     }
 
     @Override
