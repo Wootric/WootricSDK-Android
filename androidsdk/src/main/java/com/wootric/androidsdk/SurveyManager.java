@@ -94,6 +94,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
         handler.removeCallbacks(surveyRunner);
 
         surveyRunning = false;
+        currentEvent = null;
 
         if (surveySupportFragment != null) {
             surveySupportFragment.dismiss();
@@ -168,7 +169,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                                 surveyValidator.validate();
                             } else {
                                 Log.e(Constants.TAG, "Event name not registered: " + currentEvent.getSettings().getEventName());
-                                this.surveyRunning = false;
+                                surveyRunning = false;
+                                currentEvent = null;
                                 runSurvey();
                             }
                         }
@@ -189,7 +191,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     @Override
     public void onSurveyNotNeeded() {
         Wootric.notifySurveyFinished(false, false, 0);
-        this.surveyRunning = false;
+        surveyRunning = false;
+        currentEvent = null;
         runSurvey();
     }
 
@@ -197,7 +200,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     public void onRegisteredEvents(ArrayList<String> registeredEvents) {
         this.registeredEvents = registeredEvents;
         if (currentEvent == null) {
-            this.surveyRunning = false;
+            surveyRunning = false;
+            currentEvent = null;
             runSurvey();
         } else {
             if (!currentEvent.getSettings().getEventName().isEmpty()) {
@@ -205,7 +209,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                     surveyValidator.validate();
                 } else {
                     Log.e(Constants.TAG, "Event name not registered: " + currentEvent.getSettings().getEventName());
-                    this.surveyRunning = false;
+                    surveyRunning = false;
+                    currentEvent = null;
                     runSurvey();
                 }
             } else {
@@ -218,7 +223,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     public void onAuthenticateSuccess(String accessToken) {
         if(accessToken == null) {
             Wootric.notifySurveyFinished(false, false, 0);
-            this.surveyRunning = false;
+            surveyRunning = false;
+            currentEvent = null;
             return;
         }
 
@@ -260,7 +266,8 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     public void onApiError(Exception error) {
         Log.e(Constants.TAG, "API error: " + error);
         Wootric.notifySurveyFinished(false, false, 0);
-        this.surveyRunning = false;
+        surveyRunning = false;
+        currentEvent = null;
     }
 
     private void sendGetAccessTokenRequest() {
@@ -391,6 +398,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onSurveyFinished() {
-        this.surveyRunning = false;
+        surveyRunning = false;
+        currentEvent = null;
     }
 }
