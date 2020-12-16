@@ -93,15 +93,12 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
     synchronized void stop() {
         handler.removeCallbacks(surveyRunner);
 
-        resetSurvey();
-
         if (surveySupportFragment != null) {
             surveySupportFragment.dismiss();
-            surveySupportFragment = null;
         } else if (surveyFragment != null) {
             surveyFragment.dismiss();
-            surveyFragment = null;
         }
+        resetSurvey();
         Log.d(Constants.TAG, "Survey stopped");
     }
 
@@ -371,7 +368,6 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
                 originUrl = pm.getApplicationLabel(appInfo).toString();
             } catch (Exception e) {
                 Log.e(Constants.TAG, "getOriginUrl: " + e.toString());
-                resetSurvey();
                 e.printStackTrace();
             }
         }
