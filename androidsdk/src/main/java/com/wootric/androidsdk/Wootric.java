@@ -24,6 +24,7 @@ package com.wootric.androidsdk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.fragment.app.FragmentActivity;
@@ -513,6 +514,7 @@ public class Wootric {
     }
 
     private SurveyManager getSurveyManagerForActivity(Activity activity) {
+        Log.e("DIEGO", activity.getLocalClassName());
         if (activity instanceof FragmentActivity) {
             weakFragmentActivity = new WeakReference<>((FragmentActivity) activity);
         } else {
