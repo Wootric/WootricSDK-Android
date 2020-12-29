@@ -169,6 +169,11 @@ public class Wootric {
         return singleton;
     }
 
+
+    public void reset() {
+        singleton = null;
+    }
+
     public void setSurveyCallback(WootricSurveyCallback surveyCallback){
         this.surveyCallback = surveyCallback;
     }
