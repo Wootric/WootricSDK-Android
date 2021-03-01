@@ -1,3 +1,7 @@
+## 2.18.2 (2021-03-01)
+
+- Fix currentEvent being null and crashing app
+
 ## 2.18.1 (2020-12-16)
 
 - Fix memory leaks
