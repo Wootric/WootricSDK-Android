@@ -299,9 +299,9 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @SuppressLint("ResourceType")
     private void showSurveyFragment() {
-        Activity activity = currentEvent.getActivity();
-        FragmentActivity fragmentActivity = currentEvent.getFragmentActivity();
         try {
+            Activity activity = currentEvent.getActivity();
+            FragmentActivity fragmentActivity = currentEvent.getFragmentActivity();
             if (fragmentActivity != null) {
                 FragmentManager fragmentActivityManager = fragmentActivity.getSupportFragmentManager();
 
