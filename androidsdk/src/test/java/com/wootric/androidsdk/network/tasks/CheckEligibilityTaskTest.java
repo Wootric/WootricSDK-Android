@@ -18,7 +18,6 @@ import java.util.HashMap;
 import static com.wootric.androidsdk.TestHelper.testUser;
 import static com.wootric.androidsdk.TestHelper.testPreferenceUtils;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)

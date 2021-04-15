@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="wootric_dark_gray">#9b9b9b</color>
-    <color name="wootric_survey_layout_header_background">#2196F3</color>
-    <color name="wootric_score_color">#E91E63</color>
-    <color name="wootric_brand_color">#4A4A4A</color>
-    <color name="wootric_rating_bar">#B9B9B9</color>
+    <color name="wootric_survey_layout_header_background">#0058ff</color>
+    <color name="wootric_tablet_score_color">#b3cdff</color>
+    <color name="wootric_tablet_text_score_color">#253746</color>
+    <color name="wootric_tablet_cta_color">#2d91d7</color>
+    <color name="wootric_tablet_send_button_color">#253746</color>
+    <color name="wootric_score_color">#024ea9</color>
+    <color name="wootric_brand_color">#66737e</color>
+    <color name="wootric_rating_bar">#dadada</color>
+    <color name="wootric_anchors">#66737e</color>
     <color name="wootric_dark_with_alpha">#66000000</color>
-    <color name="wootric_green">#7da52d</color>
-    <color name="wootric_social">#2F80C1</color>
+    <color name="wootric_blue">#0058ff</color>
+    <color name="wootric_social">#0058ff</color>
     <color name="wootric_edit_text_background">#05000000</color>
-    <color name="wootric_edit_text_border">#19000000</color>
-    <color name="edit_score_color">#8df5f3f3</color>
+    <color name="wootric_edit_text_border">#253746</color>
+    <color name="edit_score_color">#0058ff</color>
 </resources>

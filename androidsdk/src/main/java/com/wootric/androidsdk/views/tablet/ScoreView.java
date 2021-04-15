@@ -42,8 +42,7 @@ import com.wootric.androidsdk.utils.ScreenUtils;
  */
 public class ScoreView extends TextView implements View.OnClickListener{
 
-    private int mTextColorSelected;
-    private int mTextColorNotSelected;
+    private int mTextColor;
 
     private OnScoreClickListener onScoreClickListener;
 
@@ -68,8 +67,7 @@ public class ScoreView extends TextView implements View.OnClickListener{
         final Context context = getContext();
         final Resources res = context.getResources();
 
-        mTextColorSelected = res.getColor(android.R.color.white);
-        mTextColorNotSelected = res.getColor(android.R.color.black);
+        mTextColor = res.getColor(R.color.wootric_tablet_text_score_color);
 
         final Resources resources = getResources();
         Drawable drawable;
@@ -117,7 +115,6 @@ public class ScoreView extends TextView implements View.OnClickListener{
     public void setSelected(boolean selected) {
         super.setSelected(selected);
 
-        setTextColor(isSelected() ? mTextColorSelected : mTextColorNotSelected);
         setTypeface(null, isSelected() ? Typeface.BOLD : Typeface.NORMAL);
     }
 

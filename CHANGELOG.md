@@ -1,3 +1,7 @@
+## 2.19.0 (2021-04-19)
+
+- Reskin
+
 ## 2.18.2 (2021-03-01)
 
 - Fix currentEvent being null and crashing app

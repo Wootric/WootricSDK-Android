@@ -10,24 +10,25 @@
         android:id="@+id/wootric_tv_powered_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/ibmplexsans"
         android:text="@string/wootric_powered_by"
-        android:textColor="@android:color/black"
-        android:alpha="0.3"/>
+        android:textColor="@color/wootric_tablet_text_score_color"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/ibmplexsans"
         android:text="@string/wootric"
-        android:textColor="@color/wootric_survey_layout_header_background" />
+        android:textColor="@color/wootric_tablet_text_score_color" />
 
     <TextView
         android:id="@+id/footer_dot_separator"
         android:layout_width="@dimen/wootric_footer_layout_dot_separator_width"
         android:layout_height="@dimen/wootric_footer_layout_dot_separator_height"
         android:gravity="center"
+        android:fontFamily="@font/ibmplexsans"
         android:layout_margin="@dimen/wootric_footer_layout_dot_separator_margin"
         android:background="@drawable/footer_dot_separator"
-        android:alpha="0.3"
         android:visibility="gone"/>
 
     <TextView
@@ -36,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="@string/wootric_opt_out"
         android:clickable="true"
-        android:textColor="@android:color/black"
-        android:alpha="0.3"
+        android:fontFamily="@font/ibmplexsans"
+        android:textColor="@color/wootric_tablet_text_score_color"
         android:visibility="gone"/>
 </LinearLayout>

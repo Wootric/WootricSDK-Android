@@ -1,5 +1,5 @@
 <p align="center" >
-  <img src="https://cloud.githubusercontent.com/assets/1431421/16471739/4e28eec8-3e24-11e6-8ee1-39d36bbf679e.png" alt="Wootric" title="Wootric">
+  <img src="https://user-images.githubusercontent.com/1431421/114659755-ff80c500-9ca8-11eb-9960-8f55a18d03cb.png" alt="Wootric" title="Wootric">
 </p>
 
 <p align="center" >
@@ -28,14 +28,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.18.2</version>
+    <version>2.19.0</version>
 </dependency>
 ```
 
 ### Using Gradle
 
 ```xml
-implementation 'com.wootric:wootric-sdk-android:2.18.2'
+implementation 'com.wootric:wootric-sdk-android:2.19.0'
 ```
 
 ## Initializing Wootric

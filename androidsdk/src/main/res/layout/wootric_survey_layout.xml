@@ -35,6 +35,7 @@
                     android:paddingLeft="@dimen/wootric_edit_button_padding_left"
                     android:paddingTop="@dimen/wootric_edit_button_padding_top"
                     android:text="@string/wootric_example_btn_edit_score"
+                    android:fontFamily="@font/ibmplexsans"
                     android:textColor="@color/edit_score_color"
                     android:textSize="@dimen/wootric_button_text" />
 
@@ -46,6 +47,7 @@
                     android:background="@color/wootric_survey_layout_header_background"
                     android:padding="@dimen/wootric_survey_layout_header_padding"
                     android:text="@string/wootric_example_nps_question"
+                    android:fontFamily="@font/ibmplexsans"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/wootric_survey_layout_header_text_size" />
             </LinearLayout>
@@ -101,9 +103,9 @@
                     android:layout_marginLeft="@dimen/wootric_not_likely_layout_margin_left"
                     android:layout_marginStart="@dimen/wootric_not_likely_layout_margin_start"
                     android:layout_marginTop="@dimen/wootric_not_likely_layout_margin_top"
-                    android:alpha="0.38"
                     android:text="@string/wootric_example_anchor_not_likely"
-                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/ibmplexsans"
+                    android:textColor="@color/wootric_anchors"
                     android:textSize="@dimen/wootric_anchors_text_size"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/wootric_rating_bar" />
@@ -115,9 +117,9 @@
                     android:layout_marginEnd="@dimen/wootric_likely_layout_margin_end"
                     android:layout_marginRight="@dimen/wootric_likely_layout_margin_right"
                     android:layout_marginTop="@dimen/wootric_likely_layout_margin_top"
-                    android:alpha="0.38"
                     android:text="@string/wootric_example_anchor_likely"
-                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/ibmplexsans"
+                    android:textColor="@color/wootric_anchors"
                     android:textSize="@dimen/wootric_anchors_text_size"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/wootric_rating_bar" />
@@ -139,6 +141,7 @@
                     android:nextFocusUp="@id/wootric_et_feedback"
                     android:paddingBottom="@dimen/wootric_et_feedback_padding"
                     android:paddingTop="@dimen/wootric_et_feedback_padding"
+                    android:fontFamily="@font/ibmplexsans"
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@drawable/wootric_feedback_cursor"
                     android:textSize="@dimen/wootric_et_feedback_text_size"
@@ -158,6 +161,7 @@
                     android:enabled="false"
                     android:padding="@dimen/wootric_btn_padding"
                     android:text="@string/wootric_example_btn_submit"
+                    android:fontFamily="@font/ibmplexsans"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/wootric_button_text"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -173,6 +177,7 @@
                     android:layout_marginTop="@dimen/wootric_button_margin_top"
                     android:padding="@dimen/wootric_btn_padding"
                     android:text="@string/wootric_example_btn_dismiss"
+                    android:fontFamily="@font/ibmplexsans"
                     android:textColor="@color/wootric_survey_layout_header_background"
                     android:textSize="@dimen/wootric_button_text"
                     app:layout_constraintBottom_toBottomOf="parent"

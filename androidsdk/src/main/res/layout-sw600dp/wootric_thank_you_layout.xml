@@ -16,6 +16,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:text="X"
+        android:fontFamily="@font/ibmplexsans"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -25,6 +26,7 @@
         style="@style/TextViewGreen"
         android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
         android:layout_centerHorizontal="true"
+        android:fontFamily="@font/ibmplexsans"
         android:text="@string/wootric_thank_you" />
 
     <TextView
@@ -32,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:fontFamily="@font/ibmplexsans"
         android:layout_marginBottom="@dimen/wootric_tv_thank_you_margin"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/wootric_tv_thank_you"
@@ -53,6 +56,7 @@
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
             android:text="@string/fa_thumbs_up"
+            android:fontFamily="@font/ibmplexsans"
             android:layout_margin="8dp"/>
 
         <Button
@@ -63,6 +67,7 @@
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
             android:text="@string/fa_twitter"
+            android:fontFamily="@font/ibmplexsans"
             android:layout_margin="8dp"/>
 
         <Button
@@ -73,6 +78,7 @@
             android:textSize="30sp"
             android:textColor="@color/wootric_social"
             android:text="@string/fa_facebook"
+            android:fontFamily="@font/ibmplexsans"
             android:layout_margin="8dp"/>
 
         <Button
@@ -82,8 +88,9 @@
             android:padding="12dp"
             android:textSize="16sp"
             android:background="@drawable/tablet_thank_you_done_background"
-            android:textColor="@color/wootric_rating_bar"
+            android:textColor="@color/wootric_edit_text_border"
             android:text="@string/no_thanks"
+            android:fontFamily="@font/ibmplexsans"
             android:layout_margin="8dp"/>
 
         <Button
@@ -93,8 +100,9 @@
             android:padding="12dp"
             android:textSize="16sp"
             android:background="@drawable/tablet_thank_you_action_background"
-            android:textColor="@color/wootric_survey_layout_header_background"
+            android:textColor="@color/wootric_tablet_cta_color"
             android:text="@string/wootric_btn_thank_you_action"
+            android:fontFamily="@font/ibmplexsans"
             android:layout_margin="8dp"/>
     </LinearLayout>
 
