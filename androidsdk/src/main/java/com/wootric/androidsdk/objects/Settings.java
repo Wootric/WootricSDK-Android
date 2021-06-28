@@ -58,6 +58,7 @@ public class Settings implements Parcelable {
 
     private int timeDelay = Constants.NOT_SET;
 
+    private boolean surveyedDefault = true;
     private boolean surveyImmediately;
     private boolean showOptOut;
     private boolean skipFollowupScreenForPromoters;
@@ -97,6 +98,7 @@ public class Settings implements Parcelable {
         this.localCustomThankYou = new WootricCustomThankYou(settings.localCustomThankYou);
         this.adminPanelCustomThankYou = new WootricCustomThankYou(settings.adminPanelCustomThankYou);
         this.timeDelay = settings.timeDelay;
+        this.surveyedDefault = settings.surveyedDefault;
         this.surveyImmediately = settings.surveyImmediately;
         this.showOptOut = settings.showOptOut;
         this.skipFollowupScreenForPromoters = settings.skipFollowupScreenForPromoters;
@@ -159,6 +161,10 @@ public class Settings implements Parcelable {
         this.surveyImmediately = surveyImmediately;
     }
 
+    public void setSurveyedDefault(boolean surveyedDefault) {
+        this.surveyedDefault = surveyedDefault;
+    }
+
     public void setShowOptOut(boolean showOptOut) {
         this.showOptOut = showOptOut;
     }
@@ -167,6 +173,10 @@ public class Settings implements Parcelable {
 
     public boolean isSurveyImmediately() {
         return surveyImmediately;
+    }
+
+    public boolean isSurveyedDefault() {
+        return surveyedDefault;
     }
 
     public void setSkipFollowupScreenForPromoters(boolean skipFollowupScreenForPromoters) {
@@ -728,6 +738,7 @@ public class Settings implements Parcelable {
         dest.writeParcelable(this.localCustomMessage, 0);
         dest.writeInt(this.timeDelay);
         dest.writeByte(surveyImmediately ? (byte) 1 : (byte) 0);
+        dest.writeByte(surveyedDefault ? (byte) 1 : (byte) 0);
         dest.writeValue(this.dailyResponseCap);
         dest.writeValue(this.registeredPercent);
         dest.writeValue(this.visitorPercent);
@@ -755,6 +766,7 @@ public class Settings implements Parcelable {
         this.localCustomMessage = in.readParcelable(WootricCustomMessage.class.getClassLoader());
         this.timeDelay = in.readInt();
         this.surveyImmediately = in.readByte() != 0;
+        this.surveyedDefault = in.readByte() != 0;
         this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
         this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());

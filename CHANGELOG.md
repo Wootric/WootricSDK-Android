@@ -1,3 +1,7 @@
+## 2.20.0 (2021-06-29)
+
+- Add setSurveyedDefault method
+
 ## 2.19.0 (2021-04-19)
 
 - Reskin

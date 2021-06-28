@@ -52,6 +52,46 @@ public class SurveyValidatorTest {
     }
 
     @Test
+    public void checksEligibility_whenSurveyedDefaultIsFalse() throws Exception {
+        User user = testUser();
+        EndUser endUser = testEndUser();
+        Settings settings = new Settings();
+        settings.setSurveyedDefault(false);
+
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, preferencesUtils);
+
+        surveyValidator.validate();
+
+        verify(wootricRemoteClient, times(1)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
+    }
+
+    @Test
+    public void doesNotCheckEligibility_whenSurveyedDefaultIsTrue() throws Exception {
+        User user = testUser();
+        EndUser endUser = testEndUser();
+        long createdAtJustNow = new Date().getTime();
+        endUser.setCreatedAt(createdAtJustNow);
+
+        Settings settings = new Settings();
+
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, preferencesUtils);
+
+        surveyValidator.validate();
+
+        verify(wootricRemoteClient, times(0)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
+
+        settings.setSurveyedDefault(true);
+        surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, preferencesUtils);
+
+        surveyValidator.validate();
+
+        verify(wootricRemoteClient, times(0)).checkEligibility(user, endUser, settings, preferencesUtils, surveyValidator);
+    }
+
+    @Test
     public void doesNotCheckEligibility_whenRecentlySurveyed() throws Exception {
         User user = testUser();
         EndUser endUser = testEndUser();

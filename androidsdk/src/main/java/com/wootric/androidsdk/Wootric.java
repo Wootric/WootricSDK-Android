@@ -354,6 +354,15 @@ public class Wootric {
     }
 
     /**
+     * If surveyedDefault is set to false the SDK will always check with the server
+     * to see if the end user is eligible
+     * @param surveyedDefault A boolean to set if the SDK should check with the eligibility server.
+     */
+    public void setSurveyedDefault(Boolean surveyedDefault) {
+        settings.setSurveyedDefault(surveyedDefault);
+    }
+
+    /**
      * It sets the audience of the survey.
      * <br />
      * e.g. How likely are you to recommend this product or service to recommendTarget?

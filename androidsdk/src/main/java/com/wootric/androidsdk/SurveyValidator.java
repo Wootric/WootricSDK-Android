@@ -74,6 +74,7 @@ public class SurveyValidator implements CheckEligibilityTask.Callback, GetRegist
 
     public void validate() {
         Boolean immediate = settings.isSurveyImmediately();
+        Boolean surveyedDefault = settings.isSurveyedDefault();
         Boolean recently = preferencesUtils.wasRecentlySurveyed();
         Boolean firstDelay = firstSurveyDelayPassed();
         Boolean lastSeen = lastSeenDelayPassed();
@@ -82,9 +83,13 @@ public class SurveyValidator implements CheckEligibilityTask.Callback, GetRegist
         Log.d(Constants.TAG, "WAS RECENTLY SURVEYED: " + recently);
         Log.d(Constants.TAG, "FIRST SURVEY DELAY PASSED: " + firstDelay);
         Log.d(Constants.TAG, "LAST SEEN DELAY PASSED: " + lastSeen);
+        Log.d(Constants.TAG, "SURVEYED DEFAULT: " + surveyedDefault);
 
         if (immediate) {
             Log.d(Constants.TAG, "Needs survey. Will check with server.");
+            checkEligibility();
+        } else if (!surveyedDefault) {
+            Log.d(Constants.TAG, "surveyedDefault is false. Will check with server.");
             checkEligibility();
         } else if (recently) {
             Log.d(Constants.TAG, "Doesn't need survey. Recently surveyed.");
