@@ -36,14 +36,14 @@ public class GetEndUserByEmailTask extends WootricRemoteRequestTask {
 
     private final String email;
 
-    public GetEndUserByEmailTask(String email, String accessToken, WootricApiCallback wootricApiCallback) {
-        super(REQUEST_TYPE_GET, accessToken, wootricApiCallback);
+    public GetEndUserByEmailTask(String email, String accessToken, String accountToken, WootricApiCallback wootricApiCallback) {
+        super(REQUEST_TYPE_GET, accessToken, accountToken, wootricApiCallback);
         this.email = email;
     }
 
     @Override
     protected String requestUrl() {
-        return END_USERS_URL;
+        return getApiEndpoint() + END_USERS_PATH;
     }
 
     @Override

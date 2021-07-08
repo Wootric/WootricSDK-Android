@@ -75,4 +75,8 @@ public final class Utils {
             return (byte) 0;
         }
     }
+
+    public static boolean startsWithEU(String aString) {
+        return aString.startsWith("NPS-EU");
+    }
 }

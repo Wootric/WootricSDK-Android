@@ -479,7 +479,7 @@ public class Wootric {
         }
 
         OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
-        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler, user.getAccountToken());
         SurveyValidator surveyValidator = buildSurveyValidator();
 
         if (weakFragmentActivity != null) {
@@ -505,7 +505,7 @@ public class Wootric {
         }
 
         OfflineDataHandler offlineDataHandler = new OfflineDataHandler(preferencesUtils);
-        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler);
+        WootricRemoteClient wootricRemoteClient = new WootricRemoteClient(offlineDataHandler, user.getAccountToken());
         SurveyValidator surveyValidator = buildSurveyValidator();
 
         if (weakFragmentActivity != null) {

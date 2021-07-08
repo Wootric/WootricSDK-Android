@@ -41,9 +41,11 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
  */
 public class WootricRemoteClient {
     private final OfflineDataHandler offlineDataHandler;
+    private final String accountToken;
 
-    public WootricRemoteClient(OfflineDataHandler offlineDataHandler) {
+    public WootricRemoteClient(OfflineDataHandler offlineDataHandler, String accountToken) {
         this.offlineDataHandler = offlineDataHandler;
+        this.accountToken = accountToken;
     }
 
     public void checkEligibility(User user, EndUser endUser, Settings settings, PreferencesUtils preferencesUtils, final CheckEligibilityTask.Callback surveyCallback) {
@@ -51,27 +53,27 @@ public class WootricRemoteClient {
     }
 
     public void authenticate(User user, final WootricApiCallback wootricApiCallback) {
-        new GetAccessTokenTask(user.getClientId(), wootricApiCallback).execute();
+        new GetAccessTokenTask(user.getClientId(), this.accountToken, wootricApiCallback).execute();
     }
 
     public void getEndUserByEmail(String email, String accessToken, final WootricApiCallback wootricApiCallback) {
-        new GetEndUserByEmailTask(email, accessToken, wootricApiCallback).execute();
+        new GetEndUserByEmailTask(email, accessToken, this.accountToken, wootricApiCallback).execute();
     }
 
     public void createEndUser(EndUser endUser, String accessToken, final WootricApiCallback wootricApiCallback) {
-        new CreateEndUserTask(endUser, accessToken, wootricApiCallback).execute();
+        new CreateEndUserTask(endUser, accessToken, this.accountToken, wootricApiCallback).execute();
     }
 
     public void updateEndUser(EndUser endUser, String accessToken, final WootricApiCallback wootricApiCallback) {
-        new UpdateEndUserTask(endUser, accessToken, wootricApiCallback).execute();
+        new UpdateEndUserTask(endUser, accessToken, this.accountToken, wootricApiCallback).execute();
     }
 
     public void createDecline(long endUserId, long userId, long accountId, int priority, String accessToken, String originUrl, String uniqueLink) {
-        new CreateDeclineTask(endUserId, userId, accountId, priority, originUrl, accessToken, offlineDataHandler, uniqueLink).execute();
+        new CreateDeclineTask(endUserId, userId, accountId, priority, originUrl, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
     }
 
     public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink) {
-        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, offlineDataHandler, uniqueLink).execute();
+        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
     }
 
     public void getRegisteredEvents(User user, final GetRegisteredEventsTask.Callback surveyCallback) {

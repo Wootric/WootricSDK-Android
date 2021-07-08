@@ -41,8 +41,8 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
 
     private final OfflineDataHandler offlineDataHandler;
 
-    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, OfflineDataHandler offlineDataHandler, String uniqueLink) {
-        super(REQUEST_TYPE_POST, accessToken, null);
+    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink) {
+        super(REQUEST_TYPE_POST, accessToken, accountToken, null);
 
         this.endUserId = endUserId;
         this.userId = userId;
@@ -57,7 +57,7 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
 
     @Override
     protected String requestUrl() {
-        return END_USERS_URL + "/" + String.valueOf(endUserId) + "/responses";
+        return getApiEndpoint() + END_USERS_PATH + "/" + endUserId + "/responses";
     }
 
     @Override

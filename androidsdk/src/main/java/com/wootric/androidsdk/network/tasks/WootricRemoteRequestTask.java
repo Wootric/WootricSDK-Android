@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.wootric.androidsdk.BuildConfig;
 import com.wootric.androidsdk.network.WootricApiCallback;
+import com.wootric.androidsdk.utils.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,20 +51,24 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
 
     protected static final String API_ENDPOINT = "https://api.wootric.com";
     protected static final String SURVEY_ENDPOINT = "https://survey.wootric.com";
-    protected static final String END_USERS_URL = API_ENDPOINT + "/v1/end_users";
-    protected static final String OAUTH_URL = API_ENDPOINT + "/oauth/token";
-    protected static final String ELIGIBLE_URL = SURVEY_ENDPOINT + "/eligible.json";
-    protected static final String REGISTERED_EVENTS_URL = SURVEY_ENDPOINT + "/registered_events.json";
+    protected static final String EU_API_ENDPOINT = "https://app.wootric.eu";
+    protected static final String EU_SURVEY_ENDPOINT = "https://eligibility.wootric.eu";
+    protected static final String END_USERS_PATH = "/api/v1/end_users";
+    protected static final String OAUTH_PATH = "/oauth/token";
+    protected static final String ELIGIBLE_PATH = "/eligible.json";
+    protected static final String REGISTERED_EVENTS_PATH = "/registered_events.json";
 
     private final String requestType;
     private final String accessToken;
+    private final String accountToken;
     protected final WootricApiCallback wootricApiCallback;
     protected final HashMap<String, String> paramsMap;
 
 
-    public WootricRemoteRequestTask(String requestType, String accessToken, WootricApiCallback wootricApiCallback) {
+    public WootricRemoteRequestTask(String requestType, String accessToken, String accountToken, WootricApiCallback wootricApiCallback) {
         this.requestType = requestType;
         this.accessToken = accessToken;
+        this.accountToken = accountToken;
         this.wootricApiCallback = wootricApiCallback;
         this.paramsMap = new HashMap<>();
     }
@@ -161,6 +166,14 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
             RuntimeException exception = new IllegalArgumentException(message);
             wootricApiCallback.onApiError(exception);
         }
+    }
+
+    protected String getApiEndpoint() {
+        return Utils.startsWithEU(this.accountToken) ? EU_API_ENDPOINT : API_ENDPOINT;
+    }
+
+    protected String getSurveyEndpoint() {
+        return Utils.startsWithEU(this.accountToken) ? EU_SURVEY_ENDPOINT : SURVEY_ENDPOINT;
     }
 
     protected abstract String requestUrl();

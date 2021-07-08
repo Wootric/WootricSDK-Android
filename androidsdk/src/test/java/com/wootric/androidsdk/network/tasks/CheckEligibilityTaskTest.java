@@ -1,11 +1,10 @@
 package com.wootric.androidsdk.network.tasks;
 
-import android.util.Log;
-
 import com.wootric.androidsdk.SurveyValidator;
 import com.wootric.androidsdk.network.WootricRemoteClient;
 import com.wootric.androidsdk.objects.EndUser;
 import com.wootric.androidsdk.objects.Settings;
+import com.wootric.androidsdk.objects.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,5 +55,35 @@ public class CheckEligibilityTaskTest {
 
         assertTrue(asyncTask.paramsMap.containsKey("event_name"));
         assertThat(asyncTask.paramsMap.get("event_name")).isEqualTo("test event");
+    }
+
+    @Test
+    public void testGet_RequestWithEuToken() throws Exception {
+        EndUser endUser = new EndUser();
+        Settings settings = new Settings();
+        User user = new User("NPS-EU");
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, testPreferenceUtils());
+
+        CheckEligibilityTask asyncTask = new CheckEligibilityTask(user, endUser, settings, testPreferenceUtils(), surveyValidator);
+        asyncTask.execute();
+        Robolectric.flushBackgroundThreadScheduler();
+
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://eligibility.wootric.eu/eligible.json");
+    }
+
+    @Test
+    public void testGet_RequestWithNormalToken() throws Exception {
+        EndUser endUser = new EndUser();
+        Settings settings = new Settings();
+        User user = new User("NPS");
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, testPreferenceUtils());
+
+        CheckEligibilityTask asyncTask = new CheckEligibilityTask(user, endUser, settings, testPreferenceUtils(), surveyValidator);
+        asyncTask.execute();
+        Robolectric.flushBackgroundThreadScheduler();
+
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://survey.wootric.com/eligible.json");
     }
 }

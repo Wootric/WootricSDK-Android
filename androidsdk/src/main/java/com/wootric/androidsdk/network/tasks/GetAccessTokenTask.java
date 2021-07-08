@@ -34,15 +34,13 @@ public class GetAccessTokenTask extends WootricRemoteRequestTask {
 
     private final String clientId;
 
-    public GetAccessTokenTask(String clientId, WootricApiCallback wootricApiCallback) {
-        super(REQUEST_TYPE_POST, null, wootricApiCallback);
+    public GetAccessTokenTask(String clientId, String accountToken, WootricApiCallback wootricApiCallback) {
+        super(REQUEST_TYPE_POST, null, accountToken, wootricApiCallback);
         this.clientId = clientId;
     }
 
     @Override
-    protected String requestUrl() {
-        return OAUTH_URL;
-    }
+    protected String requestUrl() { return getApiEndpoint() + OAUTH_PATH; }
 
     @Override
     protected void buildParams() {
