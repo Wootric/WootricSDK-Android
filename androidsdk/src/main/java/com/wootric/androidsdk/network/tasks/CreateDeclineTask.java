@@ -59,8 +59,8 @@ public class CreateDeclineTask extends WootricRemoteRequestTask {
     private final OfflineDataHandler offlineDataHandler;
     private final String uniqueLink;
 
-    public CreateDeclineTask(long endUserId, long userId, long accountId, int priority, String originUrl, String accessToken, OfflineDataHandler offlineDataHandler, String uniqueLink) {
-        super(REQUEST_TYPE_POST, accessToken, null);
+    public CreateDeclineTask(long endUserId, long userId, long accountId, int priority, String originUrl, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink) {
+        super(REQUEST_TYPE_POST, accessToken, accountToken, null);
 
         this.originUrl = originUrl;
         this.endUserId = endUserId;
@@ -86,7 +86,7 @@ public class CreateDeclineTask extends WootricRemoteRequestTask {
 
     @Override
     protected String requestUrl() {
-        return END_USERS_URL + "/" + String.valueOf(endUserId) + "/declines";
+        return getApiEndpoint() + END_USERS_PATH + "/" + endUserId + "/declines";
     }
 
     @Override

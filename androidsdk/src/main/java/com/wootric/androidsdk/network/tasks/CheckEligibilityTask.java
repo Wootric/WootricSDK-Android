@@ -50,7 +50,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
     private final Callback surveyCallback;
 
     public CheckEligibilityTask(User user, EndUser endUser, Settings settings, PreferencesUtils preferencesUtils, Callback surveyCallback) {
-        super(REQUEST_TYPE_GET, null, null);
+        super(REQUEST_TYPE_GET, null, user.getAccountToken(), null);
 
         this.user = user;
         this.endUser = endUser;
@@ -102,7 +102,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
     @Override
     protected String requestUrl() {
-        return ELIGIBLE_URL;
+        return getSurveyEndpoint() + ELIGIBLE_PATH;
     }
 
     @Override

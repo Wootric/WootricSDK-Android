@@ -36,14 +36,14 @@ import java.util.Map;
 public class CreateEndUserTask extends WootricRemoteRequestTask {
     private final EndUser endUser;
 
-    public CreateEndUserTask(EndUser endUser, String accessToken, WootricApiCallback wootricApiCallback) {
-        super(REQUEST_TYPE_POST, accessToken, wootricApiCallback);
+    public CreateEndUserTask(EndUser endUser, String accessToken, String accountToken, WootricApiCallback wootricApiCallback) {
+        super(REQUEST_TYPE_POST, accessToken, accountToken, wootricApiCallback);
         this.endUser = endUser;
     }
 
     @Override
     protected String requestUrl() {
-        return END_USERS_URL;
+        return getApiEndpoint() + END_USERS_PATH;
     }
 
     @Override

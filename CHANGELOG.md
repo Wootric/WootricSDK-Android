@@ -1,3 +1,7 @@
+## 2.21.0 (2021-07-09)
+
+- Add support for EU tokens
+
 ## 2.20.0 (2021-06-29)
 
 - Add setSurveyedDefault method

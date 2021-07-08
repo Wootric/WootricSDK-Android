@@ -52,6 +52,7 @@ import com.wootric.androidsdk.utils.PreferencesUtils;
 import com.wootric.androidsdk.utils.SHAUtil;
 import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.utils.SocialHandler;
+import com.wootric.androidsdk.utils.Utils;
 import com.wootric.androidsdk.views.phone.ThankYouDialogFactory;
 
 import java.lang.ref.WeakReference;
@@ -131,7 +132,7 @@ public class SurveyFragment extends DialogFragment
         mSocialHandler = new SocialHandler(getActivity());
         PreferencesUtils prefUtils = new PreferencesUtils(new WeakReference<Context>(this.getActivity()));
         OfflineDataHandler offlineDataHandler = new OfflineDataHandler(prefUtils);
-        mWootricApiClient = new WootricRemoteClient(offlineDataHandler);
+        mWootricApiClient = new WootricRemoteClient(offlineDataHandler, mUser.getAccountToken());
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
 
@@ -386,9 +387,10 @@ public class SurveyFragment extends DialogFragment
     }
 
     private void optOut() {
-        String optOutUrl = "https://app.wootric.com/opt_out?token=" + mUser.getAccountToken()
-            + "&metric_type=" + mSettings.getSurveyType()
-                + "&end_user_id=" + Long.toString(mEndUser.getId())
+        String tld = Utils.startsWithEU(mUser.getAccountToken()) ? "eu" : "com";
+        String optOutUrl = "https://app.wootric." + tld + "/opt_out?token=" + mUser.getAccountToken()
+                + "&metric_type=" + mSettings.getSurveyType()
+                + "&end_user_id=" + mEndUser.getId()
                 + "&end_user_email=" + mEndUser.getEmail()
                 + "&unique_link=" + mUniqueLink
                 + "&opt_out_token=" + mAccessToken;
