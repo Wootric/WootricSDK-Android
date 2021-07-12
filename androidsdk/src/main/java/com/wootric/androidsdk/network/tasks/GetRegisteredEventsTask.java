@@ -38,7 +38,7 @@ public class GetRegisteredEventsTask extends WootricRemoteRequestTask {
     private final GetRegisteredEventsTask.Callback surveyCallback;
 
     public GetRegisteredEventsTask(User user, GetRegisteredEventsTask.Callback surveyCallback) {
-        super(REQUEST_TYPE_GET, null, null);
+        super(REQUEST_TYPE_GET, null, user.getAccountToken(), null);
 
         this.user = user;
         this.surveyCallback = surveyCallback;
@@ -53,7 +53,7 @@ public class GetRegisteredEventsTask extends WootricRemoteRequestTask {
 
     @Override
     protected String requestUrl() {
-        return REGISTERED_EVENTS_URL;
+        return  getSurveyEndpoint() + REGISTERED_EVENTS_PATH;
     }
 
     @Override
