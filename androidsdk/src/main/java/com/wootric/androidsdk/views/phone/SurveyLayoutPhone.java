@@ -27,11 +27,15 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.TextViewCompat;
+
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -260,6 +264,13 @@ public class SurveyLayoutPhone extends LinearLayout
 
         TextView newScoreView = mScoreViews[newScore];
         newScoreView.setTextColor(mColorSelected);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            newScoreView.setAutoSizeTextTypeUniformWithConfiguration(
+                    1, 17, 1, TypedValue.COMPLEX_UNIT_DIP);
+        } else {
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(newScoreView, 1, 17, 1,
+                    TypedValue.COMPLEX_UNIT_DIP);
+        }
         newScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeSelected));
     }
 

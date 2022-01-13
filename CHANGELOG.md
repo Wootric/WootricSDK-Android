@@ -1,3 +1,7 @@
+## 2.21.1 (2022-02-14)
+
+- Fix survey rating numbers hidden when device is set to maximum font size
+
 ## 2.21.0 (2021-08-04)
 
 - Add support for EU tokens
