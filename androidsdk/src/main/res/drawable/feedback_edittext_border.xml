@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/gradientDrawable"
+        android:bottom="@dimen/wootric_edittext_item_bottom"
+        android:left="@dimen/wootric_edittext_item_left"
+        android:right="@dimen/wootric_edittext_item_right"
+        android:top="@dimen/wootric_edittext_item_top">
+
+        <shape android:shape="rectangle">
+
+            <stroke
+                android:width="@dimen/wootric_edittext_stroke_width"
+                android:color="@color/wootric_score_color" />
+
+            <solid android:color="@color/edit_background_color" />
+
+            <padding
+                android:bottom="@dimen/wootric_edittext_border_padding_bottom"
+                android:left="@dimen/wootric_edittext_border_padding_left"
+                android:right="@dimen/wootric_edittext_border_padding_right"
+                android:top="@dimen/wootric_edittext_border_padding_top" />
+        </shape>
+    </item>
+</layer-list>

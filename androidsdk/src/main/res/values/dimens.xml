@@ -79,4 +79,22 @@
     <dimen name="wootric_footer_layout_dot_separator_width">4dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_height">4dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_margin">8dp</dimen>
+
+    <!-- EditText Border  -->
+    <dimen name="wootric_edittext_item_bottom">2dp</dimen>
+    <dimen name="wootric_edittext_item_left">-2dp</dimen>
+    <dimen name="wootric_edittext_item_right">-2dp</dimen>
+    <dimen name="wootric_edittext_item_top">-2dp</dimen>
+    <dimen name="wootric_edittext_border_padding_bottom">3dp</dimen>
+    <dimen name="wootric_edittext_border_padding_left">5dp</dimen>
+    <dimen name="wootric_edittext_border_padding_right">5dp</dimen>
+    <dimen name="wootric_edittext_border_padding_top">5dp</dimen>
+    <dimen name="wootric_edittext_stroke_width">2dp</dimen>
+
+
+
+
+
+
+
 </resources>

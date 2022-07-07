@@ -136,6 +136,7 @@
                     android:hint="@string/wootric_example_followup_placeholder"
                     android:imeOptions="actionDone"
                     android:inputType="text"
+                    android:background="@drawable/feedback_edittext_border"
                     android:maxLines="1"
                     android:nextFocusLeft="@id/wootric_et_feedback"
                     android:nextFocusUp="@id/wootric_et_feedback"

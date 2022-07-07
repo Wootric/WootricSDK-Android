@@ -22,6 +22,8 @@
 
 package com.wootric.androidsdk.views.phone;
 
+import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -30,9 +32,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.TextViewCompat;
-
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -46,6 +45,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.TextViewCompat;
+
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
@@ -55,8 +57,6 @@ import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
 
 import java.lang.reflect.Field;
-
-import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
 
 /**
  * Created by maciejwitowski on 9/21/15.
@@ -168,7 +168,7 @@ public class SurveyLayoutPhone extends LinearLayout
 
         mTvSurveyHeader = (TextView) findViewById(R.id.wootric_survey_layout_tv_header);
 
-        mCommonSurveyViews = new View[]{ mLayoutBody, mTvSurveyHeader };
+        mCommonSurveyViews = new View[]{mLayoutBody, mTvSurveyHeader};
 
         mThankYouLayout = (ThankYouLayout) findViewById(R.id.wootric_thank_you_layout);
         mThankYouLayout.setThankYouLayoutListener(this);
@@ -181,7 +181,7 @@ public class SurveyLayoutPhone extends LinearLayout
         mAnchorNotLikely = (TextView) mLayoutBody.findViewById(R.id.wootric_anchor_not_likely);
         mRatingBar = (RatingBar) mLayoutBody.findViewById(R.id.wootric_rating_bar);
 
-        mSurveyViews = new View[]{ mRatingBar, mScoreLayout, mAnchorLikely, mAnchorNotLikely };
+        mSurveyViews = new View[]{mRatingBar, mScoreLayout, mAnchorLikely, mAnchorNotLikely};
 
         initScoreLayout();
         initViews();
@@ -191,10 +191,12 @@ public class SurveyLayoutPhone extends LinearLayout
 
     private void initFeedbackViewElements() {
         mEtFeedback = (EditText) mLayoutBody.findViewById(R.id.wootric_et_feedback);
-        Drawable etFeedbackBackground = mEtFeedback.getBackground();
+
+        /*  Drawable etFeedbackBackground = mEtFeedback.getBackground();
         etFeedbackBackground.setColorFilter(mColorBlack, PorterDuff.Mode.SRC_ATOP);
         etFeedbackBackground.setAlpha(26);
-        mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());
+        mEtFeedback.setOnFocusChangeListener(onEtFeedbackFocusChanged());*/
+
         mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         mEtFeedback.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mEtFeedback.setOnKeyListener(new OnKeyListener() {
@@ -210,12 +212,13 @@ public class SurveyLayoutPhone extends LinearLayout
         mBtnEditScore = (TextView) findViewById(R.id.wootric_btn_edit_score);
         mBtnEditScore.setOnClickListener(onEditScoreClick());
 
-        mFeedbackViews = new View[] {mBtnEditScore, mEtFeedback };
+        mFeedbackViews = new View[]{mBtnEditScore, mEtFeedback};
+
     }
 
     private void initScoreLayout() {
         mScoreViews = new TextView[mScoresCount];
-        for(int score = mScaleMinimum; score < mScoreViews.length; score++) {
+        for (int score = mScaleMinimum; score < mScoreViews.length; score++) {
             TextView scoreView = buildScoreView(score);
             mScoreViews[score] = scoreView;
             mScoreLayout.addView(scoreView);
@@ -239,7 +242,7 @@ public class SurveyLayoutPhone extends LinearLayout
         return new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
+                if (hasFocus) {
                     Drawable etFeedbackBackground = mEtFeedback.getBackground();
                     etFeedbackBackground.setColorFilter(mColorSelected, PorterDuff.Mode.SRC_ATOP);
                     etFeedbackBackground.setAlpha(255);
@@ -256,7 +259,7 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void updateSelectedScore(int oldScore, int newScore) {
-        if(oldScore != RatingBar.SCORE_NOT_SET) {
+        if (oldScore != RatingBar.SCORE_NOT_SET) {
             TextView oldScoreView = mScoreViews[oldScore];
             oldScoreView.setTextColor(mColorNotSelected);
             oldScoreView.setTextSize(ScreenUtils.pxToDp(mScoreTextSizeNotSelected));
@@ -291,15 +294,15 @@ public class SurveyLayoutPhone extends LinearLayout
         boolean shouldSkipFeedbackScreen = mSettings.skipFeedbackScreen() ||
                 (score.isPromoter() && mSettings.shouldSkipFollowupScreenForPromoters());
 
-        if(isFeedbackState() || shouldSkipFeedbackScreen) {
+        if (isFeedbackState() || shouldSkipFeedbackScreen) {
             updateState(STATE_THANK_YOU);
-        } else if(isSurveyState()) {
+        } else if (isSurveyState()) {
             updateState(STATE_FEEDBACK);
         }
     }
 
     private void notifyListener() {
-        if(mSurveyLayoutListener == null)
+        if (mSurveyLayoutListener == null)
             return;
 
         String text = mEtFeedback.getText().toString();
@@ -307,13 +310,13 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void dismissSurvey() {
-        if(mSurveyLayoutListener != null) {
+        if (mSurveyLayoutListener != null) {
             mSurveyLayoutListener.onDismissClick();
         }
     }
 
     private void hideOptOut() {
-        if(mSurveyLayoutListener != null) {
+        if (mSurveyLayoutListener != null) {
             mSurveyLayoutListener.onHideOptOut();
         }
     }
@@ -401,9 +404,9 @@ public class SurveyLayoutPhone extends LinearLayout
     private void updateState(int state) {
         mCurrentState = state;
 
-        if(STATE_SURVEY == mCurrentState) {
+        if (STATE_SURVEY == mCurrentState) {
             setupSurveyState();
-        } else if(STATE_FEEDBACK == mCurrentState) {
+        } else if (STATE_FEEDBACK == mCurrentState) {
             setupFeedbackState();
         } else {
             setupThankYouState();
@@ -465,12 +468,15 @@ public class SurveyLayoutPhone extends LinearLayout
     public String getFeedback() {
         return mEtFeedback.getText().toString();
     }
-    public String getEmail() { return mEmail; }
+
+    public String getEmail() {
+        return mEmail;
+    }
 
     private void setKeyboardVisibility(boolean showKeyboard) {
         final InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if(showKeyboard) {
+        if (showKeyboard) {
             mEtFeedback.requestFocus();
             mEtFeedback.setHorizontallyScrolling(false);
 
@@ -486,10 +492,14 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     @Override
-    public void onFacebookLikeBtnClick() { mSurveyLayoutListener.onFacebookLikeBtnClick(); }
+    public void onFacebookLikeBtnClick() {
+        mSurveyLayoutListener.onFacebookLikeBtnClick();
+    }
 
     @Override
-    public void onFacebookBtnClick() { mSurveyLayoutListener.onFacebookBtnClick(); }
+    public void onFacebookBtnClick() {
+        mSurveyLayoutListener.onFacebookBtnClick();
+    }
 
     @Override
     public void onTwitterBtnClick() {
