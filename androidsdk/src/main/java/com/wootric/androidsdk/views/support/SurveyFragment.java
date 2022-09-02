@@ -260,7 +260,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
     @Override
     public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink);
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mSettings.getLanguageCode());
         mScore = score;
         mText = text;
         mResponseSent = true;

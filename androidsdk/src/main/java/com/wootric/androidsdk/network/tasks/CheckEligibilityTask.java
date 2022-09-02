@@ -132,6 +132,7 @@ public class CheckEligibilityTask extends WootricRemoteRequestTask {
 
                     JSONObject settingsObject = jsonObject.getJSONObject("settings");
                     serverSettings = Settings.fromJson(settingsObject);
+                    this.settings.setLanguageCode(serverSettings.getLanguageCode());
                     this.user.setAccountToken(serverSettings.getAccountToken());
                     this.user.setClientId(serverSettings.getClientId());
                 }

@@ -72,8 +72,8 @@ public class WootricRemoteClient {
         new CreateDeclineTask(endUserId, userId, accountId, priority, originUrl, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
     }
 
-    public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink) {
-        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
+    public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink, String language) {
+        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, this.accountToken, offlineDataHandler, uniqueLink, language).execute();
     }
 
     public void getRegisteredEvents(User user, final GetRegisteredEventsTask.Callback surveyCallback) {
