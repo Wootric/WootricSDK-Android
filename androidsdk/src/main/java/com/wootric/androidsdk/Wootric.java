@@ -22,6 +22,8 @@
 
 package com.wootric.androidsdk;
 
+import static com.wootric.androidsdk.utils.Utils.checkNotNull;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.WindowManager;
@@ -40,8 +42,6 @@ import com.wootric.androidsdk.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
-
-import static com.wootric.androidsdk.utils.Utils.checkNotNull;
 
 /**
  * Created by maciejwitowski on 4/10/15.

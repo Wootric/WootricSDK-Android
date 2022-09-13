@@ -79,4 +79,11 @@
     <dimen name="wootric_footer_layout_dot_separator_width">4dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_height">4dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_margin">8dp</dimen>
+
+    <!-- Driver Picklist -->
+    <dimen name="default_textsize">13sp</dimen>
+    <dimen name="dpl_button_height">40dp</dimen>
+    <dimen name="min_horizontal_spacing">8dp</dimen>
+    <dimen name="vertical_spacing">8dp</dimen>
+
 </resources>

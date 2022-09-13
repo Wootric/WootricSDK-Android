@@ -24,13 +24,13 @@ package com.wootric.androidsdk.views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +73,6 @@ public class SurveyFragment extends DialogFragment
     private static final String ARG_ACCESS_TOKEN = "com.wootric.androidsdk.arg.access_token";
 
     private SurveyLayout mSurveyLayout;
-    private LinearLayout mFooter;
     private WootricSurveyCallback mSurveyCallback;
     private OnSurveyFinishedListener mOnSurveyFinishedListener;
 
@@ -85,6 +84,7 @@ public class SurveyFragment extends DialogFragment
     private Settings mSettings;
     private LinearLayout mPoweredBy;
     private TextView mBtnOptOut;
+    private HashMap<String, String> mDriverPicklist;
 
     private int mScore = -1;
     private String mText;
@@ -152,7 +152,6 @@ public class SurveyFragment extends DialogFragment
         mSurveyLayout = (SurveyLayout) view.findViewById(R.id.wootric_survey_layout);
         mSurveyLayout.setSurveyLayoutListener(this);
 
-        mFooter = (LinearLayout) view.findViewById(R.id.wootric_footer);
         mBtnOptOut = (TextView) view.findViewById(R.id.wootric_btn_opt_out);
         mBtnOptOut.setText(mSettings.getBtnOptOut());
 
@@ -173,6 +172,26 @@ public class SurveyFragment extends DialogFragment
                 mPoweredBy.setGravity(Gravity.RIGHT);
             } else {
                 TextView mDotSeparator = (TextView) view.findViewById(R.id.footer_dot_separator);
+                mDotSeparator.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (mIsTablet) {
+            LinearLayout footer = view.findViewById(R.id.wootric_footer_2);
+            mBtnOptOut = (TextView) footer.findViewById(R.id.wootric_btn_opt_out);
+            mBtnOptOut.setText(mSettings.getBtnOptOut());
+
+            if (mSettings.isShowOptOut()) {
+                mBtnOptOut.setVisibility(View.VISIBLE);
+                mBtnOptOut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optOut();
+                    }
+                });
+
+
+                TextView mDotSeparator = (TextView) footer.findViewById(R.id.footer_dot_separator);
                 mDotSeparator.setVisibility(View.VISIBLE);
             }
         }
@@ -258,10 +277,11 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
-    public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mSettings.getLanguageCode());
+    public void onSurveySubmit(int score, String text, HashMap<String, String> driverPicklist) {
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mSettings.getLanguageCode(),  driverPicklist);
         mScore = score;
         mText = text;
+        mDriverPicklist = driverPicklist;
         mResponseSent = true;
         priority++;
     }
@@ -341,7 +361,7 @@ public class SurveyFragment extends DialogFragment
 
         if (activity != null) {
             mShouldShowSimpleDialog = true;
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener).show();
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener, mDriverPicklist).show();
         }
 
         dismiss();
@@ -371,6 +391,7 @@ public class SurveyFragment extends DialogFragment
                     hashMap.put("score", mScore);
                 }
                 hashMap.put("text", mText);
+                hashMap.put("driver_picklist", mDriverPicklist);
                 mSurveyCallback.onSurveyDidHide(hashMap);
             }
         }

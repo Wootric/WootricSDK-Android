@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +38,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.wootric.androidsdk.OfflineDataHandler;
 import com.wootric.androidsdk.R;
@@ -86,6 +87,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
     private Settings mSettings;
     private LinearLayout mPoweredBy;
     private TextView mBtnOptOut;
+    private HashMap<String, String>mDriverPicklist;
 
     private int mScore = -1;
     private String mText;
@@ -178,6 +180,26 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
             }
         }
 
+        if (mIsTablet) {
+            LinearLayout footer = view.findViewById(R.id.wootric_footer_2);
+            mBtnOptOut = (TextView) footer.findViewById(R.id.wootric_btn_opt_out);
+            mBtnOptOut.setText(mSettings.getBtnOptOut());
+
+            if (mSettings.isShowOptOut()) {
+                mBtnOptOut.setVisibility(View.VISIBLE);
+                mBtnOptOut.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        optOut();
+                    }
+                });
+
+
+                TextView mDotSeparator = (TextView) footer.findViewById(R.id.footer_dot_separator);
+                mDotSeparator.setVisibility(View.VISIBLE);
+            }
+        }
+
         return view;
     }
 
@@ -259,10 +281,11 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
     }
 
     @Override
-    public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mSettings.getLanguageCode());
+    public void onSurveySubmit(int score, String text, HashMap<String, String> driverPicklist) {
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mSettings.getLanguageCode(),  driverPicklist);
         mScore = score;
         mText = text;
+        mDriverPicklist = driverPicklist;
         mResponseSent = true;
         priority++;
     }
@@ -342,7 +365,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
         if (activity != null) {
             mShouldShowSimpleDialog = true;
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener).show();
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener, mDriverPicklist).show();
         }
 
         dismiss();
@@ -372,6 +395,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
                     hashMap.put("score", mScore);
                 }
                 hashMap.put("text", mText);
+                hashMap.put("driver_picklist", mDriverPicklist);
                 mSurveyCallback.onSurveyDidHide(hashMap);
             }
         }

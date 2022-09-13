@@ -1,3 +1,8 @@
+## 2.23.0 (2023-02-09)
+
+- Add support for Driver Picklist feature
+- Add language to response
+
 ## 2.22.1 (2023-02-03)
 
 - Fix thank you dialog button color

@@ -22,8 +22,11 @@
 
 package com.wootric.androidsdk.views.tablet;
 
+import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
+
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -48,8 +51,16 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
+import com.wootric.androidsdk.views.driverpicklist.DriverPicklist;
+import com.wootric.androidsdk.views.driverpicklist.DriverPicklistButtonListener;
 
-import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by maciejwitowski on 10/8/15.
@@ -69,12 +80,18 @@ public class SurveyLayoutTablet extends LinearLayout
     private TextView mTvAnchorNotLikely;
     private LinearLayout mScoreLayout;
     private LinearLayout mRatingContainer;
+    private LinearLayout mLinearLayout;
+
+    private View mWootricFooter;
+    private View mWootricFooter2;
 
     private RelativeLayout mLayoutFollowup;
     private TextView mTvFollowupQuestion;
     private EditText mEtFeedback;
     private Button mBtnSubmit;
+    private Button mBtnSubmit2;
     private TextView mBtnDismiss;
+    private DriverPicklist mDriverPicklist;
 
     private RelativeLayout mThankYouLayout;
     private LinearLayout mPoweredByLayout;
@@ -104,6 +121,8 @@ public class SurveyLayoutTablet extends LinearLayout
     private ScoreView[] mScoreViews;
     private int mCurrentScore = -1;
     private String mCurrentEmail;
+
+    private HashMap<String, String> selectedAnswers;
 
     private SurveyLayoutListener mSurveyLayoutListener;
 
@@ -139,6 +158,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mTvAnchorLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_likely);
         mTvAnchorNotLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_not_likely);
         mScoreLayout = (LinearLayout) mRatingContainer.findViewById(R.id.wootric_rating_bar);
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
         mLayoutFollowup = (RelativeLayout) findViewById(R.id.wootric_layout_followup);
         mTvFollowupQuestion = (TextView) mLayoutFollowup.findViewById(R.id.wootric_tv_followup);
@@ -161,6 +181,13 @@ public class SurveyLayoutTablet extends LinearLayout
                 submitSurvey();
             }
         });
+        mBtnSubmit2 = (Button) findViewById(R.id.wootric_btn_submit_2);
+        mBtnSubmit2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitSurvey();
+            }
+        });
         mBtnDismiss = (TextView) findViewById(R.id.wootric_btn_dismiss);
         mBtnDismiss.setOnClickListener(new OnClickListener() {
             @Override
@@ -169,6 +196,11 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
+        mDriverPicklist = (DriverPicklist) findViewById(R.id.wootric_driver_picklist);
+        selectedAnswers = new HashMap<>();
+
+        mWootricFooter = (View) findViewById(R.id.wootric_footer);
+        mWootricFooter2 = (View) findViewById(R.id.wootric_footer_2);
         mBtnThankYouDismiss = (TextView) findViewById(R.id.wootric_btn_thank_you_dismiss);
         mBtnThankYouDismiss.setOnClickListener(new OnClickListener() {
             @Override
@@ -244,6 +276,32 @@ public class SurveyLayoutTablet extends LinearLayout
         mScaleMaximum = mSurveyType == null ? 10 : mScore.maximumScore();
 
         mScoresTop = mScaleMaximum + 1;
+
+        new DriverPicklist.Configure()
+                .driverPicklist(mDriverPicklist)
+                .selectedColor(mContext.getResources().getColor(mSettings.getScoreColor()))
+                .selectedFontColor(Color.parseColor("#ffffff"))
+                .deselectedColor(Color.parseColor("#ffffff"))
+                .deselectedFontColor(Color.parseColor("#253746"))
+                .selectTransitionMS(100)
+                .deselectTransitionMS(100)
+                .labels(null)
+                .mode(DriverPicklist.Mode.MULTI)
+                .allCaps(false)
+                .gravity(DriverPicklist.Gravity.CENTER)
+                .textSize(getResources().getDimensionPixelSize(R.dimen.default_textsize))
+                .verticalSpacing(getResources().getDimensionPixelSize(R.dimen.vertical_spacing))
+                .minHorizontalSpacing(getResources().getDimensionPixelSize(R.dimen.min_horizontal_spacing))
+                .typeface(Typeface.DEFAULT)
+                .setDriverPicklistButtonListener(new DriverPicklistButtonListener() {
+                    @Override
+                    public void buttonSelected(int index) {
+                    }
+                    @Override
+                    public void buttonDeselected(int index) {
+                    }
+                })
+                .build();
     }
 
     private void initScoreLayout() {
@@ -288,6 +346,7 @@ public class SurveyLayoutTablet extends LinearLayout
             mTvAnchorLikely.setText(mSettings.getAnchorLikely());
             mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
             mBtnSubmit.setText(mSettings.getBtnSubmit());
+            mBtnSubmit2.setText(mSettings.getBtnSubmit());
             mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         }
     }
@@ -310,6 +369,59 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private void setupFeedbackState() {
         setFeedbackTexts();
+
+        mDriverPicklist.removeAllViews();
+        selectedAnswers.clear();
+        try {
+            JSONObject dplSettings = mSettings.getDriverPicklistSettings(mCurrentScore);
+            JSONObject dpl = mSettings.getDriverPicklist(mCurrentScore);
+
+            if (dplSettings.getBoolean("dpl_multi_select")) {
+                mDriverPicklist.setMode(DriverPicklist.Mode.MULTI);
+            } else {
+                mDriverPicklist.setMode(DriverPicklist.Mode.SINGLE);
+            }
+
+            if (dplSettings.getBoolean("dpl_hide_open_ended")) {
+                mLinearLayout.setVisibility(GONE);
+                mBtnSubmit2.setVisibility(VISIBLE);
+                mWootricFooter.setVisibility(GONE);
+                mWootricFooter2.setVisibility(VISIBLE);
+                if (!mSettings.isShowPoweredBy()) {
+                    mWootricFooter2.findViewById(R.id.wootric_tv_powered_by).setVisibility(View.GONE);
+                    mWootricFooter2.findViewById(R.id.footer_dot_separator).setVisibility(View.GONE);
+                    mWootricFooter2.findViewById(R.id.wootric_tv_im).setVisibility(View.GONE);
+                }
+            } else {
+                mLinearLayout.setVisibility(VISIBLE);
+                mBtnSubmit2.setVisibility(GONE);
+                mWootricFooter.setVisibility(VISIBLE);
+                mWootricFooter2.setVisibility(GONE);
+            }
+            ArrayList<String> dplList = new ArrayList<>();
+            if (dpl != null) {
+                Iterator<String> keys = dpl.keys();
+
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    dplList.add(dpl.get(key).toString());
+                }
+            }
+
+            if (dplSettings.getBoolean("dpl_randomize_list")) {
+                ArrayList<String> shuffled = new ArrayList<>(dplList);
+                Collections.shuffle(shuffled);
+                for (String value : shuffled) {
+                    mDriverPicklist.addButton(value);
+                }
+            } else {
+                for (String value : dplList) {
+                    mDriverPicklist.addButton(value);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         mTvSurveyQuestion.setVisibility(GONE);
         mLayoutFollowup.setAlpha(0);
@@ -461,7 +573,22 @@ public class SurveyLayoutTablet extends LinearLayout
             return;
 
         String text = mEtFeedback.getText().toString();
-        mSurveyLayoutListener.onSurveySubmit(mCurrentScore, text);
+
+        try {
+            JSONObject dpl = mSettings.getDriverPicklist(mCurrentScore);
+            if (dpl != null) {
+                Iterator<String> keys = dpl.keys();
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    if (mDriverPicklist.selectedButtons().contains(dpl.getString(key))) {
+                        selectedAnswers.put(key, dpl.getString(key));
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSurveyLayoutListener.onSurveySubmit(mCurrentScore, text, selectedAnswers);
     }
 
     private void submitSurvey() {

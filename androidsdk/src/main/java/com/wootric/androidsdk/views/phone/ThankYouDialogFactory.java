@@ -39,7 +39,7 @@ import java.util.HashMap;
  * Created by maciejwitowski on 10/2/15.
  */
 public class ThankYouDialogFactory {
-    public static Dialog create(final Context context, final Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback, final OnSurveyFinishedListener onSurveyFinishedListener) {
+    public static Dialog create(final Context context, final Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback, final OnSurveyFinishedListener onSurveyFinishedListener, final HashMap<String, String> driverPicklist) {
         final AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
         thankYouDialog.setCancelable(false);
         final String thankYouText = settings.getFinalThankYou(score);
@@ -60,6 +60,7 @@ public class ThankYouDialogFactory {
                         hashMap.put("score", score);
                     }
                     hashMap.put("text", text);
+                    hashMap.put("driver_picklist", driverPicklist);
                     surveyCallback.onSurveyDidHide(hashMap);
                 }
             }

@@ -25,6 +25,8 @@ package com.wootric.androidsdk.network.tasks;
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.OfflineDataHandler;
 
+import java.util.HashMap;
+
 /**
  * Created by maciejwitowski on 10/13/15.
  */
@@ -39,10 +41,11 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
     private final String text;
     private final String uniqueLink;
     private final String language;
+    private final HashMap<String, String> driverPicklist;
 
     private final OfflineDataHandler offlineDataHandler;
 
-    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink, String language) {
+    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink, String language, HashMap<String, String> driverPicklist) {
         super(REQUEST_TYPE_POST, accessToken, accountToken, null);
 
         this.endUserId = endUserId;
@@ -55,6 +58,7 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
         this.offlineDataHandler = offlineDataHandler;
         this.uniqueLink = uniqueLink;
         this.language = language;
+        this.driverPicklist = driverPicklist;
     }
 
     @Override
@@ -78,6 +82,12 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
         }
         if (accountId != (long) Constants.NOT_SET) {
             paramsMap.put("account_id", String.valueOf(accountId));
+        }
+
+        if (driverPicklist != null) {
+            for (HashMap.Entry<String,String> entry : driverPicklist.entrySet()) {
+                paramsMap.put("driver_picklist[" + entry.getKey() + "]", entry.getValue());
+            }
         }
         if (!text.equals("")) {
             addOptionalParam("text", text);

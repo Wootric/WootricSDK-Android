@@ -22,8 +22,6 @@
 
 package com.wootric.androidsdk.objects;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

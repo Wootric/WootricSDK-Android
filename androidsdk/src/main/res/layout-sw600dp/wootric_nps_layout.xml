@@ -51,8 +51,15 @@
             android:fontFamily="@font/ibmplexsans"
             android:text="@string/wootric_feedback_question"/>
 
+        <com.wootric.androidsdk.views.driverpicklist.DriverPicklist
+            android:id="@+id/wootric_driver_picklist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/wootric_tv_followup" />
+
         <LinearLayout
-            android:layout_below="@+id/wootric_tv_followup"
+            android:layout_below="@+id/wootric_driver_picklist"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="4dp"
@@ -89,7 +96,6 @@
                 android:textColor="@android:color/white"
                 android:text="@string/wootric_example_btn_submit"/>
         </LinearLayout>
-
     </RelativeLayout>
 
     <LinearLayout
@@ -128,10 +134,33 @@
             android:text="@string/wootric_example_anchor_likely"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/wootric_btn_submit_2"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/wootric_layout_rating_with_anchors"
+        android:textSize="16sp"
+        android:fontFamily="@font/ibmplexsans"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/wtr_tablet_submit_background_rounded"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        android:text="@string/wootric_example_btn_submit"/>
+
     <include layout="@layout/wootric_footer"
+        android:id="@+id/wootric_footer"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:gravity="center"
         android:layout_below="@+id/wootric_layout_rating_with_anchors"
+        android:layout_centerHorizontal="true" />
+
+    <include layout="@layout/wootric_footer"
+        android:id="@+id/wootric_footer_2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_below="@+id/wootric_btn_submit_2"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

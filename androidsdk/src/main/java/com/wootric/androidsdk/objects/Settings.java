@@ -22,6 +22,8 @@
 
 package com.wootric.androidsdk.objects;
 
+import static com.wootric.androidsdk.utils.Utils.isBlank;
+
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -33,8 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-
-import static com.wootric.androidsdk.utils.Utils.isBlank;
 
 /**
  * Created by maciejwitowski on 5/5/15.
@@ -55,6 +55,8 @@ public class Settings implements Parcelable {
 
     private WootricCustomThankYou localCustomThankYou;
     private WootricCustomThankYou adminPanelCustomThankYou;
+
+    private JSONObject driverPicklist;
 
     private int timeDelay = Constants.NOT_SET;
 
@@ -136,6 +138,7 @@ public class Settings implements Parcelable {
         this.adminPanelTimeDelay = settings.adminPanelTimeDelay;
         this.adminPanelCustomThankYou = settings.adminPanelCustomThankYou;
         this.adminPanelSocial = settings.adminPanelSocial;
+        this.driverPicklist = settings.driverPicklist;
         this.localizedTexts = settings.localizedTexts;
         this.userID = settings.userID;
         this.accountID = settings.accountID;
@@ -241,6 +244,22 @@ public class Settings implements Parcelable {
     }
 
     public String getBtnOptOut() { return localizedTexts.getOptOut().toUpperCase(); }
+
+    public JSONObject getDriverPicklist(int score) throws JSONException {
+        JSONObject dpl = new JSONObject();
+        if (adminPanelCustomMessage != null) {
+            dpl =  adminPanelCustomMessage.getDriverPicklistForScore(score, surveyType, surveyTypeScale);
+        }
+        return dpl;
+    }
+
+    public JSONObject getDriverPicklistSettings(int score) throws JSONException {
+        JSONObject dplSettings = new JSONObject();
+        if (adminPanelCustomMessage != null) {
+            dplSettings =  adminPanelCustomMessage.getDriverPicklistSettingsForScore(score, surveyType, surveyTypeScale);
+        }
+        return dplSettings;
+    }
 
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
