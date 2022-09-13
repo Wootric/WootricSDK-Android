@@ -22,8 +22,14 @@
 
 package com.wootric.androidsdk.network.tasks;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.OfflineDataHandler;
+
+import java.util.HashMap;
 
 /**
  * Created by maciejwitowski on 10/13/15.
@@ -38,10 +44,11 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
     private final int priority;
     private final String text;
     private final String uniqueLink;
+    private final HashMap<String, String> driverPicklist;
 
     private final OfflineDataHandler offlineDataHandler;
 
-    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink) {
+    public CreateResponseTask(long endUserId, long userId, long accountId, String originUrl, int score, int priority, String text, String accessToken, String accountToken, OfflineDataHandler offlineDataHandler, String uniqueLink, HashMap<String, String> driverPicklist) {
         super(REQUEST_TYPE_POST, accessToken, accountToken, null);
 
         this.endUserId = endUserId;
@@ -53,6 +60,7 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
         this.text = text;
         this.offlineDataHandler = offlineDataHandler;
         this.uniqueLink = uniqueLink;
+        this.driverPicklist = driverPicklist;
     }
 
     @Override
@@ -73,6 +81,12 @@ public class CreateResponseTask extends WootricRemoteRequestTask {
         paramsMap.put("survey[unique_link]", uniqueLink);
         if (accountId != (long) Constants.NOT_SET) {
             paramsMap.put("account_id", String.valueOf(accountId));
+        }
+
+        if (driverPicklist != null) {
+            for (HashMap.Entry<String,String> entry : driverPicklist.entrySet()) {
+                paramsMap.put("driver_picklist[" + entry.getKey() + "]", entry.getValue());
+            }
         }
         if (!text.equals("")) {
             addOptionalParam("text", text);

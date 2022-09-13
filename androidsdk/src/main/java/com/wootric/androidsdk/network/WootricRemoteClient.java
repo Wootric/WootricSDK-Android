@@ -36,6 +36,8 @@ import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.objects.User;
 import com.wootric.androidsdk.utils.PreferencesUtils;
 
+import java.util.HashMap;
+
 /**
  * Created by maciejwitowski on 9/11/15.
  */
@@ -72,8 +74,8 @@ public class WootricRemoteClient {
         new CreateDeclineTask(endUserId, userId, accountId, priority, originUrl, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
     }
 
-    public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink) {
-        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, this.accountToken, offlineDataHandler, uniqueLink).execute();
+    public void createResponse(long endUserId, long userId, long accountId, String accessToken, String originUrl, int score, int priority, String text, String uniqueLink, HashMap<String, String>driverPicklist) {
+        new CreateResponseTask(endUserId, userId, accountId, originUrl, score, priority, text, accessToken, this.accountToken, offlineDataHandler, uniqueLink, driverPicklist).execute();
     }
 
     public void getRegisteredEvents(User user, final GetRegisteredEventsTask.Callback surveyCallback) {

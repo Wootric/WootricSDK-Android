@@ -86,6 +86,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
     private Settings mSettings;
     private LinearLayout mPoweredBy;
     private TextView mBtnOptOut;
+    private HashMap<String, String>mDriverPicklist;
 
     private int mScore = -1;
     private String mText;
@@ -256,7 +257,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
     @Override
     public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink);
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mDriverPicklist);
         mScore = score;
         mText = text;
         mResponseSent = true;

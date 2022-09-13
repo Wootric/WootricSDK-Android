@@ -7,12 +7,15 @@ import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.HashMap;
+
 @RunWith(RobolectricTestRunner.class)
 public class CreateResponseTaskTest {
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String UNIQUE_LINK = "12345qwerty";
     private static final String ORIGIN_URL = "com.test.app";
     private static final String TEXT = "Test comment";
+    private static final HashMap<String, String> DRIVER_PICKLIST = new HashMap<>();
     private static final long END_USER_ID = 123;
     private static final long USER_ID = 1234;
     private static final long ACCOUNT_ID = 100;
@@ -23,13 +26,13 @@ public class CreateResponseTaskTest {
 
     @Test
     public void testGet_RequestWithEuToken() throws Exception {
-        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS-EU", offlineDataHandler, UNIQUE_LINK);
+        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS-EU", offlineDataHandler, UNIQUE_LINK, DRIVER_PICKLIST);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/api/v1/end_users/" + END_USER_ID + "/responses");
     }
 
     @Test
     public void testGet_RequestWithNormalToken() throws Exception {
-        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK);
+        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK, DRIVER_PICKLIST);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
     }
 }
