@@ -179,6 +179,10 @@ public class SurveyLayoutTablet extends LinearLayout
         });
 
         mDriverPicklist = (DriverPicklist) findViewById(R.id.wootric_driver_picklist);
+<<<<<<< HEAD
+=======
+        String[] cars = {};
+>>>>>>> 2328cbd (Add driver picklist)
         selectedAnswers = new HashMap<>();
 
         new DriverPicklist.Configure()
