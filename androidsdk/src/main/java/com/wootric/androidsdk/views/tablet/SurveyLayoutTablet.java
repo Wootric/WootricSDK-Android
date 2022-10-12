@@ -24,6 +24,7 @@ package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -48,8 +49,16 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
+import com.wootric.androidsdk.views.driverpicklist.DriverPicklist;
+import com.wootric.androidsdk.views.driverpicklist.DriverPicklistButtonListener;
 
 import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by maciejwitowski on 10/8/15.
@@ -75,6 +84,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private EditText mEtFeedback;
     private Button mBtnSubmit;
     private TextView mBtnDismiss;
+    private DriverPicklist mDriverPicklist;
 
     private RelativeLayout mThankYouLayout;
 
@@ -100,6 +110,8 @@ public class SurveyLayoutTablet extends LinearLayout
     private ScoreView[] mScoreViews;
     private int mCurrentScore = -1;
     private String mCurrentEmail;
+
+    private HashMap<String, String> selectedAnswers;
 
     private SurveyLayoutListener mSurveyLayoutListener;
 
@@ -165,6 +177,37 @@ public class SurveyLayoutTablet extends LinearLayout
                 dismissSurvey();
             }
         });
+
+        mDriverPicklist = (DriverPicklist) findViewById(R.id.wootric_driver_picklist);
+        selectedAnswers = new HashMap<>();
+
+        new DriverPicklist.Configure()
+                .driverPicklist(mDriverPicklist)
+                .selectedColor(Color.parseColor("#024ea9"))
+                .selectedFontColor(Color.parseColor("#ffffff"))
+                .deselectedColor(Color.parseColor("#ffffff"))
+                .deselectedFontColor(Color.parseColor("#024ea9"))
+                .selectTransitionMS(100)
+                .deselectTransitionMS(100)
+                .labels(null)
+                .mode(DriverPicklist.Mode.MULTI)
+                .allCaps(false)
+                .gravity(DriverPicklist.Gravity.CENTER)
+                .textSize(getResources().getDimensionPixelSize(R.dimen.default_textsize))
+                .verticalSpacing(getResources().getDimensionPixelSize(R.dimen.vertical_spacing))
+                .minHorizontalSpacing(getResources().getDimensionPixelSize(R.dimen.min_horizontal_spacing))
+                .typeface(Typeface.DEFAULT)
+                .setDriverPicklistButtonListener(new DriverPicklistButtonListener() {
+                    @Override
+                    public void buttonSelected(int index) {
+                        selectedAnswers.put(mDriverPicklist.buttonLabel(index), mDriverPicklist.buttonLabel(index));
+                    }
+                    @Override
+                    public void buttonDeselected(int index) {
+                        selectedAnswers.remove(mDriverPicklist.buttonLabel(index));
+                    }
+                })
+                .build();
 
         mBtnThankYouDismiss = (TextView) findViewById(R.id.wootric_btn_thank_you_dismiss);
         mBtnThankYouDismiss.setOnClickListener(new OnClickListener() {
@@ -297,6 +340,19 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private void setupFeedbackState() {
         setFeedbackTexts();
+
+        mDriverPicklist.removeAllViews();
+        try {
+            JSONObject dpl = mSettings.getDriverPicklist(mCurrentScore);
+            Iterator<String> keys = dpl.keys();
+
+            while(keys.hasNext()) {
+                String key = keys.next();
+                mDriverPicklist.addButton(dpl.get(key).toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         mTvSurveyQuestion.setVisibility(GONE);
         mLayoutFollowup.setAlpha(0);
@@ -447,7 +503,7 @@ public class SurveyLayoutTablet extends LinearLayout
             return;
 
         String text = mEtFeedback.getText().toString();
-        mSurveyLayoutListener.onSurveySubmit(mCurrentScore, text);
+        mSurveyLayoutListener.onSurveySubmit(mCurrentScore, text, selectedAnswers);
     }
 
     private void submitSurvey() {

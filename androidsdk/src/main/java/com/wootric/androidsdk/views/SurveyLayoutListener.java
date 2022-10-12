@@ -22,12 +22,14 @@
 
 package com.wootric.androidsdk.views;
 
+import java.util.HashMap;
+
 /**
  * Created by maciejwitowski on 9/30/15.
  */
 public interface SurveyLayoutListener extends ThankYouLayoutListener {
 
-    void onSurveySubmit(int score, String text);
+    void onSurveySubmit(int score, String text, HashMap<String, String> driverPicklist);
 
     void onDismissClick();
 

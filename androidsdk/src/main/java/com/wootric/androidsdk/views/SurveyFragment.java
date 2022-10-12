@@ -255,8 +255,8 @@ public class SurveyFragment extends DialogFragment
     }
 
     @Override
-    public void onSurveySubmit(int score, String text) {
-        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, mDriverPicklist);
+    public void onSurveySubmit(int score, String text, HashMap<String, String> driverPicklist) {
+        mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, driverPicklist);
         mScore = score;
         mText = text;
         mResponseSent = true;

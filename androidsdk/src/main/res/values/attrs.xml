@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DriverPicklist">
+        <attr name="deselectedColor" format="color" />
+        <attr name="deselectedFontColor" format="color" />
+        <attr name="selectedColor" format="color" />
+        <attr name="selectedFontColor" format="color" />
+        <attr name="selectTransitionMS" format="integer" />
+        <attr name="deselectTransitionMS" format="integer" />
+        <attr name="selectMode">
+            <enum name="single" value="0" />
+            <enum name="multi" value="1" />
+            <enum name="required" value="2" />
+            <enum name="none" value="3" />
+        </attr>
+        <attr name="gravity">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="center" value="2" />
+            <enum name="staggered" value="3" />
+        </attr>
+        <attr name="typeface" format="string" />
+        <attr name="allCaps" format="boolean" />
+        <attr name="textSize" format="dimension" />
+        <attr name="labels" format="reference"/>
+        <attr name="minHorizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+    </declare-styleable>
+</resources>

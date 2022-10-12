@@ -56,6 +56,8 @@ public class Settings implements Parcelable {
     private WootricCustomThankYou localCustomThankYou;
     private WootricCustomThankYou adminPanelCustomThankYou;
 
+    private JSONObject driverPicklist;
+
     private int timeDelay = Constants.NOT_SET;
 
     private boolean surveyedDefault = true;
@@ -134,6 +136,7 @@ public class Settings implements Parcelable {
         this.adminPanelTimeDelay = settings.adminPanelTimeDelay;
         this.adminPanelCustomThankYou = settings.adminPanelCustomThankYou;
         this.adminPanelSocial = settings.adminPanelSocial;
+        this.driverPicklist = settings.driverPicklist;
         this.localizedTexts = settings.localizedTexts;
         this.userID = settings.userID;
         this.accountID = settings.accountID;
@@ -237,6 +240,14 @@ public class Settings implements Parcelable {
     }
 
     public String getBtnOptOut() { return localizedTexts.getOptOut().toUpperCase(); }
+
+    public JSONObject getDriverPicklist(int score) throws JSONException {
+        JSONObject dpl = new JSONObject();
+        if (adminPanelCustomMessage != null) {
+            dpl =  adminPanelCustomMessage.getDriverPicklistForScore(score, surveyType, surveyTypeScale);
+        }
+        return dpl;
+    }
 
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
