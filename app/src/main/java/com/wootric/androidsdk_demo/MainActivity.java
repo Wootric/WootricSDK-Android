@@ -10,7 +10,7 @@ import com.wootric.androidsdk.Wootric;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final String ACCOUNT_TOKEN = "ACCOUNT_TOKEN";
+    private static final String ACCOUNT_TOKEN = "NPS-3dbd275b";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class MainActivity extends FragmentActivity {
 
     private void startSurvey() {
         Wootric wootric = Wootric.init(this, ACCOUNT_TOKEN);
-        wootric.setEndUserEmail("nps@example.com");
+        wootric.setEndUserEmail("demoday@inmoment.com");
         wootric.setSurveyImmediately(true);
         wootric.survey();
     }

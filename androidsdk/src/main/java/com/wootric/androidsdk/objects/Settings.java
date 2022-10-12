@@ -99,6 +99,7 @@ public class Settings implements Parcelable {
         this.localSocial = new WootricSocial(settings.localSocial);
         this.localCustomThankYou = new WootricCustomThankYou(settings.localCustomThankYou);
         this.adminPanelCustomThankYou = new WootricCustomThankYou(settings.adminPanelCustomThankYou);
+//        this.driverPicklist = new WootricDriverPicklist(settings.driverPicklist);
         this.timeDelay = settings.timeDelay;
         this.surveyedDefault = settings.surveyedDefault;
         this.surveyImmediately = settings.surveyImmediately;
