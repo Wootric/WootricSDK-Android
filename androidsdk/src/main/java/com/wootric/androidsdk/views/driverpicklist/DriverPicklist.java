@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 
 import com.wootric.androidsdk.R;
 
+import java.util.ArrayList;
+
 public class DriverPicklist extends FlowLayout implements DriverPicklistButtonListener {
     public enum Mode {
         SINGLE, MULTI, REQUIRED, NONE
@@ -235,7 +237,6 @@ public class DriverPicklist extends FlowLayout implements DriverPicklistButtonLi
 
     @Override
     public void buttonSelected(int index) {
-
         switch (mode) {
             case SINGLE:
             case REQUIRED:
@@ -265,16 +266,22 @@ public class DriverPicklist extends FlowLayout implements DriverPicklistButtonLi
         }
     }
 
-    public boolean isSelected(int index) {
-        if (index > 0 && index < getChildCount()) {
-            DriverPicklistButton button = (DriverPicklistButton) getChildAt(index);
-            return button.isSelected();
+    public ArrayList<String> selectedButtons() {
+        ArrayList<String> selectedLabels = new ArrayList<>();
+        if (getChildCount() > 0) {
+            for (int i = 0; i < getChildCount(); i++) {
+                DriverPicklistButton button = (DriverPicklistButton) getChildAt(i);
+
+                if (button.getSelected()) {
+                    selectedLabels.add(button.getLabel());
+                }
+            }
         }
-        return false;
+        return selectedLabels;
     }
 
     public String buttonLabel(int index) {
-        if (index > 0 && index < getChildCount()) {
+        if (index >= 0 && index < getChildCount()) {
             DriverPicklistButton button = (DriverPicklistButton) getChildAt(index);
             return button.getLabel();
         }

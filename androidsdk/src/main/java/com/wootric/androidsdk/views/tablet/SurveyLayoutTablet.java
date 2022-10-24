@@ -57,6 +57,8 @@ import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -78,11 +80,16 @@ public class SurveyLayoutTablet extends LinearLayout
     private TextView mTvAnchorNotLikely;
     private LinearLayout mScoreLayout;
     private LinearLayout mRatingContainer;
+    private LinearLayout mLinearLayout;
+
+    private View mWootricFooter;
+    private View mWootricFooter2;
 
     private RelativeLayout mLayoutFollowup;
     private TextView mTvFollowupQuestion;
     private EditText mEtFeedback;
     private Button mBtnSubmit;
+    private Button mBtnSubmit2;
     private TextView mBtnDismiss;
     private DriverPicklist mDriverPicklist;
 
@@ -147,6 +154,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mTvAnchorLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_likely);
         mTvAnchorNotLikely = (TextView) mRatingContainer.findViewById(R.id.wootric_anchor_not_likely);
         mScoreLayout = (LinearLayout) mRatingContainer.findViewById(R.id.wootric_rating_bar);
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
         mLayoutFollowup = (RelativeLayout) findViewById(R.id.wootric_layout_followup);
         mTvFollowupQuestion = (TextView) mLayoutFollowup.findViewById(R.id.wootric_tv_followup);
@@ -170,6 +178,13 @@ public class SurveyLayoutTablet extends LinearLayout
                 submitSurvey();
             }
         });
+        mBtnSubmit2 = (Button) findViewById(R.id.wootric_btn_submit_2);
+        mBtnSubmit2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitSurvey();
+            }
+        });
         mBtnDismiss = (TextView) findViewById(R.id.wootric_btn_dismiss);
         mBtnDismiss.setOnClickListener(new OnClickListener() {
             @Override
@@ -179,10 +194,6 @@ public class SurveyLayoutTablet extends LinearLayout
         });
 
         mDriverPicklist = (DriverPicklist) findViewById(R.id.wootric_driver_picklist);
-<<<<<<< HEAD
-=======
-        String[] cars = {};
->>>>>>> 2328cbd (Add driver picklist)
         selectedAnswers = new HashMap<>();
 
         new DriverPicklist.Configure()
@@ -204,15 +215,15 @@ public class SurveyLayoutTablet extends LinearLayout
                 .setDriverPicklistButtonListener(new DriverPicklistButtonListener() {
                     @Override
                     public void buttonSelected(int index) {
-                        selectedAnswers.put(mDriverPicklist.buttonLabel(index), mDriverPicklist.buttonLabel(index));
                     }
                     @Override
                     public void buttonDeselected(int index) {
-                        selectedAnswers.remove(mDriverPicklist.buttonLabel(index));
                     }
                 })
                 .build();
 
+        mWootricFooter = (View) findViewById(R.id.wootric_footer);
+        mWootricFooter2 = (View) findViewById(R.id.wootric_footer_2);
         mBtnThankYouDismiss = (TextView) findViewById(R.id.wootric_btn_thank_you_dismiss);
         mBtnThankYouDismiss.setOnClickListener(new OnClickListener() {
             @Override
@@ -322,6 +333,7 @@ public class SurveyLayoutTablet extends LinearLayout
             mTvAnchorLikely.setText(mSettings.getAnchorLikely());
             mTvAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
             mBtnSubmit.setText(mSettings.getBtnSubmit());
+            mBtnSubmit2.setText(mSettings.getBtnSubmit());
             mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         }
     }
@@ -346,13 +358,48 @@ public class SurveyLayoutTablet extends LinearLayout
         setFeedbackTexts();
 
         mDriverPicklist.removeAllViews();
+        selectedAnswers.clear();
         try {
+            JSONObject dplSettings = mSettings.getDriverPicklistSettings(mCurrentScore);
             JSONObject dpl = mSettings.getDriverPicklist(mCurrentScore);
-            Iterator<String> keys = dpl.keys();
 
-            while(keys.hasNext()) {
-                String key = keys.next();
-                mDriverPicklist.addButton(dpl.get(key).toString());
+            if (dplSettings.getBoolean("dpl_multi_select")) {
+                mDriverPicklist.setMode(DriverPicklist.Mode.MULTI);
+            } else {
+                mDriverPicklist.setMode(DriverPicklist.Mode.SINGLE);
+            }
+
+            if (dplSettings.getBoolean("dpl_hide_open_ended")) {
+                mLinearLayout.setVisibility(GONE);
+                mBtnSubmit2.setVisibility(VISIBLE);
+                mWootricFooter.setVisibility(GONE);
+                mWootricFooter2.setVisibility(VISIBLE);
+            } else {
+                mLinearLayout.setVisibility(VISIBLE);
+                mBtnSubmit2.setVisibility(GONE);
+                mWootricFooter.setVisibility(VISIBLE);
+                mWootricFooter2.setVisibility(GONE);
+            }
+            ArrayList<String> dplList = new ArrayList<>();
+            if (dpl != null) {
+                Iterator<String> keys = dpl.keys();
+
+                while(keys.hasNext()) {
+                    String key = keys.next();
+                    dplList.add(dpl.get(key).toString());
+                }
+            }
+
+            if (dplSettings.getBoolean("dpl_randomize_list")) {
+                ArrayList<String> shuffled = new ArrayList<>(dplList);
+                Collections.shuffle(shuffled);
+                for (String value : shuffled) {
+                    mDriverPicklist.addButton(value);
+                }
+            } else {
+                for (String value : dplList) {
+                    mDriverPicklist.addButton(value);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -507,6 +554,9 @@ public class SurveyLayoutTablet extends LinearLayout
             return;
 
         String text = mEtFeedback.getText().toString();
+        for (String value:mDriverPicklist.selectedButtons()) {
+            selectedAnswers.put(value, value);
+        }
         mSurveyLayoutListener.onSurveySubmit(mCurrentScore, text, selectedAnswers);
     }
 

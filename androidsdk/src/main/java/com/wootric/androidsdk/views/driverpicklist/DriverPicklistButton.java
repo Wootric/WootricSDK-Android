@@ -187,6 +187,8 @@ public class DriverPicklistButton extends AppCompatTextView implements View.OnCl
         return this.label;
     }
 
+    public boolean getSelected() { return this.selected; }
+
     public static class DriverPicklistButtonBuilder {
         private int index;
         private String label;

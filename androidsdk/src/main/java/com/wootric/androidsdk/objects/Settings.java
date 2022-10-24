@@ -99,7 +99,6 @@ public class Settings implements Parcelable {
         this.localSocial = new WootricSocial(settings.localSocial);
         this.localCustomThankYou = new WootricCustomThankYou(settings.localCustomThankYou);
         this.adminPanelCustomThankYou = new WootricCustomThankYou(settings.adminPanelCustomThankYou);
-//        this.driverPicklist = new WootricDriverPicklist(settings.driverPicklist);
         this.timeDelay = settings.timeDelay;
         this.surveyedDefault = settings.surveyedDefault;
         this.surveyImmediately = settings.surveyImmediately;
@@ -248,6 +247,14 @@ public class Settings implements Parcelable {
             dpl =  adminPanelCustomMessage.getDriverPicklistForScore(score, surveyType, surveyTypeScale);
         }
         return dpl;
+    }
+
+    public JSONObject getDriverPicklistSettings(int score) throws JSONException {
+        JSONObject dplSettings = new JSONObject();
+        if (adminPanelCustomMessage != null) {
+            dplSettings =  adminPanelCustomMessage.getDriverPicklistSettingsForScore(score, surveyType, surveyTypeScale);
+        }
+        return dplSettings;
     }
 
     public String getFollowupQuestion(int score) {

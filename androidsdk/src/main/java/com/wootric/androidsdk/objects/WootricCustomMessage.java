@@ -48,6 +48,8 @@ public class WootricCustomMessage implements Parcelable {
 
     private JSONObject driverPicklist;
     private JSONObject driverPicklistList;
+    private JSONObject driverPicklistSettings;
+    private JSONObject driverPicklistSettingsList;
 
     public WootricCustomMessage() {
         this.followupQuestionsList = new HashMap<>();
@@ -99,15 +101,45 @@ public class WootricCustomMessage implements Parcelable {
     }
 
     JSONObject getDetractorPicklist() throws JSONException {
-        return driverPicklistList.getJSONObject("detractor_picklist");
+        if (driverPicklistList.has("detractor_picklist")) {
+            return driverPicklistList.getJSONObject("detractor_picklist");
+        }
+        return null;
     }
 
     JSONObject getPassivePicklist() throws JSONException {
-        return driverPicklistList.getJSONObject("passive_picklist");
+        if (driverPicklistList.has("passive_picklist")) {
+            return driverPicklistList.getJSONObject("passive_picklist");
+        }
+        return null;
     }
 
     JSONObject getPromoterPicklist() throws JSONException {
-        return driverPicklistList.getJSONObject("promoter_picklist");
+        if (driverPicklistList.has("promoter_picklist")) {
+            return driverPicklistList.getJSONObject("promoter_picklist");
+        }
+        return null;
+    }
+
+    JSONObject getDetractorPicklistSettings() throws JSONException {
+        if (driverPicklistSettingsList.has("detractor")) {
+            return driverPicklistSettingsList.getJSONObject("detractor");
+        }
+        return null;
+    }
+
+    JSONObject getPassivePicklistSettings() throws JSONException {
+        if (driverPicklistSettingsList.has("passive")) {
+            return driverPicklistSettingsList.getJSONObject("passive");
+        }
+        return null;
+    }
+
+    JSONObject getPromoterPicklistSettings() throws JSONException {
+        if (driverPicklistSettingsList.has("promoter")) {
+            return driverPicklistSettingsList.getJSONObject("promoter");
+        }
+        return null;
     }
 
     public void setFollowupQuestion(String followupQuestion) {
@@ -184,6 +216,20 @@ public class WootricCustomMessage implements Parcelable {
         }
     }
 
+    public JSONObject getDriverPicklistSettingsForScore(int scoreValue, String surveyType, int surveyTypeScale) throws JSONException{
+        final Score score = new Score(scoreValue, surveyType, surveyTypeScale);
+
+        if(score.isDetractor() && getDetractorPicklistSettings() != null) {
+            return getDetractorPicklistSettings();
+        } else if(score.isPassive() && getPassivePicklistSettings() != null) {
+            return getPassivePicklistSettings();
+        } else if(score.isPromoter() && getPromoterPicklistSettings() != null) {
+            return getPromoterPicklistSettings();
+        } else {
+            return driverPicklistSettings;
+        }
+    }
+
     public void setFollowupQuestionsList(HashMap<String, String> followupQuestionsList) {
         this.followupQuestionsList = followupQuestionsList;
     }
@@ -227,6 +273,7 @@ public class WootricCustomMessage implements Parcelable {
         wootricCustomMessage.followupQuestion = customMessagesJson.optString("followup_question");
         wootricCustomMessage.placeholderText = customMessagesJson.optString("placeholder_text");
         wootricCustomMessage.driverPicklist = customMessagesJson.optJSONObject("picklist");
+        wootricCustomMessage.driverPicklistSettings = customMessagesJson.optJSONObject("driver_picklist_settings");
 
         wootricCustomMessage.followupQuestionsList = new HashMap<>();
         JSONObject followupQuestionListJson = customMessagesJson.optJSONObject("followup_questions_list");
@@ -245,6 +292,7 @@ public class WootricCustomMessage implements Parcelable {
         }
 
         wootricCustomMessage.driverPicklistList = customMessagesJson.optJSONObject("driver_picklist");
+        wootricCustomMessage.driverPicklistSettingsList = customMessagesJson.optJSONObject("driver_picklist_settings_list");
         return wootricCustomMessage;
     }
 }
