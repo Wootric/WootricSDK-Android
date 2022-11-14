@@ -72,6 +72,7 @@ public class DriverPicklist extends FlowLayout implements DriverPicklistButtonLi
                     break;
                 default:
                     mode = Mode.SINGLE;
+                    break;
             }
             int gravityType = a.getInt(R.styleable.DriverPicklist_gravity, 0);
             switch (gravityType) {
