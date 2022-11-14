@@ -58,6 +58,8 @@ import com.wootric.androidsdk.views.driverpicklist.DriverPicklist;
 import com.wootric.androidsdk.views.driverpicklist.DriverPicklistButtonListener;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -186,11 +188,9 @@ public class SurveyLayoutPhone extends LinearLayout
                 .setDriverPicklistButtonListener(new DriverPicklistButtonListener() {
                     @Override
                     public void buttonSelected(int index) {
-                        selectedAnswers.put(mDriverPicklist.buttonLabel(index), mDriverPicklist.buttonLabel(index));
                     }
                     @Override
                     public void buttonDeselected(int index) {
-                        selectedAnswers.remove(mDriverPicklist.buttonLabel(index));
                     }
                 })
                 .build();
@@ -345,6 +345,10 @@ public class SurveyLayoutPhone extends LinearLayout
             return;
 
         String text = mEtFeedback.getText().toString();
+
+        for (String value:mDriverPicklist.selectedButtons()) {
+            selectedAnswers.put(value, value);
+        }
         mSurveyLayoutListener.onSurveySubmit(mRatingBar.getSelectedScore(), text, selectedAnswers);
     }
 
@@ -475,18 +479,44 @@ public class SurveyLayoutPhone extends LinearLayout
         mEtFeedback.setHint(mSettings.getFollowupPlaceholder(currentScore));
 
         mDriverPicklist.removeAllViews();
+        selectedAnswers.clear();
         try {
+            JSONObject dplSettings = mSettings.getDriverPicklistSettings(currentScore);
             JSONObject dpl = mSettings.getDriverPicklist(currentScore);
+
+            if (dplSettings.getBoolean("dpl_multi_select")) {
+                mDriverPicklist.setMode(DriverPicklist.Mode.MULTI);
+            } else {
+                mDriverPicklist.setMode(DriverPicklist.Mode.SINGLE);
+            }
+
+            if (dplSettings.getBoolean("dpl_hide_open_ended")) {
+                mEtFeedback.setVisibility(View.GONE);
+            } else {
+                mEtFeedback.setVisibility(View.VISIBLE);
+            }
+            ArrayList<String> dplList = new ArrayList<>();
             Iterator<String> keys = dpl.keys();
 
             while(keys.hasNext()) {
                 String key = keys.next();
-                mDriverPicklist.addButton(dpl.get(key).toString());
+                dplList.add(dpl.get(key).toString());
+            }
+
+            if (dplSettings.getBoolean("dpl_randomize_list")) {
+                ArrayList<String> shuffled = new ArrayList<>(dplList);
+                Collections.shuffle(shuffled);
+                for (String value : shuffled) {
+                    mDriverPicklist.addButton(value);
+                }
+            } else {
+                for (String value : dplList) {
+                    mDriverPicklist.addButton(value);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         mThankYouLayout.setVisibility(GONE);
         setKeyboardVisibility(true);

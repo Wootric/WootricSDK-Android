@@ -249,6 +249,14 @@ public class Settings implements Parcelable {
         return dpl;
     }
 
+    public JSONObject getDriverPicklistSettings(int score) throws JSONException {
+        JSONObject dplSettings = new JSONObject();
+        if (adminPanelCustomMessage != null) {
+            dplSettings =  adminPanelCustomMessage.getDriverPicklistSettingsForScore(score, surveyType, surveyTypeScale);
+        }
+        return dplSettings;
+    }
+
     public String getFollowupQuestion(int score) {
         String followupQuestion = null;
 
