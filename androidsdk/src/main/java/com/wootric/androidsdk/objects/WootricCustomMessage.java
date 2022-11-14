@@ -47,7 +47,7 @@ public class WootricCustomMessage implements Parcelable {
     private HashMap<String, String> placeholderTextsList;
 
     private JSONObject driverPicklist;
-    private JSONObject driverPicklistList;
+    private JSONObject driverPicklistObject;
     private JSONObject driverPicklistSettings;
     private JSONObject driverPicklistSettingsList;
 
@@ -101,22 +101,22 @@ public class WootricCustomMessage implements Parcelable {
     }
 
     JSONObject getDetractorPicklist() throws JSONException {
-        if (driverPicklistList.has("detractor_picklist")) {
-            return driverPicklistList.getJSONObject("detractor_picklist");
+        if (driverPicklistObject.has("detractor_picklist")) {
+            return driverPicklistObject.getJSONObject("detractor_picklist");
         }
         return null;
     }
 
     JSONObject getPassivePicklist() throws JSONException {
-        if (driverPicklistList.has("passive_picklist")) {
-            return driverPicklistList.getJSONObject("passive_picklist");
+        if (driverPicklistObject.has("passive_picklist")) {
+            return driverPicklistObject.getJSONObject("passive_picklist");
         }
         return null;
     }
 
     JSONObject getPromoterPicklist() throws JSONException {
-        if (driverPicklistList.has("promoter_picklist")) {
-            return driverPicklistList.getJSONObject("promoter_picklist");
+        if (driverPicklistObject.has("promoter_picklist")) {
+            return driverPicklistObject.getJSONObject("promoter_picklist");
         }
         return null;
     }
@@ -291,7 +291,7 @@ public class WootricCustomMessage implements Parcelable {
             wootricCustomMessage.placeholderTextsList.put(PROMOTER_TEXT_KEY, placeholderTextsListJson.optString(PROMOTER_TEXT_KEY));
         }
 
-        wootricCustomMessage.driverPicklistList = customMessagesJson.optJSONObject("driver_picklist");
+        wootricCustomMessage.driverPicklistObject = customMessagesJson.optJSONObject("driver_picklist");
         wootricCustomMessage.driverPicklistSettingsList = customMessagesJson.optJSONObject("driver_picklist_settings_list");
         return wootricCustomMessage;
     }
