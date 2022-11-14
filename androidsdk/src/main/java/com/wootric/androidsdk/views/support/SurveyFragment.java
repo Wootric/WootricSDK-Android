@@ -260,6 +260,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
         mWootricApiClient.createResponse(mEndUser.getId(), mSettings.getUserID(), mSettings.getAccountID(), mAccessToken, mOriginUrl, score, priority, text, mUniqueLink, driverPicklist);
         mScore = score;
         mText = text;
+        mDriverPicklist = driverPicklist;
         mResponseSent = true;
         priority++;
     }
@@ -339,7 +340,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
 
         if (activity != null) {
             mShouldShowSimpleDialog = true;
-            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener).show();
+            ThankYouDialogFactory.create(activity, mSettings, mSurveyLayout.getSelectedScore(), mText, mSurveyCallback, mOnSurveyFinishedListener, mDriverPicklist).show();
         }
 
         dismiss();
@@ -369,6 +370,7 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
                     hashMap.put("score", mScore);
                 }
                 hashMap.put("text", mText);
+                hashMap.put("driver_picklist", mDriverPicklist);
                 mSurveyCallback.onSurveyDidHide(hashMap);
             }
         }
