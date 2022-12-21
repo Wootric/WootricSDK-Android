@@ -1,3 +1,7 @@
+## 2.21.3 (2023-01-12)
+
+- Fix thank_you_button color being overriden by colorPrimary
+
 ## 2.21.2 (2023-01-09)
 
 - Fix color ID resource not found

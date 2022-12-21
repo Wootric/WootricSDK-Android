@@ -28,14 +28,14 @@ If you use Maven, you can include this library as a dependency:
 <dependency>
     <groupId>com.wootric</groupId>
     <artifactId>wootric-sdk-android</artifactId>
-    <version>2.21.2</version>
+    <version>2.21.3</version>
 </dependency>
 ```
 
 ### Using Gradle
 
 ```xml
-implementation 'com.wootric:wootric-sdk-android:2.21.2'
+implementation 'com.wootric:wootric-sdk-android:2.21.3'
 ```
 
 ## Initializing Wootric

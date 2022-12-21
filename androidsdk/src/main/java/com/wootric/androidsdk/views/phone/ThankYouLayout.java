@@ -23,6 +23,7 @@
 package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -226,6 +227,10 @@ public class ThankYouLayout extends RelativeLayout {
         mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
         mBtnThankYouAction.setText(thankYouLinkText);
         mBtnThankYouAction.setBackgroundColor(thankYouBackgroundColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ColorStateList csl = ColorStateList.valueOf(thankYouBackgroundColor);
+            mBtnThankYouAction.setBackgroundTintList(csl);
+        }
     }
 
     private void initSocialLinks() {
