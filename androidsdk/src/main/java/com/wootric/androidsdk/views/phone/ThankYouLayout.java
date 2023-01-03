@@ -191,14 +191,20 @@ public class ThankYouLayout extends RelativeLayout {
     private void initValues() {
         final String thankYouText = mSettings.getFinalThankYou(mScore);
         final String thankYouSetupText = mSettings.getCustomThankYouMessage(mScore);
+        int buttonColor;
 
+        try {
+            buttonColor = getResources().getColor(mSettings.getSurveyColor());
+        } catch(Exception e) {
+            buttonColor = mSettings.getSurveyColor();
+        }
         mTvThankYou.setText(thankYouText);
 
         if (thankYouSetupText != null) {
             mTvThankYouSetup.setText(thankYouSetupText);
         }
 
-        mBtnDone.setTextColor(getResources().getColor(mSettings.getSurveyColor()));
+        mBtnDone.setTextColor(buttonColor);
         mBtnDone.setText(mSettings.getBtnDismiss());
 
         initSocialLinks();
@@ -210,8 +216,13 @@ public class ThankYouLayout extends RelativeLayout {
     private void initThankYouActionBtn() {
         boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mEmail, mScore, mFeedback);
         final String thankYouLinkText = mSettings.getThankYouLinkText(mScore);
-        final int thankYouBackgroundColor =  getResources().getColor(mSettings.getThankYouButtonBackgroundColor());
+        int thankYouBackgroundColor;
 
+        try {
+            thankYouBackgroundColor = getResources().getColor(mSettings.getThankYouButtonBackgroundColor());
+        } catch(Exception e) {
+            thankYouBackgroundColor = mSettings.getThankYouButtonBackgroundColor();
+        }
         mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
         mBtnThankYouAction.setText(thankYouLinkText);
         mBtnThankYouAction.setBackgroundColor(thankYouBackgroundColor);
@@ -222,12 +233,18 @@ public class ThankYouLayout extends RelativeLayout {
         boolean shouldShowFacebookBtn = (score.isPromoter() &&
                                             mSettings.isFacebookEnabled() &&
                                             mSettings.getFacebookPageId() != null);
+        int socialColor;
 
+        try {
+            socialColor = getResources().getColor(mSettings.getSocialSharingColor());
+        } catch(Exception e) {
+            socialColor =mSettings.getSocialSharingColor();
+        }
         mLayoutFacebook.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
         mLayoutFacebookLike.setVisibility(shouldShowFacebookBtn ? VISIBLE : GONE);
 
-        mFaFacebook.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
-        mFaFacebookLike.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
+        mFaFacebook.setTextColor(socialColor);
+        mFaFacebookLike.setTextColor(socialColor);
 
         boolean shouldShowTwitterBtn =
                         score.isPromoter() &&
@@ -238,7 +255,7 @@ public class ThankYouLayout extends RelativeLayout {
 
         mLayoutTwitter.setVisibility(shouldShowTwitterBtn ? VISIBLE : GONE);
 
-        mFaTwitter.setTextColor(getResources().getColor(mSettings.getSocialSharingColor()));
+        mFaTwitter.setTextColor(socialColor);
     }
 
     private void showSimpleDialogIfNeeded() {

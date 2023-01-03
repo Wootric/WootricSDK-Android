@@ -361,9 +361,14 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void setColors() {
-        Resources res = mContext.getResources();
-        mColorSelected = res.getColor(mSettings.getScoreColor());
-        mColorEnabled = res.getColor(mSettings.getSurveyColor());
+        try {
+            Resources res = mContext.getResources();
+            mColorSelected = res.getColor(mSettings.getScoreColor());
+            mColorEnabled = res.getColor(mSettings.getSurveyColor());
+        } catch(Exception e) {
+            mColorSelected = mSettings.getScoreColor();
+            mColorEnabled = mSettings.getSurveyColor();
+        }
         mRatingBar.setSelectedColor(mColorSelected);
 
         mBtnDismiss.setTextColor(mColorEnabled);

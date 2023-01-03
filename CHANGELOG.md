@@ -1,3 +1,7 @@
+## 2.21.2 (2023-01-09)
+
+- Fix color ID resource not found
+
 ## 2.21.1 (2022-02-14)
 
 - Fix survey rating numbers hidden when device is set to maximum font size
