@@ -6,20 +6,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layoutDirection="ltr">
 
-    <TextView
-        android:id="@+id/wootric_tv_powered_by"
+    <LinearLayout
+        android:id="@+id/wootric_layout_powered_by"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ibmplexsans"
-        android:text="@string/wootric_powered_by"
-        android:textColor="@color/wootric_tablet_text_score_color"/>
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ibmplexsans"
-        android:text="@string/wootric"
-        android:textColor="@color/wootric_tablet_text_score_color" />
+        <TextView
+            android:id="@+id/wootric_tv_powered_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ibmplexsans"
+            android:text="@string/wootric_powered_by"
+            android:textColor="@color/wootric_tablet_text_score_color"/>
+
+        <TextView
+            android:id="@+id/wootric_tv_im"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ibmplexsans"
+            android:text="@string/wootric"
+            android:textColor="@color/wootric_tablet_text_score_color"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/footer_dot_separator"

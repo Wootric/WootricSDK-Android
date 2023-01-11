@@ -61,6 +61,7 @@ public class Settings implements Parcelable {
     private boolean surveyedDefault = true;
     private boolean surveyImmediately;
     private boolean showOptOut;
+    private boolean showPoweredBy;
     private boolean skipFollowupScreenForPromoters;
     private boolean skipFeedbackScreen;
 
@@ -101,6 +102,7 @@ public class Settings implements Parcelable {
         this.surveyedDefault = settings.surveyedDefault;
         this.surveyImmediately = settings.surveyImmediately;
         this.showOptOut = settings.showOptOut;
+        this.showPoweredBy = settings.showPoweredBy;
         this.skipFollowupScreenForPromoters = settings.skipFollowupScreenForPromoters;
         this.skipFeedbackScreen = settings.skipFeedbackScreen;
         this.dailyResponseCap = settings.dailyResponseCap;
@@ -170,6 +172,8 @@ public class Settings implements Parcelable {
     }
 
     public boolean isShowOptOut() { return showOptOut; }
+
+    public boolean isShowPoweredBy() { return showPoweredBy; }
 
     public boolean isSurveyImmediately() {
         return surveyImmediately;
@@ -739,6 +743,8 @@ public class Settings implements Parcelable {
         dest.writeInt(this.timeDelay);
         dest.writeByte(surveyImmediately ? (byte) 1 : (byte) 0);
         dest.writeByte(surveyedDefault ? (byte) 1 : (byte) 0);
+        dest.writeByte(showPoweredBy ? (byte) 1 : (byte) 0);
+        dest.writeByte(showOptOut ? (byte) 1 : (byte) 0);
         dest.writeValue(this.dailyResponseCap);
         dest.writeValue(this.registeredPercent);
         dest.writeValue(this.visitorPercent);
@@ -767,6 +773,8 @@ public class Settings implements Parcelable {
         this.timeDelay = in.readInt();
         this.surveyImmediately = in.readByte() != 0;
         this.surveyedDefault = in.readByte() != 0;
+        this.showPoweredBy = in.readByte() != 0;
+        this.showOptOut = in.readByte() != 0;
         this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
         this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -798,6 +806,7 @@ public class Settings implements Parcelable {
         settings.setSurveyType(settingsObject.optString("survey_type", "NPS"));
         settings.firstSurvey = settingsObject.optLong("first_survey");
         settings.adminPanelTimeDelay = settingsObject.optInt("time_delay");
+        settings.showPoweredBy = settingsObject.optBoolean("powered_by");
 
         if (settingsObject.has("account_token")) {
             settings.accountToken = settingsObject.optString("account_token");

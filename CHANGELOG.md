@@ -1,3 +1,7 @@
+## 2.22.0 (2023-01-31)
+
+- Add option to hide "powered by InMoment"
+ 
 ## 2.21.3 (2023-01-12)
 
 - Fix thank_you_button color being overriden by colorPrimary

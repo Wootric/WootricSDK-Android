@@ -77,6 +77,10 @@ public class SurveyLayoutTablet extends LinearLayout
     private TextView mBtnDismiss;
 
     private RelativeLayout mThankYouLayout;
+    private LinearLayout mPoweredByLayout;
+    private TextView mPoweredByTv;
+    private TextView mInMomentTv;
+    private TextView mDotSeparatorTv;
 
     private Button mBtnFacebookLike;
     private Button mBtnTwitter;
@@ -150,7 +154,6 @@ public class SurveyLayoutTablet extends LinearLayout
             }
         });
 
-
         mBtnSubmit = (Button) mLayoutFollowup.findViewById(R.id.wootric_btn_submit);
         mBtnSubmit.setOnClickListener(new OnClickListener() {
             @Override
@@ -223,6 +226,11 @@ public class SurveyLayoutTablet extends LinearLayout
 
         mThankYouLayout = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
 
+        mPoweredByLayout = (LinearLayout) findViewById(R.id.wootric_layout_powered_by);
+        mPoweredByTv = (TextView) findViewById(R.id.wootric_tv_powered_by);
+        mInMomentTv = (TextView) findViewById(R.id.wootric_tv_im);
+        mDotSeparatorTv = (TextView) findViewById(R.id.footer_dot_separator);
+
         setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
         initScoreLayout();
@@ -262,6 +270,11 @@ public class SurveyLayoutTablet extends LinearLayout
         mSurveyType = mSettings.getSurveyType();
 
         mScore = new Score(mCurrentScore, mSurveyType, mSettings.getSurveyTypeScale());
+
+        if (!mSettings.isShowPoweredBy() && mPoweredByLayout != null) {
+            mPoweredByLayout.setVisibility(View.GONE);
+            mDotSeparatorTv.setVisibility(View.GONE);
+        }
 
         initResources();
         initScoreLayout();
@@ -323,8 +336,6 @@ public class SurveyLayoutTablet extends LinearLayout
         mSurveyLayout.setVisibility(GONE);
         setKeyboardVisibility(false);
 
-        boolean shouldShowThankYouAction = mSettings.isThankYouActionConfigured(mCurrentEmail, mCurrentScore, feedback) ;
-
         initThankYouActionBtn();
         initSocialLinks();
 
@@ -350,6 +361,9 @@ public class SurveyLayoutTablet extends LinearLayout
 
         mThankYouLayout.setAlpha(0);
         mThankYouLayout.setVisibility(VISIBLE);
+        if (!mSettings.isShowPoweredBy() && mThankYouLayout != null) {
+            mThankYouLayout.findViewById(R.id.wootric_layout_powered_by).setVisibility(View.GONE);
+        }
         fadeInView(mThankYouLayout);
     }
 
