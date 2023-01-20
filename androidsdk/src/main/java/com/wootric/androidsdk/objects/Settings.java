@@ -64,6 +64,7 @@ public class Settings implements Parcelable {
     private boolean surveyImmediately;
     private boolean showOptOut;
     private boolean showPoweredBy;
+    private boolean customFirstQuestionEnabled;
     private boolean skipFollowupScreenForPromoters;
     private boolean skipFeedbackScreen;
 
@@ -78,6 +79,7 @@ public class Settings implements Parcelable {
     private String recommendTarget;
     private String surveyType;
     private String eventName;
+    private String customFirstQuestion;
 
     private int surveyColor = Constants.NOT_SET;
     private int scoreColor = Constants.NOT_SET;
@@ -105,6 +107,7 @@ public class Settings implements Parcelable {
         this.surveyImmediately = settings.surveyImmediately;
         this.showOptOut = settings.showOptOut;
         this.showPoweredBy = settings.showPoweredBy;
+        this.customFirstQuestionEnabled = settings.customFirstQuestionEnabled;
         this.skipFollowupScreenForPromoters = settings.skipFollowupScreenForPromoters;
         this.skipFeedbackScreen = settings.skipFeedbackScreen;
         this.dailyResponseCap = settings.dailyResponseCap;
@@ -117,6 +120,7 @@ public class Settings implements Parcelable {
         this.recommendTarget = settings.recommendTarget;
         this.surveyType = settings.surveyType;
         this.eventName = settings.eventName;
+        this.customFirstQuestion = settings.customFirstQuestion;
         this.surveyColor = settings.surveyColor;
         this.scoreColor = settings.scoreColor;
         this.thankYouButtonBackgroundColor = settings.thankYouButtonBackgroundColor;
@@ -145,6 +149,8 @@ public class Settings implements Parcelable {
         this.resurveyThrottle = settings.resurveyThrottle;
         this.declineResurveyThrottle = settings.declineResurveyThrottle;
         this.surveyType = settings.surveyType;
+        this.customFirstQuestion = settings.customFirstQuestion;
+        this.customFirstQuestionEnabled = settings.customFirstQuestionEnabled;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -177,6 +183,8 @@ public class Settings implements Parcelable {
     public boolean isShowOptOut() { return showOptOut; }
 
     public boolean isShowPoweredBy() { return showPoweredBy; }
+
+    public boolean isCustomFirstQuestionEnabled() { return customFirstQuestionEnabled; }
 
     public boolean isSurveyImmediately() {
         return surveyImmediately;
@@ -220,6 +228,9 @@ public class Settings implements Parcelable {
     }
 
     public String getSurveyQuestion() {
+        if (customFirstQuestionEnabled && customFirstQuestion != null) {
+            return customFirstQuestion;
+        }
         return localizedTexts.getSurveyQuestion();
     }
 
@@ -604,6 +615,8 @@ public class Settings implements Parcelable {
         this.eventName = eventName;
     }
 
+    public String getCustomFirstQuestion() { return customFirstQuestion; }
+
     public String getProductName() {
         return productName;
     }
@@ -764,6 +777,7 @@ public class Settings implements Parcelable {
         dest.writeByte(surveyedDefault ? (byte) 1 : (byte) 0);
         dest.writeByte(showPoweredBy ? (byte) 1 : (byte) 0);
         dest.writeByte(showOptOut ? (byte) 1 : (byte) 0);
+        dest.writeByte(customFirstQuestionEnabled ? (byte) 1 : (byte) 0);
         dest.writeValue(this.dailyResponseCap);
         dest.writeValue(this.registeredPercent);
         dest.writeValue(this.visitorPercent);
@@ -773,6 +787,7 @@ public class Settings implements Parcelable {
         dest.writeString(this.productName);
         dest.writeString(this.recommendTarget);
         dest.writeString(this.surveyType);
+        dest.writeString(this.customFirstQuestion);
         dest.writeParcelable(this.localCustomThankYou, 0);
         dest.writeParcelable(this.adminPanelCustomThankYou, 0);
         dest.writeParcelable(this.localSocial, 0);
@@ -794,6 +809,7 @@ public class Settings implements Parcelable {
         this.surveyedDefault = in.readByte() != 0;
         this.showPoweredBy = in.readByte() != 0;
         this.showOptOut = in.readByte() != 0;
+        this.customFirstQuestionEnabled = in.readByte() != 0;
         this.dailyResponseCap = (Integer) in.readValue(Integer.class.getClassLoader());
         this.registeredPercent = (Integer) in.readValue(Integer.class.getClassLoader());
         this.visitorPercent = (Integer) in.readValue(Integer.class.getClassLoader());
@@ -803,6 +819,7 @@ public class Settings implements Parcelable {
         this.productName = in.readString();
         this.recommendTarget = in.readString();
         this.surveyType = in.readString();
+        this.customFirstQuestion = in.readString();
         this.localCustomThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
         this.adminPanelCustomThankYou = in.readParcelable(WootricCustomThankYou.class.getClassLoader());
         this.localSocial = in.readParcelable(WootricSocial.class.getClassLoader());
@@ -826,6 +843,7 @@ public class Settings implements Parcelable {
         settings.firstSurvey = settingsObject.optLong("first_survey");
         settings.adminPanelTimeDelay = settingsObject.optInt("time_delay");
         settings.showPoweredBy = settingsObject.optBoolean("powered_by");
+        settings.customFirstQuestionEnabled = settingsObject.optBoolean("custom_first_question_enabled");
 
         if (settingsObject.has("account_token")) {
             settings.accountToken = settingsObject.optString("account_token");
@@ -854,6 +872,10 @@ public class Settings implements Parcelable {
 
         if (settingsObject.has("language")) {
             settings.setLanguageCode(settingsObject.optString("language"));
+        }
+
+        if (settings.customFirstQuestionEnabled) {
+            settings.customFirstQuestion = settingsObject.optString("custom_first_question");
         }
 
         JSONObject localizedTextsJson = settingsObject.optJSONObject("localized_texts");
