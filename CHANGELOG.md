@@ -1,3 +1,8 @@
+## 2.22.1 (2023-02-03)
+
+- Fix thank you dialog button color
+- Thank you dialog dismiss survey on touch outside
+
 ## 2.22.0 (2023-01-31)
 
 - Add option to hide "powered by InMoment"

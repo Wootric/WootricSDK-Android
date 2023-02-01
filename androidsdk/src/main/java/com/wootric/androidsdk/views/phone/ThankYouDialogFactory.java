@@ -26,6 +26,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.os.Build;
 
 import com.wootric.androidsdk.WootricSurveyCallback;
 import com.wootric.androidsdk.objects.Settings;
@@ -37,13 +39,13 @@ import java.util.HashMap;
  * Created by maciejwitowski on 10/2/15.
  */
 public class ThankYouDialogFactory {
-    public static Dialog create(Context context, Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback, final OnSurveyFinishedListener onSurveyFinishedListener) {
-        AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
+    public static Dialog create(final Context context, final Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback, final OnSurveyFinishedListener onSurveyFinishedListener) {
+        final AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
         thankYouDialog.setCancelable(false);
         final String thankYouText = settings.getFinalThankYou(score);
 
         thankYouDialog.setMessage(thankYouText);
-
+        thankYouDialog.setCanceledOnTouchOutside(true);
         thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -59,6 +61,23 @@ public class ThankYouDialogFactory {
                     }
                     hashMap.put("text", text);
                     surveyCallback.onSurveyDidHide(hashMap);
+                }
+            }
+        });
+
+        thankYouDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                int thankYouBackgroundColor;
+                try {
+                    thankYouBackgroundColor = context.getResources().getColor(settings.getThankYouButtonBackgroundColor());
+                } catch(Exception e) {
+                    thankYouBackgroundColor = settings.getThankYouButtonBackgroundColor();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ColorStateList csl = ColorStateList.valueOf(thankYouBackgroundColor);
+                    thankYouDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(csl);
                 }
             }
         });
