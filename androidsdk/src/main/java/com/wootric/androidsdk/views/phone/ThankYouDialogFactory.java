@@ -40,7 +40,12 @@ import java.util.HashMap;
  */
 public class ThankYouDialogFactory {
     public static Dialog create(final Context context, final Settings settings, final int score, final String text, final WootricSurveyCallback surveyCallback, final OnSurveyFinishedListener onSurveyFinishedListener, final HashMap<String, String> driverPicklist) {
-        final AlertDialog thankYouDialog = new AlertDialog.Builder(context).create();
+        final AlertDialog thankYouDialog;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            thankYouDialog = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog_Alert).create();
+        } else {
+            thankYouDialog = new AlertDialog.Builder(context, AlertDialog.THEME_HOLO_LIGHT).create();
+        }
         thankYouDialog.setCancelable(false);
         final String thankYouText = settings.getFinalThankYou(score);
 

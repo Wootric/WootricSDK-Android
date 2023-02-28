@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/edit_background_color" />
+        </shape>
+    </item>
+
+    <item
+        android:top="@dimen/wootric_edittext_item_top"
+        android:right="@dimen/wootric_edittext_item_right"
+        android:left="@dimen/wootric_edittext_item_left">
+        <shape>
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="@dimen/wootric_edittext_stroke_width"
+                android:color="@color/wootric_score_color" />
+        </shape>
+    </item>
+</layer-list>

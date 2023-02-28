@@ -16,6 +16,7 @@
     <color name="wootric_edit_text_background">#05000000</color>
     <color name="wootric_edit_text_border">#253746</color>
     <color name="edit_score_color">#FFFFFF</color>
+    <color name="edit_background_color">#00FFFFFF</color>
 
     <color name="wootric_dpl_button">#333</color>
     <color name="dark_grey">#333333</color>

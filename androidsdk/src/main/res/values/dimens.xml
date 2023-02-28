@@ -86,4 +86,9 @@
     <dimen name="min_horizontal_spacing">8dp</dimen>
     <dimen name="vertical_spacing">8dp</dimen>
 
+    <!-- EditText Border  -->
+    <dimen name="wootric_edittext_item_left">-3dp</dimen>
+    <dimen name="wootric_edittext_item_right">-3dp</dimen>
+    <dimen name="wootric_edittext_item_top">-3dp</dimen>
+    <dimen name="wootric_edittext_stroke_width">2dp</dimen>
 </resources>
