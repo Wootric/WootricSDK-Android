@@ -1,3 +1,7 @@
+## 2.24.1 (2023-03-07)
+
+- Fix missing files on Maven
+
 ## 2.24.0 (2023-03-06)
 
 - Add support for custom first question
