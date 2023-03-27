@@ -176,6 +176,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onSurveyValidated(Settings surveyServerSettings) {
+        if (currentEvent==null) return;
         currentEvent.getSettings().mergeWithSurveyServerSettings(surveyServerSettings);
         this.eventQueue.clear();
 
@@ -212,6 +213,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onAuthenticateSuccess(String accessToken) {
+        if (currentEvent==null) return;
         if(accessToken == null) {
             Wootric.notifySurveyFinished(false, false, 0);
             resetSurvey();
@@ -229,6 +231,7 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onGetEndUserIdSuccess(long endUserId) {
+        if (currentEvent==null) return;
         currentEvent.getEndUser().setId(endUserId);
 
         if(currentEvent.getEndUser().hasProperties() ||
@@ -242,11 +245,13 @@ public class SurveyManager implements SurveyValidator.OnSurveyValidatedListener,
 
     @Override
     public void onEndUserNotFound() {
+        if (currentEvent==null) return;
         sendCreateEndUserRequest();
     }
 
     @Override
     public void onCreateEndUserSuccess(long endUserId) {
+        if (currentEvent==null) return;
         currentEvent.getEndUser().setId(endUserId);
 
         showSurvey();
