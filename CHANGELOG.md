@@ -1,3 +1,7 @@
+## 2.24.2 (2023-03-27)
+
+- Fix crash after stopping a survey
+
 ## 2.24.1 (2023-03-07)
 
 - Fix missing files on Maven
