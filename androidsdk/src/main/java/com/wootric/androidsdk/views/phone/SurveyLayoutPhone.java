@@ -165,9 +165,18 @@ public class SurveyLayoutPhone extends LinearLayout
         mDriverPicklist = (DriverPicklist) mLayoutBody.findViewById(R.id.wootric_driver_picklist);
         selectedAnswers = new HashMap<>();
 
+        try {
+            Resources res = mContext.getResources();
+            mColorSelected = res.getColor(mSettings.getScoreColor());
+            mColorEnabled = res.getColor(mSettings.getSurveyColor());
+        } catch(Exception e) {
+            mColorSelected = mSettings.getScoreColor();
+            mColorEnabled = mSettings.getSurveyColor();
+        }
+
         new DriverPicklist.Configure()
                 .driverPicklist(mDriverPicklist)
-                .selectedColor(mContext.getResources().getColor(mSettings.getScoreColor()))
+                .selectedColor(mColorSelected)
                 .selectedFontColor(Color.parseColor("#ffffff"))
                 .deselectedColor(Color.parseColor("#ffffff"))
                 .deselectedFontColor(Color.parseColor("#253746"))
@@ -397,14 +406,6 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void setColors() {
-        try {
-            Resources res = mContext.getResources();
-            mColorSelected = res.getColor(mSettings.getScoreColor());
-            mColorEnabled = res.getColor(mSettings.getSurveyColor());
-        } catch(Exception e) {
-            mColorSelected = mSettings.getScoreColor();
-            mColorEnabled = mSettings.getSurveyColor();
-        }
         mRatingBar.setSelectedColor(mColorSelected);
 
         mBtnDismiss.setTextColor(mColorEnabled);

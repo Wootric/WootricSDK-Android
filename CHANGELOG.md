@@ -1,3 +1,7 @@
+## 2.24.3 (2023-05-12)
+
+- Fix getScoreColor bug
+
 ## 2.24.2 (2023-03-27)
 
 - Fix crash after stopping a survey
