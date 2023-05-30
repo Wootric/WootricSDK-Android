@@ -1,3 +1,7 @@
+## 2.25.0 (2023-06-01)
+
+- Add support for AU tokens
+
 ## 2.24.3 (2023-05-12)
 
 - Fix getScoreColor bug

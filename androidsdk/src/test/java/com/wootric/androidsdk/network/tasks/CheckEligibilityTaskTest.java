@@ -61,7 +61,7 @@ public class CheckEligibilityTaskTest {
     public void testGet_RequestWithEuToken() throws Exception {
         EndUser endUser = new EndUser();
         Settings settings = new Settings();
-        User user = new User("NPS-EU");
+        User user = new User("NPS-EU-1234abcd");
         SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
                 wootricRemoteClient, testPreferenceUtils());
 
@@ -70,6 +70,21 @@ public class CheckEligibilityTaskTest {
         Robolectric.flushBackgroundThreadScheduler();
 
         assertThat(asyncTask.requestUrl()).isEqualTo("https://eligibility.wootric.eu/eligible.json");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        EndUser endUser = new EndUser();
+        Settings settings = new Settings();
+        User user = new User("NPS-AU-1234abcd");
+        SurveyValidator surveyValidator = new SurveyValidator(user, endUser, settings,
+                wootricRemoteClient, testPreferenceUtils());
+
+        CheckEligibilityTask asyncTask = new CheckEligibilityTask(user, endUser, settings, testPreferenceUtils(), surveyValidator);
+        asyncTask.execute();
+        Robolectric.flushBackgroundThreadScheduler();
+
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://eligibility.wootric.au/eligible.json");
     }
 
     @Test
@@ -84,6 +99,6 @@ public class CheckEligibilityTaskTest {
         asyncTask.execute();
         Robolectric.flushBackgroundThreadScheduler();
 
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://survey.wootric.com/eligible.json");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://eligibility.wootric.com/eligible.json");
     }
 }

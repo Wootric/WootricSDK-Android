@@ -40,4 +40,5 @@ public class Constants {
     public static final String CES = "CES";
 
     public static final String CSAT = "CSAT";
+    public static final String API_BASE_URL = "https://app.wootric.";
 }

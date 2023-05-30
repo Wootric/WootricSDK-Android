@@ -21,8 +21,16 @@ public class UpdateEndUserTaskTest {
     public void testGet_RequestWithEuToken() throws Exception {
         EndUser endUser = testEndUser();
         endUser.setId(4321);
-        UpdateEndUserTask asyncTask = new UpdateEndUserTask(endUser, ACCESS_TOKEN, "NPS-EU", wootricApiCallback);
+        UpdateEndUserTask asyncTask = new UpdateEndUserTask(endUser, ACCESS_TOKEN, "NPS-EU-1234abcd", wootricApiCallback);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/api/v1/end_users/4321");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        EndUser endUser = testEndUser();
+        endUser.setId(4321);
+        UpdateEndUserTask asyncTask = new UpdateEndUserTask(endUser, ACCESS_TOKEN, "NPS-AU-1234abcd", wootricApiCallback);
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.au/api/v1/end_users/4321");
     }
 
     @Test
@@ -30,6 +38,6 @@ public class UpdateEndUserTaskTest {
         EndUser endUser = testEndUser();
         endUser.setId(4321);
         UpdateEndUserTask asyncTask = new UpdateEndUserTask(endUser, ACCESS_TOKEN, "NPS", wootricApiCallback);
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/4321");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users/4321");
     }
 }

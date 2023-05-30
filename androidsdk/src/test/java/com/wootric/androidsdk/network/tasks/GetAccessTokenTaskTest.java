@@ -13,13 +13,19 @@ public class GetAccessTokenTaskTest {
 
     @Test
     public void testGet_RequestWithEuToken() throws Exception {
-        GetAccessTokenTask asyncTask = new GetAccessTokenTask("clientId1234", "NPS-EU", wootricApiCallback);
+        GetAccessTokenTask asyncTask = new GetAccessTokenTask("clientId1234", "NPS-EU-1234abcd", wootricApiCallback);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/oauth/token");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        GetAccessTokenTask asyncTask = new GetAccessTokenTask("clientId1234", "NPS-AU-1234abcd", wootricApiCallback);
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.au/oauth/token");
     }
 
     @Test
     public void testGet_RequestWithNormalToken() throws Exception {
         GetAccessTokenTask asyncTask = new GetAccessTokenTask("clientId1234", "NPS", wootricApiCallback);
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/oauth/token");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/oauth/token");
     }
 }

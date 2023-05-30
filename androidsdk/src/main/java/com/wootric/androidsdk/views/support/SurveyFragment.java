@@ -22,6 +22,8 @@
 
 package com.wootric.androidsdk.views.support;
 
+import static com.wootric.androidsdk.Constants.API_BASE_URL;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -417,8 +419,8 @@ public class SurveyFragment extends DialogFragment implements SurveyLayoutListen
     }
 
     private void optOut() {
-        String tld = Utils.startsWithEU(mUser.getAccountToken()) ? "eu" : "com";
-        String optOutUrl = "https://app.wootric." + tld + "/opt_out?token=" + mUser.getAccountToken()
+        String tld = Utils.getTokenTDL(mUser.getAccountToken());
+        String optOutUrl = API_BASE_URL + tld + "/opt_out?token=" + mUser.getAccountToken()
                 + "&metric_type=" + mSettings.getSurveyType()
                 + "&end_user_id=" + Long.toString(mEndUser.getId())
                 + "&end_user_email=" + mEndUser.getEmail()

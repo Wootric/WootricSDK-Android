@@ -27,21 +27,27 @@ public class CreateResponseTaskTest {
 
     @Test
     public void testGet_RequestWithEuToken() throws Exception {
-        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS-EU", offlineDataHandler, UNIQUE_LINK, LANGUAGE, DRIVER_PICKLIST);
+        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS-EU-1234abcd", offlineDataHandler, UNIQUE_LINK, LANGUAGE, DRIVER_PICKLIST);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/api/v1/end_users/" + END_USER_ID + "/responses");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS-AU-1234abcd", offlineDataHandler, UNIQUE_LINK, LANGUAGE, DRIVER_PICKLIST);
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.au/api/v1/end_users/" + END_USER_ID + "/responses");
     }
 
     @Test
     public void testGet_RequestWithNormalToken() throws Exception {
         CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK, LANGUAGE, DRIVER_PICKLIST);
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
     }
 
     @Test
     public void testPost_RequestWithLanguage() throws Exception {
         CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK, LANGUAGE, DRIVER_PICKLIST);
         asyncTask.buildParams();
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
         assertThat(asyncTask.paramsMap.get("survey[language]")).isEqualTo("es-mx");
     }
 
@@ -49,7 +55,7 @@ public class CreateResponseTaskTest {
     public void testPost_RequestWithoutLanguage() throws Exception {
         CreateResponseTask asyncTask = new CreateResponseTask(END_USER_ID, USER_ID, ACCOUNT_ID, ORIGIN_URL, SCORE, PRIORITY, TEXT, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK, null, DRIVER_PICKLIST);
         asyncTask.buildParams();
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users/" + END_USER_ID + "/responses");
         assertThat(asyncTask.paramsMap.containsKey("survey[language]")).isFalse();
     }
 }

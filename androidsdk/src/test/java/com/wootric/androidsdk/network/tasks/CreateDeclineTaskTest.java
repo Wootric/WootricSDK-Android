@@ -21,13 +21,19 @@ public class CreateDeclineTaskTest {
 
     @Test
     public void testGet_RequestWithEuToken() throws Exception {
-        CreateDeclineTask asyncTask = new CreateDeclineTask(END_USER_ID, USER_ID, ACCOUNT_ID, PRIORITY,ORIGIN_URL, ACCESS_TOKEN, "NPS-EU", offlineDataHandler, UNIQUE_LINK);
+        CreateDeclineTask asyncTask = new CreateDeclineTask(END_USER_ID, USER_ID, ACCOUNT_ID, PRIORITY,ORIGIN_URL, ACCESS_TOKEN, "NPS-EU-1234abcd", offlineDataHandler, UNIQUE_LINK);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/api/v1/end_users/" + END_USER_ID + "/declines");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        CreateDeclineTask asyncTask = new CreateDeclineTask(END_USER_ID, USER_ID, ACCOUNT_ID, PRIORITY,ORIGIN_URL, ACCESS_TOKEN, "NPS-AU-1234abcd", offlineDataHandler, UNIQUE_LINK);
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.au/api/v1/end_users/" + END_USER_ID + "/declines");
     }
 
     @Test
     public void testGet_RequestWithNormalToken() throws Exception {
         CreateDeclineTask asyncTask = new CreateDeclineTask(END_USER_ID, USER_ID, ACCOUNT_ID, PRIORITY,ORIGIN_URL, ACCESS_TOKEN, "NPS", offlineDataHandler, UNIQUE_LINK);
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users/" + END_USER_ID + "/declines");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users/" + END_USER_ID + "/declines");
     }
 }

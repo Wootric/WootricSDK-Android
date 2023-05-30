@@ -22,6 +22,8 @@
 
 package com.wootric.androidsdk.network.tasks;
 
+import static com.wootric.androidsdk.Constants.API_BASE_URL;
+
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,10 +51,7 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     static final String REQUEST_TYPE_PUT = "PUT";
     static final String REQUEST_TYPE_GET = "GET";
 
-    protected static final String API_ENDPOINT = "https://api.wootric.com";
-    protected static final String SURVEY_ENDPOINT = "https://survey.wootric.com";
-    protected static final String EU_API_ENDPOINT = "https://app.wootric.eu";
-    protected static final String EU_SURVEY_ENDPOINT = "https://eligibility.wootric.eu";
+    protected static final String SURVEY_BASE_URL = "https://eligibility.wootric.";
     protected static final String END_USERS_PATH = "/api/v1/end_users";
     protected static final String OAUTH_PATH = "/oauth/token";
     protected static final String ELIGIBLE_PATH = "/eligible.json";
@@ -169,11 +168,11 @@ public abstract class WootricRemoteRequestTask extends AsyncTask<Void, Void, Str
     }
 
     protected String getApiEndpoint() {
-        return Utils.startsWithEU(this.accountToken) ? EU_API_ENDPOINT : API_ENDPOINT;
+        return API_BASE_URL + Utils.getTokenTDL(this.accountToken);
     }
 
     protected String getSurveyEndpoint() {
-        return Utils.startsWithEU(this.accountToken) ? EU_SURVEY_ENDPOINT : SURVEY_ENDPOINT;
+        return SURVEY_BASE_URL + Utils.getTokenTDL(this.accountToken);
     }
 
     protected abstract String requestUrl();

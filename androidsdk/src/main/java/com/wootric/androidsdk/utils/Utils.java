@@ -27,6 +27,7 @@ import android.util.Log;
 import com.wootric.androidsdk.Constants;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * Created by maciejwitowski on 11/24/15.
@@ -76,7 +77,10 @@ public final class Utils {
         }
     }
 
-    public static boolean startsWithEU(String aString) {
-        return aString.startsWith("NPS-EU");
+    public static String getTokenTDL(String accountToken) {
+        if (Pattern.compile("^NPS-(EU-|AU-)[A-Za-z0-9]{8}").matcher(accountToken).matches()) {
+            return accountToken.substring(4,6).toLowerCase();
+        }
+        return "com";
     }
 }

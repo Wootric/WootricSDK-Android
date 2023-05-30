@@ -15,13 +15,19 @@ public class GetEndUserByEmailTaskTest {
 
     @Test
     public void testGet_RequestWithEuToken() throws Exception {
-        GetEndUserByEmailTask asyncTask = new GetEndUserByEmailTask(null, ACCESS_TOKEN, "NPS-EU", wootricApiCallback);
+        GetEndUserByEmailTask asyncTask = new GetEndUserByEmailTask(null, ACCESS_TOKEN, "NPS-EU-1234abcd", wootricApiCallback);
         assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.eu/api/v1/end_users");
+    }
+
+    @Test
+    public void testGet_RequestWithAuToken() throws Exception {
+        GetEndUserByEmailTask asyncTask = new GetEndUserByEmailTask(null, ACCESS_TOKEN, "NPS-AU-1234abcd", wootricApiCallback);
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.au/api/v1/end_users");
     }
 
     @Test
     public void testGet_RequestWithNormalToken() throws Exception {
         GetEndUserByEmailTask asyncTask = new GetEndUserByEmailTask(null, ACCESS_TOKEN, "NPS", wootricApiCallback);
-        assertThat(asyncTask.requestUrl()).isEqualTo("https://api.wootric.com/api/v1/end_users");
+        assertThat(asyncTask.requestUrl()).isEqualTo("https://app.wootric.com/api/v1/end_users");
     }
 }
