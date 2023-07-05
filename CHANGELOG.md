@@ -1,3 +1,7 @@
+## 2.25.1 (2023-07-12)
+
+- Fix NullPointerException when setting color in tablets (https://github.com/Wootric/WootricSDK-flutter/issues/8)
+
 ## 2.25.0 (2023-06-01)
 
 - Add support for AU tokens

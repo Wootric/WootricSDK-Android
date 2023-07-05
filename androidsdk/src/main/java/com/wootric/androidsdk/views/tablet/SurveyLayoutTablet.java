@@ -279,7 +279,7 @@ public class SurveyLayoutTablet extends LinearLayout
 
         new DriverPicklist.Configure()
                 .driverPicklist(mDriverPicklist)
-                .selectedColor(mContext.getResources().getColor(mSettings.getScoreColor()))
+                .selectedColor(Color.parseColor("#024ea9"))
                 .selectedFontColor(Color.parseColor("#ffffff"))
                 .deselectedColor(Color.parseColor("#ffffff"))
                 .deselectedFontColor(Color.parseColor("#253746"))
