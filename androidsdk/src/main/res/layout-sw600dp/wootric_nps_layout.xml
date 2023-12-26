@@ -66,6 +66,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:orientation="horizontal"
+            android:gravity="center"
             android:background="@drawable/tablet_feedback_background"
             android:id="@+id/linearLayout">
 
@@ -162,5 +163,6 @@
         android:gravity="center"
         android:visibility="gone"
         android:layout_below="@+id/wootric_btn_submit_2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"/>
 </RelativeLayout>

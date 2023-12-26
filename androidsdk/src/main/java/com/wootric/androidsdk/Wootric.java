@@ -26,6 +26,7 @@ import static com.wootric.androidsdk.utils.Utils.checkNotNull;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.WindowManager;
 
 import androidx.fragment.app.FragmentActivity;
@@ -256,6 +257,16 @@ public class Wootric {
      */
     public void setShowOptOut(boolean showOptOut) {
         this.settings.setShowOptOut(showOptOut);
+    }
+
+    /**
+     * Show disclaimer text with link at the bottom of the survey
+     * @param disclaimerText String for the disclaimer message
+     * @param disclaimerLinkURL Uri of the website
+     * @param disclaimerLinkText String for the highlighted text to be pressed
+     */
+    public void showDisclaimer(String disclaimerText, Uri disclaimerLinkURL, String disclaimerLinkText) {
+        this.settings.setDisclaimer(disclaimerText, disclaimerLinkURL, disclaimerLinkText);
     }
 
     /**

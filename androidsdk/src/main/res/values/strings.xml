@@ -5,6 +5,8 @@
     <string name="wootric_opt_out">"opt out"</string>
     <string name="wootric_powered_by">"powered by "</string>
     <string name="wootric">"InMoment"</string>
+    <string name="wootric_disclaimer_text">"Learn how we handle your feedback here"</string>
+    <string name="wootric_disclaimer_link_text">"here"</string>
     <string name="wootric_example_btn_dismiss">DISMISS</string>
     <string name="wootric_example_btn_submit">SUBMIT</string>
     <string name="wootric_example_followup_placeholder">Anything else we should know?</string>

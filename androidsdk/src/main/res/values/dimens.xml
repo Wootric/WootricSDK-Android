@@ -78,7 +78,7 @@
     <dimen name="wootric_footer_layout_margin_end">24dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_width">4dp</dimen>
     <dimen name="wootric_footer_layout_dot_separator_height">4dp</dimen>
-    <dimen name="wootric_footer_layout_dot_separator_margin">8dp</dimen>
+    <dimen name="wootric_footer_layout_dot_separator_margin">-10dp</dimen>
 
     <!-- Driver Picklist -->
     <dimen name="default_textsize">13sp</dimen>

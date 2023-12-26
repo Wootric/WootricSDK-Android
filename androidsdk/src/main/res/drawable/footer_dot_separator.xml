@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <solid
-        android:color="@android:color/black"
+        android:color="@color/wootric_anchors"
         android:paddingTop="10dp"></solid>
     <corners android:radius="50dp"></corners>
 

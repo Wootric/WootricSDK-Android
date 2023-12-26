@@ -27,6 +27,7 @@ import static com.wootric.androidsdk.utils.Utils.isBlank;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.wootric.androidsdk.Constants;
 import com.wootric.androidsdk.R;
@@ -43,7 +44,6 @@ public class Settings implements Parcelable {
     private Long firstSurvey = -1L;
     private int adminPanelTimeDelay = Constants.NOT_SET;
     private LocalizedTexts localizedTexts;
-
     private Long userID;
     private Long accountID;
 
@@ -90,6 +90,11 @@ public class Settings implements Parcelable {
     private String clientID;
     private String accountToken;
 
+    private Boolean showDisclaimer = false;
+    private String disclaimerText;
+    private Uri disclaimerLinkURL;
+    private String disclaimerLinkText;
+
     public Settings(Settings settings) {
         this.firstSurvey = settings.firstSurvey;
         this.adminPanelTimeDelay = settings.getAdminPanelTimeDelay();
@@ -126,6 +131,10 @@ public class Settings implements Parcelable {
         this.thankYouButtonBackgroundColor = settings.thankYouButtonBackgroundColor;
         this.socialSharingColor = settings.socialSharingColor;
         this.surveyTypeScale = settings.surveyTypeScale;
+        this.showDisclaimer = settings.showDisclaimer;
+        this.disclaimerText = settings.disclaimerText;
+        this.disclaimerLinkURL = settings.disclaimerLinkURL;
+        this.disclaimerLinkText = settings.disclaimerLinkText;
     }
 
     public Settings() {
@@ -151,6 +160,7 @@ public class Settings implements Parcelable {
         this.surveyType = settings.surveyType;
         this.customFirstQuestion = settings.customFirstQuestion;
         this.customFirstQuestionEnabled = settings.customFirstQuestionEnabled;
+        this.showPoweredBy = settings.showPoweredBy;
     }
 
     public boolean firstSurveyDelayPassed(long timeFrom) {
@@ -182,7 +192,9 @@ public class Settings implements Parcelable {
 
     public boolean isShowOptOut() { return showOptOut; }
 
-    public boolean isShowPoweredBy() { return showPoweredBy; }
+    public boolean isShowPoweredBy() { return this.showPoweredBy; }
+
+    public boolean showDisclaimer() { return this.showDisclaimer; }
 
     public boolean isCustomFirstQuestionEnabled() { return customFirstQuestionEnabled; }
 
@@ -254,7 +266,11 @@ public class Settings implements Parcelable {
         return localizedTexts.getEditScore().toUpperCase();
     }
 
-    public String getBtnOptOut() { return localizedTexts.getOptOut().toUpperCase(); }
+    public String getBtnOptOut() { return localizedTexts.getOptOut(); }
+
+    public String getDisclaimerText() { return this.disclaimerText; }
+    public String getDisclaimerLinkText() { return this.disclaimerLinkText; }
+    public Uri getDisclaimerLinkURL() { return this.disclaimerLinkURL; }
 
     public JSONObject getDriverPicklist(int score) throws JSONException {
         JSONObject dpl = new JSONObject();
@@ -728,6 +744,24 @@ public class Settings implements Parcelable {
         this.scoreColor = scoreColor;
     }
 
+    public void setDisclaimer(String disclaimerText, Uri disclaimerLinkURL, String disclaimerLinkText) {
+        if (isBlank(disclaimerText)) {
+            Log.w(Constants.TAG, "setDisclaimer - disclaimerText cannot be blank.");
+            return;
+        }
+        if (disclaimerLinkURL == null) {
+            Log.w(Constants.TAG, "setDisclaimer - disclaimerLinkURL cannot be null.");
+            return;
+        }
+        if (isBlank(disclaimerLinkText)) {
+            Log.w(Constants.TAG, "setDisclaimer - disclaimerLinkText cannot be blank.");
+            return;
+        }
+        this.showDisclaimer = true;
+        this.disclaimerText = disclaimerText;
+        this.disclaimerLinkURL = disclaimerLinkURL;
+        this.disclaimerLinkText = disclaimerLinkText;
+    }
     public int getThankYouButtonBackgroundColor () {
         if (thankYouButtonBackgroundColor != Constants.NOT_SET) {
             return thankYouButtonBackgroundColor;
@@ -794,6 +828,10 @@ public class Settings implements Parcelable {
         dest.writeParcelable(this.adminPanelSocial, 0);
         dest.writeString(this.accountToken);
         dest.writeString(this.clientID);
+        dest.writeByte(this.showDisclaimer ? (byte) 1 : (byte) 0);
+        dest.writeString(this.disclaimerText);
+        dest.writeParcelable(this.disclaimerLinkURL, 0);
+        dest.writeString(this.disclaimerLinkText);
     }
 
     private Settings(Parcel in) {
@@ -826,6 +864,10 @@ public class Settings implements Parcelable {
         this.adminPanelSocial = in.readParcelable(WootricSocial.class.getClassLoader());
         this.accountToken = in.readString();
         this.clientID = in.readString();
+        this.showDisclaimer = in.readByte() != 0;
+        this.disclaimerText = in.readString();
+        this.disclaimerLinkURL = in.readParcelable(Uri.class.getClassLoader());
+        this.disclaimerLinkText = in.readString();
     }
 
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {

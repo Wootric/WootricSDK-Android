@@ -22,7 +22,13 @@
 
 package com.wootric.androidsdk.utils;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.View;
 
 import com.wootric.androidsdk.Constants;
 
@@ -82,5 +88,11 @@ public final class Utils {
             return accountToken.substring(4,6).toLowerCase();
         }
         return "com";
+    }
+
+    public static SpannableString getSpannableString(ClickableSpan clickableSpan, String disclaimerText, String disclaimerLinkText) {
+        SpannableString ss = new SpannableString(disclaimerText + " " + disclaimerLinkText);
+        ss.setSpan(clickableSpan, disclaimerText.length() + 1, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ss;
     }
 }

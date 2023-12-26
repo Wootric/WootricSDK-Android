@@ -6,6 +6,30 @@
     android:orientation="vertical"
     android:layoutDirection="ltr">
 
+    <LinearLayout
+        android:id="@+id/wootric_disclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/wootric_footer_layout_margin_end"
+        android:layout_marginRight="@dimen/wootric_footer_layout_margin_right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/wootric_disclaimer_text"
+            android:layout_width="match_parent"
+            android:layout_height="16sp"
+            android:text="@string/wootric_disclaimer_text"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:clickable="true"
+            android:fontFamily="@font/ibmplexsans"
+            android:textColor="@color/wootric_anchors"
+            android:textColorLink="@color/wootric_anchors"
+            android:visibility="gone"
+            android:layout_marginBottom="2dp"/>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -28,8 +52,7 @@
             android:layout_height="wrap_content"
             android:text="@string/wootric_opt_out"
             android:fontFamily="@font/ibmplexsans"
-            android:textColor="@android:color/black"
-            android:alpha="0.3"
+            android:textColor="@color/wootric_anchors"
             android:visibility="gone"/>
 
         <LinearLayout
@@ -46,16 +69,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wootric_powered_by"
+                android:textSize="12sp"
                 android:fontFamily="@font/ibmplexsans"
-                android:textColor="@android:color/black"
-                android:alpha="0.3"/>
+                android:textColor="@color/wootric_anchors"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wootric"
+                android:textSize="12sp"
                 android:fontFamily="@font/ibmplexsans"
-                android:textColor="@color/wootric_brand_color" />
+                android:textColor="@color/wootric_anchors" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

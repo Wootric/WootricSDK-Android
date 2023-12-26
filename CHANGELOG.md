@@ -1,3 +1,7 @@
+## 2.26.0 (2024-02-28)
+
+- Add disclaimer support
+
 ## 2.25.1 (2023-07-12)
 
 - Fix NullPointerException when setting color in tablets (https://github.com/Wootric/WootricSDK-flutter/issues/8)

@@ -365,6 +365,30 @@ public class SurveyLayoutTablet extends LinearLayout
 
     private void setupSurveyState() {
         mLayoutFollowup.setVisibility(GONE);
+        if (mSettings != null) {
+            if (!mSettings.isShowPoweredBy()) {
+                mWootricFooter.findViewById(R.id.wootric_tv_powered_by).setVisibility(View.GONE);
+                mWootricFooter.findViewById(R.id.wootric_tv_im).setVisibility(View.GONE);
+                mWootricFooter2.findViewById(R.id.wootric_tv_powered_by).setVisibility(View.GONE);
+                mWootricFooter2.findViewById(R.id.wootric_tv_im).setVisibility(View.GONE);
+                if (mSettings.isShowOptOut() && mSettings.showDisclaimer()) {
+                    mWootricFooter.findViewById(R.id.footer_dot_separator_2).setVisibility(View.VISIBLE);
+                    mWootricFooter2.findViewById(R.id.footer_dot_separator_2).setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (mSettings.isShowOptOut()) {
+                    mWootricFooter.findViewById(R.id.footer_dot_separator).setVisibility(View.VISIBLE);
+                    mWootricFooter2.findViewById(R.id.footer_dot_separator).setVisibility(View.VISIBLE);
+                    if (mSettings.showDisclaimer()) {
+                        mWootricFooter.findViewById(R.id.footer_dot_separator_2).setVisibility(View.VISIBLE);
+                        mWootricFooter2.findViewById(R.id.footer_dot_separator_2).setVisibility(View.VISIBLE);
+                    }
+                } else if (mSettings.showDisclaimer()) {
+                    mWootricFooter.findViewById(R.id.footer_dot_separator).setVisibility(View.VISIBLE);
+                    mWootricFooter2.findViewById(R.id.footer_dot_separator).setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     private void setupFeedbackState() {
@@ -387,11 +411,7 @@ public class SurveyLayoutTablet extends LinearLayout
                 mBtnSubmit2.setVisibility(VISIBLE);
                 mWootricFooter.setVisibility(GONE);
                 mWootricFooter2.setVisibility(VISIBLE);
-                if (!mSettings.isShowPoweredBy()) {
-                    mWootricFooter2.findViewById(R.id.wootric_tv_powered_by).setVisibility(View.GONE);
-                    mWootricFooter2.findViewById(R.id.footer_dot_separator).setVisibility(View.GONE);
-                    mWootricFooter2.findViewById(R.id.wootric_tv_im).setVisibility(View.GONE);
-                }
+
             } else {
                 mLinearLayout.setVisibility(VISIBLE);
                 mBtnSubmit2.setVisibility(GONE);
