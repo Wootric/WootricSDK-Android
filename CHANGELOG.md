@@ -1,3 +1,7 @@
+## 2.27.0 (2024-03-XX)
+
+- Add survey customizations
+
 ## 2.26.1 (2024-03-01)
 
 - Fix disclaimer's TextView gravity for ReactNative & Flutter
