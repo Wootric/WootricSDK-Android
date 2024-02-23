@@ -27,10 +27,16 @@ import static com.wootric.androidsdk.utils.ScreenUtils.fadeInView;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +54,7 @@ import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.Utils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
@@ -91,6 +98,9 @@ public class SurveyLayoutTablet extends LinearLayout
     private Button mBtnSubmit;
     private Button mBtnSubmit2;
     private TextView mBtnDismiss;
+
+    private int mPrimaryColor;
+    private int mSecondaryColor;
     private DriverPicklist mDriverPicklist;
 
     private RelativeLayout mThankYouLayout;
@@ -115,6 +125,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private String mSurveyType;
     private int mScaleMinimum;
     private int mScaleMaximum;
+    private int mDriverPicklistColor;
 
     private Score mScore;
     private int mScoresTop;
@@ -265,24 +276,40 @@ public class SurveyLayoutTablet extends LinearLayout
 
         setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
-        initScoreLayout();
         updateState(mCurrentState);
     }
 
     private void initResources() {
         final Resources res = getResources();
-
         mScaleMinimum = mSurveyType == null ? 0 : mScore.minimumScore();
         mScaleMaximum = mSurveyType == null ? 10 : mScore.maximumScore();
 
         mScoresTop = mScaleMaximum + 1;
 
+        try {
+            mPrimaryColor = res.getColor(mSettings.getSurveyColor());
+            mSecondaryColor = res.getColor(mSettings.getScoreColor());
+        } catch(Exception e) {
+            mPrimaryColor = mSettings.getSurveyColor();
+            mSecondaryColor = mSettings.getScoreColor();
+        }
+
+        mBtnFacebookLike.setTextColor(mSecondaryColor);
+        mBtnTwitter.setTextColor(mSecondaryColor);
+        mBtnFacebook.setTextColor(mSecondaryColor);
+        mBtnThankYouAction.setTextColor(Utils.getTextColor(mSecondaryColor, "filled", false));
+        GradientDrawable drawable = (GradientDrawable)mBtnThankYouAction.getBackground();
+        drawable.mutate();
+        int stroke = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+        drawable.setStroke(stroke, Utils.getDarkerColor(mSecondaryColor, 0.2f));
+        drawable.setColor(mSecondaryColor);
+
         new DriverPicklist.Configure()
                 .driverPicklist(mDriverPicklist)
-                .selectedColor(Color.parseColor("#024ea9"))
-                .selectedFontColor(Color.parseColor("#ffffff"))
+                .selectedColor(mPrimaryColor)
+                .selectedFontColor(Utils.getTextColor(mPrimaryColor, mSettings.getScoreScaleType(), true))
                 .deselectedColor(Color.parseColor("#ffffff"))
-                .deselectedFontColor(Color.parseColor("#253746"))
+                .deselectedFontColor(Utils.getTextColor(mPrimaryColor, mSettings.getScoreScaleType(), false))
                 .selectTransitionMS(100)
                 .deselectTransitionMS(100)
                 .labels(null)
@@ -308,7 +335,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mScoreViews = new ScoreView[mScoresTop];
 
         for(int score = mScaleMinimum; score < mScoresTop; score++) {
-            ScoreView scoreView = new ScoreView(mContext);
+            ScoreView scoreView = new ScoreView(mContext, mPrimaryColor, mSettings.getScoreScaleType());
             scoreView.setText(String.valueOf(score));
             scoreView.setOnScoreClickListener(this);
             mScoreViews[score] = scoreView;
@@ -338,6 +365,7 @@ public class SurveyLayoutTablet extends LinearLayout
         initScoreLayout();
         updateState(mCurrentState);
         setTexts();
+        setColors();
     }
 
     private void setTexts() {
@@ -349,6 +377,14 @@ public class SurveyLayoutTablet extends LinearLayout
             mBtnSubmit2.setText(mSettings.getBtnSubmit());
             mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         }
+    }
+
+    private void setColors() {
+        final Resources res = getResources();
+        mBtnSubmit.setBackgroundColor(mSecondaryColor);
+        mBtnSubmit.setTextColor(Utils.getTextColor(mSecondaryColor, "filled", false));
+        mBtnSubmit2.setBackgroundColor(mSecondaryColor);
+        mBtnSubmit2.setTextColor(Utils.getTextColor(mSecondaryColor, "filled", false));
     }
 
     private void updateState(int state) {
@@ -563,11 +599,13 @@ public class SurveyLayoutTablet extends LinearLayout
 
     @Override
     public void onScoreClick(int scoreValue) {
-         if(mCurrentScore != -1) {
-            mScoreViews[mCurrentScore].setSelected(false);
-        }
-
         mCurrentScore = scoreValue;
+
+        for(int score = mScaleMinimum; score < mScoresTop; score++) {
+            if (score != mCurrentScore) {
+                mScoreViews[score].setSelected(false);
+            }
+        }
 
         Score score = new Score(mCurrentScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
         boolean shouldSkipFeedbackScreen = mSettings.skipFeedbackScreen() ||

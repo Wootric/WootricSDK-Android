@@ -24,11 +24,14 @@ package com.wootric.androidsdk.views.tablet;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -36,6 +39,7 @@ import android.widget.TextView;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.Utils;
 
 /**
  * Created by maciejwitowski on 10/8/15.
@@ -43,11 +47,15 @@ import com.wootric.androidsdk.utils.ScreenUtils;
 public class ScoreView extends TextView implements View.OnClickListener{
 
     private int mTextColor;
+    private int mBackgroundColor;
+    private String mScoreScaleType;
 
     private OnScoreClickListener onScoreClickListener;
 
-    public ScoreView(Context context) {
+    public ScoreView(Context context, int color, String scoreScaleType) {
         super(context);
+        mBackgroundColor = color;
+        mScoreScaleType = scoreScaleType;
         init();
     }
 
@@ -67,7 +75,7 @@ public class ScoreView extends TextView implements View.OnClickListener{
         final Context context = getContext();
         final Resources res = context.getResources();
 
-        mTextColor = res.getColor(R.color.wootric_tablet_text_score_color);
+        mTextColor = Utils.getTextColor(mBackgroundColor, mScoreScaleType, false);
 
         final Resources resources = getResources();
         Drawable drawable;
@@ -78,6 +86,9 @@ public class ScoreView extends TextView implements View.OnClickListener{
             drawable = resources.getDrawable(R.drawable.score);
         }
 
+        if (mScoreScaleType.equals("filled")) {
+            drawable.setColorFilter(mBackgroundColor, PorterDuff.Mode.MULTIPLY);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             setBackground(drawable);
         }
@@ -98,6 +109,7 @@ public class ScoreView extends TextView implements View.OnClickListener{
         llp.setMargins(margin, 0, 0, 0);
         setLayoutParams(llp);
 
+        setTextColor(mTextColor);
         setOnClickListener(this);
     }
 
@@ -114,8 +126,27 @@ public class ScoreView extends TextView implements View.OnClickListener{
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
+        final Resources resources = getResources();
+        Drawable drawable;
 
+        if (selected) {
+            mTextColor = Utils.getTextColor(mBackgroundColor, mScoreScaleType, selected);
+        } else {
+            mTextColor = Color.BLACK;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            drawable = resources.getDrawable(R.drawable.score, null);
+        } else {
+            drawable = resources.getDrawable(R.drawable.score);
+        }
+        drawable.setColorFilter(mBackgroundColor, PorterDuff.Mode.MULTIPLY);
+
+        if (!isSelected()) {
+            drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        }
+        setBackground(drawable);
         setTypeface(null, isSelected() ? Typeface.BOLD : Typeface.NORMAL);
+        setTextColor(mTextColor);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener onScoreClickListener) {

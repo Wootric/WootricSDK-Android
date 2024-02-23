@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wootric_thank_you_layout_body"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/wootric_thank_you_layout_padding"
     android:background="@android:color/white"
+    android:orientation="vertical"
     android:layoutDirection="ltr">
 
     <TextView
@@ -21,7 +22,6 @@
         android:id="@+id/wootric_tv_thank_you_setup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wootric_tv_thank_you"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:fontFamily="@font/ibmplexsans"
@@ -31,7 +31,6 @@
         android:id="@+id/wootric_layout_facebook_like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wootric_tv_thank_you_setup"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -61,7 +60,6 @@
         android:id="@+id/wootric_layout_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wootric_layout_facebook_like"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -91,7 +89,6 @@
         android:id="@+id/wootric_layout_twitter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wootric_layout_facebook"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -126,7 +123,6 @@
         android:background="@color/wootric_score_color"
         android:textColor="@android:color/white"
         android:fontFamily="@font/ibmplexsans"
-        android:layout_below="@+id/wootric_layout_twitter"
         android:layout_marginTop="@dimen/wootric_thank_you_action_button_margin"
         android:gravity="center"
         android:text="@string/wootric_btn_thank_you_action"/>
@@ -135,16 +131,12 @@
         android:id="@+id/wootric_btn_thank_you_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/wootric_tv_thank_you"
         android:layout_gravity="end"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:fontFamily="@font/ibmplexsans"
         android:textSize="@dimen/wootric_button_text"
         android:textColor="@color/wootric_survey_layout_header_background"
         android:padding="@dimen/wootric_btn_padding"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="12dp"
         android:text="@string/wootric_example_btn_dismiss"/>
 
-</RelativeLayout>
+</LinearLayout>

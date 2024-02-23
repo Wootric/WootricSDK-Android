@@ -27,7 +27,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Build;
+import android.widget.Button;
 
 import com.wootric.androidsdk.WootricSurveyCallback;
 import com.wootric.androidsdk.objects.Settings;
@@ -51,7 +54,7 @@ public class ThankYouDialogFactory {
 
         thankYouDialog.setMessage(thankYouText);
         thankYouDialog.setCanceledOnTouchOutside(true);
-        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
+        thankYouDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "dismiss", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -74,16 +77,11 @@ public class ThankYouDialogFactory {
         thankYouDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                int thankYouBackgroundColor;
-                try {
-                    thankYouBackgroundColor = context.getResources().getColor(settings.getThankYouButtonBackgroundColor());
-                } catch(Exception e) {
-                    thankYouBackgroundColor = settings.getThankYouButtonBackgroundColor();
-                }
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ColorStateList csl = ColorStateList.valueOf(thankYouBackgroundColor);
-                    thankYouDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(csl);
+                    ColorStateList csl = ColorStateList.valueOf(Color.BLACK);
+                    Button dismissButton = thankYouDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    dismissButton.setTextColor(csl);
+                    dismissButton.setPaintFlags(dismissButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 }
             }
         });

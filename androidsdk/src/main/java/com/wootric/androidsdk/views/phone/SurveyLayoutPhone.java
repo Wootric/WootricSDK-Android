@@ -25,13 +25,20 @@ package com.wootric.androidsdk.views.phone;
 import static com.wootric.androidsdk.utils.ScreenUtils.setViewsVisibility;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -44,12 +51,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.TextViewCompat;
 
 import com.wootric.androidsdk.R;
 import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.Utils;
 import com.wootric.androidsdk.views.SurveyLayout;
 import com.wootric.androidsdk.views.SurveyLayoutListener;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
@@ -177,9 +187,9 @@ public class SurveyLayoutPhone extends LinearLayout
         new DriverPicklist.Configure()
                 .driverPicklist(mDriverPicklist)
                 .selectedColor(mColorSelected)
-                .selectedFontColor(Color.parseColor("#ffffff"))
+                .selectedFontColor(Utils.getTextColor(mColorSelected, mSettings.getScoreScaleType(), true))
                 .deselectedColor(Color.parseColor("#ffffff"))
-                .deselectedFontColor(Color.parseColor("#253746"))
+                .deselectedFontColor(Utils.getTextColor(mColorSelected, mSettings.getScoreScaleType(), false))
                 .selectTransitionMS(100)
                 .deselectTransitionMS(100)
                 .labels(null)
@@ -240,6 +250,8 @@ public class SurveyLayoutPhone extends LinearLayout
         mEtFeedback = (EditText) mLayoutBody.findViewById(R.id.wootric_et_feedback);
         mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         mEtFeedback.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        Drawable background = mEtFeedback.getBackground();
+        background.setColorFilter(new PorterDuffColorFilter(mSettings.getSurveyColor(), PorterDuff.Mode.SRC_IN));
         mEtFeedback.setOnKeyListener(new OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -400,7 +412,9 @@ public class SurveyLayoutPhone extends LinearLayout
         mAnchorLikely.setText(mSettings.getAnchorLikely());
         mAnchorNotLikely.setText(mSettings.getAnchorNotLikely());
         mBtnSubmit.setText(mSettings.getBtnSubmit());
+        mBtnSubmit.setPaintFlags(mBtnSubmit.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mBtnDismiss.setText(mSettings.getBtnDismiss());
+        mBtnDismiss.setPaintFlags(mBtnDismiss.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mBtnEditScore.setText(mSettings.getBtnEditScore());
         mEtFeedback.setHint(mSettings.getFollowupPlaceholder(mRatingBar.getSelectedScore()));
     }
@@ -408,9 +422,25 @@ public class SurveyLayoutPhone extends LinearLayout
     private void setColors() {
         mRatingBar.setSelectedColor(mColorSelected);
 
-        mBtnDismiss.setTextColor(mColorEnabled);
+        mBtnDismiss.setTextColor(Color.BLACK);
+        mBtnEditScore.setTextColor(Utils.getTextColor(mColorEnabled, "filled", true));
         mBtnEditScore.setBackgroundColor(mColorEnabled);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            for (Drawable drawable : mBtnEditScore.getCompoundDrawablesRelative()) {
+                if (drawable != null) {
+                    drawable.setColorFilter(new PorterDuffColorFilter(Utils.getTextColor(mColorEnabled, "filled", true), PorterDuff.Mode.SRC_IN));
+                }
+            }
+        } else {
+            for (Drawable drawable : mBtnEditScore.getCompoundDrawables()) {
+                if (drawable != null) {
+                    drawable.setColorFilter(new PorterDuffColorFilter(Utils.getTextColor(mColorEnabled, "filled", true), PorterDuff.Mode.SRC_IN));
+                }
+            }
+        }
+
         mTvSurveyHeader.setBackgroundColor(mColorEnabled);
+        mTvSurveyHeader.setTextColor(Utils.getTextColor(mColorEnabled, "filled", true));
     }
 
     private void updateState(int state) {
@@ -506,7 +536,7 @@ public class SurveyLayoutPhone extends LinearLayout
     }
 
     private void updateSubmitBtn(boolean enable) {
-        mBtnSubmit.setTextColor(enable ? mColorEnabled : mColorBlack);
+        mBtnSubmit.setTextColor(mColorBlack);
         mBtnSubmit.setAlpha(enable ? 1f : 0.26f);
         mBtnSubmit.setEnabled(enable);
     }

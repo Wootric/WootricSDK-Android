@@ -24,9 +24,13 @@ package com.wootric.androidsdk.views.phone;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -39,14 +43,15 @@ import com.wootric.androidsdk.objects.Score;
 import com.wootric.androidsdk.objects.Settings;
 import com.wootric.androidsdk.utils.FontManager;
 import com.wootric.androidsdk.utils.ScreenUtils;
+import com.wootric.androidsdk.utils.Utils;
 import com.wootric.androidsdk.views.ThankYouLayoutListener;
 
 /**
  * Created by maciejwitowski on 9/18/15.
  */
-public class ThankYouLayout extends RelativeLayout {
+public class ThankYouLayout extends LinearLayout {
 
-    private RelativeLayout mLayoutBody;
+    private LinearLayout mLayoutBody;
 
     private LinearLayout mLayoutFacebookLike;
     private LinearLayout mLayoutFacebook;
@@ -90,7 +95,7 @@ public class ThankYouLayout extends RelativeLayout {
 
         Typeface iconFont = FontManager.getTypeface(context, FontManager.FONTAWESOME);
 
-        mLayoutBody = (RelativeLayout) findViewById(R.id.wootric_thank_you_layout_body);
+        mLayoutBody = (LinearLayout) findViewById(R.id.wootric_thank_you_layout_body);
         mTvThankYou = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you);
         mTvThankYouSetup = (TextView) mLayoutBody.findViewById(R.id.wootric_tv_thank_you_setup);
         mFaFacebookLike = (TextView) mLayoutBody.findViewById(R.id.wootric_fa_facebook_like);
@@ -205,8 +210,9 @@ public class ThankYouLayout extends RelativeLayout {
             mTvThankYouSetup.setText(thankYouSetupText);
         }
 
-        mBtnDone.setTextColor(buttonColor);
+        mBtnDone.setTextColor(Color.BLACK);
         mBtnDone.setText(mSettings.getBtnDismiss());
+        mBtnDone.setPaintFlags(mBtnDone.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         initSocialLinks();
         initThankYouActionBtn();
@@ -224,8 +230,10 @@ public class ThankYouLayout extends RelativeLayout {
         } catch(Exception e) {
             thankYouBackgroundColor = mSettings.getThankYouButtonBackgroundColor();
         }
+
         mBtnThankYouAction.setVisibility(shouldShowThankYouAction ? VISIBLE : GONE);
         mBtnThankYouAction.setText(thankYouLinkText);
+        mBtnThankYouAction.setTextColor(Utils.getTextColor(thankYouBackgroundColor, "filled", false));
         mBtnThankYouAction.setBackgroundColor(thankYouBackgroundColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ColorStateList csl = ColorStateList.valueOf(thankYouBackgroundColor);

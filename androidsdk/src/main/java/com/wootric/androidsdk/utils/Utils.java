@@ -27,8 +27,11 @@ import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+
+import androidx.core.graphics.ColorUtils;
 
 import com.wootric.androidsdk.Constants;
 
@@ -94,5 +97,54 @@ public final class Utils {
         SpannableString ss = new SpannableString(disclaimerText + " " + disclaimerLinkText);
         ss.setSpan(clickableSpan, disclaimerText.length() + 1, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ss;
+    }
+
+    public static int getDarkerColor(int color, float percentage) {
+        return ColorUtils.blendARGB(color, Color.BLACK, percentage);
+    }
+
+    public static int getLighterColor(int color, float percentage) {
+        return ColorUtils.blendARGB(color, Color.WHITE, percentage);
+    }
+
+    private static int fontColor(String color) {
+        int num = Integer.parseInt(color.substring(1, 7), 16);
+        int red = (num >> 16) & 0xFF;
+        int green = (num >> 8) & 0xFF;
+        int blue = num & 0xFF;
+        double alpha = color.length() > 7 ? Integer.parseInt(color.substring(7, 9), 16) / 255.0 : 1;
+
+        red = (int) Math.round((1 - alpha) * 255 + alpha * red);
+        green = (int) Math.round((1 - alpha) * 255 + alpha * green);
+        blue = (int) Math.round((1 - alpha) * 255 + alpha * blue);
+
+        double yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000.0;
+        return yiq >= 128 ? Color.BLACK : Color.WHITE;
+    }
+
+    private static int fontColor(int color) {
+        int num = color;
+        int red = (num >> 16) & 0xFF;
+        int green = (num >> 8) & 0xFF;
+        int blue = num & 0xFF;
+        double alpha = 1;
+
+        red = (int) Math.round((1 - alpha) * 255 + alpha * red);
+        green = (int) Math.round((1 - alpha) * 255 + alpha * green);
+        blue = (int) Math.round((1 - alpha) * 255 + alpha * blue);
+
+        double yiq = ((red * 299) + (green * 587) + (blue * 114)) / 1000.0;
+        return yiq >= 128 ? Color.BLACK : Color.WHITE;
+    }
+
+    public static int getTextColor(int color, String scoreScaleType, boolean isSelected) {
+        if (isSelected || scoreScaleType.equals("filled")) {
+            if (color != 0) {
+                return fontColor(color);
+            } else {
+                return fontColor("#253746");
+            }
+        }
+        return Color.BLACK;
     }
 }

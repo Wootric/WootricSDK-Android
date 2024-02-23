@@ -103,7 +103,8 @@
             android:textColor="@color/wootric_tablet_cta_color"
             android:text="@string/wootric_btn_thank_you_action"
             android:fontFamily="@font/ibmplexsans"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:stateListAnimator="@null"/>
     </LinearLayout>
 
     <include android:id="@+id/wootric_footer"
