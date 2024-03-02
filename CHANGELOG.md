@@ -1,3 +1,7 @@
+## 2.26.1 (2024-03-01)
+
+- Fix disclaimer's TextView gravity for ReactNative & Flutter
+
 ## 2.26.0 (2024-02-28)
 
 - Add disclaimer support
