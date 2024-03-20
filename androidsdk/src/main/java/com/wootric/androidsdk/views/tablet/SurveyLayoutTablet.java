@@ -91,6 +91,9 @@ public class SurveyLayoutTablet extends LinearLayout
     private Button mBtnSubmit;
     private Button mBtnSubmit2;
     private TextView mBtnDismiss;
+
+    private int mPrimaryColor;
+    private int mSecondaryColor;
     private DriverPicklist mDriverPicklist;
 
     private RelativeLayout mThankYouLayout;
@@ -115,6 +118,7 @@ public class SurveyLayoutTablet extends LinearLayout
     private String mSurveyType;
     private int mScaleMinimum;
     private int mScaleMaximum;
+    private int mDriverPicklistColor;
 
     private Score mScore;
     private int mScoresTop;
@@ -265,21 +269,27 @@ public class SurveyLayoutTablet extends LinearLayout
 
         setPadding(CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING, CONTAINER_PADDING);
 
-        initScoreLayout();
         updateState(mCurrentState);
     }
 
     private void initResources() {
         final Resources res = getResources();
-
         mScaleMinimum = mSurveyType == null ? 0 : mScore.minimumScore();
         mScaleMaximum = mSurveyType == null ? 10 : mScore.maximumScore();
 
         mScoresTop = mScaleMaximum + 1;
 
+        try {
+            mPrimaryColor = res.getColor(mSettings.getSurveyColor());
+            mSecondaryColor = res.getColor(mSettings.getScoreColor());
+        } catch(Exception e) {
+            mPrimaryColor = mSettings.getSurveyColor();
+            mSecondaryColor = mSettings.getScoreColor();
+        }
+
         new DriverPicklist.Configure()
                 .driverPicklist(mDriverPicklist)
-                .selectedColor(Color.parseColor("#024ea9"))
+                .selectedColor(mPrimaryColor)
                 .selectedFontColor(Color.parseColor("#ffffff"))
                 .deselectedColor(Color.parseColor("#ffffff"))
                 .deselectedFontColor(Color.parseColor("#253746"))
@@ -308,7 +318,7 @@ public class SurveyLayoutTablet extends LinearLayout
         mScoreViews = new ScoreView[mScoresTop];
 
         for(int score = mScaleMinimum; score < mScoresTop; score++) {
-            ScoreView scoreView = new ScoreView(mContext);
+            ScoreView scoreView = new ScoreView(mContext, mPrimaryColor, mSettings.getScoreScaleType());
             scoreView.setText(String.valueOf(score));
             scoreView.setOnScoreClickListener(this);
             mScoreViews[score] = scoreView;
@@ -338,6 +348,7 @@ public class SurveyLayoutTablet extends LinearLayout
         initScoreLayout();
         updateState(mCurrentState);
         setTexts();
+        setColors();
     }
 
     private void setTexts() {
@@ -349,6 +360,12 @@ public class SurveyLayoutTablet extends LinearLayout
             mBtnSubmit2.setText(mSettings.getBtnSubmit());
             mEtFeedback.setImeActionLabel(mSettings.getBtnSubmit(), KeyEvent.KEYCODE_ENTER);
         }
+    }
+
+    private void setColors() {
+        final Resources res = getResources();
+        mBtnSubmit.setBackgroundColor(mSecondaryColor);
+        mBtnSubmit2.setBackgroundColor(mSecondaryColor);
     }
 
     private void updateState(int state) {
@@ -563,11 +580,13 @@ public class SurveyLayoutTablet extends LinearLayout
 
     @Override
     public void onScoreClick(int scoreValue) {
-         if(mCurrentScore != -1) {
-            mScoreViews[mCurrentScore].setSelected(false);
-        }
-
         mCurrentScore = scoreValue;
+
+        for(int score = mScaleMinimum; score < mScoresTop; score++) {
+            if (score != mCurrentScore) {
+                mScoreViews[score].setSelected(false);
+            }
+        }
 
         Score score = new Score(mCurrentScore, mSettings.getSurveyType(), mSettings.getSurveyTypeScale());
         boolean shouldSkipFeedbackScreen = mSettings.skipFeedbackScreen() ||
