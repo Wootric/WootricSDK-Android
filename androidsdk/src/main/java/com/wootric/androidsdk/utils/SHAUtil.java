@@ -34,7 +34,24 @@ public final class SHAUtil {
 
     final static String POSSIBLE = "abcdefghijklmnopqrstuvwxyz0123456789";
 
+    private static final char[] DIGITS_LOWER =
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    private static final char[] DIGITS_UPPER =
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
     private SHAUtil(){}
+
+    private static char[] encodeHex(final byte[] data) {
+        final int l = data.length;
+        final char[] out = new char[l << 1];
+        // two characters form the hex value.
+        for (int i = 0, j = 0; i < l; i++) {
+            out[j++] = DIGITS_LOWER[(0xF0 & data[i]) >>> 4];
+            out[j++] = DIGITS_LOWER[0x0F & data[i]];
+        }
+        return out;
+    }
 
     public static String buildUniqueLink(String accountToken, String endUserEmail, long date, String randomString) {
         String unixTimestamp = String.valueOf(date);
@@ -48,7 +65,7 @@ public final class SHAUtil {
         try {
             mDigest = MessageDigest.getInstance("SHA-256");
             byte[] result = mDigest.digest(text.getBytes());
-            uniqueLink = new String(Hex.encodeHex(result));
+            uniqueLink = new String(encodeHex(result));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
