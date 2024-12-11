@@ -1,3 +1,7 @@
+## 2.27.1 (2024-12-11)
+
+- Fix anchors for larger display text
+
 ## 2.27.0 (2024-07-17)
 
 - Add survey customizations
